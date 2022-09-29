@@ -1,8 +1,8 @@
 import cosmoglobe
 import matplotlib.pyplot as plt
-DIR = '/mn/stornext/u3/duncanwa/Cosmoglobe/version1'
+DIR = '/mn/stornext/u3/duncanwa/Cosmoglobe/v0'
 
-chain = cosmoglobe.Chain(f'{DIR}/BP_c0001_version1.h5')
+chain = cosmoglobe.Chain(f'{DIR}/BP_c0001_v0.h5')
 bands = ['023-WMAP_K', '030-WMAP_Ka', '040-WMAP_Q1', '040-WMAP_Q2', '060-WMAP_V1', '060-WMAP_V2', '090-WMAP_W1', '090-WMAP_W2', '090-WMAP_W3', '090-WMAP_W4']
 labs = [r'\textit K', r'\textit{Ka}', r'\textit Q1', r'\textit Q2', 
         r'\textit V1', r'\textit V2', r'\textit W1', r'\textit W2', 
