@@ -34,6 +34,7 @@
 \input{../../common/Planck}
 
 \def\WMAP{\emph{WMAP}}
+\def\WMAPnine{\emph{WMAP9}}
 \def\COBE{\emph{COBE}}
 \def\wmap{\emph{WMAP}}
 \def\planck{\emph{Planck}}
@@ -58,6 +59,7 @@
 \def\CamSpec{\texttt{CamSpec}}
 \def\Plik{\texttt{Plik}}
 \def\XFaster{\texttt{XFaster}}
+\def\sroll2{\texttt{SRoll2}}
 
 \renewcommand{\d}[0]{\vec{d}}
 \renewcommand{\t}[0]{\vec{t}}
@@ -99,6 +101,7 @@
 \newcommand{\hi}{\ensuremath{\mathsc {Hi}}}
 \newcommand{\bpbold}{\bfseries{\scshape{BeyondPlanck}}}
 \newcommand{\BP}{\textsc{BeyondPlanck}}
+\newcommand{\bp}{\textsc{BeyondPlanck}}
 \newcommand{\cosmoglobe}{\textsc{Cosmoglobe}}
 \newcommand{\Cosmoglobe}{\textsc{Cosmoglobe}}
 \newcommand{\lfi}[0]{LFI}
@@ -180,19 +183,39 @@
 A to-do list:
 
 \begin{itemize}
-	\item Fix AME model
-	\item Fix noise model
-	\item Start comparing maps
+	\item Fix AME model (\textit{I'm not sure what motivated this, perhaps not necessary?}
+	\item Fix noise model (\textit{Explained because of the Bessel filter plus linear trend})
 \end{itemize}
 
 This is a continuation of \citet{bp17}.
 
 
+The cosmic microwave background (CMB) is the most direct probe of the initial state of the Universe. Since the initial discovery of the CMB \citep{penzias:1965}, subsequent experiments have continually refined the measurements, to the extent that the \WMAP\ results are generally considered bringing cosmology into the regime of precision science \citep{bennett:2013}. Prior to \WMAP, it was common for CMB experiments to be superseded by more sensitive successors, with the noteworthy exceptions of \COBE/FIRAS and \COBE/DIRBE.
+
+The \planck\ experiment, rather than superseding \WMAP\ completely, consistently used \WMAP\ data in its calibration, component separation, and cosmological analyses. The most direct comparison between \WMAP\ and \Planck\ is through analysis of the two experiments' frequency maps, as \WMAP's \K, \Ka, \Q, \V, and \W\ maps are interleaved by the \Planck\ LFI's 30, 44, and 70\,GHz bands. Since the initial \Planck\ data release, there have been several analyses comparing the two experiments by members of the \WMAP\ team \citep{larson2014,addison:2016,huang:2018,weiland:2018,weiland:2022} and by the \Planck\ team \citep{planck2014-a13,planck2016-l06,planck2016-l05}.
+
+While the \WMAP\ low-level analysis has remained stable since \citet{bennett:2013}, there has been continued work on \Planck\ time-ordered data processing, notably \bp\ for the LFI instrument \citep{bp01}, \sroll2\ for the HFI instrument \citep{delouis:2019}, and \Planck\ DR4 for both LFI and HFI \citep[\npipe,][]{npipe}. The LFI instrument in particular has had several systematics mitigated by improved analysis, particularly a smoothed gain solution and improved noise model \citep{npipe,bp06,bp07,bp10}. When comparing \WMAP\ \K-band with the \Planck\ LFI data, the residuals are mainly characterized by \WMAP's poorly measured modes, which can be seen clearly in Figures 50 and 51 of \citet{npipe} and Figures 4 and 7 of \citet{bp14}.
+
+One of the primary outcomes of the \BP\ project is that end-to-end analysis of a dataset with poorly measured modes can be mitigated by a joint analysis with another dataset that measures these modes well. In particular, \Planck\ LFI had large scale polarizated modes aligned with the instrument's scan strategy, induced by relative errors between different polarization-sensitive radiometers \citep{bp07}. The \bp\ project mitigated this by using \WMAP's polarized \Ka--\V\ maps for component separation, where these modes were well-measured. In order to properly combine these datasets, the polarized maps were the $N_\mathrm{side}=16$ \healpix\footnote{\url{http://healpix.sourceforge.net} \citep{gorski2005}} products with a pixel-pixel covariance matrix that explicitly projected out the poorly measured modes.
+
+In principle, the \Planck\ experiment can be used to identify \WMAP's poorly measured modes in the same way that \WMAP\ removed \Planck's poorly measured modes. This was shown in \citet{bp17}, in which \WMAP\ data was calibrated against the \bp\ sky model, and the resulting maps differed from the \WMAPnine\ products mainly through the lack of the poorly measured modes. This work mainly functioned as a demonstration that the \commanderthree\ framework could be applied to the \WMAP\ dataset, and was not a true end-to-end analysis.
+
+In this work, we present the first joint TOD analysis in the \cosmoglobe\footnote{\url{cosmoglobe.uio.no}} framework, in which we analyze the full \WMAP\ dataset along with time-ordered \Planck\ LFI data. In Sect.~\ref{sec:methods}, we review the \cosmoglobe\ statistical framework and the data processing for \Planck\ LFI and \WMAP\ in the \commanderthree\ pipeline. In Sect.~\ref{sec:freqmaps}, we present the \Planck\ and \WMAP\ joint frequency maps, and compare these frequency maps with the fiducial analyses in Sect.~\ref{sec:comparison}. We discuss outstanding systematic errors and the propagation of uncertainty in Sect.~\ref{sec:systematics}. We summarize our results and lay a path forward in Sect.~\ref{sec:conclusions}.
+
+
+
 \section{\cosmoglobe\ map-making and end-to-end error propagation}
+\label{sec:methods}
+
+
+Describe \cosmoglobe.
 
 \subsection{Statistical framework}
 
+
 Calibration off of sampled sky model versus classic ``calibrate-then-analyze'' paradigm.
+
+Include the Gibbs chain.
 
 \subsection{\planck\ LFI data processing}
 
@@ -203,8 +226,10 @@ Summary of \citet{bp01}, \citet{bp10}.
 Summary of \citet{bp17}, plus changes since publication.
 
 \section{Characteristics of frequency maps}
+\label{sec:freqmaps}
 
 \section{Comparison with BP10 and \textit{WMAP9}}
+\label{sec:comparison}
 
 \subsection{Instrument characterization}
 
@@ -212,8 +237,10 @@ Summary of \citet{bp17}, plus changes since publication.
 
 
 \section{Systematic error and uncertainties}
+\label{sec:systematics}
 
 \section{Conclusions}
+\label{sec:conclusions}
 
 \begin{figure*}
 	\centering
