@@ -187,9 +187,6 @@ A to-do list:
 	\item Fix noise model (\textit{Explained because of the Bessel filter plus linear trend})
 \end{itemize}
 
-This is a continuation of \citet{bp17}.
-
-
 The cosmic microwave background (CMB) is the most direct probe of the initial state of the Universe. Since the initial discovery of the CMB \citep{penzias:1965}, subsequent experiments have continually refined the measurements, to the extent that the \WMAP\ results are generally considered bringing cosmology into the regime of precision science \citep{bennett:2013}. Prior to \WMAP, it was common for CMB experiments to be superseded by more sensitive successors, with the noteworthy exceptions of \COBE/FIRAS and \COBE/DIRBE.
 
 The \planck\ experiment, rather than superseding \WMAP\ completely, consistently used \WMAP\ data in its calibration, component separation, and cosmological analyses. The most direct comparison between \WMAP\ and \Planck\ is through analysis of the two experiments' frequency maps, as \WMAP's \K, \Ka, \Q, \V, and \W\ maps are interleaved by the \Planck\ LFI's 30, 44, and 70\,GHz bands. Since the initial \Planck\ data release, there have been several analyses comparing the two experiments by members of the \WMAP\ team \citep{larson2014,addison:2016,huang:2018,weiland:2018,weiland:2022} and by the \Planck\ team \citep{planck2014-a13,planck2016-l06,planck2016-l05}.
@@ -213,17 +210,96 @@ Describe \cosmoglobe.
 \subsection{Statistical framework}
 
 
-Calibration off of sampled sky model versus classic ``calibrate-then-analyze'' paradigm.
+In the \cosmoglobe\ paradigm, it is simplest to characterize the data's goodness-of-fit to a model,
+\begin{equation}
+	\label{eq:model}
+	\boldsymbol d =\mathsf G\mathsf P[\mathsf B^\mathrm{symm}\mathsf M\boldsymbol a+\mathsf B^\mathrm{4\pi}(\boldsymbol s^\mathrm{orb}
+	+\boldsymbol s^\mathrm{fsl})] + \boldsymbol s^\mathrm{inst}+\boldsymbol n^\mathrm{corr}+\boldsymbol n^\mathrm w,
+\end{equation}
+where $\mathsf G$ is the time-dependent gain in the form of the matrix $\mathrm{diag}(g_t)$, $\mathsf P$ is the $n_p\times n_t$ pointing matrix, 
+$\mathsf B^\mathrm{symm}$ and $\mathsf B^{4\pi}$ are the symmetrized and full symmetric beam, respectively, $\mathsf M$ is the mixing matrix between a given component $c$ with spectral energy distribution $f_c(\nu/\nu_{0,c})$ and a detector $j$ with bandpass $\tau_j(\nu)$, given by
+\begin{equation}
+	\mathsf M_{cj}=\int\d\nu\,\tau_j(\nu)f_c(\nu/\nu_{c,0}).
+\end{equation}
+The maps $\boldsymbol a$ are the component amplitudes, $\boldsymbol s^\mathrm{orb}$ is the orbital dipole induced by the motion of the telescope with respect to the Sun, and $\boldsymbol s^\mathrm{fsl}$ is the time-dependent far sidelobe signal. In the \commanderthree\ \citep{bp03} implementation, $\boldsymbol n^\mathrm{corr}$ is a realization of the correlated noise component whose SED is parametrized by $P(f\mid\boldsymbol\xi_n)$, where $\boldsymbol\xi_n$ generally includes $f_\mathrm{knee}$, a slope $\alpha$, and whose amplitude is fixed by the white noise $\sigma_0$. This model is often augmented, as we will discuss in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}. Similarly, each experiment has particular signals that are specific to the instrument in question, e.g., the 1\,Hz spike in \Planck\ LFI or the horn imbalance in \WMAP, which can be modeled by $\boldsymbol s^\mathrm{inst}$.
 
-Include the Gibbs chain.
+As shown in \citet{bp01}, this allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modelled, the data should be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. Given this model, we can evaluate the likelihood for arbitrary chunks of time-ordered data in the context of the entire model, so that individual chunks of data with poor fits can be more easily identified. In general, the likelihood is written
+\begin{equation}
+	P(\boldsymbol d\mid\boldsymbol\omega)\propto\exp\left(-\frac12\sum_t\frac{(d_t-s^\mathrm{tot}_t(\boldsymbol\omega))^2}{\sigma_0^2}
+	\right).
+\end{equation}
+If $\boldsymbol d\sim\mathcal N(\boldsymbol s^\mathrm{tot},\boldsymbol\sigma_0^2)$ is the correct model for the data, the argument of the exponent is proportional to a $\chi^2$-distribution with $n_\mathrm{TOD}$ degrees of freedom. In the limit of large $n$, a $\chi^2$ distribution is well-approximated by a Gaussian with mean $n$ and variance $2n$. Therefore we define and use the reduced-$\chi^2$ statistic,
+\begin{equation}
+	\chi^2\equiv \frac{\sum_t((d_t-s_t^\mathrm{tot})^2/\sigma_0^2 - n_\mathrm{TOD}}{\sqrt{2n_\mathrm{TOD}}},
+\end{equation}
+which should be given by a standard normal distribution. 
+
+The \cosmoglobe\ Gibbs chain is given by
+\begin{alignat}{11}
+\label{eq:gain_samp_dist}\g &\,\leftarrow          P(\g&\,               \mid \d, &\,    &          &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a, &\,C_{\ell},&\,\boldsymbol\theta)\\
+\label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,           \mid \d, &\,\g, &\,        &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a, &\,C_{\ell},&\,\boldsymbol\theta)\\ 
+\label{eq:xi_samp_dist} \boldsymbol\xi_n &\,\leftarrow        P(\boldsymbol\xi_n&\,            \mid \d, &\,\g, &\,\ncorr, &\,        &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a, &\,C_{\ell},&\,\boldsymbol\theta)\\
+\label{eq:samp_inst}\boldsymbol s^\mathrm{inst} &\,\leftarrow                                 P(\boldsymbol s^\mathrm{inst}&\,             \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,      &\,\boldsymbol\beta, &\,\a, &\,C_{\ell},&\,\boldsymbol\theta)\\
+\label{eq:beta_samp}\boldsymbol\beta &\,\leftarrow                     P(\boldsymbol\beta&\, \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,       &\,    &\,C_{\ell},&\,\boldsymbol\theta)\\
+\a &\,\leftarrow                                   P(\a&\,               \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,    &\,C_{\ell},&\,\boldsymbol\theta)\\
+C_{\ell} &\,\leftarrow                             P(C_{\ell}&\,         \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a,&\,\phantom{C_{\ell}}&\,\boldsymbol\theta)&\label{eq:cl_sampling}\\
+\boldsymbol\theta &\,\leftarrow                             P(\boldsymbol\theta&\,         \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a,&\,C_\ell\phantom{,}&\phantom{\,\boldsymbol\theta})\label{eq:param_samp},
+\end{alignat}
+with each step requiring its own dedicated sampling algorithm, and in the case of \bp, its own publication. The \commanderthree\ pipeline is designed so that results of each Gibbs sample can be easily passed to each other, and that the internal calculations of each step do not directly depend on the inner workings of each other. Therefore, in order to add another data set to the Gibbs chain, one must implement Eqs.~\eqref{eq:gain_samp_dist}--\eqref{eq:samp_inst} for each instrument, as was done in \citet{bp01} and \citet{bp10} for \Planck\ LFI and in \citet{bp17} for \WMAP, or simply pass processed maps with beam, mask, and noise information to Eqs.~\eqref{eq:beta_samp}--\eqref{eq:param_samp}, as was done for the Haslam 408\,MHz map \citep{haslam1982,remazeilles2014} and the \Planck\ 353 and 857\,GHz maps.
+
+Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI and \WMAP\ data, we summarize the TOD processing steps in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}.
+
+
 
 \subsection{\planck\ LFI data processing}
+\label{ssec:lfi}
 
 Summary of \citet{bp01}, \citet{bp10}.
 
 \subsection{\wmap\ data processing}
+\label{ssec:wmap}
+
+As summarized in \citet{bp17}, the TOD processing for \WMAP\ has been
+implemented in the \commanderthree\ Gibbs sampling framework.  The process of
+implementing this module in \commanderthree\ generally involved implementing
+the procedures outlined in \citet{jarosik2003}, \citet{hinshaw2003a},
+\citet{jarosik2007}, and \citet{wmapexsupp}, and implementing a sampling
+algorithm whenver an estimate based off of the data was obtained. \citet{bp17}
+found excellent agreement between our processed maps and the official
+\WMAPnine\ products. The most visually obvious exception is that the
+\citet{bp17} maps have no trace of the poorly-measured modes induced by
+transmission imbalance uncertainties. Although \citet{bp17} focused on the
+\Q-band maps, we show in Sect.~\ref{sec:freqmaps} that this is representative
+of all \WMAP\ bands, with the notable exception of \K-band.
+
+Two notable deviations from the official \WMAPnine\ pipeline and the
+\cosmoglobe\ approach are the gain estimation and correlated noise treatment.
+The \WMAPnine\ gain solution was a parametric fit to the orbital dipole
+measurements as a function of the instrumental housekeeping parameters, as
+detailed in Appendix~A of \citet{wmapexsupp}. This approach elides the
+dependence of a robust Galactic foreground model, and requires both excellent
+knowledge of the radiometers and a clean orbital dipole measurement which can
+be compared to the known signal. \cosmoglobe's sampling approach, as summarized
+in \citet{bp07}, fits the average gain over all detectors and TOD samples to the orbital dipole, but calibrates deviations from the average gain as a function of detector and time to the total sky model. This approach is highly dependent on using a sky model that accurately reflects the data, but makes fewer assumptions regarding the behavior of the detectors in relation to the housekeeping parameters. 
+
+In Figure~\ref{fig:relgain}, we compare the gain solution from the \commanderthree\ output to the official \WMAPnine\ gain solution, obtained by linearly regressing the calibrated and uncalibrated delivered \WMAP\ TODs. With the exception of \K-band, the gains agree to a sub-per cent level. The \K-band deviation is not entirely unexpected, as it is the TOD band with the largest synchrotron contribution, and hence in a joint gain/synchrotron amplitude sampling setup there is exists a degeneracy between \K-band's absolute gain the synchrotron spectral index.
 
 Summary of \citet{bp17}, plus changes since publication.
+
+\begin{figure*}[p]
+  	\centering
+	\includegraphics[width=0.32\textwidth]{figures/inst_023-WMAP_K.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/inst_030-WMAP_Ka.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q1.pdf}\\
+	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q2.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V1.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V2.pdf}\\
+	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W1.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W2.pdf}\\
+	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W3.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W4.pdf}
+	\caption{Instrument parameters.}        
+\end{figure*}
 
 \section{Characteristics of frequency maps}
 \label{sec:freqmaps}
@@ -260,20 +336,6 @@ Summary of \citet{bp17}, plus changes since publication.
 	\caption{Differences between Commander-processed chains and official maps (BP10 and WMAP9)}
 \end{figure*}
 
-\begin{figure*}[p]
-  	\centering
-	\includegraphics[width=0.32\textwidth]{figures/inst_023-WMAP_K.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_030-WMAP_Ka.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q1.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q2.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V1.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V2.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W1.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W2.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W3.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W4.pdf}
-	\caption{Instrument parameters.}        
-\end{figure*}
 
 
 
