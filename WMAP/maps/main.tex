@@ -235,7 +235,7 @@ If $\boldsymbol d\sim\mathcal N(\boldsymbol s^\mathrm{tot},\boldsymbol\sigma_0^2
 which should be given by a standard normal distribution. 
 
 The \cosmoglobe\ Gibbs chain is given by
-\begin{alignat}{11}
+\begin{alignat}{10}
 \label{eq:gain_samp_dist}\g &\,\leftarrow          P(\g&\,               \mid \d, &\,    &          &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a, &\,C_{\ell},&\,\boldsymbol\theta)\\
 \label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,           \mid \d, &\,\g, &\,        &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a, &\,C_{\ell},&\,\boldsymbol\theta)\\ 
 \label{eq:xi_samp_dist} \boldsymbol\xi_n &\,\leftarrow        P(\boldsymbol\xi_n&\,            \mid \d, &\,\g, &\,\ncorr, &\,        &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\a, &\,C_{\ell},&\,\boldsymbol\theta)\\
@@ -284,7 +284,11 @@ in \citet{bp07}, fits the average gain over all detectors and TOD samples to the
 
 In Figure~\ref{fig:relgain}, we compare the gain solution from the \commanderthree\ output to the official \WMAPnine\ gain solution, obtained by linearly regressing the calibrated and uncalibrated delivered \WMAP\ TODs. With the exception of \K-band, the gains agree to a sub-per cent level. The \K-band deviation is not entirely unexpected, as it is the TOD band with the largest synchrotron contribution, and hence in a joint gain/synchrotron amplitude sampling setup there is exists a degeneracy between \K-band's absolute gain the synchrotron spectral index.
 
-Summary of \citet{bp17}, plus changes since publication.
+The second main deviation is in the treatment the noise power spectra. As shown in Sect~2.5 of \citet{jarosik2003}, the noise autocorrelation spectrum is fit on a year-by-year basis to a polynomial in $\log(\Delta t)$, where $\Delta t$ is the time lag between data points. This method is very similar to the \commanderthree\ approach, which fits for the power spectrum in Fourier space using a correlated noise model of the form $\sigma_0^2(f/f_\mathrm{knee})^{\alpha}$. Properly parameterized, these two approaches should yield similar results, albeit with different levels of uncertainty and time resolution. However, we have confirmed that in many cases the simple $1/f$ noise model does not fit the signal-subtracted TOD, yielding $\chi^2$ values that are up to $10\sigma$ discrepant from their expected values.
+[Show, discuss figure with the PSDs, residual spectrum, and Bessel filter.]
+
+Deviations from the $1/f$ model consist either of a linear increase or downturn above 10\,Hz. This can be partially explained by the use of a two pole Bessel low-pass filter just prior to signal quantization, which introduces a 2.62\% correlation between 25.6\,ms sample integrations \citep[][Sect.~5.3]{jarosik2003:MAP}. The exact form of the Bessel filter was not used on flight data, but rather the parametric fit as discussed above. However, the filter is designed to reduce the signal by half at 100\,Hz, and as such has a negligible effect. 
+
 
 \begin{figure*}[p]
   	\centering
