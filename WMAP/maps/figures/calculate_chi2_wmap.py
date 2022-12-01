@@ -91,6 +91,7 @@ for freqband, band, Nobs in zip(freqs, bands, Nobs_list):
             sigma0_diff = np.std(tod[1:] - tod[:-1]) / np.sqrt(2)
 
 
+            ps_high = np.histogram(freq, bins=bins_high, weights=p)[0] / nmodes_high
             #p0 = (3, -1e-2)
             p0 = (3, 1e-2)
             popt, pcov = curve_fit(one_over_f, bin_freqs_high, ps_high, p0=p0, sigma=ps_high/np.sqrt(nmodes_high))
