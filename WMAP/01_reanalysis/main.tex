@@ -285,6 +285,12 @@ transmission imbalance uncertainties. Although \citet{bp17} focused on the
 \Q-band maps, we show in Sect.~\ref{sec:freqmaps} that this is representative
 of all \WMAP\ bands, with the notable exception of \K-band.
 
+The data model adopted in \citet{hinshaw2003a} can be written in raw digital units (du) as
+\begin{equation}
+	\d = \mathsf{GPBM}\boldsymbol a+\boldsymbol n+\boldsymbol b,
+\end{equation}
+where $\boldsymbol b$ is the instrumental baseline and $\boldsymbol n$ is the total instrumental noise. As detailed in \citet{bp06}, \commanderthree\ divides the noise into $\n=\n^\mathrm w+\n^\mathrm{corr}$, a white noise term and a correlated noise term. By definition, the white noise does not have any correlations between adjacent pixels, so that any pixel-pixel covariance should be fully described by realizations of the $\n^\mathrm{corr}$ timestream.
+
 Three notable deviations from the official \WMAPnine\ pipeline and the
 \cosmoglobe\ approach are the gain estimation, the correlated noise treatment, and the data fraction used.
 The \WMAPnine\ gain solution was a parametric fit to the orbital dipole
@@ -319,7 +325,12 @@ Deviations from the $1/f$ model consist either of a linear increase or downturn 
 	\label{fig:inst_params}
 \end{figure*}
 
-The third main difference in the \Cosmoglobe\ treatment is the amount of data used. We split the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N=23$ for \V--\W. However, \citet{wmapexsupp} lists a series of flagged events, which we isolated to their own TOD segments. When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led to unflagged data to be discarded. A similar problem occurred when $>10\%$ of the TOD was flagged. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite on their face acceptable. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data can be entirely accounted for by the cuts described in this paragraph.
+The third main difference in the \Cosmoglobe\ treatment is the amount of data used, and the size of individual scans used. 
+As shown in \citet{bp03}, a large fraction of \commander's computational time is spent performing FFTs on individual scans. Rather than truncating datastreams to have lengths equal to ``magic numbers'' for which \texttt{FFTW} \citep{FFTW05} is fastest, as in \citet{bp03}, 
+we split the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N=23$ for \V--\W. This yields scans with lengths of 6.21 days for \K- and \Ka-band, 4.97 days for \Q-band, 7.46 days for \V-band, and 4.97 days for \W-band.
+These datastream lengths gg:
+
+\citet{wmapexsupp} lists a series of flagged events, which we isolated to their own TOD segments. When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led to unflagged data to be discarded. A similar problem occurred when $>10\%$ of the TOD was flagged. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite on their face acceptable. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data can be entirely accounted for by the cuts described in this paragraph.
 
 \begin{table}
 \caption{Flagging statistics}              % title of Table
@@ -390,7 +401,17 @@ I also want to put a bit here on why the low-$\ell$ approach needed to be done s
 
 Note that LFI's 30 and 70\,GHz $QU$ correlation is $\sim0.1$, whereas 44\,GHz is much larger, $\sim0.5$. This discrepancy is due to the number of horns with differing polarization orientation. Both 30 and 70\,GHz have an even number of horns, allowing for pairs of datastreams to be combined to give independent polarization measurements. Conversely, 44\,GHz has one horn pair and an unpaired horn, the latter of which induces more correlation in the $QU$ observation matrix. An example for \Ka\ and 30\,GHz is shown in Fig.~\ref{fig:rho_qu}. Aside from the obvious morphological changes due to the two experiments' different observing strategies, the magnitude of \WMAP's correlation is much larger than \Planck's.
 
-The \BP\ project took this covariance structure into account using the dense $N_\mathrm{side}=16$ noise covariance matrix provided by the \WMAP\ team.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/ninv_info.html}} Properly sampled correlated noise only leaves white nosie in the maps, so the noise properties of each map's sample do not require a dense pixel-pixel covariance, even at low resolution \citep{bp01, bp10}. The dense noise covariance matrix also explicitly projected out the poorly-measured imbalance modes, but because we find no trace of these modes in our sky maps or residual maps, this treatment is not necessary in our approach. However, the correlation between Stokes $Q$ and $U$ was not taken into account in the \BP\ LFI analysis. This was not a significant oversight in the LFI analysis because the 30 and 70\,GHz maps only had a 10\% correlation, and 44\,GHz's 50\% correlation was subdominant to other systematic effects. We have updated \commanderthree\ to take $QU$ correlation into account for LFI.
+The \BP\ project took this covariance structure into account using the dense $N_\mathrm{side}=16$ noise covariance matrix provided by the \WMAP\ team.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/ninv_info.html}} Properly sampled correlated noise only leaves white nosie in the maps, so the noise properties of each map's sample do not require a dense pixel-pixel covariance, even at low resolution \citep{bp01, bp10}. 
+The \WMAPnine\ inverse noise covariance matrices were computed using the full time-space noise matrix $\mathsf N=\mathsf N^\mathrm w+\mathsf N^\mathrm{corr}$, so the full pixel-pixel covariance matrix $\Sigma^{-1}=\mathsf P^T\mathsf N^{-1}\mathsf P$ took into account the correlation between neighboring samples. The \cosmoglobe\ maps, by subtracting a realization of correlated noise before mapmaking, estimates an inerse noise covariance matrix
+\begin{equation}
+	\Sigma^{-1}_{pp'}
+	=\sum_{t_1,t_2}\mathsf P_{t_1,p_1}^T\mathsf N_{t_1,t_2}^{-1}\mathsf P_{t_2,p_2}
+	=\sum_t\mathsf P_{t,p_1}^T\mathsf N_{t,t}^{-1}\mathsf P_{t,p_2}
+\end{equation}
+
+How much off-diagonal pixel covariance is there here?
+
+dense noise covariance matrix also explicitly projected out the poorly-measured imbalance modes, but because we find no trace of these modes in our sky maps or residual maps, this treatment is not necessary in our approach. However, the correlation between Stokes $Q$ and $U$ was not taken into account in the \BP\ LFI analysis. This was not a significant oversight in the LFI analysis because the 30 and 70\,GHz maps only had a 10\% correlation, and 44\,GHz's 50\% correlation was subdominant to other systematic effects. We have updated \commanderthree\ to take $QU$ correlation into account for LFI.
 
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/rho_QU.pdf}
