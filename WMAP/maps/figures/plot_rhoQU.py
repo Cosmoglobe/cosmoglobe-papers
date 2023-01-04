@@ -12,7 +12,7 @@ rho_30 = d_30[2]/np.sqrt(d_30[0]*d_30[1])
 
 cmap = 'RdBu_r'
 cg.plot(rho_Ka, min=-0.5, max=0.5, llabel='\mathit{Ka}', rlabel=r'\rho_{QU}',
-    sub=(2,1,1), cmap=cmap, width=4)
+    sub=(2,1,1), cmap=cmap, width=4, xsize=1000)
 cg.plot(rho_30, min=-0.1, max=0.1, llabel='30', rlabel=r'\rho_{QU}',
-    sub=(2,1,2), cmap=cmap)
+    sub=(2,1,2), cmap=cmap, width=4, xsize=1000)
 plt.savefig('rho_QU.pdf')
