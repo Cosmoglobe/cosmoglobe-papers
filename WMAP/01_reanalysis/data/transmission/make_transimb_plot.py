@@ -81,31 +81,32 @@ wmapW3rms = [scale*0.00062, scale*0.00041]
 wmapW4mu = [0.02311, 0.02054]
 wmapW4rms = [scale*0.00380, scale*0.00202]
 
-print "K11 & ", '% 8.5f' % muK[0], "\pm", '% 8.5f' % rmsK[0], " & ", '% 8.5f' % wmapKmu[0], "\pm", '% 8.5f' % wmapKrms[0], "\cr"
-print "K12 & ", '% 8.5f' % muK[1], "\pm", '% 8.5f' % rmsK[1], " & ", '% 8.5f' % wmapKmu[1], "\pm", '% 8.5f' % wmapKrms[1], "\cr"
+print "K11 & ", '% 8.5f' % muK[0], "\pm", '% 8.5f' % (1/scale * rmsK[0]), " & ", '% 8.5f' % wmapKmu[0], "\pm", '% 8.5f' % (1/scale * wmapKrms[0]), "\cr"
+print "K12 & ", '% 8.5f' % muK[1], "\pm", '% 8.5f' % (1/scale * rmsK[1]), " & ", '% 8.5f' % wmapKmu[1], "\pm", '% 8.5f' % (1/scale * wmapKrms[1]), "\cr"
 
-print "Ka11 & ", '% 8.5f' % muKa[0], "\pm", '% 8.5f' % rmsKa[0], " & ", '% 8.5f' % wmapKamu[0], "\pm", '% 8.5f' % wmapKrms[0], "\cr"
-print "Ka12 & ", '% 8.5f' % muKa[1], "\pm", '% 8.5f' % rmsKa[1], " & ", '% 8.5f' % wmapKamu[1], "\pm", '% 8.5f' % wmapKarms[1], "\cr"
+print "Ka11 & ", '% 8.5f' % muKa[0], "\pm", '% 8.5f' % (1/scale * rmsKa[0]), " & ", '% 8.5f' % wmapKamu[0], "\pm", '% 8.5f' % (1/scale * wmapKrms[0]), "\cr"
+print "Ka12 & ", '% 8.5f' % muKa[1], "\pm", '% 8.5f' % (1/scale * rmsKa[1]), " & ", '% 8.5f' % wmapKamu[1], "\pm", '% 8.5f' % (1/scale * wmapKarms[1]), "\cr"
 
-print "Q11 & ", '% 8.5f' % muQ1[0], "\pm", '% 8.5f' % rmsQ1[0], " & ", '% 8.5f' % wmapQ1mu[0], "\pm", '% 8.5f' % wmapQ1rms[0], "\cr"
-print "Q12 & ", '% 8.5f' % muQ1[1], "\pm", '% 8.5f' % rmsQ1[1], " & ", '% 8.5f' % wmapQ1mu[1], "\pm", '% 8.5f' % wmapQ1rms[1], "\cr"
-print "Q21 & ", '% 8.5f' % muQ2[0], "\pm", '% 8.5f' % rmsQ2[0], " & ", '% 8.5f' % wmapQ2mu[0], "\pm", '% 8.5f' % wmapQ2rms[0], "\cr"
-print "Q22 & ", '% 8.5f' % muQ2[1], "\pm", '% 8.5f' % rmsQ2[1], " & ", '% 8.5f' % wmapQ2mu[1], "\pm", '% 8.5f' % wmapQ2rms[1], "\cr"
+print "Q11 & ", '% 8.5f' % muQ1[0], "\pm", '% 8.5f' % (1/scale * rmsQ1[0]), " & ", '% 8.5f' % wmapQ1mu[0], "\pm", '% 8.5f' % (1/scale * wmapQ1rms[0]), "\cr"
+print "Q12 & ", '% 8.5f' % muQ1[1], "\pm", '% 8.5f' % (1/scale * rmsQ1[1]), " & ", '% 8.5f' % wmapQ1mu[1], "\pm", '% 8.5f' % (1/scale * wmapQ1rms[1]), "\cr"
+print "Q21 & ", '% 8.5f' % muQ2[0], "\pm", '% 8.5f' % (1/scale * rmsQ2[0]), " & ", '% 8.5f' % wmapQ2mu[0], "\pm", '% 8.5f' % (1/scale * wmapQ2rms[0]), "\cr"
+print "Q22 & ", '% 8.5f' % muQ2[1], "\pm", '% 8.5f' % (1/scale * rmsQ2[1]), " & ", '% 8.5f' % wmapQ2mu[1], "\pm", '% 8.5f' % (1/scale * wmapQ2rms[1]), "\cr"
 
-print "V11 & ", '% 8.5f' % muV1[0], "\pm", '% 8.5f' % rmsV1[0], " & ", '% 8.5f' % wmapV1mu[0], "\pm", '% 8.5f' % wmapV1rms[0], "\cr"
-print "V12 & ", '% 8.5f' % muV1[1], "\pm", '% 8.5f' % rmsV1[1], " & ", '% 8.5f' % wmapV1mu[1], "\pm", '% 8.5f' % wmapV1rms[1], "\cr"
-print "V21 & ", '% 8.5f' % muV2[0], "\pm", '% 8.5f' % rmsV2[0], " & ", '% 8.5f' % wmapV2mu[0], "\pm", '% 8.5f' % wmapV2rms[0], "\cr"
-print "V22 & ", '% 8.5f' % muV2[1], "\pm", '% 8.5f' % rmsV2[1], " & ", '% 8.5f' % wmapV2mu[1], "\pm", '% 8.5f' % wmapV2rms[1], "\cr"
+print "V11 & ", '% 8.5f' % muV1[0], "\pm", '% 8.5f' % (1/scale * rmsV1[0]), " & ", '% 8.5f' % wmapV1mu[0], "\pm", '% 8.5f' % (1/scale * wmapV1rms[0]), "\cr"
+print "V12 & ", '% 8.5f' % muV1[1], "\pm", '% 8.5f' % (1/scale * rmsV1[1]), " & ", '% 8.5f' % wmapV1mu[1], "\pm", '% 8.5f' % (1/scale * wmapV1rms[1]), "\cr"
+print "V21 & ", '% 8.5f' % muV2[0], "\pm", '% 8.5f' % (1/scale * rmsV2[0]), " & ", '% 8.5f' % wmapV2mu[0], "\pm", '% 8.5f' % (1/scale * wmapV2rms[0]), "\cr"
+print "V22 & ", '% 8.5f' % muV2[1], "\pm", '% 8.5f' % (1/scale * rmsV2[1]), " & ", '% 8.5f' % wmapV2mu[1], "\pm", '% 8.5f' % (1/scale * wmapV2rms[1]), "\cr"
 
-print "W11 & ", '% 8.5f' % muW1[0], "\pm", '% 8.5f' % rmsW1[0], " & ", '% 8.5f' % wmapW1mu[0], "\pm", '% 8.5f' % wmapW1rms[0], "\cr"
-print "W12 & ", '% 8.5f' % muW1[1], "\pm", '% 8.5f' % rmsW1[1], " & ", '% 8.5f' % wmapW1mu[1], "\pm", '% 8.5f' % wmapW1rms[1], "\cr"
-print "W21 & ", '% 8.5f' % muW2[0], "\pm", '% 8.5f' % rmsW2[0], " & ", '% 8.5f' % wmapW2mu[0], "\pm", '% 8.5f' % wmapW2rms[0], "\cr"
-print "W22 & ", '% 8.5f' % muW2[1], "\pm", '% 8.5f' % rmsW2[1], " & ", '% 8.5f' % wmapW2mu[1], "\pm", '% 8.5f' % wmapW2rms[1], "\cr"
-print "W31 & ", '% 8.5f' % muW3[0], "\pm", '% 8.5f' % rmsW3[0], " & ", '% 8.5f' % wmapW3mu[0], "\pm", '% 8.5f' % wmapW3rms[0], "\cr"
-print "W32 & ", '% 8.5f' % muW3[1], "\pm", '% 8.5f' % rmsW3[1], " & ", '% 8.5f' % wmapW3mu[1], "\pm", '% 8.5f' % wmapW3rms[1], "\cr"
-print "W41 & ", '% 8.5f' % muW4[0], "\pm", '% 8.5f' % rmsW4[0], " & ", '% 8.5f' % wmapW4mu[0], "\pm", '% 8.5f' % wmapW4rms[0], "\cr"
-print "W42 & ", '% 8.5f' % muW4[1], "\pm", '% 8.5f' % rmsW4[1], " & ", '% 8.5f' % wmapW4mu[1], "\pm", '% 8.5f' % wmapW4rms[1], "\cr"
+print "W11 & ", '% 8.5f' % muW1[0], "\pm", '% 8.5f' % (1/scale * rmsW1[0]), " & ", '% 8.5f' % wmapW1mu[0], "\pm", '% 8.5f' % (1/scale * wmapW1rms[0]), "\cr"
+print "W12 & ", '% 8.5f' % muW1[1], "\pm", '% 8.5f' % (1/scale * rmsW1[1]), " & ", '% 8.5f' % wmapW1mu[1], "\pm", '% 8.5f' % (1/scale * wmapW1rms[1]), "\cr"
+print "W21 & ", '% 8.5f' % muW2[0], "\pm", '% 8.5f' % (1/scale * rmsW2[0]), " & ", '% 8.5f' % wmapW2mu[0], "\pm", '% 8.5f' % (1/scale * wmapW2rms[0]), "\cr"
+print "W22 & ", '% 8.5f' % muW2[1], "\pm", '% 8.5f' % (1/scale * rmsW2[1]), " & ", '% 8.5f' % wmapW2mu[1], "\pm", '% 8.5f' % (1/scale * wmapW2rms[1]), "\cr"
+print "W31 & ", '% 8.5f' % muW3[0], "\pm", '% 8.5f' % (1/scale * rmsW3[0]), " & ", '% 8.5f' % wmapW3mu[0], "\pm", '% 8.5f' % (1/scale * wmapW3rms[0]), "\cr"
+print "W32 & ", '% 8.5f' % muW3[1], "\pm", '% 8.5f' % (1/scale * rmsW3[1]), " & ", '% 8.5f' % wmapW3mu[1], "\pm", '% 8.5f' % (1/scale * wmapW3rms[1]), "\cr"
+print "W41 & ", '% 8.5f' % muW4[0], "\pm", '% 8.5f' % (1/scale * rmsW4[0]), " & ", '% 8.5f' % wmapW4mu[0], "\pm", '% 8.5f' % (1/scale * wmapW4rms[0]), "\cr"
+print "W42 & ", '% 8.5f' % muW4[1], "\pm", '% 8.5f' % (1/scale * rmsW4[1]), " & ", '% 8.5f' % wmapW4mu[1], "\pm", '% 8.5f' % (1/scale * wmapW4rms[1]), "\cr"
 
+df 
 
 vmin = -110
 vmax =  160
