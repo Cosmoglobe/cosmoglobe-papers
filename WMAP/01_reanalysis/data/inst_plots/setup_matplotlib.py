@@ -17,7 +17,8 @@ params = {'backend': 'pdf',
           'font.sans-serif':'FreeSans'}
 
 # use of Sans Serif also in math mode
-rc('text.latex', preamble='\usepackage{sfmath}')
+#rc('text.latex', preamble='\usepackage{sfmath}')
+#rc('text.latex', preamble='\usepackage{sfmath}')
 
 rcParams.update(params)
 
