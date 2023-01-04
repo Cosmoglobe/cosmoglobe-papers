@@ -1,6 +1,8 @@
 import numpy as np
 import healpy as hp
 import matplotlib.pyplot as plt
+import cosmoglobe as cg
+import astropy.units as u
 
 from glob import glob
 
@@ -33,32 +35,42 @@ wmap_maps = [
 '/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W2_v5.fits',
 '/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W3_v5.fits',
 '/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W4_v5.fits']
-CG_DIR = '/mn/stornext/d16/cmbco/bp/dwatts/WMAP/'
 CG_DIR = '/mn/stornext/d5/data/duncanwa/WMAP'
 
 cg_maps = [
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_023-WMAP_K_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_030-WMAP_Ka_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_040-WMAP_Q1_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_040-WMAP_Q2_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_060-WMAP_V1_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_060-WMAP_V2_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_090-WMAP_W1_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_090-WMAP_W2_map_c0001_k000001.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_090-WMAP_W3_map_c0001_k000001.fits']
-#f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_090-WMAP_W4_map_c0001_k000002.fits']
+ f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_023-WMAP_K_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_030-WMAP_Ka_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_040-WMAP_Q1_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_040-WMAP_Q2_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_060-WMAP_V1_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_060-WMAP_V2_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W1_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W2_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W3_map_c0001_k000002.fits',
+f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W4_map_c0001_k000002.fits']
 
 bands = ['K', 'Ka', 'Q1', 'Q2', 'V1', 'V2', 'W1', 'W2', 'W3', 'W4']
+
+x,y,z = hp.pix2vec(512, np.arange(12*512**2))
+dip_W = -0.233*x -2.222*y + 2.504*z
+
 
 for i in range(len(cg_maps)):
     m_WMAP = hp.read_map(wmap_maps[i])*1e3
     m_CG = hp.read_map(cg_maps[i])*1e3
-    m_CG = hp.remove_dipole(m_CG, gal_cut = 50)
+    m_CG -= dip_W*1e3
+    mono_CG = hp.fit_monopole(m_CG, gal_cut=50)
+    mono_WM = hp.fit_monopole(m_WMAP, gal_cut=50)
+    m_WMAP = m_WMAP - mono_WM + mono_CG
     f_WMAP = nmt.NmtField(mask, [m_WMAP])
     f_CG = nmt.NmtField(mask, [m_CG])
+    f_diff = nmt.NmtField(mask, [m_CG - m_WMAP])
     Clhat_W = nmt.compute_full_master(f_WMAP, f_WMAP, b)[0]
     Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)[0]
+    Clhat_diff = nmt.compute_full_master(f_diff, f_diff, b)[0]
     ell = np.arange(len(Clhat_C))
+
+
 
     plt.figure()
     plt.loglog(ell[2:], Clhat_W[2:], label='WMAP')
@@ -69,6 +81,15 @@ for i in range(len(cg_maps)):
     plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
     plt.xlabel(r'$\ell$')
     plt.savefig(f'{bands[i]}_TT.png', bbox_inches='tight')
+
+    plt.figure()
+    plt.loglog(ell[2:], abs(Clhat_diff[2:]), label='difference')
+    plt.loglog(ell[2:], -abs(Clhat_diff[2:]), 'C0--')
+    plt.title(bands[i])
+    plt.legend()
+    plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
+    plt.xlabel(r'$\ell$')
+    plt.savefig(f'{bands[i]}_TT_delta.png', bbox_inches='tight')
 
     plt.figure()
     inds = (ell > 220)
@@ -87,7 +108,7 @@ for i in range(len(cg_maps)):
     plt.ylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
     plt.xlabel(r'$\ell$')
     plt.title(bands[i])
-    plt.ylim([0.6, 1.4])
+    plt.ylim([0.8, 1.4])
     plt.savefig(f'{bands[i]}_TT_ratio.png', bbox_inches='tight')
     plt.close('all')
 
