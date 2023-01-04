@@ -39,7 +39,7 @@ vmax =  160
 
 
 # Create the plot
-fig = plt.figure(figsize=(cm2inch(width), 1.4*cm2inch(width)))
+fig = plt.figure(figsize=(cm2inch(width), 1.35*cm2inch(width)))
 # this should be changed for making a panel of multiple figures
 #ax1 = fig.add_subplot(211)
 
