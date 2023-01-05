@@ -16,39 +16,16 @@ mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=colors)
 width = 19.0
 
 # Load data
-dataK = np.loadtxt('baseslope_CG_023-WMAP_K_v1.dat')
-dataKa = np.loadtxt('baseslope_CG_030-WMAP_Ka_v1.dat')
-dataQ1 = np.loadtxt('baseslope_CG_040-WMAP_Q1_v1.dat')
-dataQ2 = np.loadtxt('baseslope_CG_040-WMAP_Q2_v1.dat')
-dataV1 = np.loadtxt('baseslope_CG_060-WMAP_V1_v1.dat')
-dataV2 = np.loadtxt('baseslope_CG_060-WMAP_V2_v1.dat')
-dataW1 = np.loadtxt('baseslope_CG_090-WMAP_W1_v1.dat')
-dataW2 = np.loadtxt('baseslope_CG_090-WMAP_W2_v1.dat')
-dataW3 = np.loadtxt('baseslope_CG_090-WMAP_W3_v1.dat')
-dataW4 = np.loadtxt('baseslope_CG_090-WMAP_W4_v1.dat')
-
-gainK = np.loadtxt('gain_CG_023-WMAP_K_v1.dat')
-gainKa = np.loadtxt('gain_CG_030-WMAP_Ka_v1.dat')
-gainQ1 = np.loadtxt('gain_CG_040-WMAP_Q1_v1.dat')
-gainQ2 = np.loadtxt('gain_CG_040-WMAP_Q2_v1.dat')
-gainV1 = np.loadtxt('gain_CG_060-WMAP_V1_v1.dat')
-gainV2 = np.loadtxt('gain_CG_060-WMAP_V2_v1.dat')
-gainW1 = np.loadtxt('gain_CG_090-WMAP_W1_v1.dat')
-gainW2 = np.loadtxt('gain_CG_090-WMAP_W2_v1.dat')
-gainW3 = np.loadtxt('gain_CG_090-WMAP_W3_v1.dat')
-gainW4 = np.loadtxt('gain_CG_090-WMAP_W4_v1.dat')
-
-#dataK[:,1:5] = dataK[:,1:5] / gainK[:,1:5]
-#dataKa[:,1:5] = dataKa[:,1:5] / gainKa[:,1:5]
-#dataQ1[:,1:5] = dataQ1[:,1:5] / gainQ1[:,1:5]
-#dataQ2[:,1:5] = dataQ2[:,1:5] / gainQ2[:,1:5]
-#dataV1[:,1:5] = dataV1[:,1:5] / gainV1[:,1:5]
-#dataV2[:,1:5] = dataV2[:,1:5] / gainV2[:,1:5]
-#dataW1[:,1:5] = dataW1[:,1:5] / gainW1[:,1:5]
-#dataW2[:,1:5] = dataW2[:,1:5] / gainW2[:,1:5]
-#dataW3[:,1:5] = dataW3[:,1:5] / gainW3[:,1:5]
-#dataW4[:,1:5] = dataW4[:,1:5] / gainW4[:,1:5]
-
+dataK = np.loadtxt('chisq_CG_023-WMAP_K_v1.dat')
+dataKa = np.loadtxt('chisq_CG_030-WMAP_Ka_v1.dat')
+dataQ1 = np.loadtxt('chisq_CG_040-WMAP_Q1_v1.dat')
+dataQ2 = np.loadtxt('chisq_CG_040-WMAP_Q2_v1.dat')
+dataV1 = np.loadtxt('chisq_CG_060-WMAP_V1_v1.dat')
+dataV2 = np.loadtxt('chisq_CG_060-WMAP_V2_v1.dat')
+dataW1 = np.loadtxt('chisq_CG_090-WMAP_W1_v1.dat')
+dataW2 = np.loadtxt('chisq_CG_090-WMAP_W2_v1.dat')
+dataW3 = np.loadtxt('chisq_CG_090-WMAP_W3_v1.dat')
+dataW4 = np.loadtxt('chisq_CG_090-WMAP_W4_v1.dat')
 
 
 maskK = np.loadtxt('mask_CG_023-WMAP_K_v1.dat')
@@ -183,11 +160,11 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"K111", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"K111", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax1.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.ylim([-9, 15]);
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
 
@@ -205,8 +182,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
 plt.setp( ax2.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"K112", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"K112", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax3 = plt.subplot2grid((10, 4), (0, 2), sharey=ax1)
 plt.plot(dataK[:,0],dataK[:,3], linewidth=1, color='black')
@@ -214,8 +191,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax3.get_xticklabels(), visible=False)
 plt.setp( ax3.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"K123", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"K123", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax4 = plt.subplot2grid((10, 4), (0, 3), sharey=ax1)
 plt.plot(dataK[:,0],dataK[:,4], linewidth=1, color='black', label='CG')
@@ -223,8 +200,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax4.get_xticklabels(), visible=False)
 plt.setp( ax4.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"K124", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"K124", fontsize=10)
+plt.ylim([-9, 15]);
 
 
 
@@ -237,14 +214,14 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
 plt.setp( ax5.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Ka111", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"Ka111", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax5.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
-#plt.yticks([0.73,0.77], [r"$0.73$", r"$0.77$"])
+#plt.yticks([0.73,0.77], [r"$0.76$", r"$0.77$"])
 
 ax6 = plt.subplot2grid((10, 4), (1, 1), sharey=ax5)
 plt.plot(dataKa[:,0],dataKa[:,2], linewidth=1, color='black')
@@ -252,8 +229,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
 plt.setp( ax6.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Ka112", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Ka112", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax7 = plt.subplot2grid((10, 4), (1, 2), sharey=ax5)
 plt.plot(dataKa[:,0],dataKa[:,3], linewidth=1, color='black')
@@ -261,8 +238,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax7.get_xticklabels(), visible=False)
 plt.setp( ax7.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Ka123", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Ka123", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax8 = plt.subplot2grid((10, 4), (1, 3), sharey=ax5)
 plt.plot(dataKa[:,0],dataKa[:,4], linewidth=1, color='black')
@@ -270,8 +247,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax8.get_xticklabels(), visible=False)
 plt.setp( ax8.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Ka124", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Ka124", fontsize=10)
+plt.ylim([-9, 15]);
 
 ###############
 #   Q1-band
@@ -283,11 +260,11 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax9.get_xticklabels(), visible=False)
 plt.setp( ax9.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q111", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"Q111", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax9.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.ylim([-9, 15]);
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
 ax10 = plt.subplot2grid((10, 4), (2, 1), sharey=ax9)
@@ -296,8 +273,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax10.get_xticklabels(), visible=False)
 plt.setp( ax10.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q112", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Q112", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax11 = plt.subplot2grid((10, 4), (2, 2), sharey=ax9)
 plt.plot(dataQ1[:,0],dataQ1[:,3], linewidth=1, color='black')
@@ -305,8 +282,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax11.get_xticklabels(), visible=False)
 plt.setp( ax11.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q123", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Q123", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax12 = plt.subplot2grid((10, 4), (2, 3), sharey=ax9)
 plt.plot(dataQ1[:,0],dataQ1[:,4], linewidth=1, color='black')
@@ -314,8 +291,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax12.get_xticklabels(), visible=False)
 plt.setp( ax12.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q124", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Q124", fontsize=10)
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
 
@@ -329,11 +306,11 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax13.get_xticklabels(), visible=False)
 plt.setp( ax13.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q211", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"Q211", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax13.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.ylim([-9, 15]);
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
 ax14 = plt.subplot2grid((10, 4), (3, 1), sharey=ax13)
 plt.plot(dataQ2[:,0],dataQ2[:,2], linewidth=1, color='black')
@@ -341,8 +318,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax14.get_xticklabels(), visible=False)
 plt.setp( ax14.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q212", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Q212", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax15 = plt.subplot2grid((10, 4), (3, 2), sharey=ax13)
 plt.plot(dataQ2[:,0],dataQ2[:,3], linewidth=1, color='black')
@@ -350,8 +327,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax15.get_xticklabels(), visible=False)
 plt.setp( ax15.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q223", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Q223", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax16 = plt.subplot2grid((10, 4), (3, 3), sharey=ax13)
 plt.plot(dataQ2[:,0],dataQ2[:,4], linewidth=1, color='black')
@@ -359,8 +336,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax16.get_xticklabels(), visible=False)
 plt.setp( ax16.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"Q224", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"Q224", fontsize=10)
+plt.ylim([-9, 15]);
 
 
 ###############
@@ -373,12 +350,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax17.get_xticklabels(), visible=False)
 plt.setp( ax17.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V111", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"V111", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax17.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
 ax18 = plt.subplot2grid((10, 4), (4, 1), sharey=ax17)
 plt.plot(dataV1[:,0],dataV1[:,2], linewidth=1, color='black')
@@ -386,8 +363,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax18.get_xticklabels(), visible=False)
 plt.setp( ax18.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V112", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"V112", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax19 = plt.subplot2grid((10, 4), (4, 2), sharey=ax17)
 plt.plot(dataV1[:,0],dataV1[:,3], linewidth=1, color='black')
@@ -395,8 +372,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax19.get_xticklabels(), visible=False)
 plt.setp( ax19.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V123", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"V123", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax20 = plt.subplot2grid((10, 4), (4, 3), sharey=ax17)
 plt.plot(dataV1[:,0],dataV1[:,4], linewidth=1, color='black')
@@ -404,8 +381,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax20.get_xticklabels(), visible=False)
 plt.setp( ax20.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V124", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"V124", fontsize=10)
+plt.ylim([-9, 15]);
 
 
 ###############
@@ -418,12 +395,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax21.get_xticklabels(), visible=False)
 plt.setp( ax21.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V211", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"V211", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax21.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
 ax22 = plt.subplot2grid((10, 4), (5, 1), sharey=ax21)
 plt.plot(dataV2[:,0],dataV2[:,2], linewidth=1, color='black')
@@ -431,8 +408,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax22.get_xticklabels(), visible=False)
 plt.setp( ax22.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V212", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"V212", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax23 = plt.subplot2grid((10, 4), (5, 2), sharey=ax21)
 plt.plot(dataV2[:,0],dataV2[:,3], linewidth=1, color='black')
@@ -440,8 +417,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax23.get_xticklabels(), visible=False)
 plt.setp( ax23.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V223", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"V223", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax24 = plt.subplot2grid((10, 4), (5, 3), sharey=ax21)
 plt.plot(dataV2[:,0],dataV2[:,4], linewidth=1, color='black')
@@ -449,8 +426,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax24.get_xticklabels(), visible=False)
 plt.setp( ax24.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"V224", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"V224", fontsize=10)
+plt.ylim([-9, 15]);
 
 
 
@@ -464,12 +441,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax25.get_xticklabels(), visible=False)
 plt.setp( ax25.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200, 2.8,r"W111", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200, 11.2,r"W111", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax25.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
 #plt.yticks([5,10,15], [r"$5$", r"$10$", r"$15$"])
 
@@ -479,8 +456,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax26.get_xticklabels(), visible=False)
 plt.setp( ax26.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W112", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W112", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax27 = plt.subplot2grid((10, 4), (6, 2), sharey=ax25)
 plt.plot(dataW1[:,0],dataW1[:,3], linewidth=1, color='black')
@@ -488,8 +465,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax27.get_xticklabels(), visible=False)
 plt.setp( ax27.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W123", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W123", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax28 = plt.subplot2grid((10, 4), (6, 3), sharey=ax25)
 plt.plot(dataW1[:,0],dataW1[:,4], linewidth=1, color='black')
@@ -497,8 +474,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax28.get_xticklabels(), visible=False)
 plt.setp( ax28.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W124", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W124", fontsize=10)
+plt.ylim([-9, 15]);
 
 
 ###############
@@ -511,12 +488,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax29.get_xticklabels(), visible=False)
 plt.setp( ax29.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W211", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"W211", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax29.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
 ax30 = plt.subplot2grid((10, 4), (7, 1), sharey=ax29)
 plt.plot(dataW2[:,0],dataW2[:,2], linewidth=1, color='black')
@@ -524,8 +501,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax30.get_xticklabels(), visible=False)
 plt.setp( ax30.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W212", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W212", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax31 = plt.subplot2grid((10, 4), (7, 2), sharey=ax29)
 plt.plot(dataW2[:,0],dataW2[:,3], linewidth=1, color='black')
@@ -533,8 +510,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax31.get_xticklabels(), visible=False)
 plt.setp( ax31.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W223", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W223", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax32 = plt.subplot2grid((10, 4), (7, 3), sharey=ax29)
 plt.plot(dataW2[:,0],dataW2[:,4], linewidth=1, color='black')
@@ -542,8 +519,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax32.get_xticklabels(), visible=False)
 plt.setp( ax32.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W224", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W224", fontsize=10)
+plt.ylim([-9, 15]);
 
 
 ###############
@@ -556,12 +533,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax33.get_xticklabels(), visible=False)
 plt.setp( ax33.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W311", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"W311", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax33.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
 ax34 = plt.subplot2grid((10, 4), (8, 1), sharey=ax33)
 plt.plot(dataW3[:,0],dataW3[:,2], linewidth=1, color='black')
@@ -569,8 +546,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax34.get_xticklabels(), visible=False)
 plt.setp( ax34.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W312", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W312", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax35 = plt.subplot2grid((10, 4), (8, 2), sharey=ax33)
 plt.plot(dataW3[:,0],dataW3[:,3], linewidth=1, color='black')
@@ -578,8 +555,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax35.get_xticklabels(), visible=False)
 plt.setp( ax35.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W323", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W323", fontsize=10)
+plt.ylim([-9, 15]);
 
 ax36 = plt.subplot2grid((10, 4), (8, 3), sharey=ax33)
 plt.plot(dataW3[:,0],dataW3[:,4], linewidth=1, color='black')
@@ -587,8 +564,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax36.get_xticklabels(), visible=False)
 plt.setp( ax36.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W324", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W324", fontsize=10)
+plt.ylim([-9, 15]);
 
 
 ###############
@@ -601,12 +578,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax37.get_xticklabels(), visible=True)
 plt.setp( ax37.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W411", fontsize=10)
-plt.ylabel(r"$b_1$ [du]");
+plt.text(52200,11.2,r"W411", fontsize=10)
+plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax37.yaxis.labelpad = 10*width/17.
-plt.ylim([-4, 4]);
+plt.ylim([-9, 15]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
-plt.yticks([-3,0,3], [r"$-3$", r"$0$", r"$3$"])
+plt.yticks([-6,0,6,12], [r"$-6$", r"$0$", r"$6$",r"$12$"])
 
 #plt.yticks([1.6,2.0,2.4], [r"$1.6$", r"$2.0$", r"$2.4$"])
 
@@ -620,8 +597,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax38.get_xticklabels(), visible=True)
 plt.setp( ax38.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W412", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W412", fontsize=10)
+plt.ylim([-9, 15]);
 
 plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
 plt.xlabel(r"MJD");
@@ -633,8 +610,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax39.get_xticklabels(), visible=True)
 plt.setp( ax39.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W423", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W423", fontsize=10)
+plt.ylim([-9, 15]);
 
 plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])        
 plt.xlabel(r"MJD");
@@ -646,8 +623,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax40.get_xticklabels(), visible=True)
 plt.setp( ax40.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.8,r"W424", fontsize=10)
-plt.ylim([-4, 4]);
+plt.text(52200,11.2,r"W424", fontsize=10)
+plt.ylim([-9, 15]);
 
 plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
 # labels
@@ -691,5 +668,5 @@ for ticklabel in ax37.yaxis.get_ticklabels():
 
 
 # save to pdf with right bounding box
-plt.savefig("instpar_CG_baseslope_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("instpar_CG_chisq_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
 
