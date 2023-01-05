@@ -56,7 +56,7 @@ for b in bands:
             sub=(1,4,3))
         cg.plot(r[3]/np.sqrt(r[1]*r[2]), cmap='RdBu_r', min=-0.5, max=0.5,
             sub=(1,4,4))
-    plt.savefig(f'{b}_std.pdf', bbox_inches='tight')
+    plt.savefig(f'{b}_rms.pdf', bbox_inches='tight')
     plt.close('all')
     
     mu = m1.mean(axis=0)
@@ -82,7 +82,7 @@ for b in bands:
         width=width, xsize=xsize, sub=(1,4,3))
     cg.plot(rho_QU, fwhm=2*u.deg, llabel=r'c_{QU}', cmap='RdBu_r',
         min=-1, max=1, sub=(1,4,4))
-    plt.savefig(f'{b}_rms.pdf', bbox_inches='tight')
+    plt.savefig(f'{b}_std.pdf', bbox_inches='tight')
     plt.close()
 
     cg.plot(mu, sig=0, rlabel=rlabel, llabel='T',
