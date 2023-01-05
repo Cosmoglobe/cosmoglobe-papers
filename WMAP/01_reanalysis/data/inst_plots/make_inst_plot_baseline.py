@@ -47,7 +47,7 @@ for i in range(4):
     inds = np.where(maskQ1[:,i+1] == 1)
     dataQ1[:,i+1] = dataQ1[:,i+1] - N.mean(dataQ1[inds,i+1])
     inds = np.where(maskQ2[:,i+1] == 1)
-    dataQ2[:,i+1] = dataQ2[:,i+1] - N.mean(dataQ2[inds,i+1])
+    dataQ2[:,i+1] = (dataQ2[:,i+1] - N.mean(dataQ2[inds,i+1]))/3
     inds = np.where(maskV1[:,i+1] == 1)
     dataV1[:,i+1] = dataV1[:,i+1] - N.mean(dataV1[inds,i+1])
     inds = np.where(maskV2[:,i+1] == 1)    
@@ -160,10 +160,11 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"K111", fontsize=10)
+plt.text(52200,70,r"K111", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax1.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
 
@@ -181,8 +182,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
 plt.setp( ax2.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"K112", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"K112", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax3 = plt.subplot2grid((10, 4), (0, 2), sharey=ax1)
 plt.plot(dataK[:,0],dataK[:,3], linewidth=1, color='black')
@@ -190,8 +191,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax3.get_xticklabels(), visible=False)
 plt.setp( ax3.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"K123", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"K123", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax4 = plt.subplot2grid((10, 4), (0, 3), sharey=ax1)
 plt.plot(dataK[:,0],dataK[:,4], linewidth=1, color='black', label='CG')
@@ -200,7 +201,7 @@ plt.setp( ax4.get_xticklabels(), visible=False)
 plt.setp( ax4.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 plt.text(52200,0,r"K124", fontsize=10)
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 
 
 
@@ -213,11 +214,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
 plt.setp( ax5.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Ka111", fontsize=10)
+plt.text(52200,70,r"Ka111", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax5.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 #plt.yticks([0.73,0.77], [r"$0.73$", r"$0.77$"])
 
@@ -227,8 +229,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
 plt.setp( ax6.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Ka112", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Ka112", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax7 = plt.subplot2grid((10, 4), (1, 2), sharey=ax5)
 plt.plot(dataKa[:,0],dataKa[:,3], linewidth=1, color='black')
@@ -236,8 +238,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax7.get_xticklabels(), visible=False)
 plt.setp( ax7.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Ka123", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Ka123", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax8 = plt.subplot2grid((10, 4), (1, 3), sharey=ax5)
 plt.plot(dataKa[:,0],dataKa[:,4], linewidth=1, color='black')
@@ -245,8 +247,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax8.get_xticklabels(), visible=False)
 plt.setp( ax8.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Ka124", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Ka124", fontsize=10)
+plt.ylim([-100, 100]);
 
 ###############
 #   Q1-band
@@ -258,10 +260,11 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax9.get_xticklabels(), visible=False)
 plt.setp( ax9.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q111", fontsize=10)
+plt.text(52200,70,r"Q111", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax9.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
 ax10 = plt.subplot2grid((10, 4), (2, 1), sharey=ax9)
@@ -270,8 +273,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax10.get_xticklabels(), visible=False)
 plt.setp( ax10.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q112", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Q112", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax11 = plt.subplot2grid((10, 4), (2, 2), sharey=ax9)
 plt.plot(dataQ1[:,0],dataQ1[:,3], linewidth=1, color='black')
@@ -279,8 +282,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax11.get_xticklabels(), visible=False)
 plt.setp( ax11.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q123", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Q123", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax12 = plt.subplot2grid((10, 4), (2, 3), sharey=ax9)
 plt.plot(dataQ1[:,0],dataQ1[:,4], linewidth=1, color='black')
@@ -288,8 +291,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax12.get_xticklabels(), visible=False)
 plt.setp( ax12.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q124", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Q124", fontsize=10)
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
 
@@ -303,11 +306,11 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax13.get_xticklabels(), visible=False)
 plt.setp( ax13.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q211", fontsize=10)
+plt.text(52200,70,r"Q211", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax13.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
-#plt.yticks([-1.4,-1.0,50], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.ylim([-100, 100]);
+plt.yticks([-60,0,60], [r"$-180$", r"$0$", r"$180$"])
 
 ax14 = plt.subplot2grid((10, 4), (3, 1), sharey=ax13)
 plt.plot(dataQ2[:,0],dataQ2[:,2], linewidth=1, color='black')
@@ -315,8 +318,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax14.get_xticklabels(), visible=False)
 plt.setp( ax14.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q212", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Q212", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax15 = plt.subplot2grid((10, 4), (3, 2), sharey=ax13)
 plt.plot(dataQ2[:,0],dataQ2[:,3], linewidth=1, color='black')
@@ -324,8 +327,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax15.get_xticklabels(), visible=False)
 plt.setp( ax15.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q223", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Q223", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax16 = plt.subplot2grid((10, 4), (3, 3), sharey=ax13)
 plt.plot(dataQ2[:,0],dataQ2[:,4], linewidth=1, color='black')
@@ -333,8 +336,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax16.get_xticklabels(), visible=False)
 plt.setp( ax16.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"Q224", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"Q224", fontsize=10)
+plt.ylim([-100, 100]);
 
 
 ###############
@@ -347,11 +350,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax17.get_xticklabels(), visible=False)
 plt.setp( ax17.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V111", fontsize=10)
+plt.text(52200,70,r"V111", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax17.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax18 = plt.subplot2grid((10, 4), (4, 1), sharey=ax17)
 plt.plot(dataV1[:,0],dataV1[:,2], linewidth=1, color='black')
@@ -359,8 +363,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax18.get_xticklabels(), visible=False)
 plt.setp( ax18.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V112", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"V112", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax19 = plt.subplot2grid((10, 4), (4, 2), sharey=ax17)
 plt.plot(dataV1[:,0],dataV1[:,3], linewidth=1, color='black')
@@ -368,8 +372,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax19.get_xticklabels(), visible=False)
 plt.setp( ax19.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V123", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"V123", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax20 = plt.subplot2grid((10, 4), (4, 3), sharey=ax17)
 plt.plot(dataV1[:,0],dataV1[:,4], linewidth=1, color='black')
@@ -377,8 +381,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax20.get_xticklabels(), visible=False)
 plt.setp( ax20.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V124", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"V124", fontsize=10)
+plt.ylim([-100, 100]);
 
 
 ###############
@@ -391,11 +395,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax21.get_xticklabels(), visible=False)
 plt.setp( ax21.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V211", fontsize=10)
+plt.text(52200,70,r"V211", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax21.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax22 = plt.subplot2grid((10, 4), (5, 1), sharey=ax21)
 plt.plot(dataV2[:,0],dataV2[:,2], linewidth=1, color='black')
@@ -403,8 +408,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax22.get_xticklabels(), visible=False)
 plt.setp( ax22.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V212", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"V212", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax23 = plt.subplot2grid((10, 4), (5, 2), sharey=ax21)
 plt.plot(dataV2[:,0],dataV2[:,3], linewidth=1, color='black')
@@ -412,8 +417,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax23.get_xticklabels(), visible=False)
 plt.setp( ax23.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V223", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"V223", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax24 = plt.subplot2grid((10, 4), (5, 3), sharey=ax21)
 plt.plot(dataV2[:,0],dataV2[:,4], linewidth=1, color='black')
@@ -421,8 +426,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax24.get_xticklabels(), visible=False)
 plt.setp( ax24.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"V224", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"V224", fontsize=10)
+plt.ylim([-100, 100]);
 
 
 
@@ -436,11 +441,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax25.get_xticklabels(), visible=False)
 plt.setp( ax25.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200, 50,r"W111", fontsize=10)
+plt.text(52200, 70,r"W111", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax25.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 #plt.yticks([5,10,15], [r"$5$", r"$10$", r"$15$"])
 
@@ -450,8 +456,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax26.get_xticklabels(), visible=False)
 plt.setp( ax26.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W112", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W112", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax27 = plt.subplot2grid((10, 4), (6, 2), sharey=ax25)
 plt.plot(dataW1[:,0],dataW1[:,3], linewidth=1, color='black')
@@ -459,8 +465,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax27.get_xticklabels(), visible=False)
 plt.setp( ax27.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W123", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W123", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax28 = plt.subplot2grid((10, 4), (6, 3), sharey=ax25)
 plt.plot(dataW1[:,0],dataW1[:,4], linewidth=1, color='black')
@@ -468,8 +474,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax28.get_xticklabels(), visible=False)
 plt.setp( ax28.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W124", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W124", fontsize=10)
+plt.ylim([-100, 100]);
 
 
 ###############
@@ -485,8 +491,9 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 plt.text(52200,0,r"W211", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax29.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax30 = plt.subplot2grid((10, 4), (7, 1), sharey=ax29)
 plt.plot(dataW2[:,0],dataW2[:,2], linewidth=1, color='black')
@@ -494,8 +501,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax30.get_xticklabels(), visible=False)
 plt.setp( ax30.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W212", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W212", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax31 = plt.subplot2grid((10, 4), (7, 2), sharey=ax29)
 plt.plot(dataW2[:,0],dataW2[:,3], linewidth=1, color='black')
@@ -503,8 +510,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax31.get_xticklabels(), visible=False)
 plt.setp( ax31.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W223", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W223", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax32 = plt.subplot2grid((10, 4), (7, 3), sharey=ax29)
 plt.plot(dataW2[:,0],dataW2[:,4], linewidth=1, color='black')
@@ -513,7 +520,7 @@ plt.setp( ax32.get_xticklabels(), visible=False)
 plt.setp( ax32.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 plt.text(52200,0,r"W224", fontsize=10)
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 
 
 ###############
@@ -526,11 +533,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax33.get_xticklabels(), visible=False)
 plt.setp( ax33.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W311", fontsize=10)
+plt.text(52200,70,r"W311", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax33.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax34 = plt.subplot2grid((10, 4), (8, 1), sharey=ax33)
 plt.plot(dataW3[:,0],dataW3[:,2], linewidth=1, color='black')
@@ -538,8 +546,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax34.get_xticklabels(), visible=False)
 plt.setp( ax34.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W312", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W312", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax35 = plt.subplot2grid((10, 4), (8, 2), sharey=ax33)
 plt.plot(dataW3[:,0],dataW3[:,3], linewidth=1, color='black')
@@ -547,8 +555,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax35.get_xticklabels(), visible=False)
 plt.setp( ax35.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W323", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W323", fontsize=10)
+plt.ylim([-100, 100]);
 
 ax36 = plt.subplot2grid((10, 4), (8, 3), sharey=ax33)
 plt.plot(dataW3[:,0],dataW3[:,4], linewidth=1, color='black')
@@ -556,8 +564,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax36.get_xticklabels(), visible=False)
 plt.setp( ax36.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W324", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W324", fontsize=10)
+plt.ylim([-100, 100]);
 
 
 ###############
@@ -570,11 +578,12 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax37.get_xticklabels(), visible=True)
 plt.setp( ax37.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W411", fontsize=10)
+plt.text(52200,70,r"W411", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax37.yaxis.labelpad = 10*width/17.
-plt.ylim([-75, 75]);
+plt.ylim([-100, 100]);
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 #plt.yticks([1.6,2.0,2.4], [r"$1.6$", r"$2.0$", r"$2.4$"])
 
@@ -588,8 +597,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax38.get_xticklabels(), visible=True)
 plt.setp( ax38.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W412", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W412", fontsize=10)
+plt.ylim([-100, 100]);
 
 plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
 plt.xlabel(r"MJD");
@@ -601,8 +610,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax39.get_xticklabels(), visible=True)
 plt.setp( ax39.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W423", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W423", fontsize=10)
+plt.ylim([-100, 100]);
 
 plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])        
 plt.xlabel(r"MJD");
@@ -614,8 +623,8 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax40.get_xticklabels(), visible=True)
 plt.setp( ax40.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,50,r"W424", fontsize=10)
-plt.ylim([-75, 75]);
+plt.text(52200,70,r"W424", fontsize=10)
+plt.ylim([-100, 100]);
 
 plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
 # labels
