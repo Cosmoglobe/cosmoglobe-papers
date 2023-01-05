@@ -55,6 +55,14 @@ x,y,z = hp.pix2vec(512, np.arange(12*512**2))
 dip_W = -0.233*x -2.222*y + 2.504*z
 
 
+fig1, axes1 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+fig2, axes2 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+fig3, axes3 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+
+
 for i in range(len(cg_maps)):
     m_WMAP = hp.read_map(wmap_maps[i])*1e3
     m_CG = hp.read_map(cg_maps[i])*1e3
