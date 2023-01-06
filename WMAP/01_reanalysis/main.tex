@@ -158,7 +158,7 @@
 
 \begin{document}
 
-\title{\bfseries{\Cosmoglobe I. Optimal joint end-to-end analysis\\of \textit{WMAP} and \textit{Planck} LFI}}
+\title{\bfseries{\Cosmoglobe\ I. Bayesian end-to-end analysis of the \emph{Wilkinson Microwave Anisotropy Probe} data}}
 \input{authors.tex}
 %\authorrunning{From BeyondPlanck to Cosmoglobe}
 \authorrunning{Watts et al.}
@@ -183,6 +183,8 @@
 
 \section{Introduction}
 \label{sec:introduction}
+
+\textbf{Describe WMAP highlights, establishment of firm LCDM model. Brief summary of Planck, Commander, BeyondPlanck, and then Cosmoglobe; WMAP is first major extension of the end-to-end framework, and marks the transition from classical single-experiment TOD analysis to multi-experiment TOD analysis. A brave new world.}
 
 A to-do list:
 
@@ -215,14 +217,14 @@ In this work, we present the first joint TOD analysis in the \cosmoglobe\footnot
 
 
 
-\section{\cosmoglobe\ map-making and end-to-end error propagation}
+\section{End-to-end Bayesian \WMAP\ analysis}
 \label{sec:methods}
 
+\subsection{Brief overview of official \WMAP\ pipeline}
 
-Describe \cosmoglobe.
+\subsection{Parametric \WMAP\ data model}
 
-\subsection{Statistical framework}
-
+\textbf{Write down data model; refer to WMAP and BP papers extensively}
 
 In the \cosmoglobe\ paradigm, it is simplest to characterize the data's goodness-of-fit to a model,
 \begin{equation}
@@ -236,6 +238,8 @@ $\mathsf B^\mathrm{symm}$ and $\mathsf B^{4\pi}$ are the symmetrized and full sy
 	\mathsf M_{cj}=\int d\nu\,\tau_j(\nu)f_c(\nu/\nu_{c,0}).
 \end{equation}
 The maps $\boldsymbol a$ are the component amplitudes, $\boldsymbol s^\mathrm{orb}$ is the orbital dipole induced by the motion of the telescope with respect to the Sun, and $\boldsymbol s^\mathrm{fsl}$ is the time-dependent far sidelobe signal. In the \commanderthree\ \citep{bp03} implementation, $\boldsymbol n^\mathrm{corr}$ is a realization of the correlated noise component whose SED is parametrized by $P(f\mid\boldsymbol\xi_n)$, where $\boldsymbol\xi_n$ generally includes $f_\mathrm{knee}$, a slope $\alpha$, and whose amplitude is fixed by the white noise $\sigma_0$. This model is often augmented, as we will discuss in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}. Similarly, each experiment has particular signals that are specific to the instrument in question, e.g., the 1\,Hz spike in \Planck\ LFI or the horn imbalance in \WMAP, which can be modeled by $\boldsymbol s^\mathrm{inst}$.
+
+\subsection{Posterior distribution and Gibbs sampling}
 
 As shown in \citet{bp01}, this allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modelled, the data should be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. Given this model, we can evaluate the likelihood for arbitrary chunks of time-ordered data in the context of the entire model, so that individual chunks of data with poor fits can be more easily identified. In general, the likelihood is written
 \begin{equation}
@@ -264,15 +268,38 @@ with each step requiring its own dedicated sampling algorithm, and in the case o
 Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI and \WMAP\ data, we summarize the TOD processing steps in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}.
 
 
+\subsection{\WMAP-specific sampling algorithms}
 
-\subsection{\planck\ LFI data processing}
-\label{ssec:lfi}
+
+\subsubsection{Differential mapmaking}
+\label{ssec:mapmaking}
+
+\textbf{Mapmaking; review/summary of BP17}
+
+
+\subsubsection{Transmission imbalance sampling}
+\label{ssec:mapmaking}
+
+\textbf{transmission imbalance; review/summary of BP17}
+
+\subsubsection{Baseline sampling}
+\label{ssec:baseline}
+
+\textbf{baselines; review/summary of BP17}
+
+\subsubsection{Other things we have added?}
+\label{ssec:baseline}
+
+
+
+%\subsection{\planck\ LFI data processing}
+%\label{ssec:lfi}
 
 Summary of \citet{bp01}, \citet{bp10}.
 Artem was here...
 
-\subsection{\wmap\ data processing}
-\label{ssec:wmap}
+%\subsection{\wmap\ data processing}
+%\label{ssec:wmap}
 
 As summarized in \citet{bp17}, the TOD processing for \WMAP\ has been
 implemented in the \commanderthree\ Gibbs sampling framework.  The process of
@@ -337,6 +364,7 @@ correlation between 25.6\,ms sample integrations
 not used on flight data, but rather the parametric fit as discussed above.
 However, the filter is designed to reduce the signal by half at 100\,Hz, and as
 such has a negligible effect. 
+
 
 
 %\begin{figure*}[p]
@@ -534,7 +562,7 @@ These datastream lengths are short enough to be processed quickly and distribute
 
 %Compare with Table 2 of \citet{bennett2003a}, Table 1 of \citet{hinshaw2007}, Table 2 of \citet{hinshaw2009}. Total observing efficiency was 98.4\% \citep{bennett2012}
 
-\subsection{Calibration}
+%\subsection{Calibration}
 
 In order to get the raw data into the sky units $\mathrm{mK_{CMB}}$, it is necessary to make a quantitative assessment of the data's goodness-of-fit. To do this, we use mapped time-domain residuals of the timestream based on an initial sky model. Following the procedure of \citet{bp06}, we create a smoothed map of the absolute deviation of the model from the sky signal. The residual maps were first smoothed to $3^\circ$, the absolute value was taken, and then the map was smoothed again with a $15^\circ$ beam. This procedure gave us an indication of the regions of the sky that are not fully characterized by the sky model. We then evaluated the \texttt{Cosmoglobe} Sky model\footnote{\url{cosmoglobe.readthedocs.io}} associated with the \BP\ data release\footnote{\url{beyondplanck.science}} to create a map of the expected thermal dust, AME, free-free, and radio emission at each \WMAP\ frequency. We thresholded using the 80th percentile of this map to match the residual map. The combination of this sky model-informed mask and the residual-informed mask formed the main processing mask for the calibration and correlated noise analysis.
 Outside of these mask, the data are fit will by the sky model, so the calibration and the correlated noise estimates should both be unbiased.
@@ -542,8 +570,29 @@ Outside of these mask, the data are fit will by the sky model, so the calibratio
 Emphasize, we use the orbital dipole for the absolute calibration, but use the full sky model from the rest of the Gibbs chain for the rest of the gain and the imbalance parameters.
 
 
-\section{Characteristics of frequency maps}
-\label{sec:freqmaps}
+\section{Data}
+\label{sec:data}
+
+\subsection{Time-ordered data}
+\label{sec:tod}
+
+\subsection{Survey of fixed \WMAP\ data products}
+\label{sec:fixedproducts}
+
+\textbf{Summarize everything we assume from the WMAP analysis: Beams, bandpasses, pointing, etc.}
+
+
+
+\section{Markov chain survey}
+\label{sec:markov_chains}
+
+\subsection{Visual inspection of trace plots and correlations}
+\label{sec:traceplots}
+
+\subsection{Computational resources}
+\label{sec:resources}
+
+
 
 \begin{figure*}
 	\centering
@@ -653,11 +702,48 @@ Emphasize, we use the orbital dipole for the absolute calibration, but use the f
 	\caption{Differences between two samples (continued)}
 \end{figure*}
 
+\section{Low-level posterior distributions}
+\label{sec:lowlevel}
 
-\section{Systematic error and uncertainties}
+\subsection{Gain and baselines}
+
+
+\subsection{Transmission imbalance}
+
+
+\subsection{Noise characterization}
+
+
+\subsection{Goodness-of-fit}
+
+
+\section{Frequency maps}
+\label{sec:maps}
+
+\subsection{Posterior mean maps}
+
+\subsection{Posterior uncertainties}
+
+\subsection{Angular power spectra}
+
+\section{Preliminary astrophysical results}
+
+\subsection{Diffuse foregrounds}
+
+\subsection{CMB constraints}
+
+\subsubsection{Solar dipole}
+
+\subsubsection{Temperature power spectrum}
+
+
+\section{Systematic error corrections and uncertainties}
 \label{sec:systematics}
 
-\section{Component separation}
+\subsection{Sky map corrections}
+
+
+\subsection{Power spectrum residuals}
 
 Want to compare the $QU$ correlation in WMAP and Planck LFI, get a quantitative number. Point out that the polarization solution itself is much better, but the covariance between pixels themselves is much higher. This wasn't an issue for LFI, so we had to take that into account here.
 
@@ -721,7 +807,7 @@ dense noise covariance matrix also explicitly projected out the poorly-measured 
 
 \appendix
 
-\section{Instrumental parameters}
+\section{Survey of instrumental parameters}
 
 \begin{figure*}[p]
   	\centering
