@@ -367,21 +367,134 @@ such has a negligible effect.
 
 
 
-%\begin{figure*}[p]
-%  	\centering
-%	\includegraphics[width=0.32\textwidth]{figures/inst_023-WMAP_K.pdf}
-%	\includegraphics[width=0.32\textwidth]{figures/inst_030-WMAP_Ka.pdf}
-%	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q1.pdf}\\
-%	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q2.pdf}
-%	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V1.pdf}
-%	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V2.pdf}\\
-%	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W1.pdf}
-%	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W2.pdf}\\
-%	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W3.pdf}
-%	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W4.pdf}
-%	\caption{Instrument parameters.}
-%	\label{fig:inst_params}
-%\end{figure*}
+
+
+
+
+
+The third main difference in the \Cosmoglobe\ treatment is the amount of data used, and the size of individual scans used. 
+As shown in \citet{bp03}, a large fraction of \commander's computational time is spent performing FFTs on individual scans. Rather than truncating datastreams to have lengths equal to ``magic numbers'' for which \texttt{FFTW} \citep{FFTW05} is fastest, as in \citet{bp03}, 
+we split the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N=23$ for \V--\W. This yields scans with lengths of 6.21 days for \K- and \Ka-band, 4.97 days for \Q-band, 7.46 days for \V-band, and 4.97 days for \W-band.
+These datastream lengths are short enough to be processed quickly and distributed efficiently across multiple processors, while being long enough to properly characterize the noise properties of the timestreams, whose $f_\mathrm{knee}$'s are on the order $1\,\mathrm{mHz}$.
+
+\citet{wmapexsupp} lists a series of flagged events, which we isolated to their own TOD segments. When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led to unflagged data to be discarded. A similar problem occurred when $>10\%$ of the TOD was flagged. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite on their face acceptable. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data can be entirely accounted for by the cuts described in this paragraph.
+
+
+%Compare with Table 2 of \citet{bennett2003a}, Table 1 of \citet{hinshaw2007}, Table 2 of \citet{hinshaw2009}. Total observing efficiency was 98.4\% \citep{bennett2012}
+
+%\subsection{Calibration}
+
+In order to get the raw data into the sky units $\mathrm{mK_{CMB}}$, it is necessary to make a quantitative assessment of the data's goodness-of-fit. To do this, we use mapped time-domain residuals of the timestream based on an initial sky model. Following the procedure of \citet{bp06}, we create a smoothed map of the absolute deviation of the model from the sky signal. The residual maps were first smoothed to $3^\circ$, the absolute value was taken, and then the map was smoothed again with a $15^\circ$ beam. This procedure gave us an indication of the regions of the sky that are not fully characterized by the sky model. We then evaluated the \texttt{Cosmoglobe} Sky model\footnote{\url{cosmoglobe.readthedocs.io}} associated with the \BP\ data release\footnote{\url{beyondplanck.science}} to create a map of the expected thermal dust, AME, free-free, and radio emission at each \WMAP\ frequency. We thresholded using the 80th percentile of this map to match the residual map. The combination of this sky model-informed mask and the residual-informed mask formed the main processing mask for the calibration and correlated noise analysis.
+Outside of these mask, the data are fit will by the sky model, so the calibration and the correlated noise estimates should both be unbiased.
+
+Emphasize, we use the orbital dipole for the absolute calibration, but use the full sky model from the rest of the Gibbs chain for the rest of the gain and the imbalance parameters.
+
+
+\section{Data}
+\label{sec:data}
+
+\subsection{Time-ordered data}
+\label{sec:tod}
+
+\subsection{Survey of fixed \WMAP\ data products}
+\label{sec:fixedproducts}
+
+\textbf{Summarize everything we assume from the WMAP analysis: Beams, bandpasses, pointing, etc.}
+
+
+
+\section{Data selection, Markov chains and resources}
+\label{sec:markov_chains}
+
+\subsection{Data selection}
+
+\begin{table}
+\caption{Flagging statistics}              % title of Table
+\label{table:flagged_data}      % is used to refer this table in the text
+\centering                                      % used for centering table
+\begin{tabular}{c r r r}          % centered columns (4 columns)
+\hline\hline                        % inserts double horizontal lines
+	Band & Flagged (\%) & Discarded (\%) & Used (\%) \\    % table heading
+\hline                                   % inserts single horizontal line
+	\K  &  1.72 & 0.87 & 97.4\\
+	\Ka &  1.64 & 0.88 & 97.5\\      % inserting body of the table
+	\Q1 &  1.84 & 0.84 & 96.5\\
+	\Q2 &  1.62 & 0.81 & 97.6\\
+	\V1 &  1.62 & 1.10 & 97.3\\
+	\V2 &  1.61 & 1.01 & 97.4\\
+	\W1 &  1.76 & 1.03 & 97.2\\
+	\W2 &  1.60 & 0.81 & 97.6\\
+	\W3 &  1.61 & 0.87 & 97.5\\
+	\W4 &  1.60 & 0.81 & 97.6\\
+\hline                                             %inserts single line
+\end{tabular}
+\end{table}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+
+\subsection{Trace plots}
+\label{sec:traceplots}
+
+\subsection{Parameter correlations}
+\label{sec:correlations}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+\subsection{Computational resources}
+\label{sec:resources}
+
+
+
+
+\section{Low-level posterior distributions}
+\label{sec:lowlevel}
 
 \begin{figure}[t]
   	\centering
@@ -390,6 +503,36 @@ such has a negligible effect.
 	\label{fig:inst_K111}
 \end{figure}
 
+
+\subsection{Gain and baselines}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+
+\subsection{Transmission imbalance}
 
 \begin{figure}[t]
   	\centering
@@ -446,6 +589,10 @@ W42 &   0.01882 \pm  0.00282  &   0.02054 \pm  0.00202 \cr
 \noalign{\vskip 5pt\hrule\vskip 5pt}}}
 \endPlancktablewide
 \end{table}
+
+
+\subsection{Noise characterization}
+
 
 
 \begin{table*}
@@ -529,70 +676,38 @@ W42  &  1  &  1.43  &  1.65  &   2.221 \pm  0.017  &  5.31  &  26.0  &   16.10 \
 \end{table*}
 
 
+\subsection{Goodness-of-fit}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
 
 
-The third main difference in the \Cosmoglobe\ treatment is the amount of data used, and the size of individual scans used. 
-As shown in \citet{bp03}, a large fraction of \commander's computational time is spent performing FFTs on individual scans. Rather than truncating datastreams to have lengths equal to ``magic numbers'' for which \texttt{FFTW} \citep{FFTW05} is fastest, as in \citet{bp03}, 
-we split the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N=23$ for \V--\W. This yields scans with lengths of 6.21 days for \K- and \Ka-band, 4.97 days for \Q-band, 7.46 days for \V-band, and 4.97 days for \W-band.
-These datastream lengths are short enough to be processed quickly and distributed efficiently across multiple processors, while being long enough to properly characterize the noise properties of the timestreams, whose $f_\mathrm{knee}$'s are on the order $1\,\mathrm{mHz}$.
+\section{Frequency maps}
+\label{sec:maps}
 
-\citet{wmapexsupp} lists a series of flagged events, which we isolated to their own TOD segments. When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led to unflagged data to be discarded. A similar problem occurred when $>10\%$ of the TOD was flagged. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite on their face acceptable. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data can be entirely accounted for by the cuts described in this paragraph.
-
-\begin{table}
-\caption{Flagging statistics}              % title of Table
-\label{table:flagged_data}      % is used to refer this table in the text
-\centering                                      % used for centering table
-\begin{tabular}{c r r r}          % centered columns (4 columns)
-\hline\hline                        % inserts double horizontal lines
-	Band & Flagged (\%) & Discarded (\%) & Used (\%) \\    % table heading
-\hline                                   % inserts single horizontal line
-	\K  &  1.72 & 0.87 & 97.4\\
-	\Ka &  1.64 & 0.88 & 97.5\\      % inserting body of the table
-	\Q1 &  1.84 & 0.84 & 96.5\\
-	\Q2 &  1.62 & 0.81 & 97.6\\
-	\V1 &  1.62 & 1.10 & 97.3\\
-	\V2 &  1.61 & 1.01 & 97.4\\
-	\W1 &  1.76 & 1.03 & 97.2\\
-	\W2 &  1.60 & 0.81 & 97.6\\
-	\W3 &  1.61 & 0.87 & 97.5\\
-	\W4 &  1.60 & 0.81 & 97.6\\
-\hline                                             %inserts single line
-\end{tabular}
-\end{table}
-
-%Compare with Table 2 of \citet{bennett2003a}, Table 1 of \citet{hinshaw2007}, Table 2 of \citet{hinshaw2009}. Total observing efficiency was 98.4\% \citep{bennett2012}
-
-%\subsection{Calibration}
-
-In order to get the raw data into the sky units $\mathrm{mK_{CMB}}$, it is necessary to make a quantitative assessment of the data's goodness-of-fit. To do this, we use mapped time-domain residuals of the timestream based on an initial sky model. Following the procedure of \citet{bp06}, we create a smoothed map of the absolute deviation of the model from the sky signal. The residual maps were first smoothed to $3^\circ$, the absolute value was taken, and then the map was smoothed again with a $15^\circ$ beam. This procedure gave us an indication of the regions of the sky that are not fully characterized by the sky model. We then evaluated the \texttt{Cosmoglobe} Sky model\footnote{\url{cosmoglobe.readthedocs.io}} associated with the \BP\ data release\footnote{\url{beyondplanck.science}} to create a map of the expected thermal dust, AME, free-free, and radio emission at each \WMAP\ frequency. We thresholded using the 80th percentile of this map to match the residual map. The combination of this sky model-informed mask and the residual-informed mask formed the main processing mask for the calibration and correlated noise analysis.
-Outside of these mask, the data are fit will by the sky model, so the calibration and the correlated noise estimates should both be unbiased.
-
-Emphasize, we use the orbital dipole for the absolute calibration, but use the full sky model from the rest of the Gibbs chain for the rest of the gain and the imbalance parameters.
-
-
-\section{Data}
-\label{sec:data}
-
-\subsection{Time-ordered data}
-\label{sec:tod}
-
-\subsection{Survey of fixed \WMAP\ data products}
-\label{sec:fixedproducts}
-
-\textbf{Summarize everything we assume from the WMAP analysis: Beams, bandpasses, pointing, etc.}
-
-
-
-\section{Markov chain survey}
-\label{sec:markov_chains}
-
-\subsection{Visual inspection of trace plots and correlations}
-\label{sec:traceplots}
-
-\subsection{Computational resources}
-\label{sec:resources}
-
-
+\subsection{Posterior mean maps}
 
 \begin{figure*}
 	\centering
@@ -646,83 +761,55 @@ Emphasize, we use the orbital dipole for the absolute calibration, but use the f
 \end{figure*}
 
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=\textwidth]{figures/023-WMAP_K_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/030-WMAP_Ka_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/040-WMAP_Q1_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/040-WMAP_Q2_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/060-WMAP_V1_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/060-WMAP_V2_rms.pdf}
-	\caption{RMS maps}
-\end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W1_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W2_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W3_rms.pdf}
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W4_rms.pdf}
-	\caption{RMS maps (continued)}
-\end{figure*}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=\textwidth]{figures/023-WMAP_K_std.pdf}
-	\includegraphics[width=\textwidth]{figures/030-WMAP_Ka_std.pdf}
-	\includegraphics[width=\textwidth]{figures/040-WMAP_Q1_std.pdf}
-	\includegraphics[width=\textwidth]{figures/040-WMAP_Q2_std.pdf}
-	\includegraphics[width=\textwidth]{figures/060-WMAP_V1_std.pdf}
-	\includegraphics[width=\textwidth]{figures/060-WMAP_V2_std.pdf}
-	\caption{STD maps}
-\end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W1_std.pdf}
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W2_std.pdf}
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W3_std.pdf}
-	\includegraphics[width=\textwidth]{figures/090-WMAP_W4_std.pdf}
-	\caption{STD maps (continued)}
-\end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.9\textwidth]{figures/023-WMAP_K_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/030-WMAP_Ka_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q1_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q2_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V1_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V2_sampdiff.pdf}
-	\caption{Differences between two samples}
-\end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W1_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W2_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W3_sampdiff.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W4_sampdiff.pdf}
-	\caption{Differences between two samples (continued)}
-\end{figure*}
-
-\section{Low-level posterior distributions}
-\label{sec:lowlevel}
-
-\subsection{Gain and baselines}
-
-
-\subsection{Transmission imbalance}
-
-
-\subsection{Noise characterization}
-
-
-\subsection{Goodness-of-fit}
-
-
-\section{Frequency maps}
-\label{sec:maps}
-
-\subsection{Posterior mean maps}
-
 \subsection{Posterior uncertainties}
+
+\begin{figure*}[p]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/023-WMAP_K_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/030-WMAP_Ka_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/040-WMAP_Q1_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/040-WMAP_Q2_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/060-WMAP_V1_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/060-WMAP_V2_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W1_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W2_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W3_rms.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W4_rms.pdf}
+	\caption{RMS maps}
+        \label{fig:rms}
+\end{figure*}
+
+\begin{figure*}[p]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/023-WMAP_K_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/030-WMAP_Ka_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/040-WMAP_Q1_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/040-WMAP_Q2_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/060-WMAP_V1_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/060-WMAP_V2_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W1_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W2_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W3_std.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W4_std.pdf}
+	\caption{STD std}
+        \label{fig:std}
+\end{figure*}
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/023-WMAP_K_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/030-WMAP_Ka_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/040-WMAP_Q1_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/040-WMAP_Q2_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/060-WMAP_V1_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/060-WMAP_V2_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W1_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W2_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W3_sampdiff.pdf}
+	\includegraphics[width=0.7\textwidth]{figures/090-WMAP_W4_sampdiff.pdf}
+	\caption{Differences between two samples}
+        \label{fig:sampdiff}
+\end{figure*}
+
 
 \subsection{Angular power spectra}
 
@@ -734,12 +821,37 @@ Emphasize, we use the orbital dipole for the absolute calibration, but use the f
 %\subsubsection{Temperature power spectrum}
 
 
+\clearpage
+
 \section{Systematic error corrections and uncertainties}
 \label{sec:systematics}
 
 \subsection{Sky map corrections}
 
+
+
 \subsection{Power spectrum residuals}
+
+\begin{figure*}
+  \center	
+  \includegraphics[width=0.98\linewidth]{figures/components_power_spectrum_std_masked.pdf}
+  \caption{Pseudo-spectrum standard deviation for each instrumental
+    systematic correction shown in
+    Figs.~\ref{fig:corrmaps30}--\ref{fig:corrmaps70} (\emph{thin
+      colored lines}). For comparison, thick black lines show spectra
+    for the full coadded frequency map; thick red lines show the
+    standard deviation of the same (i.e., the full systematic
+    uncertainty); gray lines show white noise; and dashed black lines
+    show the best-fit \Planck\ 2018 $\Lambda$CDM power spectrum
+    convolved with the instrument beam. Columns show results for 30,
+    44 and 70\,GHz, respectively, while rows show results for each of
+    the six polarization states ($TT$, $EE$, $BB$, $TE$, $TB$, and
+    $EB$). All spectra have been derived outside the CMB confidence
+    mask presented by \citet{bp13} using the HEALPix \texttt{anafast}
+    utility, correcting only for sky fraction and not for mask mode
+    coupling. }
+  \label{fig:corrmap_powspec_stddev}
+\end{figure*}
 
 Want to compare the $QU$ correlation in WMAP and Planck LFI, get a quantitative number. Point out that the polarization solution itself is much better, but the covariance between pixels themselves is much higher. This wasn't an issue for LFI, so we had to take that into account here.
 
@@ -759,31 +871,39 @@ How much off-diagonal pixel covariance is there here?
 
 dense noise covariance matrix also explicitly projected out the poorly-measured imbalance modes, but because we find no trace of these modes in our sky maps or residual maps, this treatment is not necessary in our approach. However, the correlation between Stokes $Q$ and $U$ was not taken into account in the \BP\ LFI analysis. This was not a significant oversight in the LFI analysis because the 30 and 70\,GHz maps only had a 10\% correlation, and 44\,GHz's 50\% correlation was subdominant to other systematic effects. We have updated \commanderthree\ to take $QU$ correlation into account for LFI.
 
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/rho_QU.pdf}
-	\caption{$QU$ correlation for \WMAP\ \Ka-band \textit{(top)} and \Planck\ 30\,GHz \textit{(bottom)}. Note the differing dynamic range in the two maps.}
-	\label{fig:rho_qu}
-\end{figure}
 
 \section{Comparison with official products}
 
-\subsection{Frequency difference maps}
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
 
-\subsection{Channel difference maps}
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
 
-\subsection{Internal half-difference maps}
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
 
-\subsection{Angular power spectra}
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
 
-
-\section{Conclusions}
-\label{sec:conclusions}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.93\linewidth]{figures/megaplot_official.pdf}
-  \caption{Published \textit{WMAP}+LFI bands (WMAP9 and BP10)}
-\end{figure*}
+%\begin{figure*}
+%	\centering
+%	\includegraphics[width=0.93\linewidth]{figures/megaplot_official.pdf}
+%  \caption{Published \textit{WMAP}+LFI bands (WMAP9 and BP10)}
+%\end{figure*}
 
 \begin{figure*}
 	\centering
@@ -791,11 +911,83 @@ dense noise covariance matrix also explicitly projected out the poorly-measured 
 	\caption{Mean of \textit{WMAP}+LFI bands}
 \end{figure*}
 
+\subsection{Frequency difference maps}
+
 \begin{figure*}
 	\centering
 	\includegraphics[width=0.93\linewidth]{figures/megadiff.pdf}
 	\caption{Differences between Commander-processed chains and official maps (BP10 and WMAP9)}
 \end{figure*}
+
+
+\subsection{Channel difference maps}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+\subsection{Internal half-difference maps}
+
+\subsection{Comparison of noise rms maps}
+
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/rho_QU.pdf}
+	\caption{$QU$ correlation for \WMAP\ \Ka-band \textit{(top)} and \Planck\ 30\,GHz \textit{(bottom)}. Note the differing dynamic range in the two maps.}
+	\label{fig:rho_qu}
+\end{figure}
+
+\subsection{Angular power spectra}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+
+\section{Conclusions}
+\label{sec:conclusions}
+
 
 
 
