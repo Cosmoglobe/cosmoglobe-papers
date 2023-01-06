@@ -223,11 +223,11 @@ for b in bands:
     m2 = rng.choice(m2)
     diff = m1 - m2
     diff = hp.smoothing(diff, fwhm=5*np.pi/180)
-    cg.plot(diff*1e3, sig=0, llabel=b.split('_')[1], rlabel=r'\Delta T',
+    cg.plot(diff, sig=0, llabel=b.split('_')[1], rlabel=r'\Delta T',
         min=-3, max=3, remove_mono='true', sub=(1,3,1), cbar=False)
-    cg.plot(diff*1e3, sig=1, rlabel=r'\Delta Q',
+    cg.plot(diff, sig=1, rlabel=r'\Delta Q',
         min=-3, max=3, sub=(1,3,2), cbar=False)
-    cg.plot(diff*1e3, sig=2, rlabel=r'\Delta U',
+    cg.plot(diff, sig=2, rlabel=r'\Delta U',
         min=-3, max=3, sub=(1,3,3), cbar=False)
     plt.tight_layout()
     plt.savefig(f'{b}_sampdiff.pdf', bbox_inches='tight')

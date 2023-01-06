@@ -66,7 +66,8 @@ axs1 = axes1.flatten()
 axs2 = axes2.flatten()
 axs3 = axes3.flatten()
 
-for i in range(len(cg_maps)):
+#for i in range(len(cg_maps)):
+for i in range(2):
     m_WMAP = hp.read_map(wmap_maps[i])*1e3
     m_CG = hp.read_map(cg_maps[i])*1e3
     m_CG -= dip_W*1e3
@@ -86,6 +87,7 @@ for i in range(len(cg_maps)):
     axs1[i].loglog(ell[2:], Clhat_W[2:], label='WMAP')
     axs1[i].loglog(ell[2:], Clhat_C[2:], label='Cosmoglobe')
     axs1[i].set_ylim([5e-3, 1e4])
+    axs1[i].annotate(bands[i], 0.75, 0.75)
     #plt.title(bands[i])
     #plt.legend()
     #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
@@ -103,8 +105,9 @@ for i in range(len(cg_maps)):
     inds = (ell > 220)
     axs2[i].plot(ell[inds], Clhat_W[inds], label='WMAP')
     axs2[i].plot(ell[inds], Clhat_C[inds], label='Cosmoglobe')
-    axs2[i].set_xlim([225, 1400])
-    axs2[i].set_ylim([0.002, 0.03])
+    axs2[i].annotate(bands[i], 0.75, 0.75)
+    #axs2[i].set_xlim([225, 1400])
+    #axs2[i].set_ylim([0.002, 0.03])
     #plt.legend()
     #plt.title(bands[i])
     #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
@@ -112,13 +115,33 @@ for i in range(len(cg_maps)):
     #plt.savefig(f'{bands[i]}_TT_zoom.png', bbox_inches='tight')
 
     axs3[i].semilogx(ell[2:], Clhat_W[2:]/Clhat_C[2:])
-    axs3[i].set_ylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
+    #axs3[i].set_ylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
     axs3[i].set_xlabel(r'$\ell$')
+    axs3[i].annotate(bands[i], 0.75, 0.75)
     #plt.title(bands[i])
-    axs3[3].set_ylim([0.8, 1.4])
+    #axs3[3].set_ylim([0.8, 1.4])
     #plt.savefig(f'{bands[i]}_TT_ratio.png', bbox_inches='tight')
     #plt.close('all')
 
+axs1[10].axis('off')
+axs1[11].axis('off')
+axs2[10].axis('off')
+axs2[11].axis('off')
+axs3[10].axis('off')
+axs3[11].axis('off')
+
+fig1.supxlabel(r'$\ell$')
+fig2.supxlabel(r'$\ell$')
+fig3.supxlabel(r'$\ell$')
+
+fig1.supylabel(r'$C_\ell$')
+fig2.supylabel(r'$C_\ell$')
+fig3.supylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
+
+lines_labels = fig1.axes[0].get_legend_handles_labels()
+lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
+fig1.legend(lines, labels)
+fig2.legend(lines, labels)
 
 plt.figure(fig1.number)
 plt.savefig(f'TT_spectra.pdf', bbox_inches='tight')
