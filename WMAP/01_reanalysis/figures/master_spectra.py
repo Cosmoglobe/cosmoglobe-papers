@@ -61,6 +61,7 @@ x,y,z = hp.pix2vec(512, np.arange(12*512**2))
 dip_W = -0.233*x -2.222*y + 2.504*z
 
 
+'''
 fig1, axes1 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
 plt.subplots_adjust(wspace=0, hspace=0)
 fig2, axes2 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
@@ -100,27 +101,13 @@ for i in range(len(cg_maps)):
     #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
 
     inds = (ell_eff > 220)
-    #axs2[i].plot(ell[inds], Clhat_W[inds], label='WMAP')
-    #axs2[i].plot(ell[inds], Clhat_C[inds], label='Cosmoglobe')
     axs2[i].plot(ell_eff[inds], Clhat_W[inds], label='WMAP')
     axs2[i].plot(ell_eff[inds], Clhat_C[inds], label='Cosmoglobe')
     axs2[i].text(0.75, 0.75,  r'\textit{'+bands[i]+'}', transform=axs2[i].transAxes)
-    #axs2[i].set_xlim([225, 1400])
     axs2[i].set_ylim([0.002, 0.1])
-    #plt.legend()
-    #plt.title(bands[i])
-    #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
-    #plt.xlabel(r'$\ell$')
-    #plt.savefig(f'{bands[i]}_TT_zoom.png', bbox_inches='tight')
 
     axs3[i].semilogx(ell_eff, Clhat_W/Clhat_C)
-    #axs3[i].set_ylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
-    #axs3[i].set_xlabel(r'$\ell$')
     axs3[i].text(0.25, 0.75, r'\textit{'+bands[i]+'}', transform=axs3[i].transAxes)
-    #plt.title(bands[i])
-    #axs3[3].set_ylim([0.8, 1.4])
-    #plt.savefig(f'{bands[i]}_TT_ratio.png', bbox_inches='tight')
-    #plt.close('all')
 
 axs1[10].axis('off')
 axs1[11].axis('off')
@@ -150,7 +137,7 @@ plt.figure(fig3.number)
 plt.savefig(f'TT_spectra_ratio.pdf', bbox_inches='tight')
 print('here we are')
 plt.close('all')
-
+'''
 
 
 fig1, axes1 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
@@ -174,51 +161,80 @@ axs5 = axes5.flatten()
 axs6 = axes6.flatten()
 
 
+n = 0
 for i in range(len(cg_maps)):
-    print(i)
     m_WMAP = hp.read_map(wmap_maps[i], field=(1,2))*1e3
     m_CG = hp.read_map(cg_maps[i], field=(1,2))*1e3
     f_WMAP = nmt.NmtField(mask, m_WMAP)
     f_CG = nmt.NmtField(mask, m_CG)
     Clhat_W = nmt.compute_full_master(f_WMAP, f_WMAP, b)
     Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)
-    ell = np.arange(len(Clhat_C[0]))
 
-    l1, = axs1[i].loglog(ell_eff, Clhat_W[0], label='WMAP')
-    l2, = axs1[i].loglog(ell_eff, Clhat_C[0], label='Cosmoglobe')
-    axs2[i].loglog(ell_eff, Clhat_W[3], label='WMAP')
-    axs2[i].loglog(ell_eff, Clhat_C[3], label='Cosmoglobe')
+    l1, = axs1[n].loglog(ell_eff, Clhat_W[0], label='WMAP')
+    l2, = axs1[n].loglog(ell_eff, Clhat_C[0], label='Cosmoglobe')
+    axs2[n].loglog(ell_eff, Clhat_W[3], label='WMAP')
+    axs2[n].loglog(ell_eff, Clhat_C[3], label='Cosmoglobe')
 
-    inds = (ell > 400)
-    axs3[i].plot(ell_eff[inds], Clhat_W[0][inds], label='WMAP')
-    axs3[i].plot(ell_eff[inds], Clhat_C[0][inds], label='Cosmoglobe')
-    axs4[i].plot(ell_eff[inds], Clhat_W[3][inds], label='WMAP')
-    axs4[i].plot(ell_eff[inds], Clhat_C[3][inds], label='Cosmoglobe')
+    axs1[n].set_ylim([2e-3, 1e3])
+    plt.figure(fig1.number)
+    plt.savefig(f'EE_spectra.pdf', bbox_inches='tight')
+    plt.figure(fig2.number)
+    axs2[n].set_ylim([2e-3, 1e3])
+    plt.savefig(f'BB_spectra.pdf', bbox_inches='tight')
 
+    inds = (ell_eff > 400)
+    axs3[n].plot(ell_eff[inds], Clhat_W[0][inds], label='WMAP')
+    axs3[n].plot(ell_eff[inds], Clhat_C[0][inds], label='Cosmoglobe')
+    axs4[n].plot(ell_eff[inds], Clhat_W[3][inds], label='WMAP')
+    axs4[n].plot(ell_eff[inds], Clhat_C[3][inds], label='Cosmoglobe')
 
-    axs5[i].semilogx(ell[2:], Clhat_W[0][2:]/Clhat_C[0][2:])
-    axs6[i].semilogx(ell[2:], Clhat_W[3][2:]/Clhat_C[3][2:])
+    axs3[n].set_ylim([0.002, 0.19])
+    plt.figure(fig3.number)
+    plt.savefig(f'EE_spectra_zoom.pdf', bbox_inches='tight')
+    axs4[n].set_ylim([0.002, 0.19])
+    plt.figure(fig4.number)
+    plt.savefig(f'BB_spectra_zoom.pdf', bbox_inches='tight')
 
-axs1[10].axis('off')
-axs1[11].axis('off')
-axs2[10].axis('off')
-axs2[11].axis('off')
-axs3[10].axis('off')
-axs3[11].axis('off')
-axs4[10].axis('off')
-axs4[11].axis('off')
-axs5[10].axis('off')
-axs5[11].axis('off')
-axs6[10].axis('off')
-axs6[11].axis('off')
+    axs5[n].semilogx(ell_eff, Clhat_W[0]/Clhat_C[0])
+    axs6[n].semilogx(ell_eff, Clhat_W[3]/Clhat_C[3])
 
-axs1[10].legend(handles=[l1, l2], 
+    axs5[n].set_ylim([0.6, 1.4])
+    plt.figure(fig5.number)
+    plt.savefig(f'EE_spectra_ratio.pdf', bbox_inches='tight')
+    axs6[n].set_ylim([0.6, 1.4])
+    plt.figure(fig6.number)
+    plt.savefig(f'BB_spectra_ratio.pdf', bbox_inches='tight')
+    axs1[n].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs1[n].transAxes)
+    axs2[n].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs2[n].transAxes)
+    axs3[n].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs3[n].transAxes)
+    axs4[n].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs4[n].transAxes)
+    axs5[n].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs5[n].transAxes)
+    axs6[n].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs6[n].transAxes)
+    if i == 5:
+        n += 3
+    else:
+        n += 1
+
+axs1[6].axis('off')
+axs1[7].axis('off')
+axs2[6].axis('off')
+axs2[7].axis('off')
+axs3[6].axis('off')
+axs3[7].axis('off')
+axs4[6].axis('off')
+axs4[7].axis('off')
+axs5[6].axis('off')
+axs5[7].axis('off')
+axs6[6].axis('off')
+axs6[7].axis('off')
+
+axs1[6].legend(handles=[l1, l2], 
     labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
-axs2[10].legend(handles=[l1, l2], 
+axs2[6].legend(handles=[l1, l2], 
     labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
-axs3[10].legend(handles=[l1, l2], 
+axs3[6].legend(handles=[l1, l2], 
     labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
-axs4[10].legend(handles=[l1, l2], 
+axs4[6].legend(handles=[l1, l2], 
     labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
 
 fig1.supxlabel(r'$\ell$')
@@ -241,11 +257,11 @@ plt.figure(fig2.number)
 plt.savefig(f'BB_spectra.pdf', bbox_inches='tight')
 plt.figure(fig3.number)
 plt.savefig(f'EE_spectra_zoom.pdf', bbox_inches='tight')
-plt.figure(fig1.number)
+plt.figure(fig4.number)
 plt.savefig(f'BB_spectra_zoom.pdf', bbox_inches='tight')
-plt.figure(fig2.number)
+plt.figure(fig5.number)
 plt.savefig(f'EE_spectra_ratio.pdf', bbox_inches='tight')
-plt.figure(fig3.number)
+plt.figure(fig6.number)
 plt.savefig(f'BB_spectra_ratio.pdf', bbox_inches='tight')
 '''
 fnames1 = glob(f'{DIR}/wmap_iqusmap_r9_yr?_W1_v5.fits')
