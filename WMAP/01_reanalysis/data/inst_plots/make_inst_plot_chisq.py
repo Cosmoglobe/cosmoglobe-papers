@@ -668,5 +668,5 @@ for ticklabel in ax37.yaxis.get_ticklabels():
 
 
 # save to pdf with right bounding box
-plt.savefig("instpar_CG_chisq_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("../../figures/instpar_CG_chisq_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
 
