@@ -41,19 +41,19 @@ wmap_maps = [
 '/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W2_v5.fits',
 '/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W3_v5.fits',
 '/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W4_v5.fits']
-CG_DIR = '/mn/stornext/d5/data/duncanwa/WMAP'
+CG_DIR = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_KKaQVW_a_230105'
 
 cg_maps = [
- f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_023-WMAP_K_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_030-WMAP_Ka_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_040-WMAP_Q1_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_040-WMAP_Q2_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_060-WMAP_V1_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_060-WMAP_V2_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W1_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W2_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W3_map_c0001_k000002.fits',
-f'{CG_DIR}/chains_CG_LFI_KKaQVW_c_230103/tod_090-WMAP_W4_map_c0001_k000002.fits']
+ f'{CG_DIR}/tod_023-WMAP_K_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_030-WMAP_Ka_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_040-WMAP_Q1_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_040-WMAP_Q2_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_060-WMAP_V1_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_060-WMAP_V2_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_090-WMAP_W1_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_090-WMAP_W2_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_090-WMAP_W3_map_c0001_k000008.fits',
+f'{CG_DIR}/tod_090-WMAP_W4_map_c0001_k000008.fits']
 
 bands = ['K', 'Ka', 'Q1', 'Q2', 'V1', 'V2', 'W1', 'W2', 'W3', 'W4']
 
@@ -61,7 +61,6 @@ x,y,z = hp.pix2vec(512, np.arange(12*512**2))
 dip_W = -0.233*x -2.222*y + 2.504*z
 
 
-'''
 fig1, axes1 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
 plt.subplots_adjust(wspace=0, hspace=0)
 fig2, axes2 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
@@ -73,6 +72,7 @@ axs1 = axes1.flatten()
 axs2 = axes2.flatten()
 axs3 = axes3.flatten()
 
+n = 0
 for i in range(len(cg_maps)):
     print(i)
     m_WMAP = hp.read_map(wmap_maps[i])*1e3
@@ -93,32 +93,33 @@ for i in range(len(cg_maps)):
     print('got the power spectra')
 
 
-    #l1, = axs1[i].loglog(ell[2:], Clhat_W[2:], label='WMAP')
-    #l2, = axs1[i].loglog(ell[2:], Clhat_C[2:], label='Cosmoglobe')
-    l1, = axs1[i].loglog(ell_eff, Clhat_W, label='WMAP')
-    l2, = axs1[i].loglog(ell_eff, Clhat_C, label='Cosmoglobe')
-    axs1[i].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs1[i].transAxes)
-    #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
+    l1, = axs1[n].loglog(ell_eff, Clhat_W, label='WMAP')
+    l2, = axs1[n].loglog(ell_eff, Clhat_C, label='Cosmoglobe')
+    axs1[n].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs1[n].transAxes)
 
     inds = (ell_eff > 220)
-    axs2[i].plot(ell_eff[inds], Clhat_W[inds], label='WMAP')
-    axs2[i].plot(ell_eff[inds], Clhat_C[inds], label='Cosmoglobe')
-    axs2[i].text(0.75, 0.75,  r'\textit{'+bands[i]+'}', transform=axs2[i].transAxes)
-    axs2[i].set_ylim([0.002, 0.1])
+    axs2[n].plot(ell_eff[inds], Clhat_W[inds], label='WMAP')
+    axs2[n].plot(ell_eff[inds], Clhat_C[inds], label='Cosmoglobe')
+    axs2[n].text(0.75, 0.75,  r'\textit{'+bands[i]+'}', transform=axs2[n].transAxes)
+    axs2[n].set_ylim([0.002, 0.1])
 
-    axs3[i].semilogx(ell_eff, Clhat_W/Clhat_C)
-    axs3[i].text(0.25, 0.75, r'\textit{'+bands[i]+'}', transform=axs3[i].transAxes)
+    axs3[n].semilogx(ell_eff, Clhat_W/Clhat_C)
+    axs3[n].text(0.25, 0.75, r'\textit{'+bands[i]+'}', transform=axs3[n].transAxes)
+    if i == 5:
+        n += 3
+    else:
+        n += 1
 
-axs1[10].axis('off')
-axs1[11].axis('off')
-axs2[10].axis('off')
-axs2[11].axis('off')
-axs3[10].axis('off')
-axs3[11].axis('off')
+axs1[6].axis('off')
+axs1[7].axis('off')
+axs2[6].axis('off')
+axs2[7].axis('off')
+axs3[6].axis('off')
+axs3[7].axis('off')
 
-axs1[10].legend(handles=[l1, l2], 
+axs1[6].legend(handles=[l1, l2], 
     labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
-axs2[10].legend(handles=[l1, l2], 
+axs2[6].legend(handles=[l1, l2], 
     labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
 
 fig1.supxlabel(r'$\ell$')
@@ -137,7 +138,7 @@ plt.figure(fig3.number)
 plt.savefig(f'TT_spectra_ratio.pdf', bbox_inches='tight')
 print('here we are')
 plt.close('all')
-'''
+
 
 
 fig1, axes1 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
@@ -263,82 +264,3 @@ plt.figure(fig5.number)
 plt.savefig(f'EE_spectra_ratio.pdf', bbox_inches='tight')
 plt.figure(fig6.number)
 plt.savefig(f'BB_spectra_ratio.pdf', bbox_inches='tight')
-'''
-fnames1 = glob(f'{DIR}/wmap_iqusmap_r9_yr?_W1_v5.fits')
-fnames2 = glob(f'{DIR}/wmap_iqusmap_r9_yr?_W2_v5.fits')
-fnames3 = glob(f'{DIR}/wmap_iqusmap_r9_yr?_W3_v5.fits')
-fnames4 = glob(f'{DIR}/wmap_iqusmap_r9_yr?_W4_v5.fits')
-
-fnames = fnames1 + fnames2 + fnames3
-f2s = []
-for f in fnames:
-  print(f)
-  f2s.append(nmt.NmtField(mask, hp.read_map(f, field=(1,2))))
-
-Cls = []
-
-for i in range(len(f2s)):
-      for j in range(i+1,len(f2s)):
-                print(i,j)
-                cl_22 = nmt.compute_full_master(f2s[i], f2s[j], b)
-                Cls.append(cl_22)
-
-Cls = np.array(Cls)
-
-np.save('fnames_all', Cls)
-
-W1 = hp.read_map(f'{DIR}/wmap_iqusmap_r9_9yr_W1_v5.fits', field=(1,2))
-W2 = hp.read_map(f'{DIR}/wmap_iqusmap_r9_9yr_W2_v5.fits', field=(1,2))
-W3 = hp.read_map(f'{DIR}/wmap_iqusmap_r9_9yr_W3_v5.fits', field=(1,2))
-W4 = hp.read_map(f'{DIR}/wmap_iqusmap_r9_9yr_W4_v5.fits', field=(1,2))
-
-Ws = [W1, W2, W3, W4]
-f2s = []
-for f in Ws:
-  f2s.append(nmt.NmtField(mask, f))
-
-crosses = []
-for i in range(len(f2s)):
-      for j in range(i,len(f2s)):
-                cl_22 = nmt.compute_full_master(f2s[i], f2s[j], b)
-                crosses.append(cl_22)
-
-crosses = np.array(crosses)
-np.save('crosses_wmap9', crosses)
-
-DIR = '/mn/stornext/d16/cmbco/bp/dwatts/WMAP/chains_CG_LFI_KaQVW_221124'
-W1 = hp.read_map(f'{DIR}/tod_090-WMAP_W1_map_c0001_k000010.fits', field=(1,2))
-W2 = hp.read_map(f'{DIR}/tod_090-WMAP_W2_map_c0001_k000010.fits', field=(1,2))
-W3 = hp.read_map(f'{DIR}/tod_090-WMAP_W3_map_c0001_k000010.fits', field=(1,2))
-W4 = hp.read_map(f'{DIR}/tod_090-WMAP_W4_map_c0001_k000010.fits', field=(1,2))
-
-Ws = [W1, W2, W3, W4]
-f2s = []
-for f in Ws:
-  f2s.append(nmt.NmtField(mask, f))
-
-crosses = []
-for i in range(len(f2s)):
-      for j in range(i,len(f2s)):
-                cl_22 = nmt.compute_full_master(f2s[i], f2s[j], b)
-                crosses.append(cl_22)
-
-crosses = np.array(crosses)
-np.save('crosses_CG', crosses)
-
-n1 = W1 - (W2 + W3 + W4)/3
-n2 = W2 - (W1 + W3 + W4)/3
-n3 = W3 - (W1 + W2 + W4)/3
-n4 = W4 - (W1 + W2 + W3)/3
-n5 = (W1 + W2)/2 - (W3 + W4)/2
-n6 = (W1 + W3)/2 - (W2 + W4)/2
-
-nulls = [n1, n2, n3, n4, n5, n6]
-Cls = []
-for null in nulls:
-     f2 = nmt.NmtField(mask, null)
-     cl_22 = nmt.compute_full_master(f2, f2, b)
-     Cls.append(cl_22)
-Cls = np.array(Cls)
-np.save('null_spectra_CG', Cls)
-'''
