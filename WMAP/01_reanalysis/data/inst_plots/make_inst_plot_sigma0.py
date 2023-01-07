@@ -97,7 +97,7 @@ vmax =  160
 # Create the plot
 fig = plt.figure(figsize=(cm2inch(width), 1.35*cm2inch(width)))
 # this should be changed for making a panel of multiple figures
-#ax1 = fig.add_subplot(211)
+#ax1 = fig.add_subplot(213)
 
 fig.tight_layout()
 fig.subplots_adjust(hspace=0,wspace=0)
@@ -147,7 +147,7 @@ gsfc[18,:] = [1.60, 8.46]
 gsfc[19,:] = [1.43, 5.31]
 
 mjd_wmap = [52130, 52477]
-mjd_gsfc = [52130, 55412]
+mjd_gsfc = [52130, 55414]
 
 
 ###############
@@ -312,7 +312,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax13.get_xticklabels(), visible=False)
 plt.setp( ax13.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.005,r"Q211", fontsize=10)
+plt.text(52200,1.005,r"Q213", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]");
 ax13.yaxis.labelpad = 10*width/17.
 
@@ -324,7 +324,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax14.get_xticklabels(), visible=False)
 plt.setp( ax14.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.005,r"Q212", fontsize=10)
+plt.text(52200,1.005,r"Q214", fontsize=10)
 
 ax15 = plt.subplot2grid((10, 4), (3, 2), sharey=ax13)
 plt.plot(dataQ2[:,0],dataQ2[:,3], linewidth=1, color='black')
@@ -406,7 +406,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax21.get_xticklabels(), visible=False)
 plt.setp( ax21.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.375,r"V211", fontsize=10)
+plt.text(52200,1.375,r"V213", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]");
 ax21.yaxis.labelpad = 10*width/17.
 
@@ -418,7 +418,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax22.get_xticklabels(), visible=False)
 plt.setp( ax22.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.375,r"V212", fontsize=10)
+plt.text(52200,1.375,r"V214", fontsize=10)
 
 ax23 = plt.subplot2grid((10, 4), (5, 2), sharey=ax21)
 plt.plot(dataV2[:,0],dataV2[:,3], linewidth=1, color='black')
@@ -503,7 +503,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax29.get_xticklabels(), visible=False)
 plt.setp( ax29.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.1,r"W211", fontsize=10)
+plt.text(52200,2.1,r"W213", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]");
 ax29.yaxis.labelpad = 10*width/17.
 
@@ -515,7 +515,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax30.get_xticklabels(), visible=False)
 plt.setp( ax30.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.1,r"W212", fontsize=10)
+plt.text(52200,2.1,r"W214", fontsize=10)
 
 ax31 = plt.subplot2grid((10, 4), (7, 2), sharey=ax29)
 plt.plot(dataW2[:,0],dataW2[:,3], linewidth=1, color='black')
@@ -550,7 +550,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax33.get_xticklabels(), visible=False)
 plt.setp( ax33.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.4,r"W311", fontsize=10)
+plt.text(52200,2.4,r"W313", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]");
 ax33.yaxis.labelpad = 10*width/17.
 
@@ -562,7 +562,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax34.get_xticklabels(), visible=False)
 plt.setp( ax34.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.4,r"W312", fontsize=10)
+plt.text(52200,2.4,r"W314", fontsize=10)
 
 ax35 = plt.subplot2grid((10, 4), (8, 2), sharey=ax33)
 plt.plot(dataW3[:,0],dataW3[:,3], linewidth=1, color='black')
@@ -597,7 +597,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax37.get_xticklabels(), visible=True)
 plt.setp( ax37.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.35,r"W411", fontsize=10)
+plt.text(52200,2.35,r"W413", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]");
 ax37.yaxis.labelpad = 10*width/17.
 
@@ -615,7 +615,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax38.get_xticklabels(), visible=True)
 plt.setp( ax38.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,2.35,r"W412", fontsize=10)
+plt.text(52200,2.35,r"W414", fontsize=10)
 
 plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
 plt.xlabel(r"MJD");

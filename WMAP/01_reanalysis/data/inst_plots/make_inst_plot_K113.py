@@ -55,7 +55,7 @@ vmax =  160
 # Create the plot
 fig = plt.figure(figsize=(cm2inch(width), 2*cm2inch(width)))
 # this should be changed for making a panel of multiple figures
-#ax1 = fig.add_subplot(211)
+#ax1 = fig.add_subplot(213)
 
 fig.tight_layout()
 fig.subplots_adjust(hspace=0,wspace=0)
