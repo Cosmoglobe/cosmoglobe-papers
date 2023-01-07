@@ -20,7 +20,13 @@ nside = 512
 mask = hp.read_map("/mn/stornext/d16/cmbco/bp/dwatts/WMAP/data_WMAP/wmap_kq75_TQU_mask_r9.fits")
 
 
-b = nmt.NmtBin.from_nside_linear(nside, 1)
+# bin4 = nmt.NmtBin.from_edges(l_ini, l_end)
+logbins = np.geomspace(10, 3*512-1, 50).astype('int')
+l_ini = np.concatenate((np.arange(2, 10),     logbins[:-1]))
+l_end = np.concatenate((np.arange(2, 10) + 1, logbins[1:]))
+#b = nmt.NmtBin.from_nside_linear(nside, 1)
+b = nmt.NmtBin.from_edges(l_ini, l_end)
+ell_eff = b.get_effective_ells()
 
 DIR = '/mn/stornext/d16/cmbco/ola/wmap/freq_maps'
 
@@ -66,8 +72,8 @@ axs1 = axes1.flatten()
 axs2 = axes2.flatten()
 axs3 = axes3.flatten()
 
-#for i in range(len(cg_maps)):
-for i in range(2):
+for i in range(len(cg_maps)):
+    print(i)
     m_WMAP = hp.read_map(wmap_maps[i])*1e3
     m_CG = hp.read_map(cg_maps[i])*1e3
     m_CG -= dip_W*1e3
@@ -78,46 +84,39 @@ for i in range(2):
     f_CG = nmt.NmtField(mask, [m_CG])
     f_diff = nmt.NmtField(mask, [m_CG - m_WMAP])
     Clhat_W = nmt.compute_full_master(f_WMAP, f_WMAP, b)[0]
+    print('ps1')
     Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)[0]
-    Clhat_diff = nmt.compute_full_master(f_diff, f_diff, b)[0]
+    print('ps2')
+    #Clhat_diff = nmt.compute_full_master(f_diff, f_diff, b)[0]
     ell = np.arange(len(Clhat_C))
+    print('got the power spectra')
 
 
-
-    axs1[i].loglog(ell[2:], Clhat_W[2:], label='WMAP')
-    axs1[i].loglog(ell[2:], Clhat_C[2:], label='Cosmoglobe')
-    axs1[i].set_ylim([5e-3, 1e4])
-    axs1[i].annotate(bands[i], 0.75, 0.75)
-    #plt.title(bands[i])
-    #plt.legend()
+    #l1, = axs1[i].loglog(ell[2:], Clhat_W[2:], label='WMAP')
+    #l2, = axs1[i].loglog(ell[2:], Clhat_C[2:], label='Cosmoglobe')
+    l1, = axs1[i].loglog(ell_eff, Clhat_W, label='WMAP')
+    l2, = axs1[i].loglog(ell_eff, Clhat_C, label='Cosmoglobe')
+    axs1[i].text(0.75, 0.75, r'\textit{'+bands[i]+'}', transform=axs1[i].transAxes)
     #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
-    #plt.xlabel(r'$\ell$')
-    #plt.savefig(f'{bands[i]}_TT.png', bbox_inches='tight')
 
-    #axs2[i].loglog(ell[2:], abs(Clhat_diff[2:]), label='difference')
-    #axs2[i].loglog(ell[2:], -abs(Clhat_diff[2:]), 'C0--')
-    #plt.title(bands[i])
-    #plt.legend()
-    #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
-    #plt.xlabel(r'$\ell$')
-    #plt.savefig(f'{bands[i]}_TT_delta.png', bbox_inches='tight')
-
-    inds = (ell > 220)
-    axs2[i].plot(ell[inds], Clhat_W[inds], label='WMAP')
-    axs2[i].plot(ell[inds], Clhat_C[inds], label='Cosmoglobe')
-    axs2[i].annotate(bands[i], 0.75, 0.75)
+    inds = (ell_eff > 220)
+    #axs2[i].plot(ell[inds], Clhat_W[inds], label='WMAP')
+    #axs2[i].plot(ell[inds], Clhat_C[inds], label='Cosmoglobe')
+    axs2[i].plot(ell_eff[inds], Clhat_W[inds], label='WMAP')
+    axs2[i].plot(ell_eff[inds], Clhat_C[inds], label='Cosmoglobe')
+    axs2[i].text(0.75, 0.75,  r'\textit{'+bands[i]+'}', transform=axs2[i].transAxes)
     #axs2[i].set_xlim([225, 1400])
-    #axs2[i].set_ylim([0.002, 0.03])
+    axs2[i].set_ylim([0.002, 0.1])
     #plt.legend()
     #plt.title(bands[i])
     #plt.ylabel(r'$C_\ell^{TT}\ [\mathrm{\mu K}^2]$')
     #plt.xlabel(r'$\ell$')
     #plt.savefig(f'{bands[i]}_TT_zoom.png', bbox_inches='tight')
 
-    axs3[i].semilogx(ell[2:], Clhat_W[2:]/Clhat_C[2:])
+    axs3[i].semilogx(ell_eff, Clhat_W/Clhat_C)
     #axs3[i].set_ylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
-    axs3[i].set_xlabel(r'$\ell$')
-    axs3[i].annotate(bands[i], 0.75, 0.75)
+    #axs3[i].set_xlabel(r'$\ell$')
+    axs3[i].text(0.25, 0.75, r'\textit{'+bands[i]+'}', transform=axs3[i].transAxes)
     #plt.title(bands[i])
     #axs3[3].set_ylim([0.8, 1.4])
     #plt.savefig(f'{bands[i]}_TT_ratio.png', bbox_inches='tight')
@@ -130,18 +129,18 @@ axs2[11].axis('off')
 axs3[10].axis('off')
 axs3[11].axis('off')
 
+axs1[10].legend(handles=[l1, l2], 
+    labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
+axs2[10].legend(handles=[l1, l2], 
+    labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
+
 fig1.supxlabel(r'$\ell$')
 fig2.supxlabel(r'$\ell$')
 fig3.supxlabel(r'$\ell$')
 
-fig1.supylabel(r'$C_\ell$')
-fig2.supylabel(r'$C_\ell$')
+fig1.supylabel(r'$C_\ell^\mathrm{TT}\ [\mathrm{\mu K}^2]$')
+fig2.supylabel(r'$C_\ell^\mathrm{TT}\ [\mathrm{\mu K}^2]$')
 fig3.supylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
-
-lines_labels = fig1.axes[0].get_legend_handles_labels()
-lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-fig1.legend(lines, labels)
-fig2.legend(lines, labels)
 
 plt.figure(fig1.number)
 plt.savefig(f'TT_spectra.pdf', bbox_inches='tight')
@@ -152,7 +151,31 @@ plt.savefig(f'TT_spectra_ratio.pdf', bbox_inches='tight')
 print('here we are')
 plt.close('all')
 
+
+
+fig1, axes1 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+fig2, axes2 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+fig3, axes3 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+fig4, axes4 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+fig5, axes5 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+fig6, axes6 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
+plt.subplots_adjust(wspace=0, hspace=0)
+
+axs1 = axes1.flatten()
+axs2 = axes2.flatten()
+axs3 = axes3.flatten()
+axs4 = axes4.flatten()
+axs5 = axes5.flatten()
+axs6 = axes6.flatten()
+
+
 for i in range(len(cg_maps)):
+    print(i)
     m_WMAP = hp.read_map(wmap_maps[i], field=(1,2))*1e3
     m_CG = hp.read_map(cg_maps[i], field=(1,2))*1e3
     f_WMAP = nmt.NmtField(mask, m_WMAP)
@@ -161,46 +184,69 @@ for i in range(len(cg_maps)):
     Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)
     ell = np.arange(len(Clhat_C[0]))
 
-    fig, axes = plt.subplots(sharex=True, sharey=True, nrows=2)
-    axes[0].loglog(ell[2:], Clhat_W[0][2:], label='WMAP')
-    axes[0].loglog(ell[2:], Clhat_C[0][2:], label='Cosmoglobe')
-    axes[1].loglog(ell[2:], Clhat_W[3][2:], label='WMAP')
-    axes[1].loglog(ell[2:], Clhat_C[3][2:], label='Cosmoglobe')
-    fig.suptitle(bands[i])
-    fig.supxlabel(r'$\ell$')
-    axes[0].set_ylabel(r'$C_\ell^{EE}\ [\mathrm{\mu K}^2]$')
-    axes[1].set_ylabel(r'$C_\ell^{BB}\ [\mathrm{\mu K}^2]$')
-    plt.legend()
-    plt.savefig(f'{bands[i]}_pol.png', bbox_inches='tight')
+    l1, = axs1[i].loglog(ell_eff, Clhat_W[0], label='WMAP')
+    l2, = axs1[i].loglog(ell_eff, Clhat_C[0], label='Cosmoglobe')
+    axs2[i].loglog(ell_eff, Clhat_W[3], label='WMAP')
+    axs2[i].loglog(ell_eff, Clhat_C[3], label='Cosmoglobe')
 
-    fig, axes = plt.subplots(sharex=True, sharey=True, nrows=2)
     inds = (ell > 400)
-    axes[0].plot(ell[inds], Clhat_W[0][inds], label='WMAP')
-    axes[0].plot(ell[inds], Clhat_C[0][inds], label='Cosmoglobe')
-    axes[1].plot(ell[inds], Clhat_W[3][inds], label='WMAP')
-    axes[1].plot(ell[inds], Clhat_C[3][inds], label='Cosmoglobe')
-    axes[0].set_ylabel(r'$C_\ell^{EE}\ [\mathrm{\mu K}^2]$')
-    axes[1].set_ylabel(r'$C_\ell^{BB}\ [\mathrm{\mu K}^2]$')
-    #axes[0].set_ylim([0.002, 0.045])
-    fig.supxlabel(r'$\ell$')
-    fig.supxlabel(r'$\ell$')
-    plt.legend()
-    fig.suptitle(bands[i])
-    plt.savefig(f'{bands[i]}_pol_zoom.png', bbox_inches='tight')
+    axs3[i].plot(ell_eff[inds], Clhat_W[0][inds], label='WMAP')
+    axs3[i].plot(ell_eff[inds], Clhat_C[0][inds], label='Cosmoglobe')
+    axs4[i].plot(ell_eff[inds], Clhat_W[3][inds], label='WMAP')
+    axs4[i].plot(ell_eff[inds], Clhat_C[3][inds], label='Cosmoglobe')
 
 
-    fig, axes = plt.subplots(sharex=True, sharey=True, nrows=2)
-    axes[0].semilogx(ell[2:], Clhat_W[0][2:]/Clhat_C[0][2:])
-    axes[1].semilogx(ell[2:], Clhat_W[3][2:]/Clhat_C[3][2:])
-    fig.supylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
-    axes[0].set_ylabel('EE')
-    axes[1].set_ylabel('BB')
-    axes[1].set_ylim([0.25, 1.75])
-    fig.supxlabel(r'$\ell$')
-    fig.suptitle(bands[i])
-    plt.savefig(f'{bands[i]}_pol_ratio.png', bbox_inches='tight')
-    plt.close('all')
+    axs5[i].semilogx(ell[2:], Clhat_W[0][2:]/Clhat_C[0][2:])
+    axs6[i].semilogx(ell[2:], Clhat_W[3][2:]/Clhat_C[3][2:])
 
+axs1[10].axis('off')
+axs1[11].axis('off')
+axs2[10].axis('off')
+axs2[11].axis('off')
+axs3[10].axis('off')
+axs3[11].axis('off')
+axs4[10].axis('off')
+axs4[11].axis('off')
+axs5[10].axis('off')
+axs5[11].axis('off')
+axs6[10].axis('off')
+axs6[11].axis('off')
+
+axs1[10].legend(handles=[l1, l2], 
+    labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
+axs2[10].legend(handles=[l1, l2], 
+    labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
+axs3[10].legend(handles=[l1, l2], 
+    labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
+axs4[10].legend(handles=[l1, l2], 
+    labels=[r'\textit{WMAP}', r'\textsc{Cosmoglobe}'])
+
+fig1.supxlabel(r'$\ell$')
+fig2.supxlabel(r'$\ell$')
+fig3.supxlabel(r'$\ell$')
+fig4.supxlabel(r'$\ell$')
+fig5.supxlabel(r'$\ell$')
+fig6.supxlabel(r'$\ell$')
+
+fig1.supylabel(r'$C_\ell^\mathrm{EE}\ [\mathrm{\mu K}^2]$')
+fig2.supylabel(r'$C_\ell^\mathrm{BB}\ [\mathrm{\mu K}^2]$')
+fig3.supylabel(r'$C_\ell^\mathrm{EE}\ [\mathrm{\mu K}^2]$')
+fig4.supylabel(r'$C_\ell^\mathrm{BB}\ [\mathrm{\mu K}^2]$')
+fig5.supylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
+fig6.supylabel(r'$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$')
+
+plt.figure(fig1.number)
+plt.savefig(f'EE_spectra.pdf', bbox_inches='tight')
+plt.figure(fig2.number)
+plt.savefig(f'BB_spectra.pdf', bbox_inches='tight')
+plt.figure(fig3.number)
+plt.savefig(f'EE_spectra_zoom.pdf', bbox_inches='tight')
+plt.figure(fig1.number)
+plt.savefig(f'BB_spectra_zoom.pdf', bbox_inches='tight')
+plt.figure(fig2.number)
+plt.savefig(f'EE_spectra_ratio.pdf', bbox_inches='tight')
+plt.figure(fig3.number)
+plt.savefig(f'BB_spectra_ratio.pdf', bbox_inches='tight')
 '''
 fnames1 = glob(f'{DIR}/wmap_iqusmap_r9_yr?_W1_v5.fits')
 fnames2 = glob(f'{DIR}/wmap_iqusmap_r9_yr?_W2_v5.fits')
