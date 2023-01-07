@@ -160,7 +160,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"K111", fontsize=10)
+plt.text(52200,70,r"K113", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax1.yaxis.labelpad = 10*width/17.
 plt.ylim([-100, 100]);
@@ -182,7 +182,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
 plt.setp( ax2.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"K112", fontsize=10)
+plt.text(52200,70,r"K114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax3 = plt.subplot2grid((10, 4), (0, 2), sharey=ax1)
@@ -214,7 +214,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
 plt.setp( ax5.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"Ka111", fontsize=10)
+plt.text(52200,70,r"Ka113", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax5.yaxis.labelpad = 10*width/17.
 plt.ylim([-100, 100]);
@@ -229,7 +229,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
 plt.setp( ax6.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"Ka112", fontsize=10)
+plt.text(52200,70,r"Ka114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax7 = plt.subplot2grid((10, 4), (1, 2), sharey=ax5)
@@ -260,7 +260,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax9.get_xticklabels(), visible=False)
 plt.setp( ax9.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"Q111", fontsize=10)
+plt.text(52200,70,r"Q113", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax9.yaxis.labelpad = 10*width/17.
 plt.ylim([-100, 100]);
@@ -273,7 +273,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax10.get_xticklabels(), visible=False)
 plt.setp( ax10.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"Q112", fontsize=10)
+plt.text(52200,70,r"Q114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax11 = plt.subplot2grid((10, 4), (2, 2), sharey=ax9)
@@ -350,7 +350,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax17.get_xticklabels(), visible=False)
 plt.setp( ax17.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"V111", fontsize=10)
+plt.text(52200,70,r"V113", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax17.yaxis.labelpad = 10*width/17.
 plt.ylim([-100, 100]);
@@ -363,7 +363,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax18.get_xticklabels(), visible=False)
 plt.setp( ax18.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"V112", fontsize=10)
+plt.text(52200,70,r"V114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax19 = plt.subplot2grid((10, 4), (4, 2), sharey=ax17)
@@ -441,7 +441,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax25.get_xticklabels(), visible=False)
 plt.setp( ax25.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200, 70,r"W111", fontsize=10)
+plt.text(52200, 70,r"W113", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax25.yaxis.labelpad = 10*width/17.
 plt.ylim([-100, 100]);
@@ -456,7 +456,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax26.get_xticklabels(), visible=False)
 plt.setp( ax26.get_yticklabels(), visible=False)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,70,r"W112", fontsize=10)
+plt.text(52200,70,r"W114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax27 = plt.subplot2grid((10, 4), (6, 2), sharey=ax25)

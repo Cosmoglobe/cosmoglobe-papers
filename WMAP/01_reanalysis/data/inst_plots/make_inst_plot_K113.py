@@ -88,7 +88,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-#plt.text(52200,1.25,r"K111", fontsize=10)
+#plt.text(52200,1.25,r"K113", fontsize=10)
 plt.ylabel(r"$g$ [du/mK]");
 ax1.yaxis.labelpad = 10*width/17.
 
@@ -102,7 +102,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
 plt.setp( ax2.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-#plt.text(52200,70,r"K111", fontsize=10)
+#plt.text(52200,70,r"K113", fontsize=10)
 plt.ylabel(r"$b - \left<b\right>$ [du]");
 ax1.yaxis.labelpad = 10*width/17.
 plt.ylim([-100, 100]);
@@ -120,7 +120,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax3.get_xticklabels(), visible=False)
 plt.setp( ax3.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-#plt.text(52200,2.8,r"K111", fontsize=10)
+#plt.text(52200,2.8,r"K113", fontsize=10)
 plt.ylabel(r"$b_1$ [du]");
 ax1.yaxis.labelpad = 10*width/17.
 plt.ylim([-1, 1]);
@@ -140,7 +140,7 @@ plt.setp( ax4.get_xticklabels(), visible=False)
 plt.setp( ax4.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 plt.ylim([0.65, 0.75]);
-#plt.text(52200,0.835,r"K111", fontsize=10)
+#plt.text(52200,0.835,r"K113", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]");
 ax1.yaxis.labelpad = 10*width/17.
 plt.yticks([0.67,0.70,0.73], [r"$0.67$", r"$0.70$", r"$0.73$"])
@@ -158,7 +158,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
 plt.setp( ax5.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-#plt.text(52200,4.5,r"K111", fontsize=10)
+#plt.text(52200,4.5,r"K113", fontsize=10)
 plt.ylabel(r"$f_{\mathrm{knee}}$ [mHz]");
 ax1.yaxis.labelpad = 10*width/17.
 plt.ylim([0, 7]);
@@ -175,7 +175,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
 plt.setp( ax6.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-#plt.text(52200,-0.6,r"K111", fontsize=10)
+#plt.text(52200,-0.6,r"K113", fontsize=10)
 plt.ylabel(r"$\alpha$");
 ax1.yaxis.labelpad = 10*width/17.
 plt.ylim([-1.4, -0.6]);
@@ -191,7 +191,7 @@ plt.grid(False, which="major", axis="both")
 plt.setp( ax7.get_xticklabels(), visible=True)
 plt.setp( ax7.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-#plt.text(52200,11.2,r"K111", fontsize=10)
+#plt.text(52200,11.2,r"K113", fontsize=10)
 plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax1.yaxis.labelpad = 10*width/17.
 plt.ylim([-9, 2]);
@@ -227,5 +227,5 @@ for ticklabel in ax7.yaxis.get_ticklabels():
     ticklabel.set_rotation("vertical")
 
 # save to pdf with right bounding box
-plt.savefig("instpar_CG_K111_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("instpar_CG_K113_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
 
