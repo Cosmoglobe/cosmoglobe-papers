@@ -9,6 +9,8 @@ DIR = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_KKaQVW_b_230105'
 
 width = 2
 xsize = 1200
+fontsize = {'llabel': 5,
+            'rlabel': 5,}
 
 fnames = glob(f'{DIR}/tod*WMAP*map*k000019.fits')
 fnames.sort()
@@ -33,28 +35,28 @@ d4 = hp.ud_grade(hp.smoothing(((W1-W2)-(W3-W4))/4, fwhm =10*np.pi/180)*1e3, 256)
 
 
 cg.plot(d1, sig=1, llabel=r'\mathit K-\mathit{Ka}', rlabel='Q, \mathrm{CG}', cbar=False,
-    min=-10, max=10, xsize=xsize, width=width)
+    min=-10, max=10, xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('KKa_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d1, sig=2, rlabel='U, \mathrm{CG}', cbar=False, min=-10, max=10, xsize=xsize,
-    width=width)
+    width=width, fontsize=fontsize)
 plt.savefig('KKa_deltaU.pdf', bbox_inches='tight')
 cg.plot(d2, sig=1, llabel=r'\Delta Q', min=-10, max=10, cbar=False, rlabel='Q, \mathrm{CG}',
-    xsize=xsize, width=width)
+    xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('Q_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d2, sig=2, rlabel='U, \mathrm{CG}', cbar=False, min=-10, max=10, xsize=xsize,
-    width=width)
+    width=width, fontsize=fontsize)
 plt.savefig('Q_deltaU.pdf', bbox_inches='tight')
 cg.plot(d3, sig=1, llabel=r'\Delta V', min=-10, max=10, cbar=False, rlabel='Q, \mathrm{CG}',
-    xsize=xsize, width=width)
+    xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('V_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d3, sig=2, rlabel='U, \mathrm{CG}', cbar=False, min=-10, max=10, xsize=xsize,
-    width=width)
+    width=width, fontsize=fontsize)
 plt.savefig('V_deltaU.pdf', bbox_inches='tight')
 cg.plot(d4, sig=1, unit=r'\mathrm{\mu K}', llabel=r'\Delta W', rlabel = 'Q, \mathrm{CG}',
-    min=-10, max=10, xsize=xsize, width=width, extend='both')
+    min=-10, max=10, xsize=xsize, width=width, extend='both', fontsize=fontsize)
 plt.savefig('W_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d4, sig=2, rlabel='U, \mathrm{CG}', unit=r'\mathrm{\mu K}', min=-10, max=10,
-    xsize=xsize, width=width, extend='both')
+    xsize=xsize, width=width, extend='both', fontsize=fontsize)
 plt.savefig('W_deltaU.pdf', bbox_inches='tight')
 plt.close('all')
 
@@ -85,27 +87,26 @@ d4 = hp.ud_grade(hp.smoothing(((W1-W2)-(W3-W4))/4, fwhm =10*np.pi/180)*1e3, 256)
 
 
 cg.plot(d1, sig=1, llabel=r'\mathit K-\mathit{Ka}', rlabel='Q, \mathit{WMAP}', cbar=False,
-    min=-10, max=10, xsize=xsize, width=width)
+    min=-10, max=10, xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('KKa_W_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d1, sig=2, rlabel='U, \mathit{WMAP}', cbar=False, min=-10, max=10, xsize=xsize,
-    width=width)
+    width=width, fontsize=fontsize)
 plt.savefig('KKa_W_deltaU.pdf', bbox_inches='tight')
 cg.plot(d2, sig=1, llabel=r'\Delta Q', min=-10, max=10, cbar=False, rlabel='Q, \mathit{WMAP}',
-    xsize=xsize, width=width)
+    xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('Q_W_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d2, sig=2, rlabel='U, \mathit{WMAP}', cbar=False, min=-10, max=10, xsize=xsize,
-    width=width)
+    width=width, fontsize=fontsize)
 plt.savefig('Q_W_deltaU.pdf', bbox_inches='tight')
 cg.plot(d3, sig=1, llabel=r'\Delta V', min=-10, max=10, cbar=False, rlabel='Q, \mathit{WMAP}',
-    xsize=xsize, width=width)
+    xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('V_W_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d3, sig=2, rlabel='U, \mathit{WMAP}', cbar=False, min=-10, max=10, xsize=xsize,
-    width=width)
+    width=width, fontsize=fontsize)
 plt.savefig('V_W_deltaU.pdf', bbox_inches='tight')
 cg.plot(d4, sig=1, unit=r'\mathrm{\mu K}', llabel=r'\Delta W', rlabel = 'Q, \mathit{WMAP}',
-    min=-10, max=10, xsize=xsize, width=width, extend='both')
+    min=-10, max=10, xsize=xsize, width=width, extend='both', fontsize=fontsize)
 plt.savefig('W_W_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d4, sig=2, rlabel='U, \mathit{WMAP}', unit=r'\mathrm{\mu K}', min=-10, max=10,
-    xsize=xsize, width=width, extend='both')
+    xsize=xsize, width=width, extend='both', fontsize=fontsize)
 plt.savefig('W_W_deltaU.pdf', bbox_inches='tight')
-plt.show()
