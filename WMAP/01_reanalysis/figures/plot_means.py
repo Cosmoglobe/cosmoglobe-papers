@@ -48,6 +48,15 @@ def set_llabel(llabel,x=0.005, y=0.925, fontsize=12):
         transform=ax.transAxes,
     )
 
+
+mu_Q = []
+rms_Q = []
+
+mu_V = []
+rms_V = []
+
+mu_W = []
+rms_W = []
 for b in bands:
     print(b)
 
@@ -217,6 +226,28 @@ for b in bands:
     plt.savefig(f'{b}_map.pdf', bbox_inches='tight')
     plt.close()
 
+    if ('023-WMAP_K' in b) or ('030-WMAP_Ka' in b):
+        cg.plot(mu, sig=0, rlabel=rlabel, llabel='T', unit=r'\mathrm{\mu K}',
+            min=-3.4e3, max=3.4e3, width=width, xsize=xsize, extend='both')
+        plt.savefig(f'{b}_mu_I.pdf', bbox_inches='tight')
+        cg.plot(mu_s, sig=1, min=-30, max=30, width=width,
+            xsize=xsize, rlabel=rlabel, llabel='Q', cbar=False)
+        plt.savefig(f'{b}_mu_Q.pdf', bbox_inches='tight')
+        cg.plot(mu_s, sig=2, min=-30, max=30, width=width,
+            xsize=xsize, rlabel=rlabel, llabel='U', extend='both',
+            unit=r'\mathrm{\mu K}')
+        plt.savefig(f'{b}_mu_U.pdf', bbox_inches='tight')
+        plt.close('all')
+    elif '040-WMAP_Q' in b:
+        mu_Q.append(mu)
+        rms_Q.append(rs.mean(axis=0))
+    elif '060-WMAP_V' in b:
+        mu_V.append(mu)
+        rms_V.append(rs.mean(axis=0))
+    elif '090-WMAP_W' in b:
+        mu_W.append(mu)
+        rms_W.append(rs.mean(axis=0))
+        
 
 
     m1 = rng.choice(m1)
@@ -232,3 +263,54 @@ for b in bands:
     plt.tight_layout()
     plt.savefig(f'{b}_sampdiff.pdf', bbox_inches='tight')
     plt.close()
+
+
+
+
+Q = (mu_Q[0]/rms_Q[0][:3] + mu_Q[1]/rms_Q[1][:3])/(1/rms_Q[0][:3] + 1/rms_Q[1][:3])
+V = (mu_V[0]/rms_V[0][:3] + mu_V[1]/rms_V[1][:3])/(1/rms_V[0][:3] + 1/rms_V[1][:3])
+W = (mu_W[0]/rms_W[0][:3] + mu_W[1]/rms_W[1][:3] + mu_W[2]/rms_W[2][:3] + mu_W[3]/rms_W[3][:3]) / (1/rms_W[0][:3] + 1/rms_W[1][:3] + 1/rms_W[2][:3] + 1/rms_W[3][:3])
+Q_s = hp.smoothing(Q, fwhm=2*np.pi/180)
+V_s = hp.smoothing(Q, fwhm=2*np.pi/180)
+W_s = hp.smoothing(Q, fwhm=2*np.pi/180)
+
+
+rlabel = 'Q'
+cg.plot(Q, sig=0, rlabel=rlabel, llabel='T', unit=r'\mathrm{\mu K}',
+    min=-3.4e3, max=3.4e3, width=width, xsize=xsize, extend='both')
+plt.savefig(f'Q_mu_I.pdf', bbox_inches='tight')
+cg.plot(Q_s, sig=1, min=-30, max=30, width=width,
+    xsize=xsize, rlabel=rlabel, llabel='Q', cbar=False)
+plt.savefig(f'Q_mu_Q.pdf', bbox_inches='tight')
+cg.plot(Q_s, sig=2, min=-30, max=30, width=width,
+    xsize=xsize, rlabel=rlabel, llabel='U', extend='both',
+    unit=r'\mathrm{\mu K}')
+plt.savefig(f'Q_mu_U.pdf', bbox_inches='tight')
+plt.close('all')
+
+
+
+rlabel = 'V'
+cg.plot(V, sig=0, rlabel=rlabel, llabel='T', unit=r'\mathrm{\mu K}',
+    min=-3.4e3, max=3.4e3, width=width, xsize=xsize, extend='both')
+plt.savefig(f'V_mu_I.pdf', bbox_inches='tight')
+cg.plot(V_s, sig=1, min=-30, max=30, width=width,
+    xsize=xsize, rlabel=rlabel, llabel='Q', cbar=False)
+plt.savefig(f'V_mu_Q.pdf', bbox_inches='tight')
+cg.plot(V_s, sig=2, min=-30, max=30, width=width,
+    xsize=xsize, rlabel=rlabel, llabel='U', extend='both',
+    unit=r'\mathrm{\mu K}')
+plt.savefig(f'V_mu_U.pdf', bbox_inches='tight')
+plt.close('all')
+
+rlabel = 'W'
+cg.plot(W, sig=0, rlabel=rlabel, llabel='T', unit=r'\mathrm{\mu K}',
+    min=-3.4e3, max=3.4e3, width=width, xsize=xsize, extend='both')
+plt.savefig(f'W_mu_I.pdf', bbox_inches='tight')
+cg.plot(W_s, sig=1, min=-30, max=30, width=width,
+    xsize=xsize, rlabel=rlabel, llabel='Q', cbar=False)
+plt.savefig(f'W_mu_Q.pdf', bbox_inches='tight')
+cg.plot(W_s, sig=2, min=-30, max=30, width=width,
+    xsize=xsize, rlabel=rlabel, llabel='U', extend='both',
+    unit=r'\mathrm{\mu K}')
+plt.savefig(f'W_mu_U.pdf', bbox_inches='tight')
