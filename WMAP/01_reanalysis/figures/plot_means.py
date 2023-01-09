@@ -275,7 +275,7 @@ V_s = hp.smoothing(V, fwhm=2*np.pi/180)
 W_s = hp.smoothing(W, fwhm=2*np.pi/180)
 
 
-rlabel = r'\langle Q\rangle'
+rlabel = r'\langle \textit{Q}\rangle'
 cg.plot(Q, sig=0, rlabel=rlabel, llabel='T', unit=r'\mathrm{\mu K}',
     min=-3.4e3, max=3.4e3, width=width, xsize=xsize, extend='both')
 plt.savefig(f'Q_mu_I.pdf', bbox_inches='tight')
@@ -290,7 +290,7 @@ plt.close('all')
 
 
 
-rlabel = r'\langle V\rangle'
+rlabel = r'\langle \textit{V}\rangle'
 cg.plot(V, sig=0, rlabel=rlabel, llabel='T', unit=r'\mathrm{\mu K}',
     min=-3.4e3, max=3.4e3, width=width, xsize=xsize, extend='both')
 plt.savefig(f'V_mu_I.pdf', bbox_inches='tight')
@@ -303,7 +303,7 @@ cg.plot(V_s, sig=2, min=-30, max=30, width=width,
 plt.savefig(f'V_mu_U.pdf', bbox_inches='tight')
 plt.close('all')
 
-rlabel = r'\langle W\rangle'
+rlabel = r'\langle \textit{W}\rangle'
 cg.plot(W, sig=0, rlabel=rlabel, llabel='T', unit=r'\mathrm{\mu K}',
     min=-3.4e3, max=3.4e3, width=width, xsize=xsize, extend='both')
 plt.savefig(f'W_mu_I.pdf', bbox_inches='tight')
