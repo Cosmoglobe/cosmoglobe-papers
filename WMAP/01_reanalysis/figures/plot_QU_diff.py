@@ -7,7 +7,7 @@ from glob import glob
 
 DIR = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_KKaQVW_b_230105'
 
-width = 4
+width = 2
 xsize = 1200
 
 fnames = glob(f'{DIR}/tod*WMAP*map*k000019.fits')
@@ -103,9 +103,9 @@ cg.plot(d3, sig=2, rlabel='U, \mathit{WMAP}', cbar=False, min=-10, max=10, xsize
     width=width)
 plt.savefig('V_W_deltaU.pdf', bbox_inches='tight')
 cg.plot(d4, sig=1, unit=r'\mathrm{\mu K}', llabel=r'\Delta W', rlabel = 'Q, \mathit{WMAP}',
-    min=-10, max=10, xsize=xsize, width=width)
+    min=-10, max=10, xsize=xsize, width=width, extend='both')
 plt.savefig('W_W_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d4, sig=2, rlabel='U, \mathit{WMAP}', unit=r'\mathrm{\mu K}', min=-10, max=10,
-    xsize=xsize, width=width)
+    xsize=xsize, width=width, extend='both')
 plt.savefig('W_W_deltaU.pdf', bbox_inches='tight')
 plt.show()
