@@ -156,7 +156,7 @@
 
 \begin{document}
 
-\title{\bfseries{\Cosmoglobe I. Optimal joint end-to-end analysis\\of \textit{WMAP} and \textit{Planck} LFI}}
+\title{\bfseries{\Cosmoglobe\ II. Preliminary implications for large-scale\\ CMB polarization with improved WMAP sky maps}}
 \input{authors.tex}
 %\authorrunning{From BeyondPlanck to Cosmoglobe}
 \authorrunning{Watts et al.}
@@ -213,145 +213,9 @@ In this work, we present the first joint TOD analysis in the \cosmoglobe\footnot
 
 
 
-\section{\cosmoglobe\ map-making and end-to-end error propagation}
+\section{Constraining poorly measured WMAP modes with \Cosmoglobe}
 \label{sec:methods}
 
-
-Describe \cosmoglobe.
-
-\subsection{Statistical framework}
-
-
-In the \cosmoglobe\ paradigm, it is simplest to characterize the data's goodness-of-fit to a model,
-\begin{equation}
-	\label{eq:model}
-	\boldsymbol d =\mathsf G\mathsf P[\mathsf B^\mathrm{symm}\mathsf M\boldsymbol a+\mathsf B^\mathrm{4\pi}(\boldsymbol s^\mathrm{orb}
-	+\boldsymbol s^\mathrm{fsl})] + \boldsymbol s^\mathrm{inst}+\boldsymbol n^\mathrm{corr}+\boldsymbol n^\mathrm w,
-\end{equation}
-where $\mathsf G$ is the time-dependent gain in the form of the matrix $\mathrm{diag}(g_t)$, $\mathsf P$ is the $n_p\times n_t$ pointing matrix, 
-$\mathsf B^\mathrm{symm}$ and $\mathsf B^{4\pi}$ are the symmetrized and full symmetric beam, respectively, $\mathsf M$ is the mixing matrix between a given component $c$ with spectral energy distribution $f_c(\nu/\nu_{0,c})$ and a detector $j$ with bandpass $\tau_j(\nu)$, given by
-\begin{equation}
-	\mathsf M_{cj}=\int d\nu\,\tau_j(\nu)f_c(\nu/\nu_{c,0}).
-\end{equation}
-The maps $\boldsymbol a$ are the component amplitudes, $\boldsymbol s^\mathrm{orb}$ is the orbital dipole induced by the motion of the telescope with respect to the Sun, and $\boldsymbol s^\mathrm{fsl}$ is the time-dependent far sidelobe signal. In the \commanderthree\ \citep{bp03} implementation, $\boldsymbol n^\mathrm{corr}$ is a realization of the correlated noise component whose SED is parametrized by $P(f\mid\boldsymbol\xi_n)$, where $\boldsymbol\xi_n$ generally includes $f_\mathrm{knee}$, a slope $\alpha$, and whose amplitude is fixed by the white noise $\sigma_0$. This model is often augmented, as we will discuss in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}. Similarly, each experiment has particular signals that are specific to the instrument in question, e.g., the 1\,Hz spike in \Planck\ LFI or the horn imbalance in \WMAP, which can be modeled by $\boldsymbol s^\mathrm{inst}$.
-
-As shown in \citet{bp01}, this allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modelled, the data should be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. Given this model, we can evaluate the likelihood for arbitrary chunks of time-ordered data in the context of the entire model, so that individual chunks of data with poor fits can be more easily identified. In general, the likelihood is written
-\begin{equation}
-	P(\boldsymbol d\mid\boldsymbol\omega)\propto\exp\left(-\frac12\sum_t\frac{(d_t-s^\mathrm{tot}_t(\boldsymbol\omega))^2}{\sigma_0^2}
-	\right).
-\end{equation}
-If $\boldsymbol d\sim\mathcal N(\boldsymbol s^\mathrm{tot},\boldsymbol\sigma_0^2)$ is the correct model for the data, the argument of the exponent is proportional to a $\chi^2$-distribution with $n_\mathrm{TOD}$ degrees of freedom. In the limit of large $n$, a $\chi^2$ distribution is well-approximated by a Gaussian with mean $n$ and variance $2n$. Therefore we define and use the reduced-$\chi^2$ statistic,
-\begin{equation}
-	\chi^2\equiv \frac{\sum_t((d_t-s_t^\mathrm{tot})^2/\sigma_0^2 - n_\mathrm{TOD}}{\sqrt{2n_\mathrm{TOD}}},
-\end{equation}
-which is approximately drawn from the standard normal distribution $\mathcal N(0,1)$.
-
-The \cosmoglobe\ Gibbs chain is given by
-\begin{alignat}{10}
-\label{eq:gain_samp_dist}\g &\,\leftarrow          P(\g&\,               \mid \d, &\,    &          &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\boldsymbol a, &\,C_{\ell},&\,\boldsymbol\theta)\\
-\label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,           \mid \d, &\,\g, &\,        &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\boldsymbol a, &\,C_{\ell},&\,\boldsymbol\theta)\\ 
-\label{eq:xi_samp_dist} \boldsymbol\xi_n &\,\leftarrow        P(\boldsymbol\xi_n&\,            \mid \d, &\,\g, &\,\ncorr, &\,        &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\boldsymbol a, &\,C_{\ell},&\,\boldsymbol\theta)\\
-\label{eq:samp_inst}\boldsymbol s^\mathrm{inst} &\,\leftarrow                                 P(\boldsymbol s^\mathrm{inst}&\,             \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,      &\,\boldsymbol\beta, &\,\boldsymbol a, &\,C_{\ell},&\,\boldsymbol\theta)\\
-\label{eq:beta_samp}\boldsymbol\beta &\,\leftarrow                     P(\boldsymbol\beta&\, \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,       &\,    &\,C_{\ell},&\,\boldsymbol\theta)\\
-\boldsymbol a &\,\leftarrow                                   P(\boldsymbol a&\,               \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,    &\,C_{\ell},&\,\boldsymbol\theta)\\
-C_{\ell} &\,\leftarrow                             P(C_{\ell}&\,         \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\boldsymbol a,&\,\phantom{C_{\ell}}&\,\boldsymbol\theta)&\label{eq:cl_sampling}\\
-\boldsymbol\theta &\,\leftarrow                             P(\boldsymbol\theta&\,         \mid \d, &\,\g, &\,\ncorr, &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\boldsymbol a,&\,C_\ell\phantom{,}&\phantom{\,\boldsymbol\theta})\label{eq:param_samp},
-\end{alignat}
-with each step requiring its own dedicated sampling algorithm, and in the case of \bp, its own publication. The \commanderthree\ pipeline is designed so that results of each Gibbs sample can be easily passed to each other, and that the internal calculations of each step do not directly depend on the inner workings of each other. Therefore, in order to add another data set to the Gibbs chain, one must implement Eqs.~\eqref{eq:gain_samp_dist}--\eqref{eq:samp_inst} for each instrument, as was done in \citet{bp01} and \citet{bp10} for \Planck\ LFI and in \citet{bp17} for \WMAP, or simply pass processed maps with beam, mask, and noise information to Eqs.~\eqref{eq:beta_samp}--\eqref{eq:param_samp}, as was done for the Haslam 408\,MHz map \citep{haslam1982,remazeilles2014} and the \Planck\ 353 and 857\,GHz maps.
-
-Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI and \WMAP\ data, we summarize the TOD processing steps in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}.
-
-
-
-\subsection{\planck\ LFI data processing}
-\label{ssec:lfi}
-
-Summary of \citet{bp01}, \citet{bp10}.
-Artem was here...
-
-\subsection{\wmap\ data processing}
-\label{ssec:wmap}
-
-As summarized in \citet{bp17}, the TOD processing for \WMAP\ has been
-implemented in the \commanderthree\ Gibbs sampling framework.  The process of
-implementing this module in \commanderthree\ generally involved implementing
-the procedures outlined in \citet{jarosik2003a}, \citet{hinshaw2003a},
-\citet{jarosik2007}, and \citet{wmapexsupp}, and implementing a sampling
-algorithm whenever an estimate based off of the data was obtained. \citet{bp17}
-found excellent agreement between our processed maps and the official
-\WMAPnine\ products. The most visually obvious exception is that the
-\citet{bp17} maps have no trace of the poorly-measured modes induced by
-transmission imbalance uncertainties. Although \citet{bp17} focused on the
-\Q-band maps, we show in Sect.~\ref{sec:freqmaps} that this is representative
-of all \WMAP\ bands, with the notable exception of \K-band.
-
-The data model adopted in \citet{hinshaw2003a} can be written in raw digital units (du) as
-\begin{equation}
-	\d = \mathsf{GPBM}\boldsymbol a+\boldsymbol n+\boldsymbol b,
-\end{equation}
-where $\boldsymbol b$ is the instrumental baseline and $\boldsymbol n$ is the
-total instrumental noise. As detailed in \citet{bp06}, \commanderthree\ divides
-the noise into $\n=\n^\mathrm w+\n^\mathrm{corr}$, a white noise term and a
-correlated noise term. By definition, the white noise does not have any
-correlations between adjacent pixels, so that any pixel-pixel covariance should
-be fully described by realizations of the $\n^\mathrm{corr}$ timestream.
-
-Three notable deviations from the official \WMAPnine\ pipeline and the
-\cosmoglobe\ approach are the gain estimation, the correlated noise treatment,
-and the data fraction used.  The \WMAPnine\ gain solution was a parametric fit
-to the orbital dipole measurements as a function of the instrumental
-housekeeping parameters, as detailed in Appendix~A of \citet{wmapexsupp}. This
-approach avoids the dependence of a robust Galactic foreground model, and
-requires both excellent knowledge of the radiometers and a clean orbital dipole
-measurement which can be compared to the known signal. \commanderthree's
-sampling approach, as summarized in \citet{bp07}, fits the average gain over
-all detectors and TOD samples to the orbital dipole. In addition,
-\commanderthree\ calibrates deviations from the average gain as a function of
-detector and time to the total sky model.  This approach is highly dependent on
-using a sky model that accurately reflects the data, but makes fewer
-assumptions regarding the behavior of the detectors in relation to the
-housekeeping parameters. 
-
-
-The second main deviation is in the treatment the noise power spectra. As shown
-in Sect~2.5 of \citet{jarosik2007}, the noise autocorrelation spectrum is fit
-on a year-by-year basis to a polynomial in $\log(\Delta t)$, where $\Delta t$
-is the time lag between data points. This method is very similar to the
-\commanderthree\ approach, which fits for the power spectrum in Fourier space
-using a correlated noise model of the form
-$\sigma_0^2(f/f_\mathrm{knee})^{\alpha}$. Properly parameterized, these two
-approaches should yield similar results, albeit with different levels of
-uncertainty and time resolution. However, we have confirmed that in many cases
-the simple $1/f$ noise model does not fit the signal-subtracted TOD, yielding
-$\chi^2$ values that are up to $10\sigma$ discrepant from their expected
-values.  [Show, discuss figure with the PSDs, residual spectrum, and Bessel
-filter.]
-
-Deviations from the $1/f$ model consist either of a linear increase or downturn
-above 10\,Hz. This can be partially explained by the use of a two pole Bessel
-low-pass filter just prior to signal quantization, which introduces a 2.62\%
-correlation between 25.6\,ms sample integrations
-\citep[][Sect.~5.3]{jarosik2003:MAP}. The exact form of the Bessel filter was
-not used on flight data, but rather the parametric fit as discussed above.
-However, the filter is designed to reduce the signal by half at 100\,Hz, and as
-such has a negligible effect. 
-
-
-\begin{figure*}[p]
-  	\centering
-	\includegraphics[width=0.32\textwidth]{figures/inst_023-WMAP_K.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_030-WMAP_Ka.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q1.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/inst_040-WMAP_Q2.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V1.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_060-WMAP_V2.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W1.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W2.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W3.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/inst_090-WMAP_W4.pdf}
-	\caption{Instrument parameters.}
-	\label{fig:inst_params}
-\end{figure*}
 
 \begin{figure*}[p]
   	\centering
@@ -360,43 +224,6 @@ such has a negligible effect.
 	\label{fig:gain}
 \end{figure*}
 
-The third main difference in the \Cosmoglobe\ treatment is the amount of data used, and the size of individual scans used. 
-As shown in \citet{bp03}, a large fraction of \commander's computational time is spent performing FFTs on individual scans. Rather than truncating datastreams to have lengths equal to ``magic numbers'' for which \texttt{FFTW} \citep{FFTW05} is fastest, as in \citet{bp03}, 
-we split the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N=23$ for \V--\W. This yields scans with lengths of 6.21 days for \K- and \Ka-band, 4.97 days for \Q-band, 7.46 days for \V-band, and 4.97 days for \W-band.
-These datastream lengths are short enough to be processed quickly and distributed efficiently across multiple processors, while being long enough to properly characterize the noise properties of the timestreams, whose $f_\mathrm{knee}$'s are on the order $1\,\mathrm{mHz}$.
-
-\citet{wmapexsupp} lists a series of flagged events, which we isolated to their own TOD segments. When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led to unflagged data to be discarded. A similar problem occurred when $>10\%$ of the TOD was flagged. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite on their face acceptable. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data can be entirely accounted for by the cuts described in this paragraph.
-
-\begin{table}
-\caption{Flagging statistics}              % title of Table
-\label{table:flagged_data}      % is used to refer this table in the text
-\centering                                      % used for centering table
-\begin{tabular}{c r r r}          % centered columns (4 columns)
-\hline\hline                        % inserts double horizontal lines
-	Band & Flagged (\%) & Discarded (\%) & Used (\%) \\    % table heading
-\hline                                   % inserts single horizontal line
-	\K  &  1.72 & 0.87 & 97.4\\
-	\Ka &  1.64 & 0.88 & 97.5\\      % inserting body of the table
-	\Q1 &  1.84 & 0.84 & 96.5\\
-	\Q2 &  1.62 & 0.81 & 97.6\\
-	\V1 &  1.62 & 1.10 & 97.3\\
-	\V2 &  1.61 & 1.01 & 97.4\\
-	\W1 &  1.76 & 1.03 & 97.2\\
-	\W2 &  1.60 & 0.81 & 97.6\\
-	\W3 &  1.61 & 0.87 & 97.5\\
-	\W4 &  1.60 & 0.81 & 97.6\\
-\hline                                             %inserts single line
-\end{tabular}
-\end{table}
-
-%Compare with Table 2 of \citet{bennett2003a}, Table 1 of \citet{hinshaw2007}, Table 2 of \citet{hinshaw2009}. Total observing efficiency was 98.4\% \citep{bennett2012}
-
-\subsection{Calibration}
-
-In order to get the raw data into the sky units $\mathrm{mK_{CMB}}$, it is necessary to make a quantitative assessment of the data's goodness-of-fit. To do this, we use mapped time-domain residuals of the timestream based on an initial sky model. Following the procedure of \citet{bp06}, we create a smoothed map of the absolute deviation of the model from the sky signal. The residual maps were first smoothed to $3^\circ$, the absolute value was taken, and then the map was smoothed again with a $15^\circ$ beam. This procedure gave us an indication of the regions of the sky that are not fully characterized by the sky model. We then evaluated the \texttt{Cosmoglobe} Sky model\footnote{\url{cosmoglobe.readthedocs.io}} associated with the \BP\ data release\footnote{\url{beyondplanck.science}} to create a map of the expected thermal dust, AME, free-free, and radio emission at each \WMAP\ frequency. We thresholded using the 80th percentile of this map to match the residual map. The combination of this sky model-informed mask and the residual-informed mask formed the main processing mask for the calibration and correlated noise analysis.
-Outside of these mask, the data are fit will by the sky model, so the calibration and the correlated noise estimates should both be unbiased.
-
-Emphasize, we use the orbital dipole for the absolute calibration, but use the full sky model from the rest of the Gibbs chain for the rest of the gain and the imbalance parameters.
 
 
 \section{Characteristics of frequency maps}
@@ -404,56 +231,11 @@ Emphasize, we use the orbital dipole for the absolute calibration, but use the f
 
 
 
-\section{Systematic error and uncertainties}
-\label{sec:systematics}
-
-\section{Component separation}
-
-Want to compare the $QU$ correlation in WMAP and Planck LFI, get a quantitative number. Point out that the polarization solution itself is much better, but the covariance between pixels themselves is much higher. This wasn't an issue for LFI, so we had to take that into account here.
-
-I also want to put a bit here on why the low-$\ell$ approach needed to be done separately, how correlated noise sampling addresses it, to what extent it's mitigated, etc.
-
-Note that LFI's 30 and 70\,GHz $QU$ correlation is $\sim0.1$, whereas 44\,GHz is much larger, $\sim0.5$. This discrepancy is due to the number of horns with differing polarization orientation. Both 30 and 70\,GHz have an even number of horns, allowing for pairs of datastreams to be combined to give independent polarization measurements. Conversely, 44\,GHz has one horn pair and an unpaired horn, the latter of which induces more correlation in the $QU$ observation matrix. An example for \Ka\ and 30\,GHz is shown in Fig.~\ref{fig:rho_qu}. Aside from the obvious morphological changes due to the two experiments' different observing strategies, the magnitude of \WMAP's correlation is much larger than \Planck's.
-
-The \BP\ project took this covariance structure into account using the dense $N_\mathrm{side}=16$ noise covariance matrix provided by the \WMAP\ team.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/ninv_info.html}} Properly sampled correlated noise only leaves white nosie in the maps, so the noise properties of each map's sample do not require a dense pixel-pixel covariance, even at low resolution \citep{bp01, bp10}. 
-The \WMAPnine\ inverse noise covariance matrices were computed using the full time-space noise matrix $\mathsf N=\mathsf N^\mathrm w+\mathsf N^\mathrm{corr}$, so the full pixel-pixel covariance matrix $\Sigma^{-1}=\mathsf P^T\mathsf N^{-1}\mathsf P$ took into account the correlation between neighboring samples. The \cosmoglobe\ maps, by subtracting a realization of correlated noise before mapmaking, estimates an inerse noise covariance matrix
-\begin{equation}
-	\Sigma^{-1}_{pp'}
-	=\sum_{t_1,t_2}\mathsf P_{t_1,p_1}^T\mathsf N_{t_1,t_2}^{-1}\mathsf P_{t_2,p_2}
-	=\sum_t\mathsf P_{t,p_1}^T\mathsf N_{t,t}^{-1}\mathsf P_{t,p_2}
-\end{equation}
-
-How much off-diagonal pixel covariance is there here?
-
-dense noise covariance matrix also explicitly projected out the poorly-measured imbalance modes, but because we find no trace of these modes in our sky maps or residual maps, this treatment is not necessary in our approach. However, the correlation between Stokes $Q$ and $U$ was not taken into account in the \BP\ LFI analysis. This was not a significant oversight in the LFI analysis because the 30 and 70\,GHz maps only had a 10\% correlation, and 44\,GHz's 50\% correlation was subdominant to other systematic effects. We have updated \commanderthree\ to take $QU$ correlation into account for LFI.
-
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/rho_QU.pdf}
-	\caption{$QU$ correlation for \WMAP\ \Ka-band \textit{(top)} and \Planck\ 30\,GHz \textit{(bottom)}. Note the differing dynamic range in the two maps.}
-	\label{fig:rho_qu}
-\end{figure}
 
 
 \section{Conclusions}
 \label{sec:conclusions}
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.93\linewidth]{figures/megaplot_official.pdf}
-  \caption{Published \textit{WMAP}+LFI bands (WMAP9 and BP10)}
-\end{figure*}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.93\linewidth]{figures/megaplot.pdf}
-	\caption{Mean of \textit{WMAP}+LFI bands}
-\end{figure*}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.93\linewidth]{figures/megadiff.pdf}
-	\caption{Differences between Commander-processed chains and official maps (BP10 and WMAP9)}
-\end{figure*}
 
 
 
