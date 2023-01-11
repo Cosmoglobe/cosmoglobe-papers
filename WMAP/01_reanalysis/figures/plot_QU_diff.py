@@ -30,26 +30,26 @@ W3 = hp.read_map(fnames[8], field=(0,1,2))
 W4 = hp.read_map(fnames[9], field=(0,1,2))
 
 
-d0 = hp.ud_grade(hp.smoothing(0.47*K - d_30, fwhm = fwhm)*1e3, 256)
-d1 = hp.ud_grade(hp.smoothing(0.63*d_30 - Ka, fwhm=fwhm)*1e3, 256)
+d0 = -hp.ud_grade(hp.smoothing(0.47*K - d_30, fwhm = fwhm)*1e3, 256)
+d1 = -hp.ud_grade(hp.smoothing(0.63*d_30 - Ka, fwhm=fwhm)*1e3, 256)
 d2 = hp.ud_grade(hp.smoothing(Q1 - Q2, fwhm = fwhm)*1e3, 256)
 d3 = hp.ud_grade(hp.smoothing(V1 - V2, fwhm = fwhm)*1e3, 256)
 d4 = hp.ud_grade(hp.smoothing(((W1-W2)-(W3-W4))/4, fwhm = fwhm)*1e3, 256)
 
 
-cg.plot(d0, sig=1, llabel=r'\mathit{K}-30', rlabel='Q, \mathrm{CG}', cbar=False,
+cg.plot(d0, sig=1, llabel=r'30-\mathit{K}', rlabel='Q, \mathrm{CG}', cbar=False,
     min=-10, max=10, xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('K30_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d0, sig=2, rlabel='U, \mathrm{CG}', cbar=False, min=-10, max=10, xsize=xsize,
     width=width, fontsize=fontsize)
 plt.savefig('K30_deltaU.pdf', bbox_inches='tight')
 
-cg.plot(d1, sig=1, llabel=r'30-\mathit{Ka}', rlabel='Q, \mathrm{CG}', cbar=False,
+cg.plot(d1, sig=1, llabel=r'\mathit{Ka}-30', rlabel='Q, \mathrm{CG}', cbar=False,
     min=-10, max=10, xsize=xsize, width=width, fontsize=fontsize)
-plt.savefig('30K_deltaQ.pdf', bbox_inches='tight')
+plt.savefig('30Ka_deltaQ.pdf', bbox_inches='tight')
 cg.plot(d1, sig=2, rlabel='U, \mathrm{CG}', cbar=False, min=-10, max=10, xsize=xsize,
     width=width, fontsize=fontsize)
-plt.savefig('30K_deltaU.pdf', bbox_inches='tight')
+plt.savefig('30Ka_deltaU.pdf', bbox_inches='tight')
 
 cg.plot(d2, sig=1, llabel=r'\Delta Q', min=-10, max=10, cbar=False, rlabel='Q, \mathrm{CG}',
     xsize=xsize, width=width, fontsize=fontsize)
@@ -87,26 +87,26 @@ W3 = hp.read_map(fnames[8], field=(0,1,2))
 W4 = hp.read_map(fnames[9], field=(0,1,2))
 
 
-d0 = hp.ud_grade(hp.smoothing(0.47*K - d_30, fwhm = fwhm)*1e3, 256)
-d1 = hp.ud_grade(hp.smoothing(0.63*d_30 - Ka, fwhm=fwhm)*1e3, 256)
+d0 = -hp.ud_grade(hp.smoothing(0.47*K - d_30, fwhm = fwhm)*1e3, 256)
+d1 = -hp.ud_grade(hp.smoothing(0.63*d_30 - Ka, fwhm=fwhm)*1e3, 256)
 d2 = hp.ud_grade(hp.smoothing(Q1 - Q2, fwhm = fwhm)*1e3, 256)
 d3 = hp.ud_grade(hp.smoothing(V1 - V2, fwhm = fwhm)*1e3, 256)
 d4 = hp.ud_grade(hp.smoothing(((W1-W2)-(W3-W4))/4, fwhm = fwhm)*1e3, 256)
 
 
-cg.plot(d0, sig=1, llabel=r'\mathit{K}-30', rlabel='Q, \mathrm{CG}', cbar=False,
+cg.plot(d0, sig=1, llabel=r'30-\mathit{K}', rlabel='Q, \mathit{WMAP}', cbar=False,
     min=-10, max=10, xsize=xsize, width=width, fontsize=fontsize)
 plt.savefig('K30_W_deltaQ.pdf', bbox_inches='tight')
-cg.plot(d0, sig=2, rlabel='U, \mathrm{CG}', cbar=False, min=-10, max=10, xsize=xsize,
+cg.plot(d0, sig=2, rlabel='U, \mathit{WMAP}', cbar=False, min=-10, max=10, xsize=xsize,
     width=width, fontsize=fontsize)
 plt.savefig('K30_W_deltaU.pdf', bbox_inches='tight')
 
-cg.plot(d1, sig=1, llabel=r'30-\mathit{Ka}', rlabel='Q, \mathrm{CG}', cbar=False,
+cg.plot(d1, sig=1, llabel=r'\mathit{Ka}-30', rlabel='Q, \mathit{WMAP}', cbar=False,
     min=-10, max=10, xsize=xsize, width=width, fontsize=fontsize)
-plt.savefig('30K_W_deltaQ.pdf', bbox_inches='tight')
-cg.plot(d1, sig=2, rlabel='U, \mathrm{CG}', cbar=False, min=-10, max=10, xsize=xsize,
+plt.savefig('30Ka_W_deltaQ.pdf', bbox_inches='tight')
+cg.plot(d1, sig=2, rlabel='U, \mathit{WMAP}', cbar=False, min=-10, max=10, xsize=xsize,
     width=width, fontsize=fontsize)
-plt.savefig('30K_W_deltaU.pdf', bbox_inches='tight')
+plt.savefig('30Ka_W_deltaU.pdf', bbox_inches='tight')
 
 cg.plot(d1, sig=1, llabel=r'\mathit K-\mathit{Ka}', rlabel='Q, \mathit{WMAP}', cbar=False,
     min=-10, max=10, xsize=xsize, width=width, fontsize=fontsize)
