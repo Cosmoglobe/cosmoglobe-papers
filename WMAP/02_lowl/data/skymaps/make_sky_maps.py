@@ -71,12 +71,14 @@ for filename, outfile, coltype, vmin, vmax, dataset, freq, unit, scale, offset, 
     #(directory+"diff_W3_10deg.fits", "diff_W3_n16_10deg_Q.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-3,0,3], [r"$-3$", r"0", r"$3$"], 0),        
     #(directory+"diff_W3_10deg.fits", "diff_W3_n16_10deg_U.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-3,0,3], [r"$-3$", r"0", r"$3$"], 0),                                
     # W4
-    (directory+"CG_W4_n16.fits", "CG_W4_n16_Q.pdf", 0, -30, 30., r"W4", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-30,30], [r"$-30$", r"$30$"], 1),        
-    (directory+"CG_W4_n16.fits", "CG_W4_n16_U.pdf", 0, -30, 30., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-30,30], [r"$-30$", r"$30$"], 1),
-    (directory+"wmap_9yr_coadd_W4_map.fits", "WMAP_W4_n16_Q.pdf", 0, -30, 30., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-30,30], [r"$-30$", r"$30$"], 1),        
-    (directory+"wmap_9yr_coadd_W4_map.fits", "WMAP_W4_n16_U.pdf", 0, -30, 30., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-30,30], [r"$-30$", r"$30$"], 1),
-    (directory+"diff_W4_10deg.fits", "diff_W4_n16_10deg_Q.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-3,3], [r"$-3$", r"$3$"], 1),        
-    (directory+"diff_W4_10deg.fits", "diff_W4_n16_10deg_U.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-3,3], [r"$-3$", r"$3$"], 1),                                
+    #(directory+"CG_W4_n16.fits", "CG_W4_n16_Q.pdf", 0, -30, 30., r"W4", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-30,30], [r"$-30$", r"$30$"], 1),        
+    #(directory+"CG_W4_n16.fits", "CG_W4_n16_U.pdf", 0, -30, 30., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-30,30], [r"$-30$", r"$30$"], 1),
+    #(directory+"wmap_9yr_coadd_W4_map.fits", "WMAP_W4_n16_Q.pdf", 0, -30, 30., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-30,30], [r"$-30$", r"$30$"], 1),        
+    #(directory+"wmap_9yr_coadd_W4_map.fits", "WMAP_W4_n16_U.pdf", 0, -30, 30., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-30,30], [r"$-30$", r"$30$"], 1),
+    #(directory+"diff_W4_10deg.fits", "diff_W4_n16_10deg_Q.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-3,3], [r"$-3$", r"$3$"], 1),        
+    #(directory+"diff_W4_10deg.fits", "diff_W4_n16_10deg_U.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-3,3], [r"$-3$", r"$3$"], 1),
+    # Likelihood inputs
+    (directory+"wt_r3_9yr.KaQV.map_q", "wt_r3_9yr.KaQV.map_q.pdf", 0, -3000, 3000., r"", r"", r"$\mathrm{\mu K}$", 1, 0, 0, [-3000,3000], [r"$-3000$", r"$3000$"], 1),                                        
 ]:
     m = hp.ma(hp.read_map(filename,comp))*scale - offset
     if coltype == 2:
