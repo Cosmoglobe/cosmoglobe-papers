@@ -19,7 +19,7 @@ plt.savefig('chisq_U.pdf', bbox_inches='tight')
 
 
 cg.standalone_colorbar("RdBu_r", ticks=[-3,0,3], extend='both',
-        unit=r"$\chi^2$",width=4)
+        unit=r"$\chi^2_\mathrm{red}$",width=4)
 
 plt.savefig('cbar_3sigma.pdf', bbox_inches='tight')
 
