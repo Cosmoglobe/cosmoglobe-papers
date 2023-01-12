@@ -144,6 +144,7 @@ for filename, outfile, coltype, vmin, vmax, dataset, freq, unit, scale, offset, 
             plt.title(r"%s" % freq, fontsize=16)
             #plt.text(4.65,  1.2, r"%s" % freq, ha='center', va='center')
             plt.text(-4.65,  1.2, r"%s" % dataset, ha='center', va='center')
+            plt.text(3.3,  0, r"Cosmoglobe", ha='left', va='center', fontsize=16)            
             plt.savefig(outfile, bbox_inches='tight', pad_inches=0.02)
             #plt.savefig(outfile, pad_inches=0.02)
 
