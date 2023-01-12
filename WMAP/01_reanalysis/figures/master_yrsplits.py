@@ -55,13 +55,24 @@ cg_maps = [
 # f'{CG_DIR}/chains_CG_LFI_KKaQVW_221130/tod_090-WMAP_W4_map_c0001_k000002.fits']
 
 
-DIRs =  ["/mn/stornext/d5/data/duncanwa/WMAP/chains_baselinetest",
-         "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"]
-labels = ['CG', 'W9']
+DIRs = [
+    "/mn/stornext/d5/data/duncanwa/WMAP/chains_baselinetest",
+    "/mn/stornext/d16/cmbco/ola/wmap/freq_maps",
+]
+labels = ["CG", "W9"]
 
-bands = ['023-WMAP_K', '030-WMAP_Ka', '040-WMAP_Q1', '040-WMAP_Q2',
-    '060-WMAP_V1', '060-WMAP_V2', '090-WMAP_W1', '090-WMAP_W2', '090-WMAP_W3',
-    '090-WMAP_W4']
+bands = [
+    "023-WMAP_K",
+    "030-WMAP_Ka",
+    "040-WMAP_Q1",
+    "040-WMAP_Q2",
+    "060-WMAP_V1",
+    "060-WMAP_V2",
+    "090-WMAP_W1",
+    "090-WMAP_W2",
+    "090-WMAP_W3",
+    "090-WMAP_W4",
+]
 
 for band in bands:
     fnames = glob(f"{DIRs[0]}/tod_{band}_map_yr000?_c0001_k000001.fits")
