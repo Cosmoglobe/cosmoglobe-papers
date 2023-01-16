@@ -39,7 +39,7 @@ def set_rlabel(rlabel, x=0.995, y=0.925, fontsize=12):
         rlabel,
         ha="right",
         va="center",
-        fontsize=15,
+        fontsize=12,
         fontname=None,
         transform=ax.transAxes,
     )
