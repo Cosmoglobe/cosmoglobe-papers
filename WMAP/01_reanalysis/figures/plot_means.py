@@ -557,8 +557,16 @@ plt.savefig(f"W_mu_U.png", bbox_inches="tight", dpi=300)
 
 
 cg.standalone_colorbar("binary_r", ticks=[1,2,3,4,], extend='both',
-            unit=r"$\mathrm{\mu K}$",width=4)
+            unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
 plt.savefig('cbar_std.png', bbox_inches='tight', dpi=300)
+cg.standalone_colorbar("binary_r", ticks=[25, 35, 45, 60], extend='both',
+            unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
+plt.savefig('cbar_rms_I.png', bbox_inches='tight', dpi=300)
+cg.standalone_colorbar("binary_r", ticks=[35, 50, 70, 85], extend='both',
+            unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
+plt.savefig('cbar_rms_P.png', bbox_inches='tight', dpi=300)
 cg.standalone_colorbar("RdBu_r", ticks=[-0.5, 0,0.5], extend='both',
-            width=4)
+            width=4, fontsize=18, unit=r'\phantom{$\rho$}')
 plt.savefig('cbar_rho.png', bbox_inches='tight', dpi=300)
+
+
