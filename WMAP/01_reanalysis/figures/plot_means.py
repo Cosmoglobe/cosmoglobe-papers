@@ -93,7 +93,7 @@ for b in bands:
     # if b == '090-WMAP_W4':
     #   cbar = True
 
-    rlabel = r"A^\mathrm{RMS}_{" + b.split("_")[1] + r"}"
+    rlabel = r"\sigma_{" + b.split("_")[1] + r"}"
     if "040-WMAP_Q" in b:
         r /= 1.5**2
         fac = "/1.5"
@@ -558,15 +558,15 @@ plt.savefig(f"W_mu_U.png", bbox_inches="tight", dpi=300)
 
 cg.standalone_colorbar("binary_r", ticks=[1,2,3,4,], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
-plt.savefig('cbar_std.png', bbox_inches='tight', dpi=300)
+plt.savefig('cbar_std.png', dpi=300)
 cg.standalone_colorbar("binary_r", ticks=[25, 35, 45, 60], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
-plt.savefig('cbar_rms_I.png', bbox_inches='tight', dpi=300)
+plt.savefig('cbar_rms_I.png', dpi=300)
 cg.standalone_colorbar("binary_r", ticks=[35, 50, 70, 85], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
-plt.savefig('cbar_rms_P.png', bbox_inches='tight', dpi=300)
+plt.savefig('cbar_rms_P.png', dpi=300)
 cg.standalone_colorbar("RdBu_r", ticks=[-0.5, 0,0.5], extend='both',
             width=4, fontsize=18, unit=r'\phantom{$\rho$}')
-plt.savefig('cbar_rho.png', bbox_inches='tight', dpi=300)
+plt.savefig('cbar_rho.png', dpi=300)
 
 
