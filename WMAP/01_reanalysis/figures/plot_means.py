@@ -12,9 +12,15 @@ xsize = 1200
 DIR1 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_857_KKaQVW_a_230110"
 DIR2 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_857_KKaQVW_b_230111"
 
+RDIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
+
+WDIR = "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"
+
 chain1 = cg.Chain(f"{DIR1}/chain_c0001.h5", burn_in=2)
 chain2 = cg.Chain(f"{DIR2}/chain_c0001.h5", burn_in=2)
 
+wbands = [
+    "K1", "Ka1", "Q1", "Q2", "V1", "V2", "W1", "W2", "W3", "W4"]
 bands = [
     "023-WMAP_K",
     "030-WMAP_Ka",
@@ -27,6 +33,10 @@ bands = [
     "090-WMAP_W3",
     "090-WMAP_W4",
 ]
+
+x, y, z = hp.pix2vec(512, np.arange(12 * 512**2))
+dip_W = -0.233 * x - 2.222 * y + 2.504 * z
+
 
 
 def set_rlabel(rlabel, x=0.995, y=0.925, fontsize=12):
@@ -69,7 +79,7 @@ rms_V = []
 
 mu_W = []
 rms_W = []
-for b in bands:
+for n, b in enumerate(bands):
     print(b)
 
     m1 = chain1.get(f"tod/{b}/map") * 1e3
@@ -79,6 +89,15 @@ for b in bands:
     r2 = chain2.get(f"tod/{b}/rms")
     rs = np.concatenate((r1, r2)) * 1e6
     r = rng.choice(rs)
+
+    mu = hp.read_map(f"{RDIR}/CG_{b}_IQU_n0512_v1.fits", field=(0,1,2)) * 1e3
+    rms = hp.read_map(f"{RDIR}/CG_{b}_IQU_n0512_v1.fits", field=(3,4,5,6))
+    sd  = hp.read_map(f"{RDIR}/CG_{b}_IQU_n0512_v1.fits", field=(7,8,9,10))
+
+    rms[:3] *= 1e3
+    rms[3] *= 1e6
+    sd[:3] *= 1e3
+    sd[3] *= 1e6
 
     llabelT = ""
     llabelQ = ""
@@ -157,11 +176,11 @@ for b in bands:
     plt.savefig(f"{b}_rms.png", bbox_inches="tight", dpi=300)
     plt.close("all")
 
-    mu = m1.mean(axis=0)
-    sd = m1.std(axis=0)
+    #mu = m1.mean(axis=0)
+    #sd = m1.std(axis=0)
     mu_s = hp.smoothing(mu, fwhm=2 * np.pi / 180)
 
-    rho_QU = ((ms[:, 1] - mu[1]) * (ms[:, 2] - mu[2])).mean(axis=0) / sd[1] / sd[2]
+    rho_QU = sd[3]/sd[1]/sd[2]
     rlabel = r"\sigma_{" + b.split("_")[1] + r"}"
     # Limits:
 
@@ -413,6 +432,11 @@ for b in bands:
     plt.tight_layout()
     plt.savefig(f"{b}_sampdiff.png", bbox_inches="tight", dpi=300)
     plt.close()
+
+    d_WMAP = hp.read_map(f"{WDIR}/wmap_iqusmap_r9_9yr_{wbands[n]}_v5.fits",
+        field=(0,1,2))
+    d_WMAP[0] += dip_W
+    d_WMAP *= 1e3
 
 
 Q = (mu_Q[0] / rms_Q[0][:3] + mu_Q[1] / rms_Q[1][:3]) / (
