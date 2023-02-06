@@ -187,6 +187,20 @@
 
 \textbf{Describe WMAP highlights, establishment of firm LCDM model. Brief summary of Planck, Commander, BeyondPlanck, and then Cosmoglobe; WMAP is first major extension of the end-to-end framework, and marks the transition from classical single-experiment TOD analysis to multi-experiment TOD analysis. A brave new world.}
 
+The discovery of the Cosmic Microwave Background (CMB) by \citet{penzias:1965} marked a genuine paradigm shift in the field of cosmology, giving direct evidence that the Universe was once much hotter than it is today, effectively ruling out the steady-state theory of the universe \citep{dicke:1965}. Aside from a fundamental shift in the astrophysical history of the universe, this discovery spurred a series of cosmological experiments, which culminated in the Nobel Prize-winning measurements by \COBE's FIRAS and DMR experiments that confirmed the blackbody nature of the CMB and measured temperature variations from the primordial gravitational field \citep{smoot:1992, mather:1994}.
+
+The \textit{Wilkinson Microwave Anisotropy Probe} (\WMAP) mission directly superseded the DMR, with the goal of making maps of the CMB that were 45 times more sensitive and 33 times higher angular resolution, all with the goal of measuring the physics of the universe at recombination \citep{bennett2003:MAP}. It can be argued that \WMAP's measurements of the CMB heralded a paradigm shift of similar magnitude to the 1965 discovery of the CMB. As quantified in \citet{bennett2012}, the volume of parameter space in standard $\Lambda$CDM allowed before \WMAP\ was 68,000 times larger than after, with 99.9985\,\% of six-parameter $\Lambda$CDM ruled out. As a concrete example, the best determination of the age of the CMB before \WMAP\ came from Boomerang \citep{lange:2001} and constrained $t_0<14\,\mathrm{Gyr}$, with peak values of 9--11\,Gyr, in contradiction with direct measurements of the oldest globular clusters \citep{hu:2001}.
+
+The \Planck\ satellite was developed concurrently with \WMAP, and their operation lifetimes briefly overlapped, with \Planck\ observing from 2009--2013 and \WMAP\ from 2001--2011 (cite). \Planck's stated goal was to (check overview papers) fully characterize the temperature fluctuations from recombination, as well as to characterize the polarized microwave sky on large angular scales.  Overall, the \Planck\ experiment's sensitivity to the CMB was an improvement in white noise sensitivity of a factor x, and a factor of y improvement in angular resolution. Overall, the raw sensitivity of \Planck\ was an order of magnitude lower than \WMAP. As opposed to \WMAP, which used minimal \COBE\ data in its fiducial analysis, \Planck's initial release calibrated off of \WMAP's Solar dipole solution, and the Galactic component separation solution found in  \citet{planck2014-a12} by \commander\ \citep{jewell2004,eriksen:2004,eriksen2006,eriksen2008} made use of \WMAP\ frequency maps. Most crucially, the \Planck\ and \WMAP\ maps are of similar quality that meaningful comparisons can be made between them. This last aspect has been critical, especially for the \Planck\ Low Frequency Instrument (LFI), whose channels lie between those of \WMAP.
+
+
+As became clear in the LFI analysis (2018 LFI analysis), there was a circular dependency between the instrument calibration and the sky -- a robust sky model made from \Planck\ LFI maps was required to calibrate the timestreams sufficiently accurately. It was from this need that the \BP\ project grew \citep{bp01}, powered by \commanderthree\ \citep{bp03}, a Gibbs sampling software that performed high-level and low-level parameter estimation in a single integrated framework. This analysis demonstrated the feasibility of a full end-to-end Gibbs sampling analysis in the CMB framework, while providing the highest-quality LFI maps to date.
+
+The success of this paradigm, using properly characterized external datasets to improve TOD processing, led to the \cosmoglobe\ initiative. As part of the \BP\ suite of papers, \citet{bp17} integrated \WMAP\ \Q-band TODs into the \commanderthree\ framework, calibrated off of the \BP\ sky model. Beyond demonstrating that \commanderthree\ can be applied to non-\Planck\ data, this analysis uncovered an instrumental effect not previously described in the literature, namely a spurious polarization signal induced by the coupling of the Solar dipole, sidelobes, and horn transmission imbalance. 
+
+This paper is the next logical step in the set of previous developments, and presents the first end-to-end TOD analysis of multiple datasets. In this work, we analyze the full \WMAP\ dataset at the raw TOD level alongside the \Planck\ LFI TODs. As described in Sect.~\ref{sec:methods}, this takes into account the fact that \Planck\ and \WMAP\ observed the same sky, and hence uses the sky as determined from a component separation using these data as a given in each stage of the Gibbs chain. We describe the underlying data in more detail in Sect.~\ref{sec:data}, and follow this by detailing the statistical properties of the output Markov chains in Sect.~\ref{sec:markov_chains}. We describe the posterior distribution of instrumental parameters in Sect.~\ref{sec:lowlevel},  and describe the properties of the derived frequency maps in \ref{sec:maps}. In Sect.~\ref{sec:comparison}, we compare the \cosmoglobe\ results with the fiducial \textit{WMAP9} analysis in both map and power spectrum space, and Sect.~\ref{sec:systematics} includes a thorough discussion of systematic error treatment in both frameworks. We conclude in Sect.~\ref{sec:conclusions}, and lay a path forward for the \cosmoglobe\ project.
+
+
 A to-do list:
 
 \begin{itemize}
@@ -606,9 +620,19 @@ In a preliminary \commanderthree\ run, we discovered an unbounded rise in the
 
 In order to break this degeneracy, it was necessary to impose a prior either on the AME itself or on the absolute calibration. The AME prior we explored followed the approach of \citet{bp13}, in which the prior mean was the \Planck\ DR4\,857 GHz map scaled by $3\cdot10^{-5}$, and the variance is given in angular scales by a parameter $q$. We found that a prior of $q=10^{-2}\,\mathrm{\mu K}^2$ was necessary to stabilize the gain, resulting in an AME map that was nearly identical to the \Planck\ 857\,GHz band. As this gave a result that was inconsistent with many previous results, we opted insted to sample the absolute calibration instead.
 
-Any error in $g_0$ leads to a residual due to the large Solar dipole. In practice, we found that the typical variation of $g_0$ was 0.002, giving a relative error of $\sim0.1\,\%$. This variation induces a $\sim6\,\mathrm{\mu K}$ Solar dipole uncertainty, which is easily attributed to AME during component separation. In Figure (figure goes here), we demonstrate this effect on recovered AME maps using extreme $g_0$ values of 1.175 and 1.9. We find that AME maps consistent with those presented in \citet{bennett2012} and \citet{planck2014-a12} are recovered when $g_0$ is between 1.180 and 1.184 \textbf{preliminary}. Based on this analysis, we sample $g_0$ from a Gaussian with mean 1.182 and standard deviation 0.002.
+Any error in $g_0$ leads to a residual due to the large Solar dipole. In practice, we found that the typical variation of $g_0$ was 0.002, giving a relative error of $\sim0.1\,\%$. This variation induces a $\sim6\,\mathrm{\mu K}$ Solar dipole uncertainty, which is easily attributed to AME during component separation. In Figure \ref{fig:g0_ame}, we demonstrate this effect on recovered AME maps using extreme $g_0$ values of 1.175 and 1.9. We find that AME maps consistent with those presented in \citet{bennett2012} and \citet{planck2014-a12} are recovered when $g_0$ is between 1.180 and 1.182. Based on this analysis, we sample $g_0$ from a Gaussian with mean 1.1815 and standard deviation 0.001.
 
 \citet{bennett2012} and \citet{planck2014-a12} find AME peak frequencies 12.0--17.5\,GHz and 17--23\,GHz, respectively, both with low signal-to-noise at high Galactic latitude and with structure along the plane. The Q-U-I JOint Tenerife Experiment (QUIJOTE) has recently released maps of the sky with approximately 70\,\% sky coverage at frequencies 11, 13, 17, and 19\,GHz \citep{QUIJOTE_IV}. QUIJOTE is optimized for characterizing the polarized sky, and constraints from, e.g., \citet{QUIJOTE_VIII}, will be critical for future polarized synchrotron SED characterization and polarized AME limits. While in principle the AME SED can be constrained by a joint \WMAP/LFI/QUIJOTE analysis, we consider this outside of the scope of the paper, which aims to evaluate the effect of jointly analyzing \WMAP\ and \Planck\ LFI at the TOD level.  Future analysis will include the QUIJOTE data, and hopefully break the $g_0$-$a_\mathrm{ame}$ degeneracy.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{figures/ame_g01.178.png}
+	\includegraphics[width=\columnwidth]{figures/ame_g01.181.png}
+	\includegraphics[width=\columnwidth]{figures/ame_g01.185.png}
+	\includegraphics[width=0.5\columnwidth]{figures/cbar_100uK.png}
+	\caption{Dependence on AME amplitude evaluated at 22\,GHz as a function of absolute calibration. Each map comes from the fifth iteration of a dedicated \commander\ run that fixed $g_0$ while letting all other TOD parameters be fit. The values of $g_0=1.178$ and $g_0=1.185$ represent $3.5\sigma$ draws from the prior distribution with mean $1.1815$ and standard deviation $0.001$. The dipole visible in the top and bottom panels is aligned perfectly with the Solar dipole, and is directly due to variations in the \K-band absolute calibration.}
+	\label{fig:g0_ame}
+\end{figure}
 
 
 \subsection{Computational resources}
@@ -1054,6 +1078,7 @@ dense noise covariance matrix also explicitly projected out the poorly-measured 
 
 
 \section{Comparison with official products}
+\label{sec:comparison}
 
 \begin{figure*}
 	\centering
