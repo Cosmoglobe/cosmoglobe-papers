@@ -4,6 +4,7 @@ from matplotlib.ticker import MaxNLocator
 import numpy as N
 import scipy.stats
 import healpy as hp
+import cosmoglobe as cg
 
 import plotly.colors as pcol
 import matplotlib as mpl
