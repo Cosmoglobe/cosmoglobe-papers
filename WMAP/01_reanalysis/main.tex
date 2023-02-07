@@ -242,9 +242,13 @@ We begin by discussing the \WMAP\ analysis from uncalibrated TOD to maps. Sect.~
 
 The \WMAP\ satellite carried forty differential polarization-sensitive radiometers grouped as differnecing assemblies (DAs), where one pair was sensitive to the difference in signal at one polarization orientation and the other pair sensitive to the orthogonal polarization. In total, the DAs were allocated as: 1 \K\ (23\,GHz), 1 \Ka\ (30\,GHz), 2 \Q\ (40\,GHz), 2 \V (60\,GHz), and 4 \W (90\,GHz).
 
+(We assume that the pointing solution and beams are perfectly known.)
+
 Here we describe the calibration procedure as reported in \citet{hinshaw2009}. The TOD are intially modelled as having constant gain and baseline for a 1--24\,hour period, and are fit to the orbital dipole assuming $T_0$ from \citet{mather:1999} and a map made from a previous iteration of the mapmaking procedure. Once the gain and baseline solution has converged, the data are fit to a parametric form of the radiometer performance as a function of housekeeping data, given in \citet{wmapexsupp}.
 
 (Sidelobes, mapmaking. Also need to mention the pointing solution.)
+
+As described in \citet{jarosik2007}, the frequency response of the radiometers forming a DA are slightly different, which causes a spurious signal to be leaked into the polarization maps. This effect is mitigated by assigning a spurious pseudo-Stokes parameter, $S$, and solving for it explicitly in the mapmaking procedure.
 
 \subsection{\WMAP\ instrument model}
 \label{sec:wmap_instmodel}
@@ -402,52 +406,77 @@ Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI
 
 \subsection{Sampling algorithms}
 
+Each step of the Gibbs chain requires its own distribution to be sampled from. In Sects.~\ref{ssec:oldsamplers} we review the sampling algorithms implemented in the \bp\ suite of papers, while Sects.~\ref{ssec:mapmaking}--\ref{ssec:baseline} provide an overview of the \WMAP-specific processing steps.
+
 \subsubsection{Review of previous work}
 \label{ssec:oldsamplers}
+
+Gain sampling (Eq.~\eqref{eq:gain}) is described in \citet{bp06}.
+
+Correlated noise sampling and noise SED sampling is described in \citet{bp07}.
+
+Component separation for intensity and polarization are described in \citet{bp13} and \citet{bp14}, respectively.
+
+Power spectrum estimation is described in \citet{bp10}.
+
+Cosmological parameter estimation is described in \citet{bp11}.
 
 
 \subsubsection{Differential mapmaking}
 \label{ssec:mapmaking}
 
-\textbf{Mapmaking; review/summary of BP17}
 
+After calibration and correction for instrumental effects, the TOD can be modeled as
+\begin{equation}
+	\boldsymbol d=\mathsf P\boldsymbol m+\boldsymbol n^\mathrm{w},
+\end{equation}
+where
+\begin{equation}
+	\boldsymbol m=\mathsf B^\mathrm{symm}\mathsf M\boldsymbol a
+\end{equation}
+is the expected map for each detector after removing the orbital dipole, far sidelobe, baseline, and a realization of correlated noise. The differential pointing strategy can be represented in matrix form as 
+\begin{align}
+	\label{eq:wmap_pointing}
+	\mathsf P_{tp}&=
+	(1+x_\mathrm{im})(\delta_{p^I_{\phantom\A}p_\A^I}
+	+\delta_{p^Q_{\phantom\A}p^Q_\A}\cos2\psi_\A
+	+\delta_{p^U_{\phantom\A}p^U_\A}\sin2\psi_\A)
+	\\
+	&-(1-x_\mathrm{im})(\delta_{p^I_{\phantom\B}p_\B^I}
+	-\delta_{p^Q_{\phantom\A}p^Q_\B}\cos2\psi_\B
+	-\delta_{p^U_{\phantom\A}p^U_\B}\sin2\psi_\B)
+\end{align}
+where $p_\A$ and $p_\B$ are the time-dependent pointings for each DA. The maximum likelihood map can in principal be solved using the usual mapmaking equation,
+\begin{equation}
+	\label{eq:mapmapking_eqn1}
+	\mathsf P^T\mathsf N^{-1}\mathsf P\boldsymbol m=\mathsf P^T\mathsf N^{-1}\boldsymbol d.
+\end{equation}
+For a single-horn experiment, i.e., \Planck\ LFI, this reduces to a $3\times3$ matrix that can be inverted for each pixel independently. For the pointing matrix in Eq.~\eqref{eq:wmap_pointing}, this is no longer possible, as there is inherently coupling between horns A and B in the timestreams. The $3N_\mathrm{pix}\times3N_\mathrm{pix}$ matrix can be solved using an iterative algorithm, e.g., preconditioned conjugate gradients.
+
+(???) identified an issue where a large difference in the sky temperature at pixel value at pixel A versus pixel B induced artifacts in the mapmaking procedure. We adopt the procedured first described in (???) where only the pixel in a bright region, defined by a small processing mask by (???), is accumulated, this modifying the mapmaking equation to
+\begin{equation}
+	\mathsf P^T_\mathrm{am}\mathsf N^{-1}\mathsf P\boldsymbol m
+	=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d.
+\end{equation}
+This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$, which typically takes about 20 iterations for producing a frequency maps.
 
 \subsubsection{Transmission imbalance sampling}
 \label{ssec:imbalance}
 
-\textbf{transmission imbalance; review/summary of BP17}
+Transmission imbalance, i.e., the differential power transmission of the optics and waveguide components, can be parameterized as
+\begin{equation}
+	d_{t,j}=g_{t,j}[(1+x_{\mathrm{im},j})s_{t,j}^\mathrm{tot,A}-(1-x_{\mathrm{im},j})s_{t,j}^\mathrm{tot,b}]+n_t.
+\end{equation}
+This can be decomposed into a differential (d) and common-mode (c) signal such that
+\begin{equation}
+	d_{t,j}=g_{t,j}[s_{t,j}^\mathrm d+x_{\mathrm{im},j}s_{t,j}^\mathrm c]+n_t.
+\end{equation}
+In this form, the imbalance parameters can be estimated by drawing Gaussian samples from the standard mean and standard deviation over the entire mission.
+
+The \WMAP\ procedure, described in \citet{jarosik2003a}, fit for common-mode and differential coefficients along with a cubic baseline over 10 precession periods at a time, corresponding to 10 hours of observation. The mean and uncertainty were then calculated by averaging and taking the standard deviation of these values. This approach has the benefit of allowing for the tracking of possible transmission imbalance variation throughout the mission. However, none of the \WMAP\ suite of papers have indicated this, and it has not arisen in our analysis, so we model this as an effect whose value is constant throughout the mission.
 
 \subsubsection{Baseline sampling}
 \label{ssec:baseline}
-
-\textbf{baselines; review/summary of BP17}
-
-%\subsubsection{Other things we have added?}
-%\label{ssec:baseline}
-
-
-
-%\subsection{\planck\ LFI data processing}
-%\label{ssec:lfi}
-
-Summary of \citet{bp01}, \citet{bp10}.
-Artem was here...
-
-%\subsection{\wmap\ data processing}
-%\label{ssec:wmap}
-
-As summarized in \citet{bp17}, the TOD processing for \WMAP\ has been
-implemented in the \commanderthree\ Gibbs sampling framework.  The process of
-implementing this module in \commanderthree\ generally involved implementing
-the procedures outlined in \citet{jarosik2003a}, \citet{hinshaw2003a},
-\citet{jarosik2007}, and \citet{wmapexsupp}, and implementing a sampling
-algorithm whenever an estimate based off of the data was obtained. \citet{bp17}
-found excellent agreement between our processed maps and the official
-\WMAPnine\ products. The most visually obvious exception is that the
-\citet{bp17} maps have no trace of the poorly-measured modes induced by
-transmission imbalance uncertainties. Although \citet{bp17} focused on the
-\Q-band maps, we show in Sect.~\ref{sec:freqmaps} that this is representative
-of all \WMAP\ bands, with the notable exception of \K-band.
 
 The data model adopted in \citet{hinshaw2003a} can be written in raw digital units (du) as
 \begin{equation}
@@ -459,6 +488,55 @@ the noise into $\n=\n^\mathrm w+\n^\mathrm{corr}$, a white noise term and a
 correlated noise term. By definition, the white noise does not have any
 correlations between adjacent pixels, so that any pixel-pixel covariance should
 be fully described by realizations of the $\n^\mathrm{corr}$ timestream.
+
+The approach detailed in \citet{hinshaw2003a} and the \commander\
+implementation differ mainly in the assumed stable timescale -- the initial
+\WMAP\ baseline is estimated over one hour timescales, whereas \commander\
+assumes constant values throught the entire timestream, 3--7 days depending on
+the band in question. As noted in \citet{hinshaw2003a}, residual baseline
+variations manifest as correlated noise stripes in the final maps. \WMAPnine\
+solves this using a time-domain filter, downweighting the data based off of the
+noise characterization. This approach is equivalent to the \commanderthree\
+procedure of removing a constrained realization of correlated noise from the
+timestream directly, based on the best-fit to the noise PSD.
+
+%\subsubsection{Other things we have added?}
+%\label{ssec:baseline}
+
+
+
+%\subsection{\planck\ LFI data processing}
+%\label{ssec:lfi}
+
+%Summary of \citet{bp01}, \citet{bp10}.
+%Artem was here...
+
+%\subsection{\wmap\ data processing}
+%\label{ssec:wmap}
+
+%As summarized in \citet{bp17}, the TOD processing for \WMAP\ has been
+%implemented in the \commanderthree\ Gibbs sampling framework.  The process of
+%implementing this module in \commanderthree\ generally involved implementing
+%the procedures outlined in \citet{jarosik2003a}, \citet{hinshaw2003a},
+%\citet{jarosik2007}, and \citet{wmapexsupp}, and implementing a sampling
+%algorithm whenever an estimate based off of the data was obtained. \citet{bp17}
+%found excellent agreement between our processed maps and the official
+%\WMAPnine\ products. The most visually obvious exception is that the
+%\citet{bp17} maps have no trace of the poorly-measured modes induced by
+%transmission imbalance uncertainties. Although \citet{bp17} focused on the
+%\Q-band maps, we show in Sect.~\ref{sec:freqmaps} that this is representative
+%of all \WMAP\ bands, with the notable exception of \K-band.
+
+%The data model adopted in \citet{hinshaw2003a} can be written in raw digital units (du) as
+%\begin{equation}
+%	\d = \mathsf{GPBM}\boldsymbol a+\boldsymbol n+\boldsymbol b,
+%\end{equation}
+%where $\boldsymbol b$ is the instrumental baseline and $\boldsymbol n$ is the
+%total instrumental noise. As detailed in \citet{bp06}, \commanderthree\ divides
+%the noise into $\n=\n^\mathrm w+\n^\mathrm{corr}$, a white noise term and a
+%correlated noise term. By definition, the white noise does not have any
+%correlations between adjacent pixels, so that any pixel-pixel covariance should
+%be fully described by realizations of the $\n^\mathrm{corr}$ timestream.
 
 Three notable deviations from the official \WMAPnine\ pipeline and the
 \cosmoglobe\ approach are the gain estimation, the correlated noise treatment,
