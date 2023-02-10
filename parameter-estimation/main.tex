@@ -300,11 +300,11 @@ We have shown that the algorithm presented in \cite{racine:2016} works well in t
 
 \appendix
 
-\section{Appendix A: Analytic expression for a constant latitude mask}
+\section{Analytic expression for a constant latitude mask}
 \label{sec:appendix}
 
 
-The goal of this appendix is to show how we can calculate $N_{\ell m, \ell' m'}^{-1}$ exactly for a constant latitude mask and uniform noise, and also how we can make it computationally faster. The noise can be written as this in pixel space,
+The goal of this appendix is to show how we can calculate $N_{\ell m, \ell' m'}^{-1}$ exactly for a constant latitude mask and uniform noise, and how this makes the map making equation computationally faster to solve. The noise can be written as this in pixel space:
 $$
 \left(N^{-1} \right)_{pp'} = \frac{N_{\mathrm{pix}}}{\sigma^2} \delta_{pp'} H(|\theta(p) -\pi/2|-b).
 $$
@@ -347,19 +347,19 @@ This gives us in spherical coordinates
 \end{align}
 Writing the above equation in terms of Legendre polynomials $P_{\ell m}(\cos(\theta)))$, we have
 $\Tilde{Y}_{\ell m} = \Delta_{\ell m}P_{\ell m}(\cos(\theta)))$, where ${\Delta_{\ell m}=(-1)^m \sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell - m)!}{(\ell+m)!}}}$.
- Writing $x=\arccos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or antisymmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and antisymmetric when $\ell+m$ = odd. Since $m=m'$, an important feature is that the two integrals cancel each other if $\ell+\ell' =$ odd. We therefore only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, we get
+ Writing $x=\cos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or antisymmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and antisymmetric when $\ell+m$ = odd. Since $m=m'$, an important feature is that the two integrals cancel each other if $\ell+\ell' =$ odd. We therefore only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, for $\ell + \ell'=$ even, we get
 \begin{align}
 \nonumber
 \left(N^{-1}\right)_{\ell m, \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{0}^{\pi/2-b} d\theta \sin(\theta)\Tilde{Y}_{\ell m}(\theta)\Tilde{Y}_{\ell' m'}(\theta)\\
 \label{eq:finished_n_inv}
-&=\frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\Delta_{\ell m}\Delta_{\ell' m'}\int_{\sin(b)}^{1} dx P_{\ell m}(x) P_{\ell' m}(x).
+&=\frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{\sin(b)}^{1} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)).
 \end{align}
 This integral can be solved numerically by gridding $x$ and the spherical harmonics without phase can be calculated in Python using a library like ...
 
 Since the masks used for this work are $\sin(b)\geq 0.2$, we require much fewer grid points for $x$ if we use the following identity for $\ell+\ell' = $ even:
 \begin{align}
-&\Delta_{\ell m} \Delta_{\ell'm}\delta_{mm'} \int_{\sin(b)}^{1} dx P_{\ell m}(x) P_{\ell' m}(x) = \\
-\frac{1}{4\pi}\delta_{\ell \ell'}\delta_{m m'} - &\Delta_{\ell m} \Delta_{\ell'm}\delta_{mm'} \int_{0}^{\sin(b)} dx P_{\ell m}(x) P_{\ell' m}(x),
+&\delta_{mm'} \int_{\sin(b)}^{1} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)) = \\
+\frac{1}{4\pi}\delta_{\ell \ell'}\delta_{m m'} - &\delta_{mm'} \int_{0}^{\sin(b)} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)),
 \end{align}
 which comes from the orthonormality condition for spherical harmonics. We now only need to grid $x$ in the interval $0\leq x \leq \sin(b) \leq 0.2$ for this work.
 
