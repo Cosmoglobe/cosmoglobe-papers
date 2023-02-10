@@ -617,7 +617,11 @@ A key motivation of the \cosmoglobe\ project is to evaluate whether it is feasib
 
 Despite the relatively small data volume spanned by \WMAP, the CPU time is comparable to each of the LFI channels.  By far the largest reason for this is the mapmaking step, which requires looping over the entire dataset for each matrix multiplication, a process which must be repeated $\sim20$ times. This is vastly sped up by the use of a low resolution preconditioner, reducing the number of iterations by an order of magnitude.
 
-(One thing I would like to explain -- why does it take so much longer for TOD operations? My initial thought was that each timestream requires two timestreams for each horn, but that's not enough.)
+\textit{(One thing I would like to explain -- why does it take so much longer for TOD operations? My initial thought was that each timestream requires two timestreams for each horn, but that's not enough.)}
+
+Additionally, operations that require creating timestreams for each detector, i.e., TOD projection, sidelobe evaluation, and orbital dipole projection, take much longer than expected from a pure data volume scaling. Part of this is due to each \WMAP\ radiometer needing to evaluate the sky in two pixels simultaneously, doubling the expected workload. The operations of gain sampling and correlated noise sampling include multiple FFTs. Typical LFI TODs are of length $\sim200\,000$, an order of magnitude smaller than the \WMAP\ TODs of length $2^{\text{22\ --\ 23}}$. 
+
+\textit{(Need to expand ``other'')}
 
 
 
@@ -625,7 +629,7 @@ Despite the relatively small data volume spanned by \WMAP, the CPU time is compa
   \begingroup
   \newdimen\tblskip \tblskip=5pt
   \caption{Computational resources required for end-to-end
-    \cosmoglobe\ processing. All times correspond to CPU hours, and all data volumes are reported in GB All reported times are
+    \cosmoglobe\ processing. All times correspond to CPU hours, and all data volumes are reported in GB. Reported times are
     averaged over more than 100 samples, and vary by $\lesssim\,5\,\%$ from sample to
     sample. \textbf{Preliminary numbers, not all accurate}}
   \label{tab:resources}
@@ -723,9 +727,20 @@ Despite the relatively small data volume spanned by \WMAP, the CPU time is compa
 \section{Low-level posterior distributions}
 \label{sec:lowlevel}
 
+These parameters are themselves sampled conditioned on a full sky model.
+
+Remember that the frequency maps themselves are deterministic functions of the low-level sampled parameters.
+
 \begin{figure}[t]
   	\centering
-	\includegraphics[width=\linewidth]{figures/instpar_CG_K111_v1.pdf}
+	\includegraphics[width=\linewidth]{figures/instpar_CG_K113_v1.pdf}
+	\caption{Overview of K113}
+	\label{fig:inst_K113}
+\end{figure}
+
+\begin{figure}[t]
+  	\centering
+	\includegraphics[width=\linewidth]{figures/instpar_CG_K113_samples_v1.pdf}
 	\caption{Overview of K113}
 	\label{fig:inst_K113}
 \end{figure}
