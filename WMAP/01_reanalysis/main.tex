@@ -360,7 +360,7 @@ For a single-horn experiment, i.e., \Planck\ LFI, this reduces to a $3\times3$ m
 	\mathsf P^T_\mathrm{am}\mathsf N^{-1}\mathsf P\boldsymbol m
 	=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d.
 \end{equation}
-This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$, which typically takes about 20 iterations for producing a frequency maps.
+This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$, which typically takes about 20 iterations for producing frequency maps.
 
 \subsubsection{Transmission imbalance sampling}
 \label{ssec:imbalance}
@@ -390,6 +390,15 @@ the noise into $\n=\n^\mathrm w+\n^\mathrm{corr}$, a white noise term and a
 correlated noise term. By definition, the white noise does not have any
 correlations between adjacent pixels, so that any pixel-pixel covariance should
 be fully described by realizations of the $\n^\mathrm{corr}$ timestream.
+
+\commander\ estimates the baseline using the full estimate of the current sky
+model, $\boldsymbol r=\boldsymbol d-g\boldsymbol s^\mathrm{tot}=\boldsymbol
+b+\boldsymbol n$. Modeling $\boldsymbol b=b_0+b_1\Delta t$, we solve for $b_0$
+and $b_1$ using linear regression in each timestream while masking out samples
+that lie within the processing mask. Strictly speaking, this is breaking the
+Gibbs chain, as we are not formally sampling $b_0$ and $b_1$ for each TOD
+chunk. In practice, baseline estimation uncertainty propagates to correlated
+noise realizations and PSD parameters, as discussed below.
 
 The approach detailed in \citet{hinshaw2003a} and the \commander\
 implementation differ mainly in the assumed stable timescale -- the initial
