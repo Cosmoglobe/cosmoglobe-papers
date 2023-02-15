@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from glob import glob
 
-DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_KKaQVW_b_230105"
+DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
 
 width = 2
 xsize = 1200
@@ -14,9 +14,9 @@ fontsize = {
     "rlabel": 5,
 }
 
-fnames = glob(f"{DIR}/tod*WMAP*map*k000019.fits")
+fnames = glob(f"{DIR}/tod*WMAP*map*k00????.fits")
 fnames.sort()
-fname_30 = glob(f"{DIR}/tod_030_*map*k000019.fits")[0]
+fname_30 = glob(f"{DIR}/tod_030_*map*k00????.fits")[0]
 d_30 = hp.read_map(fname_30, field=(0, 1, 2)) * 1e-3
 fwhm = 5 * np.pi / 180
 
@@ -169,6 +169,20 @@ cg.plot(
 )
 plt.savefig("W_deltaU.pdf", bbox_inches="tight")
 plt.close("all")
+
+
+Clhat0 = hp.anafast(d0)
+Clhat1 = hp.anafast(d1)
+Clhat2 = hp.anafast(d2)
+Clhat3 = hp.anafast(d3)
+Clhat4 = hp.anafast(d4)
+
+np.savetxt('Clhat_K30_CG.txt', Clhat0)
+np.savetxt('Clhat_30Ka_CG.txt', Clhat1)
+np.savetxt('Clhat_dQ_CG.txt', Clhat2)
+np.savetxt('Clhat_dV_CG.txt', Clhat3)
+np.savetxt('Clhat_dW_CG.txt', Clhat4)
+
 
 DIR = "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"
 fnames = glob(f"{DIR}/wmap_iqusmap_r9_9yr*.fits")
@@ -347,3 +361,15 @@ cg.plot(
     fontsize=fontsize,
 )
 plt.savefig("W_W_deltaU.pdf", bbox_inches="tight")
+
+Clhat0 = hp.anafast(d0)
+Clhat1 = hp.anafast(d1)
+Clhat2 = hp.anafast(d2)
+Clhat3 = hp.anafast(d3)
+Clhat4 = hp.anafast(d4)
+
+np.savetxt('Clhat_K30_WM.txt', Clhat0)
+np.savetxt('Clhat_30Ka_WM.txt', Clhat1)
+np.savetxt('Clhat_dQ_WM.txt', Clhat2)
+np.savetxt('Clhat_dV_WM.txt', Clhat3)
+np.savetxt('Clhat_dW_WM.txt', Clhat4)
