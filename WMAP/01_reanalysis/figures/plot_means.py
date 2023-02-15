@@ -199,31 +199,16 @@ for n, b in enumerate(bands):
     fI = ""
     fQ = ""
     fU = ""
-    cbar = False
+    cbar = True
     llabelT = ""
     llabelQ = ""
     llabelU = ""
     llabelQU = ""
-    if "023-WMAP_K" in b:
-        lim_T = (1, 5)
-        lim_P = (1, 5)
-        llabelT = "T"
-        llabelQ = "Q"
-        llabelU = "U"
-        llabelQU = r"\rho_{QU}"
-    elif "030-WMAP_Ka" in b:
-        lim_T = (1, 5)
-        lim_P = (1, 5)
-    elif "040-WMAP_Q" in b:
-        lim_T = (1, 5)
-        lim_P = (1, 5)
-    elif "060-WMAP_V" in b:
-        lim_T = (1, 5)
-        lim_P = (1, 5)
-    elif "090-WMAP_W" in b:
-        lim_T = (1, 5)
-        lim_P = (1, 5)
-    if b == "090-WMAP_W4":
+    if b == "023-WMAP_K":
+        sd[0] /= 4
+        f = "/4"
+        fI = f
+    elif b == "090-WMAP_W4":
         sd[0] /= 6
         sd[1:] /= 8
         fI = "/6"
@@ -247,22 +232,18 @@ for n, b in enumerate(bands):
         fI = "/2"
         sd[1:] /= 3
         fQ = fU = "/3"
-    elif b == "023-WMAP_K":
-        sd[0] /= 4
-        f = "/4"
-        fI = f
-    elif b == "030-WMAP_Ka":
-        sd[0] /= 2
-        f = "/2"
-        fI = f
+    #elif b == "030-WMAP_Ka":
+    #    sd[0] /= 2
+    #    f = "/2"
+    #    fI = f
     #elif b == "040-WMAP_Q1":
     #    sd /= 2
     #    f = "/2"
     #    fI = fQ = fU = f
-    elif b == "040-WMAP_Q2":
-        sd /= 2
-        f = "/2"
-        fI = fQ = fU = f
+    #elif b == "040-WMAP_Q2":
+    #    sd /= 2
+    #    f = "/2"
+    #    fI = fQ = fU = f
     elif "060-WMAP_V" in b:
         sd /= 2
         f = "/2"
@@ -276,9 +257,10 @@ for n, b in enumerate(bands):
         width=width * 2,
         xsize=xsize,
         sub=(1, 4, 1),
-        min=1,
-        max=4,
+        min=0,
+        max=1,
         cbar=cbar,
+        extend="both",
     )
     set_rlabel(rlabel + fI)
     set_llabel(llabelT)
@@ -291,8 +273,9 @@ for n, b in enumerate(bands):
         xsize=xsize,
         sub=(1, 4, 2),
         cbar=cbar,
-        min=1,
-        max=4,
+        min=0,
+        max=1,
+        extend="both",
     )
     set_rlabel(rlabel + fQ)
     set_llabel(llabelQ)
@@ -305,8 +288,9 @@ for n, b in enumerate(bands):
         xsize=xsize,
         sub=(1, 4, 3),
         cbar=cbar,
-        min=1,
-        max=4,
+        min=0,
+        max=1,
+        extend="both",
     )
     set_rlabel(rlabel + fU)
     set_llabel(llabelU)
@@ -319,6 +303,7 @@ for n, b in enumerate(bands):
         max=0.5,
         sub=(1, 4, 4),
         width=width * 2,
+        extend="both",
     )
     set_rlabel(rlabel)
     set_llabel(llabelQU)
