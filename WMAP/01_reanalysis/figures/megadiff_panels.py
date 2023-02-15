@@ -7,7 +7,7 @@ import numpy as np
 DIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
 WDIR = "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"
 BPDIR = "/mn/stornext/d16/cmbco/bp/delivery/v10.00/v2"
-width = 16
+width = 5
 xsize = 800
 
 bands = [
@@ -375,7 +375,7 @@ cg.plot(
     max=10,
     fwhm=2 * u.deg,
     remove_mono="auto",
-    cbar=True,
+    cbar=False,
 )
 plt.savefig('megadiff_W_I.pdf')
 plt.close()
@@ -390,7 +390,7 @@ cg.plot(
     extend="both",
     min=-10,
     max=10,
-    cbar=True,
+    cbar=False,
 )
 plt.savefig('megadiff_W_Q.pdf')
 plt.close()
@@ -405,7 +405,7 @@ cg.plot(
     extend="both",
     min=-10,
     max=10,
-    cbar=True,
+    cbar=False,
 )
 plt.savefig('megadiff_W_U.pdf')
 plt.close()
@@ -413,6 +413,6 @@ plt.close()
     
 cg.standalone_colorbar("planck_log",  ticks=[-10, -7.5, -5, -2.5, -1, 0, 1, 2.5, 5, 7.5, 10],
     extend='both',
-            unit=r"$\mathrm{\mu K}$")
+            unit=r"$\mathrm{\mu K}$", width=width)
 plt.savefig('cbar_10uK_symlog2.pdf', bbox_inches='tight')
 
