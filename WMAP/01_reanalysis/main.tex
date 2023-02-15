@@ -474,6 +474,156 @@ timestream directly, based on the best-fit to the noise PSD.
 
 
 
+
+
+
+
+
+
+
+
+%\subsection{Calibration}
+
+%In order to get the raw data into the sky units $\mathrm{mK_{CMB}}$, it is necessary to make a quantitative assessment of the data's goodness-of-fit. To do this, we use mapped time-domain residuals of the timestream based on an initial sky model. Following the procedure of \citet{bp06}, we create a smoothed map of the absolute deviation of the model from the sky signal. The residual maps were first smoothed to $3^\circ$, the absolute value was taken, and then the map was smoothed again with a $15^\circ$ beam. This procedure gave us an indication of the regions of the sky that are not fully characterized by the sky model. We then evaluated the \texttt{Cosmoglobe} Sky model\footnote{\url{cosmoglobe.readthedocs.io}} associated with the \BP\ data release\footnote{\url{beyondplanck.science}} to create a map of the expected thermal dust, AME, free-free, and radio emission at each \WMAP\ frequency. We thresholded using the 80th percentile of this map to match the residual map. The combination of this sky model-informed mask and the residual-informed mask formed the main processing mask for the calibration and correlated noise analysis.
+%Outside of these mask, the data are fit will by the sky model, so the calibration and the correlated noise estimates should both be unbiased.
+
+
+
+\section{Data}
+\label{sec:data}
+
+
+\subsection{Time-ordered data}
+\label{sec:tod}
+
+\subsection{Survey of fixed \WMAP\ data products}
+\label{sec:fixedproducts}
+
+\textbf{Summarize everything we assume from the WMAP analysis: Beams, bandpasses, pointing, etc.}
+
+
+
+\section{Data selection, Markov chains and resources}
+\label{sec:markov_chains}
+
+\subsection{Data selection}
+
+%Compare with Table 2 of \citet{bennett2003a}, Table 1 of \citet{hinshaw2007}, Table 2 of \citet{hinshaw2009}. Total observing efficiency was 98.4\% \citep{bennett2012}
+
+The full nine-year \WMAP\ archive spans from August 10, 2001 to August 10, 2010, with the raw uncalibrated data spanning 626\,GB. A little over 1\,\% of the data were lost or rejected due to incomplete satellite telemetry, thermal disturbances, spacecraft anomalies, and station-keeping maneuvers, with an extra 0.1\,\% rejected due to planet flagging \citep{bennett2003a,hinshaw2007,hinshaw2009,bennett2012}. 
+The final results reported in \citet{bennett2012} included roughly 98.4\,\% of the total data volume.
+A full accounting of all data cuts can be found in Table~1.8 of \citet{wmapexsupp}. In total, we flag the same data indicated in the fiducial \WMAP\ analysis, and use the same planet flags
+
+As shown in \citet{bp03}, a large fraction of \commanderthree's computational time is spent performing FFTs on individual scans. Rather than truncating datastreams to have lengths equal to ``magic numbers'' for which \texttt{FFTW} \citep{FFTW05} is fastest, as in \citet{bp03}, 
+we split the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N=23$ for \V--\W. This yields scans with lengths of 6.21 days for \K- and \Ka-band, 4.97 days for \Q-band, 7.46 days for \V-band, and 4.97 days for \W-band.
+These datastream lengths are short enough to be processed quickly and distributed efficiently across multiple processors, while being long enough to properly characterize the noise properties of the timestreams, whose $f_\mathrm{knee}$'s are on the order $1\,\mathrm{mHz}$. Most importantly, \texttt{FFTW} performs fastest when the datastream is of length $2^N$.
+
+When rechunking the data, timestreams of length $2^N$ were interrupted by events logged in Table~1.8 of \citet{wmapexsupp}.
+When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led us to discard these otherwise useful data. In addition, when $>10\%$ of the TOD was flagged, the large number of gaps in the data made the constrained realizations unreliable, as well as biasing the noise PSD parameters. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite being of acceptable quality. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data volume can be entirely accounted for by the cuts described in this paragraph.
+
+\begin{table}
+\caption{Flagging statistics}              % title of Table
+\label{table:flagged_data}      % is used to refer this table in the text
+\centering                                      % used for centering table
+\begin{tabular}{c r r r}          % centered columns (4 columns)
+\hline\hline                        % inserts double horizontal lines
+	Band & Flagged (\%) & Discarded (\%) & Used (\%) \\    % table heading
+\hline                                   % inserts single horizontal line
+	\K  &  1.72 & 0.87 & 97.4\\
+	\Ka &  1.64 & 0.88 & 97.5\\      % inserting body of the table
+	\Q1 &  1.84 & 0.84 & 96.5\\
+	\Q2 &  1.62 & 0.81 & 97.6\\
+	\V1 &  1.62 & 1.10 & 97.3\\
+	\V2 &  1.61 & 1.01 & 97.4\\
+	\W1 &  1.76 & 1.03 & 97.2\\
+	\W2 &  1.60 & 0.81 & 97.6\\
+	\W3 &  1.61 & 0.87 & 97.5\\
+	\W4 &  1.60 & 0.81 & 97.6\\
+\hline                                             %inserts single line
+\end{tabular}
+\end{table}
+
+
+
+\subsection{Trace plots}
+\label{sec:traceplots}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+\subsection{Parameter correlations}
+\label{sec:correlations}
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+jfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj flksdj kflsajdk f
+
+\subsubsection{\K-band calibration and AME}
+\label{sec:kband_correlation}
+
+In a preliminary \commanderthree\ run, we discovered an unbounded rise in the
+\K-band absolute calibration, $g_0$, and the dipole in the AME component of the sky. Because the AME is strongest among all bands at \K-band, any increase in the \K-band absolute calibration can easily be accounted for by changing the amplitude of the AME, while leaving goodness-of-fit tests such as relative-$\chi^2$ and residual maps unaffected.
+
+In order to break this degeneracy, it was necessary to impose a prior either on the AME itself or on the absolute calibration. The AME prior we explored followed the approach of \citet{bp13}, in which the prior mean was the \Planck\ DR4\,857 GHz map scaled by $3\cdot10^{-5}$, and the variance is given in angular scales by a parameter $q$. We found that a prior of $q=10^{-2}\,\mathrm{\mu K}^2$ was necessary to stabilize the gain, resulting in an AME map that was nearly identical to the \Planck\ 857\,GHz band. As this gave a result that was inconsistent with many previous results, we opted insted to sample the absolute calibration instead.
+
+Any error in $g_0$ leads to a residual due to the large Solar dipole. In practice, we found that the typical variation of $g_0$ was 0.002, giving a relative error of $\sim0.1\,\%$. This variation induces a $\sim6\,\mathrm{\mu K}$ Solar dipole uncertainty, which is easily attributed to AME during component separation. In Figure \ref{fig:g0_ame}, we demonstrate this effect on recovered AME maps using extreme $g_0$ values of 1.175 and 1.9. We find that AME maps consistent with those presented in \citet{bennett2012} and \citet{planck2014-a12} are recovered when $g_0$ is between 1.180 and 1.182. Based on this analysis, we sample $g_0$ from a Gaussian with mean 1.1815 and standard deviation 0.001.
+
+\citet{bennett2012} and \citet{planck2014-a12} find AME peak frequencies 12.0--17.5\,GHz and 17--23\,GHz, respectively, both with low signal-to-noise at high Galactic latitude and with structure along the plane. The Q-U-I JOint Tenerife Experiment (QUIJOTE) has recently released maps of the sky with approximately 70\,\% sky coverage at frequencies 11, 13, 17, and 19\,GHz \citep{QUIJOTE_IV}. QUIJOTE is optimized for characterizing the polarized sky, and constraints from, e.g., \citet{QUIJOTE_VIII}, will be critical for future polarized synchrotron SED characterization and polarized AME limits. While in principle the AME SED can be constrained by a joint \WMAP/LFI/QUIJOTE analysis, we consider this outside of the scope of the paper, which aims to evaluate the effect of jointly analyzing \WMAP\ and \Planck\ LFI at the TOD level.  Future analysis will include the QUIJOTE data, and hopefully break the $g_0$-$a_\mathrm{ame}$ degeneracy.
+
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=\columnwidth]{figures/ame_g01_178.pdf}
+%	\includegraphics[width=\columnwidth]{figures/ame_g01_181.pdf}
+%	\includegraphics[width=\columnwidth]{figures/ame_g01_185.pdf}
+%	\includegraphics[width=0.5\columnwidth]{figures/cbar_100uK.pdf}
+%	\caption{Dependence on AME amplitude evaluated at 22\,GHz as a function of absolute calibration. Each map comes from the fifth iteration of a dedicated \commander\ run that fixed $g_0$ while letting all other TOD parameters be fit. The values of $g_0=1.178$ and $g_0=1.185$ represent $3.5\sigma$ draws from the prior distribution with mean $1.1815$ and standard deviation $0.001$. The dipole visible in the top and bottom panels is aligned perfectly with the Solar dipole, and is directly due to variations in the \K-band absolute calibration.}
+%	\label{fig:g0_ame}
+%\end{figure}
+
+
 \subsection{Computational resources}
 \label{sec:resources}
 
@@ -884,40 +1034,40 @@ djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj fl
 
 \begin{figure*}[p]
 	\centering
-	\includegraphics[width=0.9\textwidth]{figures/023-WMAP_K_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/030-WMAP_Ka_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q1_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q2_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V1_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V2_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W1_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W2_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W3_rms.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W4_rms.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_rms_I.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_rms_P.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_rms_P.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_rho.png}
+	\includegraphics[width=0.9\textwidth]{figures/023-WMAP_K_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/030-WMAP_Ka_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q1_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q2_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V1_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V2_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W1_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W2_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W3_rms.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W4_rms.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_rms_I.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_rms_P.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_rms_P.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_rho.pdf}
 	\caption{RMS maps}
         \label{fig:rms}
 \end{figure*}
 
 \begin{figure*}[p]
 	\centering
-	\includegraphics[width=0.9\textwidth]{figures/023-WMAP_K_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/030-WMAP_Ka_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q1_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q2_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V1_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V2_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W1_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W2_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W3_std.png}
-	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W4_std.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_std.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_std.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_std.png}
-	\includegraphics[width=0.22\textwidth]{figures/cbar_rho.png}
+	\includegraphics[width=0.9\textwidth]{figures/023-WMAP_K_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/030-WMAP_Ka_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q1_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/040-WMAP_Q2_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V1_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/060-WMAP_V2_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W1_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W2_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W3_std.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/090-WMAP_W4_std.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_std.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_std.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_std.pdf}
+	\includegraphics[width=0.22\textwidth]{figures/cbar_rho.pdf}
 	\caption{STD std}
         \label{fig:std}
 \end{figure*}
@@ -974,11 +1124,11 @@ djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj fl
 
 \begin{figure*}
 	\centering
-	\includegraphics[width=0.32\textwidth]{figures/chisq_I.png}
-	\includegraphics[width=0.32\textwidth]{figures/chisq_Q.png}
-	\includegraphics[width=0.32\textwidth]{figures/chisq_U.png}
+	\includegraphics[width=0.32\textwidth]{figures/chisq_I.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/chisq_Q.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/chisq_U.pdf}
 	\newline
-	\includegraphics[width=0.3\textwidth]{figures/cbar_3sigma.png}
+	\includegraphics[width=0.3\textwidth]{figures/cbar_3sigma.pdf}
 	\caption{Reduced-$\chi^2$, using $n_\mathrm{dof}=300$, which comes from fitting to the regions outside of the \K-band processing mask.}
 \end{figure*}
 
@@ -1182,14 +1332,18 @@ W3 $-$ W4         & 4257  & 4145  & 112 \cr
 	%\includegraphics[width=0.24\textwidth]{figures/30Ka_W_deltaQ.pdf}
 	%\includegraphics[width=0.24\textwidth]{figures/30Ka_deltaU.pdf}
 	%\includegraphics[width=0.24\textwidth]{figures/30Ka_W_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/KKa_deltaQ.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/KKa_W_deltaQ.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/KKa_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/KKa_W_deltaU.pdf}\\
 	\includegraphics[width=0.24\textwidth]{figures/Q_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/Q_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/Q_deltaU.pdf}
-	\includegraphics[width=0.24\textwidth]{figures/Q_W_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/Q_W_deltaU.pdf}\\
 	\includegraphics[width=0.24\textwidth]{figures/V_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/V_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/V_deltaU.pdf}
-	\includegraphics[width=0.24\textwidth]{figures/V_W_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/V_W_deltaU.pdf}\\
 	\includegraphics[width=0.24\textwidth]{figures/W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/W_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/W_deltaU.pdf}
@@ -1724,10 +1878,10 @@ djfksajf lasj fkdjas fklsaj lfjdsl kfkj jasdlkfj aslkfj klsadjf lsdajf lkasdj fl
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\columnwidth]{figures/ame_g01_178.png}
-	\includegraphics[width=\columnwidth]{figures/ame_g01_181.png}
-	\includegraphics[width=\columnwidth]{figures/ame_g01_185.png}
-	\includegraphics[width=0.5\columnwidth]{figures/cbar_100uK.png}
+	\includegraphics[width=\columnwidth]{figures/ame_g01_178.pdf}
+	\includegraphics[width=\columnwidth]{figures/ame_g01_181.pdf}
+	\includegraphics[width=\columnwidth]{figures/ame_g01_185.pdf}
+	\includegraphics[width=0.5\columnwidth]{figures/cbar_100uK.pdf}
 	\caption{Dependence on AME amplitude evaluated at 22\,GHz as a function of absolute calibration. Each map comes from the fifth iteration of a dedicated \commander\ run that fixed $g_0$ while letting all other TOD parameters be fit. The values of $g_0=1.178$ and $g_0=1.185$ represent $3.5\sigma$ draws from the prior distribution with mean $1.1815$ and standard deviation $0.001$. The dipole visible in the top and bottom panels is aligned perfectly with the Solar dipole, and is directly due to variations in the \K-band absolute calibration.}
 	\label{fig:g0_ame}
 \end{figure}
