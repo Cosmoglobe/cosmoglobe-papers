@@ -6,6 +6,7 @@ import numpy as np
 from glob import glob
 
 DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
+DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203"
 
 width = 2
 xsize = 1200
@@ -14,11 +15,13 @@ fontsize = {
     "rlabel": 5,
 }
 
-fnames = glob(f"{DIR}/tod*WMAP*map*k00????.fits")
+fnames = glob(f"{DIR}/tod*WMAP*map*k000097.fits")
 fnames.sort()
-fname_30 = glob(f"{DIR}/tod_030_*map*k00????.fits")[0]
+fname_30 = glob(f"{DIR}/tod_030_*map*k000097.fits")[0]
 d_30 = hp.read_map(fname_30, field=(0, 1, 2)) * 1e-3
 fwhm = 5 * np.pi / 180
+
+print(fnames)
 
 K = hp.read_map(fnames[0], field=(0, 1, 2))
 Ka = hp.read_map(fnames[1], field=(0, 1, 2))
@@ -31,12 +34,13 @@ W2 = hp.read_map(fnames[7], field=(0, 1, 2))
 W3 = hp.read_map(fnames[8], field=(0, 1, 2))
 W4 = hp.read_map(fnames[9], field=(0, 1, 2))
 
-
 d0 = -hp.ud_grade(hp.smoothing(0.495 * K - d_30, fwhm=fwhm) * 1e3, 256)
 d1 = -hp.ud_grade(hp.smoothing(0.63 * d_30 - Ka, fwhm=fwhm) * 1e3, 256)
 d2 = hp.ud_grade(hp.smoothing(Q1 - Q2, fwhm=fwhm) * 1e3, 256)
 d3 = hp.ud_grade(hp.smoothing(V1 - V2, fwhm=fwhm) * 1e3, 256)
 d4 = hp.ud_grade(hp.smoothing(((W1 - W2) - (W3 - W4)) / 4, fwhm=fwhm) * 1e3, 256)
+
+plt.show()
 
 
 cg.plot(
