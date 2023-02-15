@@ -48,6 +48,7 @@ for i,m in enumerate(maps):
         sub=(1,3,2))
     cg.plot(m, sig=2, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='U',
         sub=(1,3,3))
+    plt.tight_layout()
     plt.savefig(f'res_{bands[i]}_IQU.pdf', bbox_inches='tight')
     plt.close('all')
 
