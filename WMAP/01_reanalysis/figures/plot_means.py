@@ -199,7 +199,7 @@ for n, b in enumerate(bands):
     fI = ""
     fQ = ""
     fU = ""
-    cbar = True
+    cbar = False
     llabelT = ""
     llabelQ = ""
     llabelU = ""
