@@ -9,15 +9,17 @@ rng = np.random.default_rng()
 width = 6
 xsize = 1200
 
-DIR1 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_857_KKaQVW_a_230110"
-DIR2 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_857_KKaQVW_b_230111"
+DIR1 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
+DIR2 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203"
 
 RDIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
 
 WDIR = "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"
 
-chain1 = cg.Chain(f"{DIR1}/chain_c0001.h5", burn_in=2)
-chain2 = cg.Chain(f"{DIR2}/chain_c0001.h5", burn_in=2)
+
+burn_in = 5
+chain1 = cg.Chain(f"{RDIR}/CG_c0001_v1.h5")
+chain2 = cg.Chain(f"{RDIR}/CG_c0002_v1.h5")
 
 wbands = [
     "K1", "Ka1", "Q1", "Q2", "V1", "V2", "W1", "W2", "W3", "W4"]
@@ -82,13 +84,18 @@ rms_W = []
 for n, b in enumerate(bands):
     print(b)
 
-    m1 = chain1.get(f"tod/{b}/map") * 1e3
-    m2 = chain2.get(f"tod/{b}/map") * 1e3
-    ms = np.concatenate((m1, m2))
-    r1 = chain1.get(f"tod/{b}/rms")
-    r2 = chain2.get(f"tod/{b}/rms")
-    rs = np.concatenate((r1, r2)) * 1e6
-    r = rng.choice(rs)
+    ind1 = np.random.randint(burn_in, chain1.nsamples)
+    ind2 = np.random.randint(burn_in, chain2.nsamples)
+    m1 = chain1.get(f"tod/{b}/map", samples=ind1) * 1e3
+    m2 = chain2.get(f"tod/{b}/map", samples=ind2) * 1e3
+    #ms = np.concatenate((m1, m2))
+    r1 = chain1.get(f"tod/{b}/rms", samples=ind1) * 1e6
+    r2 = chain2.get(f"tod/{b}/rms", samples=ind2) * 1e6
+    #rs = np.concatenate((r1, r2)) * 1e6
+    if np.random.random() < 0.5:
+       r = r1
+    else:
+       r = r2
 
     mu = hp.read_map(f"{RDIR}/CG_{b}_IQU_n0512_v1.fits", field=(0,1,2)) * 1e3
     rms = hp.read_map(f"{RDIR}/CG_{b}_IQU_n0512_v1.fits", field=(3,4,5,6))
@@ -173,7 +180,7 @@ for n, b in enumerate(bands):
     set_rlabel(rlabel)
     set_llabel(llabelQU)
     plt.tight_layout()
-    plt.savefig(f"{b}_rms.png", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_rms.pdf", bbox_inches="tight")
     plt.close("all")
 
     #mu = m1.mean(axis=0)
@@ -316,7 +323,7 @@ for n, b in enumerate(bands):
     set_rlabel(rlabel)
     set_llabel(llabelQU)
     plt.tight_layout()
-    plt.savefig(f"{b}_std.png", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_std.pdf", bbox_inches="tight")
     plt.close()
 
     rlabel = r"\langle\textit{" + b.split("_")[1] + r"}\rangle"
@@ -359,7 +366,7 @@ for n, b in enumerate(bands):
         unit=r"\mathrm{\mu K}",
     )
     plt.tight_layout()
-    plt.savefig(f"{b}_map.png", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_map.pdf", bbox_inches="tight")
     plt.close()
 
     if ("023-WMAP_K" in b) or ("030-WMAP_Ka" in b):
@@ -375,7 +382,7 @@ for n, b in enumerate(bands):
             xsize=xsize,
             extend="both",
         )
-        plt.savefig(f"{b}_mu_I.png", bbox_inches="tight", dpi=300)
+        plt.savefig(f"{b}_mu_I.pdf", bbox_inches="tight")
         cg.plot(
             mu_s,
             sig=1,
@@ -387,7 +394,7 @@ for n, b in enumerate(bands):
             llabel="Q",
             cbar=False,
         )
-        plt.savefig(f"{b}_mu_Q.png", bbox_inches="tight", dpi=300)
+        plt.savefig(f"{b}_mu_Q.pdf", bbox_inches="tight")
         cg.plot(
             mu_s,
             sig=2,
@@ -400,20 +407,20 @@ for n, b in enumerate(bands):
             extend="both",
             unit=r"\mathrm{\mu K}",
         )
-        plt.savefig(f"{b}_mu_U.png", bbox_inches="tight", dpi=300)
+        plt.savefig(f"{b}_mu_U.pdf", bbox_inches="tight")
         plt.close("all")
     elif "040-WMAP_Q" in b:
         mu_Q.append(mu)
-        rms_Q.append(rs.mean(axis=0))
+        rms_Q.append(r)
     elif "060-WMAP_V" in b:
         mu_V.append(mu)
-        rms_V.append(rs.mean(axis=0))
+        rms_V.append(r)
     elif "090-WMAP_W" in b:
         mu_W.append(mu)
-        rms_W.append(rs.mean(axis=0))
+        rms_W.append(r)
 
-    m1 = rng.choice(m1)
-    m2 = rng.choice(m2)
+    #m1 = rng.choice(m1)
+    #m2 = rng.choice(m2)
     diff = m1 - m2
     diff = hp.smoothing(diff, fwhm=5 * np.pi / 180)
     cg.plot(
@@ -430,7 +437,7 @@ for n, b in enumerate(bands):
     cg.plot(diff, sig=1, rlabel=r"\Delta Q", min=-3, max=3, sub=(1, 3, 2), cbar=False)
     cg.plot(diff, sig=2, rlabel=r"\Delta U", min=-3, max=3, sub=(1, 3, 3), cbar=False)
     plt.tight_layout()
-    plt.savefig(f"{b}_sampdiff.png", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_sampdiff.pdf", bbox_inches="tight")
     plt.close()
 
     d_WMAP = hp.read_map(f"{WDIR}/wmap_iqusmap_r9_9yr_{wbands[n]}_v5.fits",
@@ -469,7 +476,7 @@ cg.plot(
     xsize=xsize,
     extend="both",
 )
-plt.savefig(f"Q_mu_I.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"Q_mu_I.pdf", bbox_inches="tight")
 cg.plot(
     Q_s,
     sig=1,
@@ -481,7 +488,7 @@ cg.plot(
     llabel="Q",
     cbar=False,
 )
-plt.savefig(f"Q_mu_Q.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"Q_mu_Q.pdf", bbox_inches="tight")
 cg.plot(
     Q_s,
     sig=2,
@@ -494,7 +501,7 @@ cg.plot(
     extend="both",
     unit=r"\mathrm{\mu K}",
 )
-plt.savefig(f"Q_mu_U.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"Q_mu_U.pdf", bbox_inches="tight")
 plt.close("all")
 
 
@@ -511,7 +518,7 @@ cg.plot(
     xsize=xsize,
     extend="both",
 )
-plt.savefig(f"V_mu_I.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"V_mu_I.pdf", bbox_inches="tight")
 cg.plot(
     V_s,
     sig=1,
@@ -523,7 +530,7 @@ cg.plot(
     llabel="Q",
     cbar=False,
 )
-plt.savefig(f"V_mu_Q.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"V_mu_Q.pdf", bbox_inches="tight")
 cg.plot(
     V_s,
     sig=2,
@@ -536,7 +543,7 @@ cg.plot(
     extend="both",
     unit=r"\mathrm{\mu K}",
 )
-plt.savefig(f"V_mu_U.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"V_mu_U.pdf", bbox_inches="tight")
 plt.close("all")
 
 rlabel = r"\langle \textit{W}\rangle"
@@ -552,7 +559,7 @@ cg.plot(
     xsize=xsize,
     extend="both",
 )
-plt.savefig(f"W_mu_I.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"W_mu_I.pdf", bbox_inches="tight")
 cg.plot(
     W_s,
     sig=1,
@@ -564,7 +571,7 @@ cg.plot(
     llabel="Q",
     cbar=False,
 )
-plt.savefig(f"W_mu_Q.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"W_mu_Q.pdf", bbox_inches="tight")
 cg.plot(
     W_s,
     sig=2,
@@ -577,20 +584,20 @@ cg.plot(
     extend="both",
     unit=r"\mathrm{\mu K}",
 )
-plt.savefig(f"W_mu_U.png", bbox_inches="tight", dpi=300)
+plt.savefig(f"W_mu_U.pdf", bbox_inches="tight")
 
 
 cg.standalone_colorbar("binary_r", ticks=[1,2,3,4,], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
-plt.savefig('cbar_std.png', dpi=300)
+plt.savefig('cbar_std.pdf')
 cg.standalone_colorbar("binary_r", ticks=[25, 35, 45, 60], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
-plt.savefig('cbar_rms_I.png', dpi=300)
+plt.savefig('cbar_rms_I.pdf')
 cg.standalone_colorbar("binary_r", ticks=[35, 50, 70, 85], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
-plt.savefig('cbar_rms_P.png', dpi=300)
+plt.savefig('cbar_rms_P.pdf')
 cg.standalone_colorbar("RdBu_r", ticks=[-0.5, 0,0.5], extend='both',
             width=4, fontsize=18, unit=r'\phantom{$\rho$}')
-plt.savefig('cbar_rho.png', dpi=300)
+plt.savefig('cbar_rho.pdf')
 
 
