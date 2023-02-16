@@ -6,6 +6,10 @@ n_dof = 300
 f = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203/chisq_c0001_k000100.fits'
 
 chisq = hp.read_map(f, field=(0,1,2))
+chisq_IQU = chisq.sum(axis=0)
+chisq_red = (chisq - 3*n_dof)/(2*3*n_dof)**0.5
+cg.plot(chisq_red, min=-3, max=3)
+plt.show()
 #chisq = hp.ud_grade(chisq, 1024)
 #chisq_s = hp.smoothing(chisq, 0.5*np.pi/180)
 chisq_red = (chisq - n_dof)/(2*n_dof)**0.5
