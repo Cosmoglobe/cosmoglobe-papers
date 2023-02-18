@@ -15,7 +15,6 @@ params = {'backend': 'pdf',
           'font.family':'sans-serif',
           # free font similar to Helvetica
           'font.sans-serif':'FreeSans'}
-          }
 
 # use of Sans Serif also in math mode
 #rc('text.latex', preamble='\usepackage{sfmath}')

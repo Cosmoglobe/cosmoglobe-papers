@@ -3,8 +3,10 @@ import numpy as np
 from glob import glob
 import astropy.units as u
 import healpy as hp
-
 import cosmoglobe as cg
+
+from setup_matplotlib import *
+
 CGDIR = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203'
 
 fnames = glob(f'{CGDIR}/tod_023-WMAP_K_*_c0001_k000121.fits')
