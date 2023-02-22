@@ -18,7 +18,7 @@ nside = 512
 
 # Read mask and apodize it on a scale of ~1deg
 mask = hp.read_map(
-    "/mn/stornext/d16/cmbco/bp/dwatts/WMAP/data_WMAP/wmap_kq75_TQU_mask_r9.fits"
+    "/mn/stornext/d5/data/duncanwa/WMAP/data/wmap_kq75_TQU_mask_r9.fits"
 )
 
 
@@ -26,8 +26,8 @@ mask = hp.read_map(
 logbins = np.geomspace(10, 3 * 512 - 1, 50).astype("int")
 l_ini = np.concatenate((np.arange(2, 10), logbins[:-1]))
 l_end = np.concatenate((np.arange(2, 10) + 1, logbins[1:]))
-# b = nmt.NmtBin.from_nside_linear(nside, 1)
-b = nmt.NmtBin.from_edges(l_ini, l_end)
+b = nmt.NmtBin.from_nside_linear(nside, 1)
+#b = nmt.NmtBin.from_edges(l_ini, l_end)
 ell_eff = b.get_effective_ells()
 
 DIR = "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"
@@ -44,19 +44,20 @@ wmap_maps = [
     "/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W3_v5.fits",
     "/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W4_v5.fits",
 ]
-CG_DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_KKaQVW_a_230105"
+CG_DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203"
+CG_DIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
 
 cg_maps = [
-    f"{CG_DIR}/tod_023-WMAP_K_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_030-WMAP_Ka_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_040-WMAP_Q1_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_040-WMAP_Q2_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_060-WMAP_V1_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_060-WMAP_V2_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_090-WMAP_W1_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_090-WMAP_W2_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_090-WMAP_W3_map_c0001_k000008.fits",
-    f"{CG_DIR}/tod_090-WMAP_W4_map_c0001_k000008.fits",
+    f"{CG_DIR}/CG_023-WMAP_K_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_030-WMAP_Ka_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_040-WMAP_Q1_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_040-WMAP_Q2_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_060-WMAP_V1_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_060-WMAP_V2_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W1_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W2_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W3_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W4_IQU_n0512_v1.fits",
 ]
 
 bands = ["K", "Ka", "Q1", "Q2", "V1", "V2", "W1", "W2", "W3", "W4"]
@@ -79,22 +80,28 @@ axs3 = axes3.flatten()
 n = 0
 for i in range(len(cg_maps)):
     print(i)
-    m_WMAP = hp.read_map(wmap_maps[i]) * 1e3
-    m_CG = hp.read_map(cg_maps[i]) * 1e3
-    m_CG -= dip_W * 1e3
-    mono_CG = hp.fit_monopole(m_CG, gal_cut=50)
-    mono_WM = hp.fit_monopole(m_WMAP, gal_cut=50)
-    m_WMAP = m_WMAP - mono_WM + mono_CG
-    f_WMAP = nmt.NmtField(mask, [m_WMAP])
-    f_CG = nmt.NmtField(mask, [m_CG])
-    f_diff = nmt.NmtField(mask, [m_CG - m_WMAP])
-    Clhat_W = nmt.compute_full_master(f_WMAP, f_WMAP, b)[0]
-    print("ps1")
-    Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)[0]
-    print("ps2")
-    # Clhat_diff = nmt.compute_full_master(f_diff, f_diff, b)[0]
-    ell = np.arange(len(Clhat_C))
-    print("got the power spectra")
+    try:
+      Clhat_W = np.loadtxt(f'fullspec_WM_TT_{bands[i]}.txt')
+      Clhat_C = np.loadtxt(f'fullspec_CG_TT_{bands[i]}.txt')
+    except IOError:
+      m_WMAP = hp.read_map(wmap_maps[i]) * 1e3
+      m_CG = hp.read_map(cg_maps[i]) * 1e3
+      m_CG -= dip_W * 1e3
+      mono_CG = hp.fit_monopole(m_CG, gal_cut=50)
+      mono_WM = hp.fit_monopole(m_WMAP, gal_cut=50)
+      m_WMAP = m_WMAP - mono_WM + mono_CG
+      f_WMAP = nmt.NmtField(mask, [m_WMAP])
+      f_CG = nmt.NmtField(mask, [m_CG])
+      f_diff = nmt.NmtField(mask, [m_CG - m_WMAP])
+      Clhat_W = nmt.compute_full_master(f_WMAP, f_WMAP, b)[0]
+      print("ps1")
+      Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)[0]
+      print("ps2")
+      # Clhat_diff = nmt.compute_full_master(f_diff, f_diff, b)[0]
+      ell = np.arange(len(Clhat_C))
+      print("got the power spectra")
+      np.savetxt(f'fullspec_WM_TT_{bands[i]}.txt', Clhat_W)
+      np.savetxt(f'fullspec_CG_TT_{bands[i]}.txt', Clhat_C)
 
     (l1,) = axs1[n].loglog(ell_eff, Clhat_W, label="WMAP")
     (l2,) = axs1[n].loglog(ell_eff, Clhat_C, label="Cosmoglobe")
@@ -164,12 +171,18 @@ axs6 = axes6.flatten()
 
 n = 0
 for i in range(len(cg_maps)):
-    m_WMAP = hp.read_map(wmap_maps[i], field=(1, 2)) * 1e3
-    m_CG = hp.read_map(cg_maps[i], field=(1, 2)) * 1e3
-    f_WMAP = nmt.NmtField(mask, m_WMAP)
-    f_CG = nmt.NmtField(mask, m_CG)
-    Clhat_W = nmt.compute_full_master(f_WMAP, f_WMAP, b)
-    Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)
+    try:
+      Clhat_W = np.loadtxt(f'fullspec_WM_EB_{bands[i]}.txt')
+      Clhat_C = np.loadtxt(f'fullspec_CG_EB_{bands[i]}.txt')
+    except IOError:
+      m_WMAP = hp.read_map(wmap_maps[i], field=(1, 2)) * 1e3
+      m_CG = hp.read_map(cg_maps[i], field=(1, 2)) * 1e3
+      f_WMAP = nmt.NmtField(mask, m_WMAP)
+      f_CG = nmt.NmtField(mask, m_CG)
+      Clhat_W = nmt.compute_full_master(f_WMAP, f_WMAP, b)
+      Clhat_C = nmt.compute_full_master(f_CG, f_CG, b)
+      np.savetxt(f'fullspec_WM_EB_{bands[i]}.txt', Clhat_W)
+      np.savetxt(f'fullspec_CG_EB_{bands[i]}.txt', Clhat_C)
 
     (l1,) = axs1[n].loglog(ell_eff, Clhat_W[0], label="WMAP")
     (l2,) = axs1[n].loglog(ell_eff, Clhat_C[0], label="Cosmoglobe")

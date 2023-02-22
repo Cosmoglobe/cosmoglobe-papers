@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import healpy as hp
 import numpy as np
 
-DIR = "/mn/stornext/d16/www_cmb/dwatts/v0"
+DIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
 WDIR = "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"
 BPDIR = "/mn/stornext/d16/cmbco/bp/delivery/v10.00/v2"
 width = 16
