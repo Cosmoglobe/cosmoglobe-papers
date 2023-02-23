@@ -270,22 +270,56 @@ Section~\ref{sec:systematics} includes a thorough discussion of systematic error
 \section{End-to-end Bayesian CMB analysis}
 \label{sec:methods}
 
-We begin by discussing the \WMAP\ analysis from uncalibrated TOD to maps. Sect.~\ref{sec:official_pipeline} provides a brief overview of the official \WMAP\ pipeline, and Sect.~\ref{sec:wmap_instmodel} constructs the data model that will be used in the end-to-end Gibbs sampling analysis.
+We begin by discussing the \WMAP\ analysis from uncalibrated TOD to maps. Section~\ref{sec:lfi_bp} gives an overview of the \bp\ project's reanalysis of \Planck\ LFI data, Sect.~\ref{sec:official_pipeline} provides a brief overview of the official \WMAP\ pipeline, and Sect.~\ref{sec:wmap_instmodel} constructs the data model that is used in the end-to-end Gibbs sampling analysis.
 
 \subsection{LFI and \bp}
+\label{sec:lfi_bp}
+
+The \bp\ project \citep{bp01} was the first true application of end-to-end Gibbs sampling in the framework of CMB data analysis. The \Planck\ Low Frequency Instrument data had been gradually improved through each \Planck\ data release, specifically  PR1 \citep{planck2014-a03}, PR2 \citep{planck2014-a03}, PR3 \citep{planck2016-l02}, and PR4 \citep{planck2014-a03}. Even after PR4, the LFI data still failed polarization null tests and contained visually striking poorly measured modes corresponding to relative gain uncertainty between different detectors. During the PR3 analysis, it became clear that there was a degeneracy between the assumption of the sky's polarization and the gain differences. 
+
+The \bp\ analysis generated the first clean LFI maps by Gibbs sampling the sky components and underlying instrumental parameters jointly \citep{bp01,bp03,bp10}. The \commanderthree\ pipeline was used to perform the low-level data analysis conditioned on a sky model that was created through component separation, and the reprocessed maps were used to perform component separation once again. This Gibbs chain not only allowed for the true instrumental properties to be determined thus creating the best LFI maps to date -- it fully explored the degeneracies between the low-level instrumental parameters themselves and our knowledge of the sky \citep{bp13,bp14}.
 
 \subsection{Official \WMAP\ pipeline}
 \label{sec:official_pipeline}
 
-The \WMAP\ satellite carried forty differential polarization-sensitive radiometers grouped as differnecing assemblies (DAs), where one pair was sensitive to the difference in signal at one polarization orientation and the other pair sensitive to the orthogonal polarization. In total, the DAs were allocated as: 1 \K\ (23\,GHz), 1 \Ka\ (30\,GHz), 2 \Q\ (40\,GHz), 2 \V\ (60\,GHz), and 4 \W\ (90\,GHz).
+The \WMAP\ satellite carried forty differential polarization-sensitive
+radiometers grouped as differnecing assemblies (DAs), where one pair was
+sensitive to the difference in signal at one polarization orientation and the
+other pair sensitive to the orthogonal polarization. In total, the DAs were
+allocated as: 1 \K\ (23\,GHz), 1 \Ka\ (30\,GHz), 2 \Q\ (40\,GHz), 2 \V\
+(60\,GHz), and 4 \W\ (90\,GHz).
 
-(We assume that the pointing solution and beams are perfectly known.)
+The \WMAP\ data were calibrated by jointly estimating the time-dependent gains and baselines, as describe in \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
+The TOD are intially modelled as having
+constant gain and baseline for a 1--24\,hour period, and are fit to the orbital
+dipole assuming $T_0$ from \citet{mather:1999} and a map made from a previous
+iteration of the mapmaking procedure. Once the gain and baseline solution has
+converged, the data are fit to a parametric form of the radiometer performance
+as a function of housekeeping data, given in Appendix A of \citet{wmapexsupp}.
 
-Here we describe the calibration procedure as reported in \citet{hinshaw2009}. The TOD are intially modelled as having constant gain and baseline for a 1--24\,hour period, and are fit to the orbital dipole assuming $T_0$ from \citet{mather:1999} and a map made from a previous iteration of the mapmaking procedure. Once the gain and baseline solution has converged, the data are fit to a parametric form of the radiometer performance as a function of housekeeping data, given in \citet{wmapexsupp}.
+Transmission imbalance, i.e., the effect of different sky signal transmission from the A-side and B-side optics, is parameterized using $x_\mathrm{im}$, which is zero in the case of an ideal differential radiometer. In practice, an unpolarized sky map generates a timestream
+\begin{align}
+	d_t^\mathrm{imbal}&\propto (1+x_\mathrm{im})T_{p_\A}-(1-x_\mathrm{im})T_{p_\B}
+	\\
+	&=(T_{p_\A}-T_{p_\B})+x_\mathrm{im}(T_{p_\A}+T_{p_\B}).
+\end{align}
+If the $x_\mathrm{im}$ value is inaccurate, this yields a spurious polarization component, and creates imbalance modes due to coupling with the Solar dipole \citep{jarosik2007}. The transmission imbalance factors are fit by using the Solar dipole in TOD space and fitting the common-mode and differential signals in TOD space directly \citep{jarosik2003b,jarosik2007}.
 
-(Sidelobes, mapmaking. Also need to mention the pointing solution.)
+Far sidelobes were estimated using a combination of laboratory measurements and Moon data taken during the mission \citep{barnes2003}, as well as a physical optics model describe in \citet{hinshaw2009}. To remove the far sidelobe  in the TOD, an estimate was calculated by convolving the intensity map and the orbital dipole signal with the measured sidelobe signal \citep{jarosik2007}. Although the sidelobe pickup was modeled in \citet{barnes2003}, it was determined that the results were small enough to be neglected, and have not been reported in any of the \WMAP\ data releases.
 
-As described in \citet{jarosik2007}, the frequency response of the radiometers forming a DA are slightly different, which causes a spurious signal to be leaked into the polarization maps. This effect is mitigated by assigning a spurious pseudo-Stokes parameter, $S$, and solving for it explicitly in the mapmaking procedure.
+
+Data are flagged and masked before the final mapmaking step. In particular, station-keeping maneuevers, solar flares, and unscheduled events caused certain data to be unusable -- the full catalog of these events is listed in Table~1.8 of \citet{wmapexsupp}. In addition, data are masked depending on the channel frequency and the planet itself, with the full list of exclusion radii enumerated in Table~4 of \citet{bennett2012}.
+
+To create the sky maps, the calibrated data are put into the asymmetric mapmaking equation,
+\begin{equation}
+	\mathsf P_{am}^T\mathsf N^{-1}\mathsf P\boldsymbol m=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d,
+\end{equation}
+
+As described in \citet{jarosik2007}, the frequency response of the radiometers
+forming a DA are slightly different, which causes a spurious signal to be
+leaked into the polarization maps. This effect is mitigated by assigning a
+spurious pseudo-Stokes parameter, $S$, and solving for it explicitly in the
+mapmaking procedure.
 
 \subsection{Instrument model}
 \label{sec:wmap_instmodel}
@@ -439,7 +473,7 @@ This can be decomposed into a differential (d) and common-mode (c) signal such t
 \end{equation}
 In this form, the imbalance parameters can be estimated by drawing Gaussian samples from the standard mean and standard deviation over the entire mission.
 
-The \WMAP\ procedure, described in \citet{jarosik2003a}, fit for common-mode and differential coefficients along with a cubic baseline over 10 precession periods at a time, corresponding to 10 hours of observation. The mean and uncertainty were then calculated by averaging and taking the standard deviation of these values. This approach has the benefit of allowing for the tracking of possible transmission imbalance variation throughout the mission. However, none of the \WMAP\ suite of papers have indicated this, and it has not arisen in our analysis, so we model this as an effect whose value is constant throughout the mission.
+The \WMAP\ procedure, described in \citet{jarosik2003b}, fit for common-mode and differential coefficients along with a cubic baseline over 10 precession periods at a time, corresponding to 10 hours of observation. The mean and uncertainty were then calculated by averaging and taking the standard deviation of these values. This approach has the benefit of allowing for the tracking of possible transmission imbalance variation throughout the mission. However, none of the \WMAP\ suite of papers have indicated this, and it has not arisen in our analysis, so we model this as an effect whose value is constant throughout the mission.
 
 \subsubsection{Baseline sampling}
 \label{ssec:baseline}
