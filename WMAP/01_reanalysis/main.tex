@@ -720,13 +720,17 @@ timestream directly, based on the best-fit to the noise PSD.
 \section{Data and data processing}
 \label{sec:data}
 
+We describe the delivered \WMAP\ data in Sect.~\ref{sec:products}, then describe the treatment we apply it to make them compatible with \commanderthree\ in Sect.~\ref{sec:preprocessing}, then describe the computational requirements in Sect.~\ref{sec:resources}.
+
 \subsection{Publicly available \WMAP\ products}
 \label{sec:products}
 
+The full \WMAP\ dataset is hosted at the Legacy Archive for Microwave Backgroudn Data Analysis (LAMBDA).\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/m_products.html}} In addition to the primary scientific products, e.g., cosmological parameters, CMB power spectra and anisotropy maps, and frequency maps, the time-ordered data (TOD) can be downloaded, both in uncalibrated and calibrated form.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/tod_info.html}} In principle, thanks to these data and the explanatory supplements \citep{wmapexsupp}, the entire data analysis pipeline can be reproduced from TOD in digital units (du) to frequency maps.
+
+For this analysis, we keep certain instrumental parameters fixed to the reported values. For example, we have made no attempts to rederive the pointing solutions, re-estimate the main beam response and far sidelobe pickup, or recover data that was flagged in the \WMAP\ event log. These and other analyses, such as estimating the bandpass shift over the course of the mission, are certainly possible within the larger Gibbs sampling framework. However, in this work we limit ourselves to recalibrating the TOD, estimating the noise properties, and applying bandpass corrections to the data before mapmaking.
+
 \subsection{TOD pre-processing and data selection}
 \label{sec:preprocessing}
-
-Chunking, events, compression, data volume, planet flags, pixelized pointing
 
 \begin{table}
 \caption{Flagging statistics}              % title of Table
@@ -750,9 +754,6 @@ Chunking, events, compression, data volume, planet flags, pixelized pointing
 \end{tabular}
 \end{table}
 
-\subsection{Time-ordered \WMAP\ data}
-\label{sec:tod}
-
 Figure with raw TOD, WMAP cleaned, components, total, difference etc.
 
 
@@ -771,25 +772,6 @@ When rechunking the data, timestreams of length $2^N$ were interrupted by events
 When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led us to discard these otherwise useful data. In addition, when $>10\%$ of the TOD was flagged, the large number of gaps in the data made the constrained realizations unreliable, as well as biasing the noise PSD parameters. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite being of acceptable quality. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data volume can be entirely accounted for by the cuts described in this paragraph.
 
 
-%\subsection{Survey of fixed \WMAP\ data products}
-%\label{sec:fixedproducts}
-%
-%\textbf{Summarize everything we assume from the WMAP analysis: Beams, bandpasses, pointing, etc.}
-
-\subsection{Data selection}
-
-%Compare with Table 2 of \citet{bennett2003a}, Table 1 of \citet{hinshaw2007}, Table 2 of \citet{hinshaw2009}. Total observing efficiency was 98.4\% \citep{bennett2012}
-
-The full nine-year \WMAP\ archive spans from August 10, 2001 to August 10, 2010, with the raw uncalibrated data spanning 626\,GB. A little over 1\,\% of the data were lost or rejected due to incomplete satellite telemetry, thermal disturbances, spacecraft anomalies, and station-keeping maneuvers, with an extra 0.1\,\% rejected due to planet flagging \citep{bennett2003a,hinshaw2007,hinshaw2009,bennett2012}. 
-The final results reported in \citet{bennett2012} included roughly 98.4\,\% of the total data volume.
-A full accounting of all data cuts can be found in Table~1.8 of \citet{wmapexsupp}. In total, we flag the same data indicated in the fiducial \WMAP\ analysis, and use the same planet flags
-
-As shown in \citet{bp03}, a large fraction of \commanderthree's computational time is spent performing FFTs on individual scans. Rather than truncating datastreams to have lengths equal to ``magic numbers'' for which \texttt{FFTW} \citep{FFTW05} is fastest, as in \citet{bp03}, 
-we split the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N=23$ for \V--\W. This yields scans with lengths of 6.21 days for \K- and \Ka-band, 4.97 days for \Q-band, 7.46 days for \V-band, and 4.97 days for \W-band.
-These datastream lengths are short enough to be processed quickly and distributed efficiently across multiple processors, while being long enough to properly characterize the noise properties of the timestreams, whose $f_\mathrm{knee}$'s are on the order $1\,\mathrm{mHz}$. Most importantly, \texttt{FFTW} performs fastest when the datastream is of length $2^N$.
-
-When rechunking the data, timestreams of length $2^N$ were interrupted by events logged in Table~1.8 of \citet{wmapexsupp}.
-When we encountered these events, TOD segments that were interrupted by the event were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led us to discard these otherwise useful data. In addition, when $>10\%$ of the TOD was flagged, the large number of gaps in the data made the constrained realizations unreliable, as well as biasing the noise PSD parameters. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite being of acceptable quality. We present the full statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data volume can be entirely accounted for by the cuts described in this paragraph.
 
 \begin{table}
 \caption{Flagging statistics}              % title of Table
@@ -820,11 +802,12 @@ A key motivation of the \cosmoglobe\ project is to evaluate whether it is feasib
 
 Despite the relatively small data volume spanned by \WMAP, the CPU time is comparable to each of the LFI channels.  By far the largest reason for this is the mapmaking step, which requires looping over the entire dataset for each matrix multiplication, a process which must be repeated $\sim20$ times. This is vastly sped up by the use of a low resolution preconditioner, reducing the number of iterations by an order of magnitude.
 
-\textit{(One thing I would like to explain -- why does it take so much longer for TOD operations? My initial thought was that each timestream requires two timestreams for each horn, but that's not enough.)}
+%\textit{(One thing I would like to explain -- why does it take so much longer for TOD operations? My initial thought was that each timestream requires two timestreams for each horn, but that's not enough.)}
 
 Additionally, operations that require creating timestreams for each detector, i.e., TOD projection, sidelobe evaluation, and orbital dipole projection, take much longer than expected from a pure data volume scaling. Part of this is due to each \WMAP\ radiometer needing to evaluate the sky in two pixels simultaneously, doubling the expected workload. The operations of gain sampling and correlated noise sampling include multiple FFTs. Typical LFI TODs are of length $\sim200\,000$, an order of magnitude smaller than the \WMAP\ TODs of length $2^{\text{22\ --\ 23}}$. 
 
-\textit{(Need to expand ``other'')}
+%\textit{(Need to expand ``other'')}
+
 \begin{table*}[t]
   \begingroup
   \newdimen\tblskip \tblskip=5pt
@@ -932,28 +915,7 @@ Additionally, operations that require creating timestreams for each detector, i.
 	\label{fig:timestreams}
 \end{figure*}
 
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10min.pdf}
-	\caption{Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP.}
-	\label{fig:cal_comp_10min}
-\end{figure}
 
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10hr.pdf}
-	\caption{(top) Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP. (bottom) Raw correlated noise (gray) and smoothed data with Gaussian kernel (black). This shows more clearly the hourly baseline subtraction from the \WMAP\ treatment.}
-	\label{fig:cal_comp}
-\end{figure}
-
-To compare the TODs, it's important to look at the \WMAP\ gain model,
-\begin{equation}
-	g=\alpha\frac{\overline V-V_\circ-\beta(T_\mathrm{RXB}-290\,K)}
-	{T_\mathrm{FPA}-T_\circ}+(m\Delta t+c),
-\end{equation}
-where $\alpha$, $\V_\circ$, $\beta$, $T_\circ$, $m$, and $c$ are fit to a constant value across the mission for each radiometer. $\overline V$ are radio frequency bias powers per detector, and $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ are the receiver box and focal plane assembly temperatures, which are recorded every 23.04\,s. Since we couldn't find the exact thermistors that recorded $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ that were used for the gain solution, we are unable to evaluate this exactly. Although we are unable to reproduce the exact gain model parametrized in \citet{wmapexsupp}, the $\sim20\,s$ time dependence of the gain model on housekeeping data is a plausible explanation for the time-dependent noise variation in the different calibrated data solutions.
-
-As reported in \citet{hinshaw2007}, the calibrated data archive has been calibrated using the procedure listed above, with a baseline subtracted each hour and the sidelobe subtracted. Figure~\ref{fig:cal_comp_10min} shows the \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ with the \WMAP\ delivered calibrated signal subtracted. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. The differences of order $50\,\mathrm{\mu K}$ correspond to sky brightness of order $10\,\mathrm{mK}$, equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainy estimated in \citet{bennett2012} based on end-to-end simulations.
-
-On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most prominent feature is a signal of amplitude $0.2\,\mathrm{mK}$. This likely due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assinging a linear baseline solution for the entire scan. However, the variations are commensurate with correlated noise, which for \K113 has $f_\mathrm{knee}\sim0.5\,\mathrm{mHz}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. To test this hypothesis, we plot a realization of correlated noise generated by \commander, and find that the signals are very similar, both in amplitude and morphology.
 
 
 
@@ -969,7 +931,7 @@ On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most promin
 %Outside of these mask, the data are fit will by the sky model, so the calibration and the correlated noise estimates should both be unbiased.
 
 
-\clearpage
+%\clearpage
 
 
 
@@ -982,7 +944,7 @@ On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most promin
 %\section{Low-level posterior distributions}
 %\label{sec:lowlevel}
 
-\clearpage
+%\clearpage
 
 
 \section{Posterior distributions}
@@ -1006,6 +968,29 @@ On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most promin
 
 \subsection{Gain and baselines}
 \label{sec:gain}
+
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10min.pdf}
+	\caption{Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP.}
+	\label{fig:cal_comp_10min}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10hr.pdf}
+	\caption{(top) Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP. (bottom) Raw correlated noise (gray) and smoothed data with Gaussian kernel (black). This shows more clearly the hourly baseline subtraction from the \WMAP\ treatment.}
+	\label{fig:cal_comp}
+\end{figure}
+
+To compare the calibrated TODs from \WMAP\ versus \cosmoglobe, it is  important to look at the \WMAP\ gain model,
+\begin{equation}
+	g=\alpha\frac{\overline V-V_\circ-\beta(T_\mathrm{RXB}-290\,K)}
+	{T_\mathrm{FPA}-T_\circ}+(m\Delta t+c),
+\end{equation}
+where $\alpha$, $\V_\circ$, $\beta$, $T_\circ$, $m$, and $c$ are fit to a constant value across the mission for each radiometer. $\overline V$ are radio frequency bias powers per detector, and $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ are the receiver box and focal plane assembly temperatures, which are recorded every 23.04\,s. Since we couldn't find the exact thermistors that recorded $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ that were used for the gain solution, we are unable to evaluate this exactly. Although we are unable to reproduce the exact gain model parametrized in \citet{wmapexsupp}, the $23.4\,\mathrm s$ time dependence of the gain model on housekeeping data is a plausible explanation for the time-dependent noise variation in the different calibrated data solutions.
+
+As reported in \citet{hinshaw2007}, the calibrated data archive has been calibrated using the procedure listed above, with a baseline subtracted each hour and the sidelobe subtracted. Figure~\ref{fig:cal_comp_10min} shows the \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ with the \WMAP\ delivered calibrated signal subtracted. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. The differences of order $50\,\mathrm{\mu K}$ correspond to sky brightness of order $10\,\mathrm{mK}$, equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainy estimated in \citet{bennett2012} based on end-to-end simulations.
+
+On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most prominent feature is a signal of amplitude $0.2\,\mathrm{mK}$. This likely due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assinging a linear baseline solution for the entire scan. However, the variations are commensurate with correlated noise, which for \K113 has $f_\mathrm{knee}\sim0.5\,\mathrm{mHz}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. To test this hypothesis, we plot a realization of correlated noise generated by \commander, and find that the signals are very similar, both in amplitude and morphology.
 
 \subsection{Transmission imbalance}
 \label{sec:xim}
@@ -1240,7 +1225,7 @@ Resources table, as from Q1.
 
 
 
-\clearpage
+%\clearpage
 
 %\section{High-level posterior distributions}
 %\label{sec:maps}
@@ -1344,7 +1329,7 @@ such has a negligible effect.
 
 \lipsum[1-4]
 
-\clearpage
+%\clearpage
 
 
 \section{Frequency maps and astrophysical components}
@@ -1532,7 +1517,7 @@ Will combine these spectra shortly
 %\subsubsection{Temperature power spectrum}
 
 
-\clearpage
+%\clearpage
 
 
 Want to compare the $QU$ correlation in WMAP and Planck LFI, get a quantitative number. Point out that the polarization solution itself is much better, but the covariance between pixels themselves is much higher. This wasn't an issue for LFI, so we had to take that into account here.
@@ -1736,7 +1721,7 @@ W3 $-$ W4         & 4257  & 4145  & 112 \cr
 
 
 
-\clearpage
+%\clearpage
 \section{Systematic error corrections and uncertainties}
 \label{sec:systematics}
 
@@ -1783,7 +1768,7 @@ W3 $-$ W4         & 4257  & 4145  & 112 \cr
 
 
 
-\clearpage
+%\clearpage
 \section{Outstanding issues}
 \label{sec:issues}
 
