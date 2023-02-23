@@ -289,6 +289,13 @@ other pair sensitive to the orthogonal polarization. In total, the DAs were
 allocated as: 1 \K\ (23\,GHz), 1 \Ka\ (30\,GHz), 2 \Q\ (40\,GHz), 2 \V\
 (60\,GHz), and 4 \W\ (90\,GHz).
 
+The \WMAP\ pointing solution was determined using the boresight vectors of individual feedhorns in spacecraft coordinates, in combination with on-board star trackers. Thermal flexure of the tracking structure introduced small pointing errors, as discussed by \citet{jarosik2007}. Using the temperature variation measured by housekeeping data, the quaternion pointing solution was corrected using a linear model that depends on arcsecond per temperature change. The residual pointing errors were computed using observations of Jupiter Saturn, and the reported upper limit was given by 10'' \citep{bennett2012,wmapexsupp}.
+
+The \WMAP\ bandpasses were measured directly pre-launch, sweeping a signal source through 201 frequencies and recording the output \citep{jarosik2003:MAP}. The bandpass responses have not been updated since the initial data release. However, as noted in \citet{bennett2012}, there has been an observed drift in the center frequency of \K, \Ka, \Q, and \V-band corresponding to a $\sim0.1\,\%$ decrease over time. In practice, this did not affect the \WMAP\ data processing because each year was mapped separately and co-added afterwards. An effective frequency calculator was delivered in the DR5 release as part of the IDL library to mitigate this effect during astrophysical analyses.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/m_sw.html}}
+
+The beams were characterized in the form of maps, with separate products for the near-field and far-field. The main beam and near sidelobes were characterized using a combination of physical optics codes and observations of Jupiter for each horn separately. The maps of Jupiter were then combined with the best-fit physical optics codes to create a map of the beam response \citep{hill2009,weiland2010,bennett2012}.
+Far sidelobes were estimated using a combination of laboratory measurements and Moon data taken during the mission \citep{barnes2003}, as well as a physical optics model describe in \citet{hinshaw2009}. To remove the far sidelobe  in the TOD, an estimate was calculated by convolving the intensity map and the orbital dipole signal with the measured sidelobe signal \citep{jarosik2007}. Although the sidelobe pickup was modeled in \citet{barnes2003}, it was determined that the results were small enough to be neglected, and have not been reported in any of the \WMAP\ data releases.
+
 The \WMAP\ data were calibrated by jointly estimating the time-dependent gains and baselines, as describe in \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
 The TOD are intially modelled as having
 constant gain and baseline for a 1--24\,hour period, and are fit to the orbital
@@ -303,9 +310,8 @@ Transmission imbalance, i.e., the effect of different sky signal transmission fr
 	\\
 	&=(T_{p_\A}-T_{p_\B})+x_\mathrm{im}(T_{p_\A}+T_{p_\B}).
 \end{align}
-If the $x_\mathrm{im}$ value is inaccurate, this yields a spurious polarization component, and creates imbalance modes due to coupling with the Solar dipole \citep{jarosik2007}. The transmission imbalance factors are fit by using the Solar dipole in TOD space and fitting the common-mode and differential signals in TOD space directly \citep{jarosik2003b,jarosik2007}.
+If the $x_\mathrm{im}$ value is inaccurate, this yields a spurious polarization component, and creates imbalance modes due to coupling with the Solar dipole \citep{jarosik2007}. The transmission imbalance factors are fit by using the Solar dipole in TOD space and fitting the common-mode and differential signals in TOD space directly \citep{jarosik2003a,jarosik2007}.
 
-Far sidelobes were estimated using a combination of laboratory measurements and Moon data taken during the mission \citep{barnes2003}, as well as a physical optics model describe in \citet{hinshaw2009}. To remove the far sidelobe  in the TOD, an estimate was calculated by convolving the intensity map and the orbital dipole signal with the measured sidelobe signal \citep{jarosik2007}. Although the sidelobe pickup was modeled in \citet{barnes2003}, it was determined that the results were small enough to be neglected, and have not been reported in any of the \WMAP\ data releases.
 
 
 Data are flagged and masked before the final mapmaking step. In particular, station-keeping maneuevers, solar flares, and unscheduled events caused certain data to be unusable -- the full catalog of these events is listed in Table~1.8 of \citet{wmapexsupp}. In addition, data are masked depending on the channel frequency and the planet itself, with the full list of exclusion radii enumerated in Table~4 of \citet{bennett2012}.
@@ -314,18 +320,35 @@ To create the sky maps, the calibrated data are put into the asymmetric mapmakin
 \begin{equation}
 	\mathsf P_{am}^T\mathsf N^{-1}\mathsf P\boldsymbol m=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d,
 \end{equation}
+where $\mathsf P$ is implicitly defined for detectors $\boldsymbol d_1$ and $\boldsymbol d_2$ sensitive to different polarization orientations,
+\begin{align}
+	\boldsymbol d_1&=\mathsf P_1\boldsymbol m
+	\nonumber
+	\\
+	&=(1+x_\mathrm{im})[T_\A+Q_\A\cos2\gamma_\A+U_\A\sin2\gamma_\A+S_\A]
+	\nonumber
+	\\
+	&+(1-x_\mathrm{im})[-T_\B-Q_\B\cos2\gamma_\B-U_\B\sin2\gamma_\B-S_\B]
+	\\
+	\boldsymbol d_2&=\mathsf P_2\boldsymbol m
+	\nonumber
+	\\
+	&=(1+x_\mathrm{im})[T_\A-Q_\A\cos2\gamma_\A-U_\A\sin2\gamma_\A-S_\A]
+	\nonumber
+	\\
+	&+(1-x_\mathrm{im})[-T_\B+Q_\B\cos2\gamma_\B+U_\B\sin2\gamma_\B+S_\B]
+\end{align}
+In this formalism, $S$ acts as an extra Stokes parameter that absorbs the effects of different bandpass response between radiometers $\boldsymbol d_1$ and $\boldsymbol d_2$ \citep{jarosik2007}.
+The asymmetric mapmaking matrix, $\boldsymbol P_\mathrm{am}$, is used because, as noted in \citet{jarosik2010}, large signals observed in one beam can leak into the solution for the pixel observed by the other beam, leading to incorrect signals in the final map. The asymmetric mapmaking solution essentially works by only updating the matrix multiplication for beam A when beam A is in a high emission region and beam B is not, and vice versa. \citet{bennett2012} also identified that these effects are pronounced when there is a steep gradient in the emission across the $N_\mathrm{side}=512$ pixels within an $N_\mathrm{side}=16$ superpixel, leading to excesses $140^\circ$ away from the Galactic center.
 
-As described in \citet{jarosik2007}, the frequency response of the radiometers
-forming a DA are slightly different, which causes a spurious signal to be
-leaked into the polarization maps. This effect is mitigated by assigning a
-spurious pseudo-Stokes parameter, $S$, and solving for it explicitly in the
-mapmaking procedure.
+An accurate noise model is necessary to perform the maximum likelihood mapmaking, as it requires the evaluation of $\mathsf N^{-1}$. The time-space autocorrelation function was estimated for each year of data, which is then Fourier transformed, inverted, and Fourier transformed again to create an effective inverse noise operator $N_{tt'}^{-1}$. 
+Finally, to create the sky maps themselves, the data are treated one year at a time, and the iterative Bi-conjugate Gradient Stabilized Method \citep[BiCG-STAB][]{bicgstab,bicgstab_template} is applied to the maps.
+
 
 \subsection{Instrument model}
 \label{sec:wmap_instmodel}
 
-\textbf{Write down data model; refer to WMAP and BP papers extensively}
-
+As opposed to the \WMAP\ pipeline, the \cosmoglobe\ model involves creating a generative model for every aspect of the data, including the sky and instrumental effects at once.
 In the \cosmoglobe\ paradigm, it is simplest to characterize the data's goodness-of-fit to a model,
 \begin{equation}
 	\label{eq:model}
@@ -337,7 +360,34 @@ $\mathsf B^\mathrm{symm}$ and $\mathsf B^{4\pi}$ are the symmetrized and full sy
 \begin{equation}
 	\mathsf M_{cj}=\int d\nu\,\tau_j(\nu)f_c(\nu/\nu_{c,0}).
 \end{equation}
-The maps $\boldsymbol a$ are the component amplitudes, $\boldsymbol s^\mathrm{orb}$ is the orbital dipole induced by the motion of the telescope with respect to the Sun, and $\boldsymbol s^\mathrm{fsl}$ is the time-dependent far sidelobe signal. In the \commanderthree\ \citep{bp03} implementation, $\boldsymbol n^\mathrm{corr}$ is a realization of the correlated noise component whose SED is parametrized by $P(f\mid\boldsymbol\xi_n)$, where $\boldsymbol\xi_n$ generally includes $f_\mathrm{knee}$, a slope $\alpha$, and whose amplitude is fixed by the white noise $\sigma_0$. This model is often augmented, as we will discuss in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}. Similarly, each experiment has particular signals that are specific to the instrument in question, e.g., the 1\,Hz spike in \Planck\ LFI or the large baseline in \WMAP, which can be modeled by $\boldsymbol s^\mathrm{inst}$.
+The maps $\boldsymbol a$ are the component amplitudes, $\boldsymbol s^\mathrm{orb}$ is the orbital dipole induced by the motion of the telescope with respect to the Sun, and $\boldsymbol s^\mathrm{fsl}$ is the time-dependent far sidelobe signal. In the \commanderthree\ \citep{bp03} implementation, $\boldsymbol n^\mathrm{corr}$ is a realization of the correlated noise component whose SED is parametrized by $P(f\mid\boldsymbol\xi_n)$, where $\boldsymbol\xi_n$ generally includes $f_\mathrm{knee}$, a slope $\alpha$, and whose amplitude is fixed by the white noise $\sigma_0$. 
+%This model is often augmented, as we will discuss in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}. 
+Similarly, each experiment has particular signals that are specific to the instrument in question, e.g., the 1\,Hz spike in \Planck\ LFI or the large baseline in \WMAP, which can be modeled by $\boldsymbol s^\mathrm{inst}$.
+
+The most unique feature of the \WMAP\ data is that it includes differential pointing.  \WMAP\ has two primary mirrors approximately reflected along the vertical satellite axis, and are tilted approximately $19.5^\circ$ downwards -- in total, when horn A is pointed at pixel $p_\A$, horn B is pointed at a pixel $p_\B$ that is approximately $141^\circ$ away \citep{page2003:MAP}. The incoming radiation is differenced in the electronics before being deposited on the detectors, essentially recording radiation proportional to $\boldsymbol m_\A-\boldsymbol m_\B$ and $\boldsymbol m_\B-\boldsymbol m_\A$ on the detectors \citep{jarosik2003:MAP}. Each pair of radiometers has a partner pair of radiometers that observes the same pixels with sensitivity to the orthogonal polarization direction. Taking these effects all into account, the total data model for a single radiometer is given by
+\begin{align}
+	d_{t}&=g_{t}\mathsf P_{t,p}s_{p} + s^\mathrm{inst}_t+n_t
+	\\
+	&=g_t\Big[\alpha_\A(T_{p_\A(t)}+Q_{p_\A(t)}\cos2\gamma_\A(t) + U_{p_\A(t)}\sin2\gamma_\A(t))
+	\nonumber
+	\\
+	&\phantom{g_t\Big[}-
+	\alpha_\B(T_{p_\B(t)}+Q_{p_\B(t)}\cos2\gamma_\B(t) + U_{p_\A(t)}\sin2\gamma_\B(t))\Big]
+	\nonumber
+	\\
+	&\phantom{g_t\Big[}
+	+ s_t^\mathrm{inst}+n_t
+\end{align}
+where $s_p$ is the total sky signal $\mathsf B\mathsf M\boldsymbol a$, $\gamma_{\A/\B}$ are the time-dependent polarization angles, and $p_{\A/\B}$ are the A and B pixel locations.
+In this notation, $\alpha_{\A/\B}$ is the total optical power transmission for horn A and B. Defining the transmission imbalance for a given radiometer pair $x_\mathrm{im}\equiv(\alpha_\A-\alpha_\B)/(\alpha_\A+\alpha_\B)$ and absorbing $\alpha_\A+\alpha_\B$ into the definition of $g_t$ allows the pointing operation to be written in terms of the deviation from ideality,
+\begin{align}
+	\mathsf P_{t,p}s_p
+	&=(1+x_\mathrm{im})(T_{p_\A}+Q_{p_\A}\cos2\gamma_\A + U_{p_\A}\sin2\gamma_\A)
+	\nonumber
+	\\
+	&
+	-(1-x_\mathrm{im})(T_{p_\B}+Q_{p_\B}\cos2\gamma_\B + U_{p_\A}\sin2\gamma_\B).
+\end{align}
 
 \subsection{Sky model}
 
@@ -355,10 +405,12 @@ Note that the AME model we adopt is a pure exponential, rather than the SED temp
 \begin{equation}
 	s^\mathrm{sd}_\mathrm{RJ}(\nu)\propto\nu^{-2}\boldsymbol s_0^\mathrm{sd}\left(\nu\cdot\frac{30\,\mathrm{GHz}}{\nu_\mathrm p}\right).
 \end{equation}
-In the \WMAP\ and LFI frequency range, the exponential model and the \texttt{SpDust2} are phenomenologically quite similar, despite their very different origins. As we describe in (\ldots), the exponential model is a simple fit with $\beta$ drawn from a prior value of $-3.57$, and is a clear parametric form that is easy to interpret. An alternative model is the two-parameter log-normal AME SED,
+In the \WMAP\ and LFI frequency range, the exponential model and the \texttt{SpDust2} are phenomenologically quite similar, despite their very different origins. 
+%As we describe in (\ldots), 
+The exponential model is a simple fit with $\beta$ drawn from a prior value of $-3.57$, and is a clear parametric form that is easy to interpret. An alternative model is the two-parameter log-normal AME SED,
 \begin{equation}
-	\boldsymbol s_\mathrm{RJ}^{ame,log-N}=\boldsymbol a_\mathrm{ame}
-	\left(\frac{\nu}{\nu_\mathrm{ame}}\right)^{-2}\exp\left(-\frac12\left[\frac{\ln(\nu/\nu_\mathrm{ame}}{W_\mathrm{ame}}\right]^2\right),
+	\boldsymbol s_\mathrm{RJ}^\textrm{ame,log-N}=\boldsymbol a_\mathrm{ame}
+	\left(\frac{\nu}{\nu_\mathrm{ame}}\right)^{-2}\exp\left(-\frac12\left[\frac{\ln(\nu/\nu_\mathrm{ame})}{W_\mathrm{ame}}\right]^2\right),
 \end{equation}
 derived by \citet{Stevenson_2014} as an analytical approximation to the spinning dust emission. This has also been employed in the latest QUIJOTE analaysis, e.g., \citet{QUIJOTE_V}, as it allows for variation of the peak frequency $\nu_\mathrm{ame}$ and width $W_\mathrm{ame}$. Although this work is not dependent on the specific parametric form of the AME, we opt for the exponential form described above, as it provides an excellent fit to the diffuse AME with a single parameter.
 
@@ -394,31 +446,113 @@ C_{\ell} &\,\leftarrow                             P(C_{\ell}&\,         \mid \d
 \end{alignat}
 with each step requiring its own dedicated sampling algorithm, and in the case of \bp, its own publication. The \commanderthree\ pipeline is designed so that results of each Gibbs sample can be easily passed to each other, and that the internal calculations of each step do not directly depend on the inner workings of each other. Therefore, in order to add another data set to the Gibbs chain, one must implement Eqs.~\eqref{eq:gain_samp_dist}--\eqref{eq:samp_inst} for each instrument, as was done in \citet{bp01} and \citet{bp10} for \Planck\ LFI and in \citet{bp17} for \WMAP, or simply pass processed maps with beam, mask, and noise information to Eqs.~\eqref{eq:beta_samp}--\eqref{eq:param_samp}, as was done for the Haslam 408\,MHz map \citep{haslam1982,remazeilles2014} and the \Planck\ 353 and 857\,GHz maps.
 
-Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI and \WMAP\ data, we summarize the TOD processing steps in Sects.~\ref{ssec:lfi} and \ref{ssec:wmap}.
+Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI and \WMAP\ data, we summarize the TOD processing steps in Sect.~\ref{sec:algorithms}.
 
 
 
 \subsection{Sampling algorithms}
+\label{sec:algorithms}
 
 Each step of the Gibbs chain requires its own distribution to be sampled from. In Sect.~\ref{ssec:oldsamplers} we review the sampling algorithms implemented in the \bp\ suite of papers, while Sects.~\ref{ssec:mapmaking}--\ref{ssec:baseline} provide an overview of the \WMAP-specific processing steps.
 
 \subsubsection{Review of sampling algorithms}
 \label{ssec:oldsamplers}
 
-Gain sampling (Eq.~\eqref{eq:gain_samp_dist}) is described in \citet{bp07}.
 
-Correlated noise sampling and noise SED sampling is described in \citet{bp06}.
+Several of the techniques required for \WMAP\ data analysis have already been implemented and describe in the \bp\ framework and implemented in \commanderthree. This section includes a summary of the algorithms that were used described previously for the analysis of LFI data. In each of these cases, every part of the model not explicitly mentioned is held fixed unless specified otherwise.
+
+Noise estimation and calibration, described in \citet{bp06} and \citet{bp07} respectively, are highly degenerate, given that the timestream
+\begin{equation}
+	d_{t,i}=g_{q,i}s_{t,i}^\mathrm{tot}+n_{t,i}^\mathrm{corr}+n_{t,i}^\mathrm{wn}
+\end{equation}
+is equally well fit by two solutions if $g'=gs^\mathrm{tot}/(s^\mathrm{tot})'$ or ${(n^\mathrm{corr})'=n^\mathrm{corr}+gs^\mathrm{tot}+g'(s^\mathrm{tot})'}$. In practice, this is dealt with by marginalizing over the correlated noise realization $\boldsymbol n^\mathrm{corr}$ assuming a fixed PSD $\boldsymbol\xi_n$, so that Eqs.~\eqref{eq:gain_samp_dist} and \eqref{eq:ncorr_samp_dist} are evaluated as
+\begin{alignat}{10}
+	\g&\,\leftarrow P(\g&\,\mid\d, &\, &\,&\,\boldsymbol\xi_n,\ldots)
+	\label{eq:gmarg}
+	\\
+	\ncorr&\,\leftarrow P(\ncorr&\,\mid\d, &\,\g, &\,&\,\boldsymbol\xi_n,\ldots).
+	\label{eq:ncorr_only}
+\end{alignat}
+This is allowed by probability theory given that the joint distribution $P(\g,\ncorr\mid\boldsymbol\omega)=P(\ncorr\mid\g,\boldsymbol\omega)P(\g\mid\boldsymbol\omega)$, so that Eqs.~\eqref{eq:gmarg} and \eqref{eq:ncorr_only} evaluated in sequence is equivalent to drawing a joint sample from $P(\g,\ncorr\mid\boldsymbol\omega)$. In practice, this means that when sampling for $\g$, the covariance matrix $\mathsf N=\mathsf N_\textrm{wn}+\mathsf N_\textrm{corr}$ must be used, rather than just $\mathsf N_\mathrm{wn}$.
+
+\commanderthree\ models the gain at each timesteam $t$ for a detector $i$ as
+\begin{equation}
+	g_{t,i}=g_0+\Delta g_i+\delta g_{q,i}
+\end{equation}
+where $q$ labels the time interval for which we assume the gain is constant over, e.g., a single scan. In order to sample the gain, we write down a generative model for the TOD,
+\begin{equation}
+	\d_i=\g_{i}\s_{i}^\mathrm{tot} +\n_{i}^\mathrm{tot}\sim\mathcal N(\g_i\s_{i}^\mathrm{tot},\mathsf N_i).
+\end{equation}
+Since the $\d_i$ is given as a linear combination of the fixed signal and the gains, a random sample of the gain can be drawn by solving\footnote{See, e.g., Appendix A.2 of \citet{bp01} for a derivation of this result.}
+\begin{equation}
+	\label{eq:gain_gauss_samp}
+	[(\s_i^\mathrm{tot})^T\mathsf N_i^{-1}\s_i^\mathrm{tot}]\g_i
+	=(\s_i^\mathrm{tot})^T\N^{-1}_i\d_i
+	+(\s_i^\mathrm{tot})^T\N^{-1/2}_i\boldsymbol\eta.
+\end{equation}
+Note that the $\mathsf N_i$ depends implicitly on the noise PSD $\boldsymbol \xi_n$, while the specific realization of $\ncorr$ is accounted for in the covariance matrix.
+In practice, as shown in \citet{bp07}, \commanderthree\ samples $g_0$, $\Delta g_i$, and $\delta g_{q,i}$ in separate sampling steps. Formally, the Gibbs chain is broken by fitting the absolute gain $g_0$ to the orbital dipole rather than the full sky signal. However, this makes the sampling much more robust to unmodelled systematic effects, so the trade-off in rigor is justified.
+
+The correlated noise sampling, described in \citet{bp06}, follows a similar procedure to gain sampling, except now conditioned upon the gain estimate, sampled just before correlated noise in the code. Similar to the gain case, we can write a generative model for the data
+\begin{equation}
+	\d_i=\g_i\s_i^\mathrm{tot}+\n_i^\mathrm{corr}+\n^\mathrm{wn}_i
+	\sim\mathcal N(\g_i\s_i^\mathrm{tot},\N_{\mathrm{corr},i}+\N_{\mathrm{wn},i}).
+\end{equation}
+Given fixed $\boldsymbol r_i=\d_i-\g_i\s_i^\mathrm{tot}$, we can again write a sampling equation, 
+\begin{equation}
+	\label{eq:ncorr_gauss_samp}
+	(\N_{\mathrm{corr},i}^{-1}+\N_{\mathrm{wn},i}^{-1})
+	\n^\mathrm{corr}_i
+	=\N^{-1}_{\mathrm{wn},i}\boldsymbol r_i
+	+\N^{-1/2}_{\mathrm{wn},i}\boldsymbol\eta_1
+	+\N^{-1/2}_{\mathrm{corr},i}\boldsymbol\eta_2.
+\end{equation}
+This gives a sample of the true underlying correlated noise that occurred when the instrument was taking data. In practice, this is equivalent to the destriping mapmaking algorithm \texttt{Madam}, and returns equivalent results to the classical method \citep{bp02}.
+
+To solve for the correlated noise parameters, we assume that the correlated noise is drawn from a correlated Gaussian and form the posterior distribution
+\begin{equation}
+	P(\boldsymbol\xi_n\mid\n^\mathrm{corr})\propto\frac{\exp{[-\frac12(\n^\mathrm{corr})^T\N_\mathrm{corr}^{-1}\n^\mathrm{corr}]}}
+	{\sqrt{|\N_\mathrm{corr}|}}P(\boldsymbol\xi_n).
+\end{equation}
+The simplest parameterization for correlated noise is given by
+\begin{equation}
+	\mathsf N_\mathrm{corr}(f)=\sigma_0^2\left(\frac f{f_\mathrm{knee}}\right)^\alpha.
+\end{equation}
+This can in principal be modified, and for \Planck\ LFI a Gaussian log-normal bump was added at a late stage in the \bp\ analysis. Rather than sampling for $\sigma_0$, we effectively fix the white noise level to the noise level at the highest frequency, e.g.,
+\begin{equation}
+	\sigma_0^2\equiv\frac{\mathrm{Var}(r_{t+1}-r_t)}2,
+\end{equation}
+where $t$ and $t+1$ are consecutive time samples, and ${\boldsymbol r\equiv\boldsymbol d-\boldsymbol g\boldsymbol s^\mathrm{tot}
+-\boldsymbol n^\mathrm{corr}}$. In practice, this makes $\sigma_0$ a deterministic function of the sampled sky and gain parameters. The parameters $\alpha$ and $f_\mathrm{knee}$ are not linear in the data, so must be sampled using the general inversion sampler.\footnote{See, e.g., Appendix A.3 of \citet{bp01} and Chapter 7.3.2 of \citet{numerical_recipes} for further details.} In practice, this requires gridding out the posterior one parameter at a time.
+
+The bandpass mismatch is explicitly modeled in \commanderthree. Using the calibrated sky model, the expected calibrated sky signal is given by
+\begin{equation}
+	m_{p,j}=\mathsf B_{p,p'}\sum_c\mathsf M_{c,j}a^c_{p'}+n_{j,p}^\mathrm w.
+\end{equation}
+Since $\mathsf M_{c,j}$ encodes the bandpass response of every detector $j$ to every component $c$, the maps $\boldsymbol m_j$ will each be slightly different depending on their bandpass $\tau_j$. More importantly, differences in signal between different detectors can be attributed to a spurious polarization signal, giving spurious polarized maps. Therefore, before averaging different detectors together, \commanderthree\ estimates the average over all detectors in a given frequency channel $\boldsymbol m\equiv \langle \boldsymbol m_j\rangle$, and subtracts it directly in the timestream;
+\begin{equation}
+	\delta s_{t,j}^\mathrm{leak}=\mathsf P_{t,p}^j\mathsf B_{p,p'}^j\left(\boldsymbol m_{j,p'}-\boldsymbol m_{p'}\right).
+\end{equation}
+This leakage term uses the expected bandpass
+
+Once the instrumental parameters have been sampled, \commanderthree\ computes the calibrated TOD for each band,
+\begin{equation}
+	r_{t,j}=\frac{d_{t,j}-n_{t,j}^\mathrm{corr}}{g_{t,j}}-\left(s_{t,j}^\mathrm{orb}
+	+s_{t,j}^\mathrm{fsl}+\delta s_{t,j}^\mathrm{leak}+s_{t,j}^\mathrm{inst}\right)
+\end{equation}
+where $\s^\mathrm{orb}$ is the orbital dipole, $\s^\mathrm{fsl}$ is the far sidelobe timestream, $\delta\s^\mathrm{leak}$ is the bandpass leakage, and $\s^\mathrm{inst}$ is the set of instrumental parameters, e.g., the 1\,Hz spike in LFI. With the a correlated noise realization removed, one can perform simple binned mapmaking, weighting each pixel by the white noise amplitude.
 
 Component separation for intensity and polarization are described in \citet{bp13} and \citet{bp14}, respectively.
 
-Power spectrum estimation is described in \citet{bp10}.
+% Power spectrum estimation is described in \citet{bp12}.
 
-Cosmological parameter estimation is described in \citet{bp11}.
+% Cosmological parameter estimation is described in \citet{bp11}.
 
 
 \subsubsection{Differential mapmaking}
 \label{ssec:mapmaking}
 
+The first additional algorithm that needed to be added to \commanderthree\ was differential mapmaking, since the \Planck\ LFI data came from a standard single-horn instrument.  
 
 After calibration and correction for instrumental effects, the TOD can be modeled as
 \begin{equation}
@@ -447,16 +581,12 @@ where $p_\A$ and $p_\B$ are the time-dependent pointings for each DA. The maximu
 \end{equation}
 For a single-horn experiment, i.e., \Planck\ LFI, this reduces to a $3\times3$ matrix that can be inverted for each pixel independently. For the pointing matrix in Eq.~\eqref{eq:wmap_pointing}, this is no longer possible, as there is inherently coupling between horns A and B in the timestreams. The $3N_\mathrm{pix}\times3N_\mathrm{pix}$ matrix can be solved using an iterative algorithm, e.g., preconditioned conjugate gradients.
 
-(???) identified an issue where a large difference in the sky temperature at pixel value at pixel A versus pixel B induced artifacts in the mapmaking procedure. We adopt the procedured first described in (???) where only the pixel in a bright region, defined by a small processing mask by (???), is accumulated, this modifying the mapmaking equation to
+\citet{jarosik2010} identified an issue where a large difference in the sky temperature at pixel value at pixel A versus pixel B induced artifacts in the mapmaking procedure. We adopt the procedured first described in \citet{hinshaw2003a} where only the pixel in a bright region, defined by a small processing mask \citep{bennett2012} is accumulated, thus modifying the mapmaking equation to
 \begin{equation}
 	\mathsf P^T_\mathrm{am}\mathsf N^{-1}\mathsf P\boldsymbol m
 	=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d.
 \end{equation}
 This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$, which typically takes about 20 iterations for producing frequency maps.
-
-\subsubsection{Gain estimation}
-\label{ssec:gain}
-
 
 
 \subsubsection{Transmission imbalance estimation}
@@ -471,9 +601,14 @@ This can be decomposed into a differential (d) and common-mode (c) signal such t
 \begin{equation}
 	d_{t,j}=g_{t,j}[s_{t,j}^\mathrm d+x_{\mathrm{im},j}s_{t,j}^\mathrm c]+n_t.
 \end{equation}
-In this form, the imbalance parameters can be estimated by drawing Gaussian samples from the standard mean and standard deviation over the entire mission.
+In this form, the imbalance parameters can be estimated by drawing Gaussian samples from the standard mean and standard deviation over the entire mission. To draw samples for $x_{\mathrm{im},j}$, we construct the sampling routine analogous to Eqs.~\eqref{eq:gain_gauss_samp} and \eqref{eq:ncorr_gauss_samp} with $\boldsymbol r=\boldsymbol d-\boldsymbol g\boldsymbol s^\mathrm d$,
+\begin{equation}
+	[(\boldsymbol g\boldsymbol s^\mathrm c)^T\mathsf N^{-1}\boldsymbol g\boldsymbol s^\mathrm c]x_\mathrm{im}
+	=(\boldsymbol g\boldsymbol s^\mathrm c)^T\mathsf N^{-1}\boldsymbol r+(\boldsymbol g\boldsymbol s^\mathrm c)^T\mathsf N^{-1/2}\boldsymbol\eta,
+\end{equation}
+essentially cross-correlating the common-mode signal with $\boldsymbol r$ with appropriate weights and adding a Gaussian random variable with the correct weighting. Note that we are marginalizing over the correlated noise here by using $\N=\N_\mathrm{wn}+\N_\mathrm{corr}$. This mitigates any baseline drifts being erroneusly attributed to the common-mode signal and biasing the estimate of $x_\mathrm{im}$.
 
-The \WMAP\ procedure, described in \citet{jarosik2003b}, fit for common-mode and differential coefficients along with a cubic baseline over 10 precession periods at a time, corresponding to 10 hours of observation. The mean and uncertainty were then calculated by averaging and taking the standard deviation of these values. This approach has the benefit of allowing for the tracking of possible transmission imbalance variation throughout the mission. However, none of the \WMAP\ suite of papers have indicated this, and it has not arisen in our analysis, so we model this as an effect whose value is constant throughout the mission.
+The \WMAP\ procedure, described in \citet{jarosik2003a}, fit for common-mode and differential coefficients along with a cubic baseline over 10 precession periods at a time, corresponding to 10 hours of observation. The mean and uncertainty were then calculated by averaging and taking the standard deviation of these values. This approach has the benefit of allowing for the tracking of possible transmission imbalance variation throughout the mission. However, none of the \WMAP\ suite of papers have indicated this, and it has not arisen in our analysis, so we model this as an effect whose value is constant throughout the mission.
 
 \subsubsection{Baseline sampling}
 \label{ssec:baseline}
