@@ -542,7 +542,7 @@ Once the instrumental parameters have been sampled, \commanderthree\ computes th
 \end{equation}
 where $\s^\mathrm{orb}$ is the orbital dipole, $\s^\mathrm{fsl}$ is the far sidelobe timestream, $\delta\s^\mathrm{leak}$ is the bandpass leakage, and $\s^\mathrm{inst}$ is the set of instrumental parameters, e.g., the 1\,Hz spike in LFI. With the a correlated noise realization removed, one can perform simple binned mapmaking, weighting each pixel by the white noise amplitude.
 
-Component separation for intensity and polarization are described in \citet{bp13} and \citet{bp14}, respectively.
+% Component separation for intensity and polarization are described in \citet{bp13} and \citet{bp14}, respectively.
 
 % Power spectrum estimation is described in \citet{bp12}.
 
@@ -722,6 +722,12 @@ timestream directly, based on the best-fit to the noise PSD.
 
 We describe the delivered \WMAP\ data in Sect.~\ref{sec:products}, then describe the treatment we apply it to make them compatible with \commanderthree\ in Sect.~\ref{sec:preprocessing}, then describe the computational requirements in Sect.~\ref{sec:resources}.
 
+\begin{figure*}
+	\includegraphics[width=\textwidth]{figures/K113_timestreams.pdf}
+	\caption{Each of the timestreams that go into the model. Note the varying dynamic ranges of each plot.}
+	\label{fig:timestreams}
+\end{figure*}
+
 \subsection{Publicly available \WMAP\ products}
 \label{sec:products}
 
@@ -886,11 +892,6 @@ Additionally, operations that require creating timestreams for each detector, i.
 
 
 
-\begin{figure*}
-	\includegraphics[width=\textwidth]{figures/K113_timestreams.pdf}
-	\caption{Each of the timestreams that go into the model. Note the varying dynamic ranges of each plot.}
-	\label{fig:timestreams}
-\end{figure*}
 
 
 
@@ -1052,7 +1053,18 @@ We find $x_\mathrm{im}$ values that are largely consistent with the values repor
 \subsection{Instrumental noise and goodness-of-fit}
 \label{sec:noise}
 
-The noise fitting, as outlined in Sect.~\ref{sec:algorithms}, is 
+The noise fitting, as outlined in Sect.~\ref{sec:algorithms}, inherently depends the data being fit well by both the sky model and the instrument model. In practice, correlated noise fitting can model any unmodelled signals, so the power spectrum and TODs must be carefully scrutinized before any conclusions can be made about the corresponding maps.
+
+The white noise level in raw du is not strictly sampled, but is estimated conditioned on the instrumental parameters and the sky parameters. However, the calibrated white noise level $\sigma_0[\mathrm K]=\sigma_0[\mathrm{du}]/g$ does depend on the gain quite directly, which allows us to test the effects of the calibration on the instrument senstivity itself. The calibrated white noise level follows a biannual trend indicative of a system temperature variation, which is to be expected given the radiometer equation
+\begin{equation}
+	\sigma_0[\mathrm V]\propto gT_\mathrm{sys}.
+\end{equation}
+Aside from an overall amplitude shift due to the absolute calibration variation, the shape of the white noise level is stable throughout the Gibbs chain.
+
+The knee frequencies for each channel lie between the reported values in \citet{jarosik2003a} for both the Goddard Space Flight Center (GSFC) laboratory measurements and those from the first year of data collection. Nearly all radiometers have constant $f_\mathrm{knee}$ throughout the mission, with a few notable exceptions. First, all \W-band channels display some amount of temporal variation that does not seem to be associated with any sinusoidal features. Second, all \Q2 channels, \V223, and \V224 all display a similar asymptotic drift in time. We have not found any instrumental effects that share this feature.
+The PSD slope $\alpha$ is around $-1$ for each radiometer, albeit with high scatter for the lower frequencies. As expected, the uncertainty in $\alpha$ decreases as $f_\mathrm{knee}$ increases, since there are more datapoints to fit below $f_\mathrm{knee}$ where the constraining power on $\alpha$ is the strongest.
+
+Given the noise model and data residual, we can evaluate the goodness-of-fit in the form of the relative $\chi^2$. Here, we find that approximately half of the radiometers have a $\chi^2$ value at least $6\sigma$ above or below the expected value. Given perfect Gaussian residuals, we would expect the reduced sum of squares to be $n_\mathrm{tod}=2^N$ and be within $\sqrt{2n_\mathrm{tod}}=2^{(N+1)/2}$ 68\,\% of the time.
 
 \begin{table*}
 \newdimen\tblskip \tblskip=5pt
