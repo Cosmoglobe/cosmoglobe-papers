@@ -6,6 +6,33 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 #from setup_matplotlib import *
 
+def G_K(V, TRXB, TFPA):
+    T0 = 5.3235e1
+    V0 = -5.5125e-1
+    beta = -7.22e-4
+    alpha = 4.4619e1
+
+    return alpha*(V - V0 - beta*(TRXB - 290))/(TFPA - T0)
+
+def mnem_to_K(arr, Win, aeu=0):
+  if aeu == 1:
+    Slp  = 255.381467e-6
+    YInt = 319.5197
+    WInt = 129
+    WSlp = 256
+    Rmax = 650.58226
+  elif aeu == 2:
+    Slp  = 254.968244e-6
+    YInt = 319.5004
+    WInt = 129
+    WSlp = 256
+    Rmax = 650.25838
+  else:
+    print('Do not be here')
+  Res = (arr * Slp) + YInt + (((Win - WInt) / WSlp) * Rmax)
+  return Res
+
+
 
 CGDIR = '/mn/stornext/d5/data/duncanwa/WMAP/chains_writeW2_230217'
 chain = cg.Chain(f'{CGDIR}/chain_c0001.h5')
@@ -61,11 +88,58 @@ axes[6].set_ylabel(r'$s_\mathrm{res}$')
 '''
 
 pid = 32
+mjd = chain.get(f'tod/023-WMAP_K//MJD')
+mjd0 = mjd[0,pid-1]
+# November 19, 2001
+# 323rd day
+
 
 from cosmoglobe.tod_tools import TODLoader
 comm_tod = TODLoader("/mn/stornext/d16/cmbco/ola/wmap/tods/hdf5/uncalibrated", "wmap")
 comm_tod.init_file('K1', f'{pid:06}')
 ztod = comm_tod.load_field(f'{pid:06}/K113/ztod')
+
+
+
+from astropy.io import fits
+RAWDIR = '/mn/stornext/d16/cmbco/ola/wmap/tods/uncalibrated'
+data_fits = fits.open(f'{RAWDIR}/wmap_tod_20013170000_20013180000_uncalibrated_v5.fits')
+time3 = data_fits[3].data['time'] + 2.45e6 - 2_400_000.5
+time2 = data_fits[2].data['time'] + 2.45e6 - 2_400_000.5
+fig, axes = plt.subplots(sharex=True, sharey=False, nrows=4)
+#axes[0].plot(time2, data_fits[2].data['K113'])
+dt_hdf = 1.536/12/3600/24
+
+time_hdf = np.arange(mjd0, mjd0+ztod.size*dt_hdf, dt_hdf)
+dt = 1.536/12
+#inds = (t < 60*10)
+T_days = 10*60/3600/24
+inds = time_hdf < T_days + mjd0
+axes[0].plot(time_hdf[inds],-ztod[inds], 'k')
+
+
+time, FPA = np.loadtxt(f'../data/housekeeping/FPA3.txt').T
+time3 = time + 2.45e6 - 2_400_000.5
+inds = (time3 > mjd0) & (time3 < T_days + mjd0)
+
+axes[1].plot(time3[inds], FPA[inds])
+
+time, RXB = np.loadtxt(f'../data/housekeeping/RXB1.txt').T
+time3 = time + 2.45e6 - 2_400_000.5
+axes[2].plot(time3[inds], RXB[inds])
+
+time, RFB1 = np.loadtxt(f'../data/housekeeping/RFB1.txt').T
+time3 = time + 2.45e6 - 2_400_000.5
+axes[3].plot(time3[inds], RFB1[inds])
+
+time, RFB2 = np.loadtxt(f'../data/housekeeping/RFB2.txt').T
+time3 = time + 2.45e6 - 2_400_000.5
+axes[3].plot(time3[inds], RFB2[inds])
+
+plt.figure()
+plt.plot(time3, G_K(RFB1, RXB, FPA))
+plt.plot(time3, G_K(RFB2, RXB, FPA))
+
 
 
 baseline = chain.get('tod/023-WMAP_K/baseline')
@@ -79,7 +153,8 @@ n_corr = data['n_corr'][0]
 gain = data['gain_000001'][()]
 bpcorr = data['bpcorr'][0]
 s_orb = data['s_orb'][0]
-n_corr_filt = gaussian_filter1d(n_corr, 2000)
+#n_corr_filt = gaussian_filter1d(n_corr, 2000)
+n_corr_filt = gaussian_filter1d(n_corr, 10000)
 
 mask = data['flag'][0]
 
@@ -133,7 +208,7 @@ axes[6].plot(t[inds], res[inds]/sigma, 'k.', ms=2, alpha=0.5)
 
 axes[0].set_ylabel(r"$d_\mathrm{raw}\ \mathrm{[du]}$")
 axes[1].set_ylabel(r"$s_\mathrm{sky}\ \mathrm{[mK]}$")
-axes[2].set_ylabel(r'$s_\mathrm{corr}\ \mathrm{[mK]}$')
+axes[2].set_ylabel(r'$n_\mathrm{corr}\ \mathrm{[mK]}$')
 axes[3].set_ylabel(r'$s_\mathrm{orb}\ \mathrm{[mK]}$')
 axes[4].set_ylabel(r'$s_\mathrm{sl}\ \mathrm{[mK]}$')
 axes[5].set_ylabel(r'$s_\mathrm{leak}\ \mathrm{[mK]}$')
@@ -193,6 +268,18 @@ for ticklabel in ax.yaxis.get_ticklabels():
   ticklabel.set_rotation("vertical")
   ticklabel.set_verticalalignment("center")
 plt.savefig('K113_TOD_diff_10min.pdf', bbox_inches='tight')
+
+
+fig, axes = plt.subplots(sharex=True, nrows=4)
+axes[0].plot(t[inds], 1e3*(tod[inds]/gain - sl[inds] -
+    d2[f'{pid:06}/K113/tod'][inds]), '.', ms=0.75, color='k')
+#plt.ylabel(r'$d_\mathrm{cal}/g-s_\mathrm{sl}-d_\mathrm{cal}^\mathit{WMAP}$ [mK]')
+inds = (time3 > mjd0) & (time3 < T_days + mjd0)
+axes[1].plot((time3[inds]-time3[inds][0])*3600*24, FPA[inds])
+axes[2].plot((time3[inds]-time3[inds][0])*3600*24, RXB[inds])
+axes[3].plot((time3[inds]-time3[inds][0])*3600*24, RFB1[inds])
+axes[3].plot((time3[inds]-time3[inds][0])*3600*24, RFB2[inds])
+
 
 inds = t < 3600*24
 fig, axes = plt.subplots(sharex=True, sharey=True, nrows=2, figsize=(4, 4))

@@ -4,7 +4,11 @@ from astropy.io import fits
 import healpy as hp
 from scipy.interpolate import interp1d
 
+from tqdm import tqdm
+
 from glob import glob
+
+import time
 
 from fits_to_h5 import quat_to_sky_coords, ang2pix_multiprocessing, get_psi
 import ducc0.totalconvolve as totalconvolve
@@ -250,6 +254,8 @@ dip_W = -0.233 * x - 2.222 * y + 2.504 * z
 lmax = 128
 kmax = 100
 
+lmax = 32
+kmax = 16
 
 
 W_DIR = '/mn/stornext/d16/cmbco/ola/wmap/tods'
@@ -261,8 +267,23 @@ fnames_ucal = glob(f'{W_DIR_UCAL}/*.fits')
 fnames_cal.sort()
 fnames_ucal.sort()
 
+slms = []
+blm_As = []
+blm_Bs = []
 
-for n in range(len(fnames_cal)):
+for bi in range(len(bands)):
+    slm = make_dipole_alms(lmax=lmax, band = bands[bi])
+    blm_A, blm_B = get_sidelobe_alms(
+        band=bands[bi], lmax=lmax, kmax=kmax, theta_c=theta_cs[bi], psi=np.pi / 180 * psis[bi]
+    )
+    slms.append(slm)
+    blm_As.append(blm_A)
+    blm_Bs.append(blm_B)
+
+
+for n in tqdm(range(len(fnames_cal))):
+
+    t0 = time.time()
 
     data_cal = fits.open(fnames_cal[n])
     data_ucal = fits.open(fnames_ucal[n])
@@ -280,15 +301,12 @@ for n in range(len(fnames_cal)):
     pix_A_all = [[], [], [], [], [], [], [], [], [], []]
     pix_B_all = [[], [], [], [], [], [], [], [], [], []]
     genflags = data_ucal[2].data["genflags"] * 2**11
-    daflags = get_flags(data_ucal)
+    daflags0 = data_ucal[2].data["daflags"]
+    #daflags = get_flags(data_ucal)
+
     for i in range(10):
         Nobs = Nobs_array[i]
-        for j in range(Nobs):
-            daflags[i][j::Nobs] += genflags
-        if len(flags_all[i]) == 0:
-            flags_all[i] = daflags[i]
-        else:
-            flags_all[i] = np.concatenate((flags_all[i], daflags[i]))
+        flags_all[i] = np.repeat(daflags0[:,i], Nobs)
     gal_A, gal_B, pol_A, pol_B = quat_to_sky_coords(data_ucal, center=True)
     psi_A = get_psi(gal_A, pol_A, band_labels[::4])
     psi_B = get_psi(gal_B, pol_B, band_labels[1::4])
@@ -298,17 +316,13 @@ for n in range(len(fnames_cal)):
     
     
     for bi in range(10):
-        slm = make_dipole_alms(lmax=lmax, band = bands[bi])
-        blm_A, blm_B = get_sidelobe_alms(
-            band=bands[bi], lmax=lmax, kmax=kmax, theta_c=theta_cs[bi], psi=np.pi / 180 * psis[bi]
-        )
-        
+       
         # totalconvolver interpolator, grid in theta,phi,psi
         interp_A = totalconvolve.Interpolator(
-            slm, blm_A, separate=False, lmax=lmax, kmax=kmax, epsilon=1e-4, nthreads=0
+            slms[bi], blm_As[bi], separate=False, lmax=lmax, kmax=kmax, epsilon=1e-4, nthreads=0
         )
         interp_B = totalconvolve.Interpolator(
-            slm, blm_B, separate=False, lmax=lmax, kmax=kmax, epsilon=1e-4, nthreads=0
+            slms[bi], blm_Bs[bi], separate=False, lmax=lmax, kmax=kmax, epsilon=1e-4, nthreads=0
         )
         npnt = len(psi_A[bi])
         ptg = np.zeros((npnt, 3))
@@ -324,8 +338,6 @@ for n in range(len(fnames_cal)):
         
         sl = res_A - res_B
         
-        
-       
         for j in range(4):
             d_ucal = data_ucal[2].data[band_labels[4*bi+j]].flatten()
             d_cal = data_cal[2].data[band_labels[4*bi+j]].flatten()
@@ -346,27 +358,35 @@ for n in range(len(fnames_cal)):
                 sli = np.array_split(sl, 24)[i]
                 t_lab = np.array_split(t_ucal,24)[i] + t2jd - 2_400_000.5
    
+                y = d_cali[indsi] + sli[indsi]
+                A = np.vstack([y, np.ones_like(ti[indsi]), (ti[indsi]-ti[0]),
+                  (ti[indsi]-ti[0])**2,
+                  (ti[indsi]-ti[0])**3]).T
                 try:
-                  p_fitted = np.polynomial.Polynomial.fit(d_cali[indsi] + sli[indsi], d_ucali[indsi], deg=1)
-                except ValueError:
-                  continue
-
-
-                #sli = d_cali*0
+                    X = np.linalg.inv(A.T.dot(A)).dot(A.T.dot(d_ucali[indsi]))
+                except np.linalg.LinAlgError:
+                    continue
+                g0, baseline, slope, b2, b3 = X
+                y = d_cali + sli
+                A = np.vstack([y, np.ones_like(ti), (ti-ti[0]),
+                  (ti-ti[0])**2,
+                  (ti-ti[0])**3]).T
                
                 if (n % 100 == 0):
                     axes[0].plot(ti[indsi] - t[0], d_ucali[indsi])
                     axes[1].plot(ti[indsi] - t[0], d_cali[indsi])
                     
                     
-                    axes[2].plot(ti - t[0],  (d_ucali - p_fitted(d_cali + sli)))
+                    axes[2].plot(ti - t[0],  (d_ucali - A.dot(X)))
                     axes[2].set_ylim([-1, 1])
-                
-                baseline, g0 = p_fitted.convert().coef
+               
+
                 with open(f'{band_labels[4*bi+j]}_g0.txt', 'a') as f:
                   f.write(f'{t_lab[0]}\t{g0}\n')
-                with open(f'{band_labels[4*bi+j]}_b.txt', 'a') as f:
+                with open(f'{band_labels[4*bi+j]}_b0.txt', 'a') as f:
                   f.write(f'{t_lab[0]}\t{baseline}\n')
+                with open(f'{band_labels[4*bi+j]}_b1.txt', 'a') as f:
+                  f.write(f'{t_lab[0]}\t{slope}\n')
         
             if (n % 100 == 0):
                 axes[0].set_ylabel('Raw [du]')
