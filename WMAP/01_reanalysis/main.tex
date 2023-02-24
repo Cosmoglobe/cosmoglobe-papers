@@ -3,7 +3,7 @@
 
 \usepackage{graphicx}
 \usepackage{amsmath,amsfonts,amssymb}
-\usepackage{txfonts}
+\usepackage[varg]{txfonts}
 \usepackage{color}
 \usepackage{natbib}
 \usepackage{float}
@@ -770,27 +770,6 @@ When we encountered these events, TOD segments that were interrupted by the even
 
 
 
-\begin{table}
-\caption{Flagging statistics}              % title of Table
-\label{table:flagged_data}      % is used to refer this table in the text
-\centering                                      % used for centering table
-\begin{tabular}{c r r r}          % centered columns (4 columns)
-\hline\hline                        % inserts double horizontal lines
-	Band & Flagged (\%) & Discarded (\%) & Used (\%) \\    % table heading
-\hline                                   % inserts single horizontal line
-	\K  &  1.72 & 0.87 & 97.4\\
-	\Ka &  1.64 & 0.88 & 97.5\\      % inserting body of the table
-	\Q1 &  1.84 & 0.84 & 96.5\\
-	\Q2 &  1.62 & 0.81 & 97.6\\
-	\V1 &  1.62 & 1.10 & 97.3\\
-	\V2 &  1.61 & 1.01 & 97.4\\
-	\W1 &  1.76 & 1.03 & 97.2\\
-	\W2 &  1.60 & 0.81 & 97.6\\
-	\W3 &  1.61 & 0.87 & 97.5\\
-	\W4 &  1.60 & 0.81 & 97.6\\
-\hline                                             %inserts single line
-\end{tabular}
-\end{table}
 
 \subsection{Computational resources}
 \label{sec:resources}
@@ -811,7 +790,8 @@ Additionally, operations that require creating timestreams for each detector, i.
   \caption{Computational resources required for end-to-end
     \cosmoglobe\ processing. All times correspond to CPU hours, and all data volumes are reported in GB. Reported times are
     averaged over more than 100 samples, and vary by $\lesssim\,5\,\%$ from sample to
-    sample. \textbf{Preliminary numbers, not all accurate}}
+    sample. %\textbf{Preliminary numbers, not all accurate}
+	}
   \label{tab:resources}
   \nointerlineskip
   \vskip -3mm
@@ -988,21 +968,27 @@ where $\alpha$, $\V_\circ$, $\beta$, $T_\circ$, $m$, and $c$ are fit to a consta
 Evaluating the model as a function of $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ requires finding the housekeeping data for the thermistor that was physically closest to the relevant radiometer's focal plane on the satellite. As this requires detailed technical information about the specifications of the telescope layout that can easily be misunderstood, we do not attempt to reproduce the gain model given in Eq.~\eqref{eq:wmap_gain} in this work.
 Although we are unable to reproduce the exact gain model parametrized in \citet{wmapexsupp}, the $23.4\,\mathrm s$ time dependence of the gain model on housekeeping data is a plausible explanation for the time-dependent noise variation in the different calibrated data solutions.
 
-As reported in \citet{hinshaw2007}, the calibrated data archive has been calibrated using the procedure listed above, with a baseline subtracted each hour and the sidelobe subtracted. Figure~\ref{fig:cal_comp_10min} shows the \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ with the \WMAP\ delivered calibrated signal subtracted. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. The differences of order $50\,\mathrm{\mu K}$ correspond to sky brightness of order $10\,\mathrm{mK}$, equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainy estimated in \citet{bennett2012} based on end-to-end simulations.
+As reported in \citet{hinshaw2007}, the calibrated data archive has been calibrated using the procedure listed above, with a baseline subtracted each hour and the sidelobe subtracted. Figure~\ref{fig:cal_comp_10min} shows the \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ with the \WMAP\ delivered calibrated signal subtracted. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. The differences of order $50\,\mathrm{\mu K}$ correspond to sky brightness of order $10\,\mathrm{mK}$, equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainty estimated in \citet{bennett2012} based on end-to-end simulations.
 
-On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most prominent feature is a signal of amplitude $0.2\,\mathrm{mK}$. This likely due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assinging a linear baseline solution for the entire scan. However, the variations are commensurate with correlated noise, which for \K113 has $f_\mathrm{knee}\sim0.5\,\mathrm{mHz}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. To test this hypothesis, we plot a realization of correlated noise generated by \commander, and find that the signals are very similar, both in amplitude and morphology.
+On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most prominent feature is a signal of amplitude $0.2\,\mathrm{mK}$. This likely due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assigning a linear baseline solution for the entire scan. However, the variations are commensurate with correlated noise, which for \K113 has $f_\mathrm{knee}\sim0.5\,\mathrm{mHz}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. To test this hypothesis, we plot a realization of correlated noise generated by \commander, and find that the signals are very similar, both in amplitude and morphology.
 
 
-We also compare the gain and baseline solutions throughout the course of the mission in Fig.~\ref{fig:inst_K113}. To recover the \WMAPnine\ gain solution, we directly compare the uncalibrated \WMAP\ data with the calibrated \WMAP\ data with a far sidelobe contribution convolved with the delivered \WMAPnine\ DA maps. We find that the calibratd and uncalibrated data can be related by
+We also compare the gain and baseline solutions throughout the course of the mission in Fig.~\ref{fig:inst_K113}. To recover the \WMAPnine\ gain solution, we directly compare the uncalibrated \WMAP\ data with the calibrated \WMAP\ data with a far sidelobe contribution convolved with the delivered \WMAPnine\ DA maps. We find that the calibrated and uncalibrated data can be related by
 \begin{equation}
 	d^\mathrm{raw}_t=g(d^\mathrm{cal}_t+s^\mathrm{sl}_t)+\sum_{i=0}^3c_i(t-t_0)^i.
 \end{equation}
-We find that $d^\mathrm{raw}$ is consistent with the expression on the right at the level of $<0.1\,\mathrm{du}$ for all radiometers, suggesting that this estimate of $g$ and the baseline $c_0$ is a good approximation of the \WMAPnine\ calibration solution.
+We find that $d^\mathrm{raw}$ is consistent with the expression on the right at the level of $<0.1\,\mathrm{du}$ for all radiometers, suggesting that this estimate of $g$ and the baseline $c_0$ is a good approximation of the \WMAPnine\ calibration solution. An initial estimate using a linear baseline gave an unacceptably poor fit. Given that Eqn.~(2) of \citet{jarosik2003a} employed a cubic baseline fit while fitting for transmission imbalance parameters, it is reasonable to assume that the official calibrated archive was created using a similar procedure.
+
+The morphological characteristics of the \WMAPnine\ and \cosmoglobe\ gain solutions are similar, with a general trend to increase with time. Both solutions also follow a sinusoidal pattern, corresponding to temperature change due to L2's motion around the Sun \citep{wmapexsupp}. However, we do find the amplitude of the \cosmoglobe\ \K-band gain is slightly lower than the \WMAPnine\ solution, and with fewer oscillatory features. Other than the absolute calibration shift in \K-band, the gains are consistent between \cosmoglobe\ and \WMAPnine\ within 1\,\%. For completeness, the full gain comparisons can be found in Fig.~\ref{fig:gain}. 
 
 
 
 \subsection{Transmission imbalance}
 \label{sec:xim}
+
+The transmission imbalance parameters $x_\mathrm{im}$ are crucial to measure correctly because their mis-estimation can induce a large polarized signal that is coupled to the Solar dipole \citep{jarosik2007,bp17}. The uncertainty in $x_\mathrm{im}$ was quoted as the source of large-scale polarized features in the \WMAPnine\ maps, and a template of this effect was explicitly projected out in the pixel-space polarized covariance matrix. 
+
+We find $x_\mathrm{im}$ values that are largely consistent with the values reported in \citet{bennett2012}, albeit with some outliers. We find in general that the 68\,\% confidence intervals from \cosmoglobe\ are smaller than the fiducial values, although we caution against a direct comparison of these values since such different procedures were used for estimating the uncertainties.
 
 \begin{figure}[t]
   	\centering
@@ -1011,110 +997,62 @@ We find that $d^\mathrm{raw}$ is consistent with the expression on the right at 
 	\label{fig:x_im}
 \end{figure}
 
-\begin{table}
-\newdimen\tblskip \tblskip=5pt
-\caption{Transmission imbalance parameters for each \WMAP\ radiometer as estimated in the current analysis (\emph{second column}) and in the official 9-year \WMAP\ analysis (\emph{third column}). Our uncertainties indicate $1\,\sigma$ marginal posterior standard deviations. }
-\label{tab:dipole}
-\vskip -8mm
-\footnotesize
-\setbox\tablebox=\vbox{
- \newdimen\digitwidth
- \setbox0=\hbox{\rm 0}
- \digitwidth=\wd0
- \catcode`*=\active
- \def*{\kern\digitwidth}
-%
-  \newdimen\dpwidth
-  \setbox0=\hbox{.}
-  \dpwidth=\wd0
-  \catcode`!=\active
-  \def!{\kern\dpwidth}
-%
-  \halign{\hbox to 1.8cm{#\leaderfil}\tabskip 2em&
-    \hfil$#$\hfil \tabskip 2em&
-    \hfil$#$\hfil \tabskip 0em\cr
-\noalign{\doubleline}
-\omit\hfil\sc Radiometer \hfil& x_{\mathrm{im}}^{\mathrm{CG}}& x_{\mathrm{im}}^{\mathrm{WMAP}}\cr
-\noalign{\vskip 3pt\hrule\vskip 5pt}
-K11 &   0.00018 \pm  0.00013  &  -0.00067 \pm  0.00017 \cr
-K12 &   0.00388 \pm  0.00015  &   0.00536 \pm  0.00014 \cr
-Ka11 &   0.00339 \pm  0.00012  &   0.00353 \pm  0.00017 \cr
-Ka12 &   0.00150 \pm  0.00010  &   0.00154 \pm  0.00008 \cr
-Q11 &   0.00081 \pm  0.00016  &  -0.00013 \pm  0.00046 \cr
-Q12 &   0.00517 \pm  0.00027  &   0.00414 \pm  0.00025 \cr
-Q21 &   0.00985 \pm  0.00042  &   0.00756 \pm  0.00052 \cr
-Q22 &   0.01235 \pm  0.00011  &   0.00986 \pm  0.00115 \cr
-V11 &   0.00012 \pm  0.00041  &   0.00053 \pm  0.00020 \cr
-V12 &   0.00212 \pm  0.00089  &   0.00250 \pm  0.00057 \cr
-V21 &   0.00246 \pm  0.00012  &   0.00352 \pm  0.00033 \cr
-V22 &   0.00323 \pm  0.00070  &   0.00245 \pm  0.00098 \cr
-W11 &   0.01169 \pm  0.00105  &   0.01134 \pm  0.00199 \cr
-W12 &   0.00442 \pm  0.00109  &   0.00173 \pm  0.00036 \cr
-W21 &   0.01595 \pm  0.00052  &   0.01017 \pm  0.00216 \cr
-W22 &   0.01540 \pm  0.00167  &   0.01142 \pm  0.00121 \cr
-W31 &  -0.00089 \pm  0.00010  &  -0.00122 \pm  0.00062 \cr
-W32 &   0.00354 \pm  0.00084  &   0.00463 \pm  0.00041 \cr
-W41 &   0.02734 \pm  0.00219  &   0.02311 \pm  0.00380 \cr
-W42 &   0.01882 \pm  0.00282  &   0.02054 \pm  0.00202 \cr
-\noalign{\vskip 5pt\hrule\vskip 5pt}}}
-\endPlancktablewide
-\end{table}
+%\begin{table}
+%\newdimen\tblskip \tblskip=5pt
+%\caption{Transmission imbalance parameters for each \WMAP\ radiometer as estimated in the current analysis (\emph{second column}) and in the official 9-year \WMAP\ analysis (\emph{third column}). Our uncertainties indicate $1\,\sigma$ marginal posterior standard deviations. }
+%\label{tab:dipole}
+%\vskip -8mm
+%\footnotesize
+%\setbox\tablebox=\vbox{
+% \newdimen\digitwidth
+% \setbox0=\hbox{\rm 0}
+% \digitwidth=\wd0
+% \catcode`*=\active
+% \def*{\kern\digitwidth}
+%%
+%  \newdimen\dpwidth
+%  \setbox0=\hbox{.}
+%  \dpwidth=\wd0
+%  \catcode`!=\active
+%  \def!{\kern\dpwidth}
+%%
+%  \halign{\hbox to 1.8cm{#\leaderfil}\tabskip 2em&
+%    \hfil$#$\hfil \tabskip 2em&
+%    \hfil$#$\hfil \tabskip 0em\cr
+%\noalign{\doubleline}
+%\omit\hfil\sc Radiometer \hfil& x_{\mathrm{im}}^{\mathrm{CG}}& x_{\mathrm{im}}^{\mathrm{WMAP}}\cr
+%\noalign{\vskip 3pt\hrule\vskip 5pt}
+%K11 &   0.00018 \pm  0.00013  &  -0.00067 \pm  0.00017 \cr
+%K12 &   0.00388 \pm  0.00015  &   0.00536 \pm  0.00014 \cr
+%Ka11 &   0.00339 \pm  0.00012  &   0.00353 \pm  0.00017 \cr
+%Ka12 &   0.00150 \pm  0.00010  &   0.00154 \pm  0.00008 \cr
+%Q11 &   0.00081 \pm  0.00016  &  -0.00013 \pm  0.00046 \cr
+%Q12 &   0.00517 \pm  0.00027  &   0.00414 \pm  0.00025 \cr
+%Q21 &   0.00985 \pm  0.00042  &   0.00756 \pm  0.00052 \cr
+%Q22 &   0.01235 \pm  0.00011  &   0.00986 \pm  0.00115 \cr
+%V11 &   0.00012 \pm  0.00041  &   0.00053 \pm  0.00020 \cr
+%V12 &   0.00212 \pm  0.00089  &   0.00250 \pm  0.00057 \cr
+%V21 &   0.00246 \pm  0.00012  &   0.00352 \pm  0.00033 \cr
+%V22 &   0.00323 \pm  0.00070  &   0.00245 \pm  0.00098 \cr
+%W11 &   0.01169 \pm  0.00105  &   0.01134 \pm  0.00199 \cr
+%W12 &   0.00442 \pm  0.00109  &   0.00173 \pm  0.00036 \cr
+%W21 &   0.01595 \pm  0.00052  &   0.01017 \pm  0.00216 \cr
+%W22 &   0.01540 \pm  0.00167  &   0.01142 \pm  0.00121 \cr
+%W31 &  -0.00089 \pm  0.00010  &  -0.00122 \pm  0.00062 \cr
+%W32 &   0.00354 \pm  0.00084  &   0.00463 \pm  0.00041 \cr
+%W41 &   0.02734 \pm  0.00219  &   0.02311 \pm  0.00380 \cr
+%W42 &   0.01882 \pm  0.00282  &   0.02054 \pm  0.00202 \cr
+%\noalign{\vskip 5pt\hrule\vskip 5pt}}}
+%\endPlancktablewide
+%\end{table}
 
 
-\begin{table}
-\newdimen\tblskip \tblskip=5pt
-\caption{Transmission imbalance template amplitudes for each \WMAP\ radiometer as estimated by fitting the official templates to low-resolution difference maps between \cosmoglobe\ and \WMAP. The templates are provided in mK, and the template amplitudes are therefore dimensionless. The fourth column lists the relative decrease in standard deviation, $\sqrt{\sigma_{\mathrm{raw}}^2 - \sigma_{\mathrm{corr}}^2}/\sigma_{\mathrm{raw}}$,  after subtracting the best-fit templates in percent. }
-\label{tab:transmission}
-\vskip -4mm
-\footnotesize
-\setbox\tablebox=\vbox{
- \newdimen\digitwidth
- \setbox0=\hbox{\rm 0}
- \digitwidth=\wd0
- \catcode`*=\active
- \def*{\kern\digitwidth}
-%
-  \newdimen\dpwidth
-  \setbox0=\hbox{.}
-  \dpwidth=\wd0
-  \catcode`!=\active
-  \def!{\kern\dpwidth}
-%
-  \halign{\hbox to 1.8cm{#\leaderfil}\tabskip 2em&
-    \hfil$#$\hfil \tabskip 2em&
-    \hfil$#$\hfil \tabskip 2em&    
-    \hfil$#$\hfil \tabskip 0em\cr
-\noalign{\doubleline}
-\omit\hfil\sc DA \hfil& a_1 & a_2 & \Delta \sigma [\%]\cr
-\noalign{\vskip 3pt\hrule\vskip 5pt}
-K1 &   -27.5*  &  -50.6* & 30 \cr
-Ka1 &   -1.4  &   -1.9 & 25 \cr
-Q1 &   -30.0* &  -71.6* & 11 \cr
-Q2 &   -7.1  &  -1.5 & 20 \cr
-V1 &   -32.8*  &  -53.4* & *6 \cr
-V2 &   *8.8  &  -4.1 & 16 \cr
-W1 &   -2.8  &  *4.6 & *8 \cr
-W2 &   -6.9  & -3.5 & 11 \cr
-W3 &   29.1  & 53.4 & 12 \cr
-W4 &   15.5  & -6.8 & 52 \cr
-\noalign{\vskip 5pt\hrule\vskip 5pt}}}
-\endPlancktablewide
-\end{table}
-
-
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{figures/diff_K1_Q.pdf}\\
-  \includegraphics[width=\linewidth]{figures/temp_corr_K1_Q.pdf}\\
-  \includegraphics[width=\linewidth]{figures/res_loss_K1_Q.pdf}
-  \caption{K-band transmission imbalance templates}
-  \label{fig:Kimbal}
-\end{figure}
 
 
 \subsection{Instrumental noise and goodness-of-fit}
 \label{sec:noise}
+
+The noise fitting, as outlined in Sect.~\ref{sec:algorithms}, is 
 
 \begin{table*}
 \newdimen\tblskip \tblskip=5pt
@@ -1207,14 +1145,7 @@ W42  &  1  &  1.43  &  1.65  &   2.221 \pm  0.017  &  5.31  &  26.0  &   16.10 \
 Need to have the things that go directly into likelihood, the template-corrected WMAP data, theirs versus ours.
 
 Show the low-resolution one. Plotting the W3-W4, W1-W2, V1-V2, Q1-Q2, Ka-0.32K.
-
-We need to have a brief overview of the sky model.
-
-Also need to have the sky model added.
-
 Include the SED from the 03 paper, reference it, remove the power law.
-
-Resources table, as from Q1.
 
 
 \lipsum[1-8]
@@ -1342,6 +1273,7 @@ such has a negligible effect.
 
 
 \section{Frequency maps and astrophysical components}
+\label{sec:maps}
 
 \subsection{Map summary statistics}
 
@@ -1587,6 +1519,56 @@ W3 $-$ W4         & 4257  & 4145  & 112 \cr
 \end{table}
 
 
+\begin{table}
+\newdimen\tblskip \tblskip=5pt
+\caption{Transmission imbalance template amplitudes for each \WMAP\ radiometer as estimated by fitting the official templates to low-resolution difference maps between \cosmoglobe\ and \WMAP. The templates are provided in mK, and the template amplitudes are therefore dimensionless. The fourth column lists the relative decrease in standard deviation, $\sqrt{\sigma_{\mathrm{raw}}^2 - \sigma_{\mathrm{corr}}^2}/\sigma_{\mathrm{raw}}$,  after subtracting the best-fit templates in percent. }
+\label{tab:transmission}
+\vskip -4mm
+\footnotesize
+\setbox\tablebox=\vbox{
+ \newdimen\digitwidth
+ \setbox0=\hbox{\rm 0}
+ \digitwidth=\wd0
+ \catcode`*=\active
+ \def*{\kern\digitwidth}
+%
+  \newdimen\dpwidth
+  \setbox0=\hbox{.}
+  \dpwidth=\wd0
+  \catcode`!=\active
+  \def!{\kern\dpwidth}
+%
+  \halign{\hbox to 1.8cm{#\leaderfil}\tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&    
+    \hfil$#$\hfil \tabskip 0em\cr
+\noalign{\doubleline}
+\omit\hfil\sc DA \hfil& a_1 & a_2 & \Delta \sigma [\%]\cr
+\noalign{\vskip 3pt\hrule\vskip 5pt}
+K1 &   -27.5*  &  -50.6* & 30 \cr
+Ka1 &   -1.4  &   -1.9 & 25 \cr
+Q1 &   -30.0* &  -71.6* & 11 \cr
+Q2 &   -7.1  &  -1.5 & 20 \cr
+V1 &   -32.8*  &  -53.4* & *6 \cr
+V2 &   *8.8  &  -4.1 & 16 \cr
+W1 &   -2.8  &  *4.6 & *8 \cr
+W2 &   -6.9  & -3.5 & 11 \cr
+W3 &   29.1  & 53.4 & 12 \cr
+W4 &   15.5  & -6.8 & 52 \cr
+\noalign{\vskip 5pt\hrule\vskip 5pt}}}
+\endPlancktablewide
+\end{table}
+
+
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/diff_K1_Q.pdf}\\
+  \includegraphics[width=\linewidth]{figures/temp_corr_K1_Q.pdf}\\
+  \includegraphics[width=\linewidth]{figures/res_loss_K1_Q.pdf}
+  \caption{K-band transmission imbalance templates}
+  \label{fig:Kimbal}
+\end{figure}
 
 
 \subsection{Consistency within \WMAP\ channels}
