@@ -50,6 +50,7 @@ with h5py.File(filename, 'r') as f:
     # detector = 3
     for detector in range(4):
 
+
         Nobs = 30  #for W-band
 
         dt = 1.536 / Nobs
@@ -59,6 +60,26 @@ with h5py.File(filename, 'r') as f:
 
         # dt = 1 / samprate  # seconds
         sigma0 = xi[detector, 0] #/ gain[detector]
+
+        #fig, axes = plt.subplots(sharex=False, nrows=2, figsize=(5,6))
+        #z = (r[detector] - n_corr[detector])/sigma0
+        #bins = np.linspace(-6,6,100)
+        #counts, x = np.histogram(z, bins=bins, density=True)
+        #axes[0].stairs(counts, x, lw=2, zorder=5, label=r'$(r-n_\mathrm{corr})/\sigma_0$')
+        #axes[1].stairs(counts, x, lw=2, zorder=5, label=r'$(r-n_\mathrm{corr})/\sigma_0$')
+        #x = (x[:-1] + x[1:])/2
+        #G = np.exp(-x**2/2)/np.sqrt(2*np.pi)
+        #axes[0].plot(x, G, 'k', label=r'$\mathcal N(0,1)$')
+        #axes[1].plot(x, G, 'k', label=r'$\mathcal N(0,1)$')
+        #axes[0].set_yscale('log')
+        #axes[0].set_ylim([1e-4, 1])
+        #axes[0].set_xlim([-6,6])
+        #axes[1].set_xlim([-2,2])
+        #plt.legend(loc='best')
+        #axes[1].set_xlabel(r'Deviation [$\sigma$]')
+        #axes[1].set_ylim([0.25, 0.5])
+        #fig.supylabel(r'PDF')
+        #plt.show()
 
         r = r * mask + (n_corr + np.random.randn(*n_corr.shape) * sigma0) * (1 - mask)
         
@@ -82,21 +103,21 @@ with h5py.File(filename, 'r') as f:
 
         S = wn * (f3 / fknee) ** (alpha)
         full = wn + S
-        plt.figure(figsize=(7, 5))
-        plt.loglog(f3, psd3, 'C0', alpha=0.5, label=r'$d - g s_\mathrm{tot}$')
-        plt.loglog(f3, psd3_r, 'k', alpha=0.5, label=r'$d - g s_\mathrm{tot} - n_\mathrm{corr}$')
-        plt.loglog(f3, psd3_n, 'C1', alpha=0.5, label=r'$n_\mathrm{corr}$')
+        plt.figure(figsize=(5, 4))
+        plt.loglog(f3*1e3, 1e-3*psd3, 'C0', alpha=0.5, label=r'$d - g s_\mathrm{tot}$')
+        plt.loglog(f3*1e3, 1e-3*psd3_r, 'k', alpha=0.5, label=r'$d - g s_\mathrm{tot} - n_\mathrm{corr}$')
+        plt.loglog(f3*1e3, 1e-3*psd3_n, 'C1', alpha=0.5, label=r'$n_\mathrm{corr}$')
 
-        plt.loglog(f3, full, '--', color='C0', label='current model (sample)')
-        plt.loglog(f3, S, '--', color='C1') 
-        plt.loglog(f3, full * 0 + wn, '--', color='k')
-        plt.xlim(4e-6, 2e1)
+        plt.loglog(f3*1e3, 1e-3*full, '--', color='C0', label='current model (sample)')
+        plt.loglog(f3*1e3, 1e-3*S, '--', color='C1') 
+        plt.loglog(f3*1e3, 1e-3*(full * 0 + wn), '--', color='k')
+        plt.xlim(4e-3, 2e4)
         plt.legend(frameon=False)
         
-        plt.ylabel('PSD [du${}^2$ Hz${}^{-1}$]')
-        plt.xlabel('Frequency [Hz]')
-        plt.savefig('ps_test_W4_det%i.png' % (detector+1), bbox_inches='tight', dpi=150)
-        # plt.savefig('ps_test_W4_det%i.pdf' % (detector+1), bbox_inches='tight')
+        plt.ylabel('PSD [du${}^2$ mHz${}^{-1}$]')
+        plt.xlabel('Frequency [mHz]')
+        #plt.savefig('ps_test_W4_det%i.png' % (detector+1), bbox_inches='tight', dpi=150)
+        plt.savefig('ps_test_W4_det%i.pdf' % (detector+1), bbox_inches='tight')
         # plt.show()
 
 # bands = ['K', 'Ka', 'Q1', 'Q2', 'V1', 'V2', 'W1', 'W2', 'W3', 'W4']
