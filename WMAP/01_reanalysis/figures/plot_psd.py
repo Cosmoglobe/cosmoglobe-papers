@@ -5,6 +5,17 @@ from scipy import interpolate
 from matplotlib.pyplot import cm
 import sys
 import h5py
+from scipy.ndimage import gaussian_filter1d
+
+
+seconds = np.arange(5, 60, 5)
+minutes = np.arange(5, 60, 5)*60
+hours   = np.arange(6, 24, 6)*60*60
+days    = np.arange(1, 7)*60*60*24
+weeks   = np.arange(1, 4)*60*60*24*7
+minor_ticks = np.concatenate((seconds, minutes, hours, days, weeks))
+
+
 
 def one_over_f(freq, sigma0, fknee):
     return sigma0 ** 2 * (1.0 + fknee * freq)
@@ -26,6 +37,14 @@ def bin_data_maxbin(arr, slope=1.0, cut=20, maxbin=2000):
         newarr[i] = np.sum(arr[cumsum:cumsum+n_coadd[i]]) / n_coadd[i]
         cumsum += n_coadd[i]
     return newarr
+
+def H(f):
+    omega = 2*np.pi*f
+    A = 6.803e5
+    B = 1.36e3
+    s= 1j*omega
+    h = A/(s**2 + B*s+A)
+    return abs(h)
 
 
 # path = '/mn/stornext/d16/cmbco/bp/dwatts/WMAP/faz_chains_DAs/'
@@ -104,7 +123,7 @@ with h5py.File(filename, 'r') as f:
 
         S = wn * (f3 / fknee) ** (alpha)
         full = wn + S
-        plt.figure(figsize=(5, 4))
+        plt.figure(figsize=(6, 5))
         plt.loglog(f3*1e3, 1e-3*psd3_r, 'k', alpha=0.5, label=r'$d - g s_\mathrm{tot} - n_\mathrm{corr}$')
         plt.loglog(f3*1e3, 1e-3*psd3_n, 'C1', alpha=0.5, label=r'$n_\mathrm{corr}$')
         plt.loglog(f3*1e3, 1e-3*psd3, 'C0', alpha=0.5, label=r'$d - g s_\mathrm{tot}$')
@@ -119,9 +138,49 @@ with h5py.File(filename, 'r') as f:
         plt.xlabel('Frequency [mHz]')
         plt.ylim([1e-4, 5])
         plt.xlim(xmax=1e4)
+        ax = plt.gca()
+        ax2 = ax.twiny()
+        ax2.set_xscale('log')
+        ax2.set_xticks([], minor=True)
+
+        ax2.set_xticks(1/minor_ticks, minor=True)
+        ax2.set_xticklabels([], minor=True)
+
+        lims = ax.get_xlim()
+        ax2.set_xticks(1/np.array([1, 60, 3600, 24*3600, 7*24*3600]))
+        ax2.set_xticklabels(['second', 'minute', 'hour', 'day', 'week'])
+        ax2.set_xlim([lims[0]*1e-3, lims[1]*1e-3])
+
         #plt.savefig('ps_test_W4_det%i.png' % (detector+1), bbox_inches='tight', dpi=150)
         plt.savefig('ps_test_W4_det%i.pdf' % (detector+1), bbox_inches='tight')
         # plt.show()
+
+
+       
+        plt.figure(figsize=(6,5)) 
+        slope = 0.85
+        slope = 1.5
+        fcut = 0.05
+        fcut = 0.5
+        #bf = bin_data_maxbin(f, slope=slope, cut=cut, maxbin=maxbin)
+        #ind = (bf > fcut)
+        #plt.plot(bf[ind], bin_data_maxbin(psd, slope=slope, cut=cut,
+        #  maxbin=maxbin)[ind], label=r'$d - g s_\mathrm{tot}$')
+
+        ind = (f > fcut)
+        plt.plot(f[ind],  gaussian_filter1d(psd, 5000)[ind], label=r'$d - g s_\mathrm{tot}$')
+
+        plt.plot(f[ind], (sigma0**2*(1+(f/fknee)**alpha))[ind]/samprate,  
+            'k--', label='current model (sample)')
+        plt.ylabel('PSD [du${}^2$ Hz${}^{-1}$]')
+        plt.xlabel('Frequency [Hz]')
+        plt.legend(loc='best')
+        ax = plt.gca()
+        ax.set_xticks(np.arange(1,11,2), minor=True)
+        ax.set_xticklabels([], minor=True)
+        ax.set_xlim([0.5,samprate/2])
+
+        plt.savefig('ps_test_W4_det%i_zoom.pdf' % (detector+1), bbox_inches='tight')
 
 # bands = ['K', 'Ka', 'Q1', 'Q2', 'V1', 'V2', 'W1', 'W2', 'W3', 'W4']
 
