@@ -66,8 +66,8 @@ slope_a -= slope_a.mean()
 base_b -= base_b.mean()
 slope_b -= slope_b.mean()
 
-sigma_a = sigma_a / gain_a * np.sqrt(1.536/12) / np.sqrt(2.)
-sigma_b = sigma_b / gain_b * np.sqrt(1.536/12) / np.sqrt(2.)
+#sigma_a = sigma_a / gain_a * np.sqrt(1.536/12) / np.sqrt(2.)
+#sigma_b = sigma_b / gain_b * np.sqrt(1.536/12) / np.sqrt(2.)
 
 samps_a = np.arange(len(sigma_a)) + 2
 samps_b = np.arange(len(sigma_b)) + 2
@@ -150,7 +150,8 @@ plt.setp( ax4.get_xticklabels(), visible=False)
 plt.setp( ax4.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.ylim([0.7015, 0.70615]); #plt.text(52200,0.835,r"K113", fontsize=10)
-plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]"); ax1.yaxis.labelpad = 10*width/17.
+plt.ylabel(r"$\sigma_{0}$ [du]"); ax1.yaxis.labelpad = 10*width/17.
+plt.ylim([2.65375, 2.65475])
 #plt.yticks([0.67,0.70,0.73], [r"$0.67$", r"$0.70$", r"$0.73$"])
 
 
