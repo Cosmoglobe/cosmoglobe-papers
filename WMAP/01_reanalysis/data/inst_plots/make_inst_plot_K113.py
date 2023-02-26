@@ -82,8 +82,10 @@ for i in range(len(inds)):
         wmap2[i] = wmap2[i-1]
 
 ax1 = plt.subplot2grid((7, 1), (0, 0))
-plt.plot(mjd_gain,1./np.abs(wmap2), linewidth=0.5, color='red')
+#plt.plot(mjd_gain,1./np.abs(wmap2), linewidth=0.5, color='red')
 plt.plot(gainK[:,0],gainK[:,1], linewidth=1, color='black')
+data = np.loadtxt('K113_g0.txt')
+plt.plot(data[::73,0], abs(data[::73,1]), linewidth=0.5, color='red')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
