@@ -20,33 +20,52 @@ mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=colors)
 width = 8.8
 
 # Load data
-chain = cg.Chain(f'{DIR}/chains_CG_b_230203/chain_c0001.h5')
+chain_a = cg.Chain(f'{DIR}/chains_CG_a_230206/chain_c0001.h5')
+chain_b = cg.Chain(f'{DIR}/chains_CG_b_230203/chain_c0001.h5')
 
-chisq = chain.get('tod/023-WMAP_K/chisq')
-xi_n = chain.get('tod/023-WMAP_K/xi_n')
-baseline = chain.get('tod/023-WMAP_K/baseline')
-gain = chain.get('tod/023-WMAP_K/gain')
-x_im = chain.get('tod/023-WMAP_K/x_im')
+chisq_a = chain_a.get('tod/023-WMAP_K/chisq')
+xi_n_a = chain_a.get('tod/023-WMAP_K/xi_n')
+baseline_a = chain_a.get('tod/023-WMAP_K/baseline')
+gain_a = chain_a.get('tod/023-WMAP_K/gain')
+x_im_a = chain_a.get('tod/023-WMAP_K/x_im')
+
+chisq_b = chain_b.get('tod/023-WMAP_K/chisq')
+xi_n_b = chain_b.get('tod/023-WMAP_K/xi_n')
+baseline_b = chain_b.get('tod/023-WMAP_K/baseline')
+gain_b = chain_b.get('tod/023-WMAP_K/gain')
+x_im_b = chain_b.get('tod/023-WMAP_K/x_im')
 
 pid = 533
+pid = 50
 
-sigma = xi_n[2:,0,0,pid]
-fknee = xi_n[2:,1,0,pid]*1e3
-alpha = xi_n[2:,2,0,pid]
-base = baseline[2:,0,0,pid]
-slope = baseline[2:,1,0,pid]
-gain = gain[2:,0,pid]
-chisq = chisq[2:,0,pid]
+sigma_a = xi_n_a[2:,0,0,pid]
+fknee_a = xi_n_a[2:,1,0,pid]*1e3
+alpha_a = xi_n_a[2:,2,0,pid]
+base_a = baseline_a[2:,0,0,pid]
+slope_a = baseline_a[2:,1,0,pid]
+gain_a = gain_a[2:,0,pid]
+chisq_a = chisq_a[2:,0,pid]
 
-print(x_im.shape)
+sigma_b = xi_n_b[2:,0,0,pid]
+fknee_b = xi_n_b[2:,1,0,pid]*1e3
+alpha_b = xi_n_b[2:,2,0,pid]
+base_b = baseline_b[2:,0,0,pid]
+slope_b = baseline_b[2:,1,0,pid]
+gain_b = gain_b[2:,0,pid]
+chisq_b = chisq_b[2:,0,pid]
 
 
-base -= base.mean()
-slope -= slope.mean()
 
-sigma = sigma / gain * np.sqrt(1.536/12) / np.sqrt(2.)
+base_a -= base_a.mean()
+slope_a -= slope_a.mean()
+base_b -= base_b.mean()
+slope_b -= slope_b.mean()
 
-samps = np.arange(len(sigma)) + 2
+sigma_a = sigma_a / gain_a * np.sqrt(1.536/12) / np.sqrt(2.)
+sigma_b = sigma_b / gain_b * np.sqrt(1.536/12) / np.sqrt(2.)
+
+samps_a = np.arange(len(sigma_a)) + 2
+samps_b = np.arange(len(sigma_b)) + 2
 
 
 
@@ -70,7 +89,8 @@ fig.subplots_adjust(hspace=0,wspace=0)
 
 
 ax1 = plt.subplot2grid((7, 1), (0, 0))
-plt.plot(samps,gain, linewidth=1, color='black')
+plt.plot(samps_a,gain_a, linewidth=1, color='C0')
+plt.plot(samps_b,gain_b, linewidth=1, color='C1')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
@@ -84,7 +104,8 @@ ax1.yaxis.labelpad = 10*width/17.
 ###############
 
 ax2 = plt.subplot2grid((7, 1), (1, 0))
-plt.plot(samps,x_im[2:,0], linewidth=1, color='black', label='CG')
+plt.plot(samps_a,x_im_a[2:,0], linewidth=1, color='C0', label='CG')
+plt.plot(samps_b,x_im_b[2:,0], linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
 plt.setp( ax2.get_yticklabels(), visible=True)
@@ -92,9 +113,8 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.text(52200,70,r"K113", fontsize=10)
 plt.ylabel(r"$x_\mathrm{im,1}$")
 ax1.yaxis.labelpad = 10*width/17.
-#plt.ylim([-100, 100]);
-#plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
-#plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
+plt.ylim([-5e-4, 1.5e-3]);
+plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
 
 ###############
@@ -102,15 +122,14 @@ ax1.yaxis.labelpad = 10*width/17.
 ###############
 
 ax3 = plt.subplot2grid((7, 1), (2, 0))
-plt.plot(samps,x_im[2:,1], linewidth=1, color='black', label='CG')
+plt.plot(samps_a,x_im_a[2:,1], linewidth=1, color='C0', label='CG')
+plt.plot(samps_b,x_im_b[2:,1], linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax3.get_xticklabels(), visible=False)
 plt.setp( ax3.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.text(52200,2.8,r"K113", fontsize=10)
 plt.ylabel(r"$x_\mathrm{im,2}$")
 ax1.yaxis.labelpad = 10*width/17.
-#plt.ylim([-1, 1]);
 #plt.yticks([-0.5,0,0.5], [r"$-0.5$", r"$0$", r"$0.5$"])
 
 
@@ -119,12 +138,13 @@ ax1.yaxis.labelpad = 10*width/17.
 ###############
 
 ax4 = plt.subplot2grid((7, 1), (3, 0))
-plt.plot(samps,sigma, linewidth=1, color='black', label='CG')
+plt.plot(samps_a,sigma_a, linewidth=1, color='C0', label='CG')
+plt.plot(samps_b,sigma_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax4.get_xticklabels(), visible=False)
 plt.setp( ax4.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.ylim([0.7015, 0.70615]); #plt.text(52200,0.835,r"K113", fontsize=10)
+#plt.ylim([0.7015, 0.70615]); #plt.text(52200,0.835,r"K113", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]"); ax1.yaxis.labelpad = 10*width/17.
 #plt.yticks([0.67,0.70,0.73], [r"$0.67$", r"$0.70$", r"$0.73$"])
 
@@ -134,7 +154,8 @@ plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]"); ax1.yaxis.labelpad
 ###############
 
 ax5 = plt.subplot2grid((7, 1), (4, 0))
-plt.plot(samps,fknee, linewidth=1, color='black', label='CG')
+plt.plot(samps_a,fknee_a, linewidth=1, color='C0', label='CG')
+plt.plot(samps_b,fknee_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
 plt.setp( ax5.get_yticklabels(), visible=True)
@@ -142,7 +163,7 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.text(52200,4.5,r"K113", fontsize=10)
 plt.ylabel(r"$f_{\mathrm{knee}}$ [mHz]");
 ax1.yaxis.labelpad = 10*width/17.
-plt.ylim([0.6, 1.1]);
+plt.ylim([0.65, 1.1]);
 plt.yticks([0.75, 1.00], [r"$0.75$", r"$1.00$"])
 
 
@@ -151,7 +172,8 @@ plt.yticks([0.75, 1.00], [r"$0.75$", r"$1.00$"])
 ###############
 
 ax6 = plt.subplot2grid((7, 1), (5, 0))
-plt.plot(samps,alpha, linewidth=1, color='black', label='CG')
+plt.plot(samps_a,alpha_a, linewidth=1, color='C0', label='CG')
+plt.plot(samps_b,alpha_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
 plt.setp( ax6.get_yticklabels(), visible=True)
@@ -159,7 +181,7 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.text(52200,-0.6,r"K113", fontsize=10)
 plt.ylabel(r"$\alpha$");
 ax1.yaxis.labelpad = 10*width/17.
-#plt.ylim([-1.4, -0.6]);
+plt.ylim([-1.25, -0.9]);
 #plt.yticks([-1.3,-1.0,-0.7], [r"$-1.3$", r"$-1.0$", r"$-0.7$"])
 
 ###############
@@ -167,7 +189,8 @@ ax1.yaxis.labelpad = 10*width/17.
 ###############
 
 ax7 = plt.subplot2grid((7, 1), (6, 0))
-plt.plot(samps,chisq, linewidth=1, color='black', label='CG')
+plt.plot(samps_a,chisq_a, linewidth=1, color='C0', label='CG')
+plt.plot(samps_b,chisq_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax7.get_xticklabels(), visible=True)
 plt.setp( ax7.get_yticklabels(), visible=True)
@@ -175,7 +198,8 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.text(52200,11.2,r"K113", fontsize=10)
 plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax1.yaxis.labelpad = 10*width/17.
-plt.ylim([-3, -0.5]);
+#plt.ylim([-3, -0.5]);
+plt.ylim([-8.1,-6.8])
 #plt.yticks([-6,-3,0], [r"$-6$", r"$-3$", r"$0$"])
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
