@@ -29,7 +29,6 @@ dataW2 = np.loadtxt('gain_CG_090-WMAP_W2_v1.dat')
 dataW3 = np.loadtxt('gain_CG_090-WMAP_W3_v1.dat')
 dataW4 = np.loadtxt('gain_CG_090-WMAP_W4_v1.dat')
 
-wmap = np.loadtxt('regressed_gains.txt')
 fnames = glob('*_g0.txt')
 fnames.sort()
 thin = 73
