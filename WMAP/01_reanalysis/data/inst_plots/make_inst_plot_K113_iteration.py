@@ -35,8 +35,13 @@ baseline_b = chain_b.get('tod/023-WMAP_K/baseline')
 gain_b = chain_b.get('tod/023-WMAP_K/gain')
 x_im_b = chain_b.get('tod/023-WMAP_K/x_im')
 
+
+
 pid = 533
 pid = 50
+
+mjds = chain_a.get('tod/023-WMAP_K/MJD')[-1]
+print(mjds[pid], mjds[pid+1])
 
 sigma_a = xi_n_a[2:,0,0,pid]
 fknee_a = xi_n_a[2:,1,0,pid]*1e3
@@ -74,7 +79,7 @@ vmax =  160
 
 
 # Create the plot
-fig = plt.figure(figsize=(cm2inch(width), 2*cm2inch(width)))
+fig = plt.figure(figsize=(cm2inch(width), 2*cm2inch(width)*5/7))
 # this should be changed for making a panel of multiple figures
 #ax1 = fig.add_subplot(213)
 
@@ -88,7 +93,7 @@ fig.subplots_adjust(hspace=0,wspace=0)
 ###############
 
 
-ax1 = plt.subplot2grid((7, 1), (0, 0))
+ax1 = plt.subplot2grid((5, 1), (0, 0))
 plt.plot(samps_a,gain_a, linewidth=1, color='C0')
 plt.plot(samps_b,gain_b, linewidth=1, color='C1')
 plt.grid(False, which="major", axis="both")
@@ -103,41 +108,41 @@ ax1.yaxis.labelpad = 10*width/17.
 #   x_im1
 ###############
 
-ax2 = plt.subplot2grid((7, 1), (1, 0))
-plt.plot(samps_a,x_im_a[2:,0], linewidth=1, color='C0', label='CG')
-plt.plot(samps_b,x_im_b[2:,0], linewidth=1, color='C1', label='CG')
-plt.grid(False, which="major", axis="both")
-plt.setp( ax2.get_xticklabels(), visible=False)
-plt.setp( ax2.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-#plt.text(52200,70,r"K113", fontsize=10)
-plt.ylabel(r"$x_\mathrm{im,1}$")
-ax1.yaxis.labelpad = 10*width/17.
-plt.ylim([-5e-4, 1.5e-3]);
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+#ax2 = plt.subplot2grid((7, 1), (1, 0))
+#plt.plot(samps_a,x_im_a[2:,0], linewidth=1, color='C0', label='CG')
+#plt.plot(samps_b,x_im_b[2:,0], linewidth=1, color='C1', label='CG')
+#plt.grid(False, which="major", axis="both")
+#plt.setp( ax2.get_xticklabels(), visible=False)
+#plt.setp( ax2.get_yticklabels(), visible=True)
+#plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+##plt.text(52200,70,r"K113", fontsize=10)
+#plt.ylabel(r"$x_\mathrm{im,1}$")
+#ax1.yaxis.labelpad = 10*width/17.
+#plt.ylim([-5e-4, 1.5e-3]);
+#plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
 
 ###############
 #   x_im2
 ###############
 
-ax3 = plt.subplot2grid((7, 1), (2, 0))
-plt.plot(samps_a,x_im_a[2:,1], linewidth=1, color='C0', label='CG')
-plt.plot(samps_b,x_im_b[2:,1], linewidth=1, color='C1', label='CG')
-plt.grid(False, which="major", axis="both")
-plt.setp( ax3.get_xticklabels(), visible=False)
-plt.setp( ax3.get_yticklabels(), visible=True)
-#plt.text(52200,2.8,r"K113", fontsize=10)
-plt.ylabel(r"$x_\mathrm{im,2}$")
-ax1.yaxis.labelpad = 10*width/17.
-#plt.yticks([-0.5,0,0.5], [r"$-0.5$", r"$0$", r"$0.5$"])
-
-
+#ax3 = plt.subplot2grid((7, 1), (2, 0))
+#plt.plot(samps_a,x_im_a[2:,1], linewidth=1, color='C0', label='CG')
+#plt.plot(samps_b,x_im_b[2:,1], linewidth=1, color='C1', label='CG')
+#plt.grid(False, which="major", axis="both")
+#plt.setp( ax3.get_xticklabels(), visible=False)
+#plt.setp( ax3.get_yticklabels(), visible=True)
+##plt.text(52200,2.8,r"K113", fontsize=10)
+#plt.ylabel(r"$x_\mathrm{im,2}$")
+#ax1.yaxis.labelpad = 10*width/17.
+##plt.yticks([-0.5,0,0.5], [r"$-0.5$", r"$0$", r"$0.5$"])
+ 
+ 
 ###############
 #   sigma0
 ###############
 
-ax4 = plt.subplot2grid((7, 1), (3, 0))
+ax4 = plt.subplot2grid((5, 1), (1, 0))
 plt.plot(samps_a,sigma_a, linewidth=1, color='C0', label='CG')
 plt.plot(samps_b,sigma_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
@@ -153,7 +158,7 @@ plt.ylabel(r"$\sigma_{0}$ [mK\,$\mathrm{s}^{\frac{1}{2}}$]"); ax1.yaxis.labelpad
 #   fknee
 ###############
 
-ax5 = plt.subplot2grid((7, 1), (4, 0))
+ax5 = plt.subplot2grid((5, 1), (2, 0))
 plt.plot(samps_a,fknee_a, linewidth=1, color='C0', label='CG')
 plt.plot(samps_b,fknee_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
@@ -171,7 +176,7 @@ plt.yticks([0.75, 1.00], [r"$0.75$", r"$1.00$"])
 #   alpha
 ###############
 
-ax6 = plt.subplot2grid((7, 1), (5, 0))
+ax6 = plt.subplot2grid((5, 1), (3, 0))
 plt.plot(samps_a,alpha_a, linewidth=1, color='C0', label='CG')
 plt.plot(samps_b,alpha_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
@@ -188,7 +193,7 @@ plt.ylim([-1.25, -0.9]);
 #   chisq
 ###############
 
-ax7 = plt.subplot2grid((7, 1), (6, 0))
+ax7 = plt.subplot2grid((5, 1), (4, 0))
 plt.plot(samps_a,chisq_a, linewidth=1, color='C0', label='CG')
 plt.plot(samps_b,chisq_b, linewidth=1, color='C1', label='CG')
 plt.grid(False, which="major", axis="both")
@@ -206,18 +211,17 @@ plt.ylim([-8.1,-6.8])
 #plt.xticks([52000,53000,54000,55000], [r"$52\,000$", r"$53\,000$", r"$54\,000$", r"$55\,000$"])
 # labels
 plt.xlabel(r"Gibbs Iteration");
-ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
 
 
 # set vertical y axis ticklables
 for ticklabel in ax1.yaxis.get_ticklabels():
     ticklabel.set_rotation("vertical")
 
-for ticklabel in ax2.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax3.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
+#for ticklabel in ax2.yaxis.get_ticklabels():
+#    ticklabel.set_rotation("vertical")
+#
+#for ticklabel in ax3.yaxis.get_ticklabels():
+#    ticklabel.set_rotation("vertical")
 
 for ticklabel in ax4.yaxis.get_ticklabels():
     ticklabel.set_rotation("vertical")
