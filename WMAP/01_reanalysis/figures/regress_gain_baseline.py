@@ -380,14 +380,14 @@ for n in tqdm(range(len(fnames_cal))):
                     axes[2].plot(ti - t[0],  (d_ucali - A.dot(X)))
                     axes[2].set_ylim([-1, 1])
                
-
-                with open(f'{band_labels[4*bi+j]}_g0.txt', 'a') as f:
+                with open(f'../../data/inst_plots/{band_labels[4*bi+j]}_g0.txt', 'a') as f:
                   f.write(f'{t_lab[0]}\t{g0}\n')
-                with open(f'{band_labels[4*bi+j]}_b0.txt', 'a') as f:
+                with open(f'../../data/inst_plots/{band_labels[4*bi+j]}_b0.txt', 'a') as f:
                   f.write(f'{t_lab[0]}\t{baseline}\n')
-                with open(f'{band_labels[4*bi+j]}_b1.txt', 'a') as f:
+                with open(f'../../data/inst_plots/{band_labels[4*bi+j]}_b1.txt', 'a') as f:
                   f.write(f'{t_lab[0]}\t{slope}\n')
-        
+       
+            '''
             if (n % 100 == 0):
                 axes[0].set_ylabel('Raw [du]')
                 axes[1].set_ylabel('Cal [mK]')
@@ -395,3 +395,4 @@ for n in tqdm(range(len(fnames_cal))):
                 plt.savefig(f'{band_labels[4*bi+j]}_timestreams_{n:06}.png',
                     bbox_inches='tight')
                 plt.close()
+            '''
