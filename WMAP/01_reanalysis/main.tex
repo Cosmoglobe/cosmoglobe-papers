@@ -426,6 +426,11 @@ derived by \citet{Stevenson_2014} as an analytical approximation to the spinning
 %	\caption{AME exponential}
 %\end{figure}
 
+\subsection{Priors}
+\label{sec:priors}
+
+
+
 \subsection{Posterior distribution and Gibbs sampling}
 
 As shown in \citet{bp01}, this parametric description of the instrumental effects and skythis parametric description of the instrumental effects and sky  allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modelled, the data should be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. Given this model, we can evaluate the likelihood for arbitrary chunks of time-ordered data in the context of the entire model, so that individual chunks of data with poor fits can be more easily identified. In general, the likelihood is written
@@ -782,7 +787,6 @@ When we encountered these events, TOD segments that were interrupted by the even
 
 
 
-
 \subsection{Computational resources}
 \label{sec:resources}
 
@@ -931,7 +935,7 @@ Additionally, operations that require creating timestreams for each detector, i.
 %\clearpage
 
 
-\section{Posterior distributions}
+\section{Instrumental parameters}
 \label{sec:posteriors}
 
 \begin{figure}[t]
@@ -940,6 +944,35 @@ Additionally, operations that require creating timestreams for each detector, i.
 	\caption{Overview of \K113. The red solid lines in first and second panel  are the delivered gain and baselines from \WMAPnine, while the black lines in all panels are samples from the \cosmoglobe\ Gibbs chain. The red dashed and yellow dashed lines are reported $\sigma_0$ and $f_\mathrm{knee}$ values from the first-year \WMAP\ data analysis and GSFC measurements, respectively.}
 	\label{fig:inst_K113}
 \end{figure}
+
+
+\subsection{Trace plots and correlations}
+\label{sec:traceplots}
+
+%\lipsum[1]
+To illustrate the dependence of the goodness-of-fit on the noise model,
+we inspect the 50th TOD segment, corresponding to MJDs 52285.2--52290.6, as a
+function of Gibbs iteration, in Fig.~\ref{fig:inst_K113_gibbs}. This is one of
+the worst-fitting TOD segments of the entire mission, with a reduced relative
+$\chi^2$ of $-7.5$, equivalent to $\chi^2/n=0.993$. The line plots demonstrate a strong correlation between the noise parameters and the $\chi^2$, while the gain itself is almost completely uncorrelated with the variations in the $\chi^2$. As $\sigma_0$ is not formally sampled in the Gibbs chain, it is weakly dependent on $f_\mathrm{knee}$ and $\alpha$, making it more likely that it is the driver of the correlations in this figure. 
+
+\begin{figure}[t]
+  	\centering
+	\includegraphics[width=\linewidth]{figures/instpar_CG_K113_samples_v1.pdf}
+	\caption{Subset of \K113 Gibbs samples for both chains, arbitrarily colored red and blue. The parameters correspond to MJDs 52285.2--52290.6.}
+	\label{fig:inst_K113_gibbs}
+\end{figure}
+
+
+%\subsection{Parameter correlations}
+%\label{sec:correlations}
+
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=\textwidth]{figures/noise_parameter_correlation.pdf}
+	\caption{Noise parameter correlation matrix. We average over all Gibbs samples of the noise parameters $\xi^n=\{\alpha,f_\mathrm{knee},\sigma_0\}$ for each PID. We then find the correlation in time between these averages for the different bands and detector. The results here are for the calibrated white noise level, $\sigma_0[\mathrm{mK}]$. The values for each detector are ordered 13, 14, 23, and 24}
+	\label{fig:correlation}
+\end{figure*}
 
 
 
@@ -1253,51 +1286,11 @@ Given the frequency maps,\footnote{As the maps are deterministic functions of th
 \end{figure}
 
 
-\section{Markov chains and parameter correlations}
-\label{sec:markov}
 
 
-\subsection{Trace plots}
-\label{sec:traceplots}
-
-%\lipsum[1]
-To illustrate the dependence of the goodness-of-fit on the noise model,
-we inspect the 50th TOD segment, corresponding to MJDs 52285.2--52290.6, as a
-function of Gibbs iteration, in Fig.~\ref{fig:inst_K113_gibbs}. This is one of
-the worst-fitting TOD segments of the entire mission, with a reduced relative
-$\chi^2$ of $-7.5$, equivalent to $\chi^2/n=0.993$. The line plots demonstrate a strong correlation between the noise parameters and the $\chi^2$, while the gain itself is almost completely uncorrelated with the variations in the $\chi^2$. As $\sigma_0$ is not formally sampled in the Gibbs chain, it is weakly dependent on $f_\mathrm{knee}$ and $\alpha$, making it more likely that it is the driver of the correlations in this figure. 
-
-\begin{figure}[t]
-  	\centering
-	\includegraphics[width=\linewidth]{figures/instpar_CG_K113_samples_v1.pdf}
-	\caption{Subset of \K113 Gibbs samples for both chains, arbitrarily colored red and blue. The parameters correspond to MJDs 52285.2--52290.6.}
-	\label{fig:inst_K113_gibbs}
-\end{figure}
-
-
-\subsection{Parameter correlations}
-\label{sec:correlations}
-
-\begin{figure*}[t]
-	\centering
-	\includegraphics[width=\textwidth]{figures/noise_parameter_correlation.pdf}
-	\caption{Noise parameter correlation matrix. We average over all Gibbs samples of the noise parameters $\xi^n=\{\alpha,f_\mathrm{knee},\sigma_0\}$ for each PID. We then find the correlation in time between these averages for the different bands and detector. The results here are for the calibrated white noise level, $\sigma_0[\mathrm{mK}]$. The values for each detector are ordered 13, 14, 23, and 24}
-	\label{fig:correlation}
-\end{figure*}
 
 \lipsum[5]
 
-\subsubsection{\K-band calibration and AME}
-\label{sec:kband_correlation}
-
-In a preliminary \commanderthree\ run, we discovered an unbounded rise in the
-\K-band absolute calibration, $g_0$, and the dipole in the AME component of the sky. Because the AME is strongest among all bands at \K-band, any increase in the \K-band absolute calibration can easily be accounted for by changing the amplitude of the AME, while leaving goodness-of-fit tests such as relative-$\chi^2$ and residual maps unaffected.
-
-In order to break this degeneracy, it was necessary to impose a prior either on the AME itself or on the absolute calibration. The AME prior we explored followed the approach of \citet{bp13}, in which the prior mean was the \Planck\ DR4\,857 GHz map scaled by $3\cdot10^{-5}$, and the variance is given in angular scales by a parameter $q$. We found that a prior of $q=10^{-2}\,\mathrm{\mu K}^2$ was necessary to stabilize the gain, resulting in an AME map that was nearly identical to the \Planck\ 857\,GHz band. As this gave a result that was inconsistent with many previous results, we opted insted to sample the absolute calibration instead.
-
-Any error in $g_0$ leads to a residual due to the large Solar dipole. In practice, we found that the typical variation of $g_0$ was 0.002, giving a relative error of $\sim0.1\,\%$. This variation induces a $\sim6\,\mathrm{\mu K}$ Solar dipole uncertainty, which is easily attributed to AME during component separation. In Figure \ref{fig:g0_ame}, we demonstrate this effect on recovered AME maps using extreme $g_0$ values of 1.175 and 1.9. We find that AME maps consistent with those presented in \citet{bennett2012} and \citet{planck2014-a12} are recovered when $g_0$ is between 1.180 and 1.182. Based on this analysis, we sample $g_0$ from a Gaussian with mean 1.1815 and standard deviation 0.001.
-
-\citet{bennett2012} and \citet{planck2014-a12} find AME peak frequencies 12.0--17.5\,GHz and 17--23\,GHz, respectively, both with low signal-to-noise at high Galactic latitude and with structure along the plane. The Q-U-I JOint Tenerife Experiment (QUIJOTE) has recently released maps of the sky with approximately 70\,\% sky coverage at frequencies 11, 13, 17, and 19\,GHz \citep{QUIJOTE_IV}. QUIJOTE is optimized for characterizing the polarized sky, and constraints from, e.g., \citet{QUIJOTE_VIII}, will be critical for future polarized synchrotron SED characterization and polarized AME limits. While in principle the AME SED can be constrained by a joint \WMAP/LFI/QUIJOTE analysis, we consider this outside of the scope of the paper, which aims to evaluate the effect of jointly analyzing \WMAP\ and \Planck\ LFI at the TOD level.  Future analysis will include the QUIJOTE data, and hopefully break the $g_0$-$a_\mathrm{ame}$ degeneracy.
 
 %\begin{figure}
 %	\centering
@@ -1362,7 +1355,7 @@ such has a negligible effect.
 %\clearpage
 
 
-\section{Frequency maps and astrophysical components}
+\section{Frequency maps}
 \label{sec:maps}
 
 
@@ -1763,10 +1756,13 @@ W4 &   15.5  & -6.8 & 52 \cr
 %\end{figure*}
 
 
-\subsection{Preliminary CMB results}
+\section{Preliminary astrophysical results}
+\label{sec:maps}
+
+\subsection{CMB results}
 \label{sec:cmb}
 
-\subsubsection{CMB Solar dipole}
+\subsubsection{Solar dipole}
 \label{sec:dipole}
 
 \begin{figure}
@@ -1779,14 +1775,19 @@ W4 &   15.5  & -6.8 & 52 \cr
 	\includegraphics[width=\columnwidth]{figures/dip_latitude.pdf}
 \end{figure}
 
-\subsubsection{Temperature power spectrum}
+\subsubsection{Quadrupole and octopole}
+\label{sec:anomalies}
+
+\subsubsection{Angular temperature power spectrum}
 \label{sec:cls}
 
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/GaussCl_CG_lmax50.pdf}
 \end{figure}
 
-\subsubsection{Preliminary large-scale CMB polarization results}
+
+
+\subsubsection{Large-scale polarization}
 \label{sec:lowl_cmb}
 
 
@@ -1812,7 +1813,9 @@ W4 &   15.5  & -6.8 & 52 \cr
 \end{figure}
 
 
-\subsection{Signal-to-noise ratio comparison between \WMAP\ and LFI}
+\subsection{Galactic foregrounds}
+
+\subsection{\WMAP-versus-LFI signal-to-noise ratio comparison}
 \label{sec:s2n}
 
 
@@ -2245,3 +2248,16 @@ W4 &   15.5  & -6.8 & 52 \cr
 \section{Comparison with \BP\ LFI results}
 
 \end{document}
+
+
+\subsubsection{\K-band calibration and AME}
+\label{sec:kband_correlation}
+
+In a preliminary \commanderthree\ run, we discovered an unbounded rise in the
+\K-band absolute calibration, $g_0$, and the dipole in the AME component of the sky. Because the AME is strongest among all bands at \K-band, any increase in the \K-band absolute calibration can easily be accounted for by changing the amplitude of the AME, while leaving goodness-of-fit tests such as relative-$\chi^2$ and residual maps unaffected.
+
+In order to break this degeneracy, it was necessary to impose a prior either on the AME itself or on the absolute calibration. The AME prior we explored followed the approach of \citet{bp13}, in which the prior mean was the \Planck\ DR4\,857 GHz map scaled by $3\cdot10^{-5}$, and the variance is given in angular scales by a parameter $q$. We found that a prior of $q=10^{-2}\,\mathrm{\mu K}^2$ was necessary to stabilize the gain, resulting in an AME map that was nearly identical to the \Planck\ 857\,GHz band. As this gave a result that was inconsistent with many previous results, we opted insted to sample the absolute calibration instead.
+
+Any error in $g_0$ leads to a residual due to the large Solar dipole. In practice, we found that the typical variation of $g_0$ was 0.002, giving a relative error of $\sim0.1\,\%$. This variation induces a $\sim6\,\mathrm{\mu K}$ Solar dipole uncertainty, which is easily attributed to AME during component separation. In Figure \ref{fig:g0_ame}, we demonstrate this effect on recovered AME maps using extreme $g_0$ values of 1.175 and 1.9. We find that AME maps consistent with those presented in \citet{bennett2012} and \citet{planck2014-a12} are recovered when $g_0$ is between 1.180 and 1.182. Based on this analysis, we sample $g_0$ from a Gaussian with mean 1.1815 and standard deviation 0.001.
+
+\citet{bennett2012} and \citet{planck2014-a12} find AME peak frequencies 12.0--17.5\,GHz and 17--23\,GHz, respectively, both with low signal-to-noise at high Galactic latitude and with structure along the plane. The Q-U-I JOint Tenerife Experiment (QUIJOTE) has recently released maps of the sky with approximately 70\,\% sky coverage at frequencies 11, 13, 17, and 19\,GHz \citep{QUIJOTE_IV}. QUIJOTE is optimized for characterizing the polarized sky, and constraints from, e.g., \citet{QUIJOTE_VIII}, will be critical for future polarized synchrotron SED characterization and polarized AME limits. While in principle the AME SED can be constrained by a joint \WMAP/LFI/QUIJOTE analysis, we consider this outside of the scope of the paper, which aims to evaluate the effect of jointly analyzing \WMAP\ and \Planck\ LFI at the TOD level.  Future analysis will include the QUIJOTE data, and hopefully break the $g_0$-$a_\mathrm{ame}$ degeneracy.
