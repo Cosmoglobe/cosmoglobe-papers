@@ -99,15 +99,13 @@ for i in range(len(bands)):
     plt.text(0.085, y0 + i*dy ,   r'\textit{' + bands[len(bands) - i - 1] + '}', transform=f.transFigure, fontsize=fontsize, rotation=90)
 
 
-xl = np.array([0.0 - 0.01, 12.0 - 0.05, 30.0, 66.03]) * 0.999
 xl = []
-for i in range(11):
+for i in range(0,11):
     xl.append(i*12*0.999)
 plt.vlines(xl, ymin=0.0, ymax=120.0, linestyle='-', color='k', lw=1.05, alpha=1.0)
 plt.hlines(xl, xmin=0.0, xmax=120.0, linestyle='-', color='k', lw=1.05, alpha=1.0)
 xl = []
 for i in range(41):
-    #xl.append(i*12*0.999)
     xl += (np.array([4.0 - 0.01 + i*12, 8.0- 0.01 + i*12]) * 0.999).tolist()
 #xl = np.array([4.0 - 0.01, 8.0- 0.01, 18.0, 24.0, 42.0, 54.0]) * 0.999
 plt.vlines(xl, ymin=0.0, ymax=120.0, linestyle='-', color='k', lw=0.5, alpha=0.6)
