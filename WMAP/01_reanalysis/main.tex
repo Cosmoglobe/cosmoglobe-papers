@@ -66,7 +66,7 @@
 \def\sroll2{\texttt{SRoll2}}
 
 \newcommand{\phm}{\phantom{-}}
-\renewcommand{\d}[0]{\vec{d}}
+\newcommand{\dv}[0]{\vec{d}}
 \renewcommand{\t}[0]{\vec{t}}
 \newcommand{\A}[0]{\mathrm{A}}
 \newcommand{\B}[0]{\mathrm{B}}
@@ -481,13 +481,13 @@ This is allowed by probability theory given that the joint distribution $P(\g,\n
 \end{equation}
 where $q$ labels the time interval for which we assume the gain is constant over, e.g., a single scan. In order to sample the gain, we write down a generative model for the TOD,
 \begin{equation}
-	\d_i=\g_{i}\s_{i}^\mathrm{tot} +\n_{i}^\mathrm{tot}\sim\mathcal N(\g_i\s_{i}^\mathrm{tot},\mathsf N_i).
+	\dv_i=\g_{i}\s_{i}^\mathrm{tot} +\n_{i}^\mathrm{tot}\sim\mathcal N(\g_i\s_{i}^\mathrm{tot},\mathsf N_i).
 \end{equation}
-Since the $\d_i$ is given as a linear combination of the fixed signal and the gains, a random sample of the gain can be drawn by solving\footnote{See, e.g., Appendix A.2 of \citet{bp01} for a derivation of this result.}
+Since the $\dv_i$ is given as a linear combination of the fixed signal and the gains, a random sample of the gain can be drawn by solving\footnote{See, e.g., Appendix A.2 of \citet{bp01} for a derivation of this result.}
 \begin{equation}
 	\label{eq:gain_gauss_samp}
 	[(\s_i^\mathrm{tot})^T\mathsf N_i^{-1}\s_i^\mathrm{tot}]\g_i
-	=(\s_i^\mathrm{tot})^T\N^{-1}_i\d_i
+	=(\s_i^\mathrm{tot})^T\N^{-1}_i\dv_i
 	+(\s_i^\mathrm{tot})^T\N^{-1/2}_i\boldsymbol\eta.
 \end{equation}
 Note that the $\mathsf N_i$ depends implicitly on the noise PSD $\boldsymbol \xi_n$, while the specific realization of $\ncorr$ is accounted for in the covariance matrix.
@@ -495,10 +495,10 @@ In practice, as shown in \citet{bp07}, \commanderthree\ samples $g_0$, $\Delta g
 
 The correlated noise sampling, described in \citet{bp06}, follows a similar procedure to gain sampling, except now conditioned upon the gain estimate, sampled just before correlated noise in the code. Similar to the gain case, we can write a generative model for the data
 \begin{equation}
-	\d_i=\g_i\s_i^\mathrm{tot}+\n_i^\mathrm{corr}+\n^\mathrm{wn}_i
+	\dv_i=\g_i\s_i^\mathrm{tot}+\n_i^\mathrm{corr}+\n^\mathrm{wn}_i
 	\sim\mathcal N(\g_i\s_i^\mathrm{tot},\N_{\mathrm{corr},i}+\N_{\mathrm{wn},i}).
 \end{equation}
-Given fixed $\boldsymbol r_i=\d_i-\g_i\s_i^\mathrm{tot}$, we can again write a sampling equation, 
+Given fixed $\boldsymbol r_i=\dv_i-\g_i\s_i^\mathrm{tot}$, we can again write a sampling equation, 
 \begin{equation}
 	\label{eq:ncorr_gauss_samp}
 	(\N_{\mathrm{corr},i}^{-1}+\N_{\mathrm{wn},i}^{-1})
