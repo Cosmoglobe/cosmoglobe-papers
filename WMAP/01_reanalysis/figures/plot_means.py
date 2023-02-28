@@ -326,6 +326,7 @@ for n, b in enumerate(bands):
     )
     plt.tight_layout()
     plt.savefig(f"{b}_map_I.pdf", bbox_inches="tight", dpi=300)
+    plt.close('all')
     cg.plot(
         mu_s,
         sig=1,
@@ -339,6 +340,7 @@ for n, b in enumerate(bands):
     )
     plt.tight_layout()
     plt.savefig(f"{b}_map_Q.pdf", bbox_inches="tight", dpi=300)
+    plt.close('all')
     cg.plot(
         mu_s,
         sig=2,
@@ -353,7 +355,7 @@ for n, b in enumerate(bands):
     )
     plt.tight_layout()
     plt.savefig(f"{b}_map_U.pdf", bbox_inches="tight", dpi=300)
-    plt.close()
+    plt.close('all')
 
     if ("023-WMAP_K" in b) or ("030-WMAP_Ka" in b):
         cg.plot(
@@ -369,6 +371,7 @@ for n, b in enumerate(bands):
             extend="both",
         )
         plt.savefig(f"{b}_mu_I.pdf", bbox_inches="tight", dpi=300)
+        plt.close('all')
         cg.plot(
             mu_s,
             sig=1,
@@ -381,6 +384,7 @@ for n, b in enumerate(bands):
             cbar=False,
         )
         plt.savefig(f"{b}_mu_Q.pdf", bbox_inches="tight", dpi=300)
+        plt.close('all')
         cg.plot(
             mu_s,
             sig=2,
@@ -394,6 +398,7 @@ for n, b in enumerate(bands):
             unit=r"\mathrm{\mu K}",
         )
         plt.savefig(f"{b}_mu_U.pdf", bbox_inches="tight", dpi=300)
+        plt.close('all')
         plt.close("all")
     elif "040-WMAP_Q" in b:
         mu_Q.append(mu)
@@ -463,6 +468,7 @@ cg.plot(
     extend="both",
 )
 plt.savefig(f"Q_mu_I.pdf", bbox_inches="tight", dpi=300)
+plt.close('all')
 cg.plot(
     Q_s,
     sig=1,
@@ -475,6 +481,7 @@ cg.plot(
     cbar=False,
 )
 plt.savefig(f"Q_mu_Q.pdf", bbox_inches="tight", dpi=300)
+plt.close('all')
 cg.plot(
     Q_s,
     sig=2,
@@ -505,6 +512,7 @@ cg.plot(
     extend="both",
 )
 plt.savefig(f"V_mu_I.pdf", bbox_inches="tight", dpi=300)
+plt.close('all')
 cg.plot(
     V_s,
     sig=1,
@@ -517,6 +525,7 @@ cg.plot(
     cbar=False,
 )
 plt.savefig(f"V_mu_Q.pdf", bbox_inches="tight", dpi=300)
+plt.close('all')
 cg.plot(
     V_s,
     sig=2,
@@ -546,6 +555,7 @@ cg.plot(
     extend="both",
 )
 plt.savefig(f"W_mu_I.pdf", bbox_inches="tight", dpi=300)
+plt.close('all')
 cg.plot(
     W_s,
     sig=1,
@@ -558,6 +568,7 @@ cg.plot(
     cbar=False,
 )
 plt.savefig(f"W_mu_Q.pdf", bbox_inches="tight", dpi=300)
+plt.close('all')
 cg.plot(
     W_s,
     sig=2,
@@ -571,19 +582,24 @@ cg.plot(
     unit=r"\mathrm{\mu K}",
 )
 plt.savefig(f"W_mu_U.pdf", bbox_inches="tight", dpi=300)
+plt.close('all')
 
 
 cg.standalone_colorbar("binary_r", ticks=[1,2,3,4,], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
 plt.savefig('cbar_std.pdf', dpi=300)
+plt.close('all')
 cg.standalone_colorbar("binary_r", ticks=[25, 35, 45, 60], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
 plt.savefig('cbar_rms_I.pdf', dpi=300)
+plt.close('all')
 cg.standalone_colorbar("binary_r", ticks=[35, 50, 70, 85], extend='both',
             unit=r"$\mathrm{\mu K}$",width=4, fontsize=18)
 plt.savefig('cbar_rms_P.pdf', dpi=300)
+plt.close('all')
 cg.standalone_colorbar("RdBu_r", ticks=[-0.5, 0,0.5], extend='both',
             width=4, fontsize=18, unit=r'\phantom{$\rho$}')
 plt.savefig('cbar_rho.pdf', dpi=300)
+plt.close('all')
 
 
