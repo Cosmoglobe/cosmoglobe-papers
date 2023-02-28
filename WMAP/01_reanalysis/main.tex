@@ -283,20 +283,20 @@ The \bp\ analysis generated the first clean LFI maps by Gibbs sampling the sky c
 \label{sec:official_pipeline}
 
 The \WMAP\ satellite carried forty differential polarization-sensitive
-radiometers grouped as differnecing assemblies (DAs), where one pair was
+radiometers grouped as differencing assemblies (DAs), where one pair was
 sensitive to the difference in signal at one polarization orientation and the
 other pair sensitive to the orthogonal polarization. In total, the DAs were
 allocated as: 1 \K\ (23\,GHz), 1 \Ka\ (30\,GHz), 2 \Q\ (40\,GHz), 2 \V\
 (60\,GHz), and 4 \W\ (90\,GHz).
 
-The \WMAP\ pointing solution was determined using the boresight vectors of individual feedhorns in spacecraft coordinates, in combination with on-board star trackers. Thermal flexure of the tracking structure introduced small pointing errors, as discussed by \citet{jarosik2007}. Using the temperature variation measured by housekeeping data, the quaternion pointing solution was corrected using a linear model that depends on arcsecond per temperature change. The residual pointing errors were computed using observations of Jupiter Saturn, and the reported upper limit was given by 10'' \citep{bennett2012,wmapexsupp}.
+The \WMAP\ pointing solution was determined using the boresight vectors of individual feedhorns in spacecraft coordinates, in combination with on-board star trackers. Thermal flexure of the tracking structure introduced small pointing errors, as discussed by \citet{jarosik2007}. Using the temperature variation measured by housekeeping data, the quaternion pointing solution was corrected using a linear model that depends on arcsecond per temperature change (\textbf{what does this mean?}). The residual pointing errors were computed using observations of Jupiter (\textbf{and?}) Saturn, and the reported upper limit was given by 10'' \citep{bennett2012,wmapexsupp}.
 
 The \WMAP\ bandpasses were measured directly pre-launch, sweeping a signal source through 201 frequencies and recording the output \citep{jarosik2003:MAP}. The bandpass responses have not been updated since the initial data release. However, as noted in \citet{bennett2012}, there has been an observed drift in the center frequency of \K, \Ka, \Q, and \V-band corresponding to a $\sim0.1\,\%$ decrease over time. In practice, this did not affect the \WMAP\ data processing because each year was mapped separately and co-added afterwards. An effective frequency calculator was delivered in the DR5 release as part of the IDL library to mitigate this effect during astrophysical analyses.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/m_sw.html}}
 
 The beams were characterized in the form of maps, with separate products for the near-field and far-field. The main beam and near sidelobes were characterized using a combination of physical optics codes and observations of Jupiter for each horn separately. The maps of Jupiter were then combined with the best-fit physical optics codes to create a map of the beam response \citep{hill2009,weiland2010,bennett2012}.
-Far sidelobes were estimated using a combination of laboratory measurements and Moon data taken during the mission \citep{barnes2003}, as well as a physical optics model describe in \citet{hinshaw2009}. To remove the far sidelobe  in the TOD, an estimate was calculated by convolving the intensity map and the orbital dipole signal with the measured sidelobe signal \citep{jarosik2007}. Although the sidelobe pickup was modeled in \citet{barnes2003}, it was determined that the results were small enough to be neglected, and have not been reported in any of the \WMAP\ data releases.
+Far sidelobes were estimated using a combination of laboratory measurements and Moon data taken during the mission \citep{barnes2003}, as well as a physical optics model described in \citet{hinshaw2009}. To remove the far sidelobe  in the TOD, an estimate was calculated by convolving the intensity map and the orbital dipole signal with the measured sidelobe signal \citep{jarosik2007}. Although the sidelobe pickup was modeled in \citet{barnes2003}, it was determined that the results were small enough to be neglected, and have not been reported in any of the \WMAP\ data releases.
 
-The \WMAP\ data were calibrated by jointly estimating the time-dependent gains and baselines, as describe in \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
+The \WMAP\ data were calibrated by jointly estimating the time-dependent gains and baselines, as described in \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
 The TOD are intially modelled as having
 constant gain and baseline for a 1--24\,hour period, and are fit to the orbital
 dipole assuming $T_0$ from \citet{mather:1999} and a map made from a previous
@@ -379,7 +379,7 @@ The most unique feature of the \WMAP\ data is that it includes differential poin
 	+ s_t^\mathrm{inst}+n_t
 \end{align}
 where $s_p$ is the total sky signal $\mathsf B\mathsf M\boldsymbol a$, $\gamma_{\A/\B}$ are the time-dependent polarization angles, and $p_{\A/\B}$ are the A and B pixel locations.
-In this notation, $\alpha_{\A/\B}$ is the total optical power transmission for horn A and B. Defining the transmission imbalance for a given radiometer pair $x_\mathrm{im}\equiv(\alpha_\A-\alpha_\B)/(\alpha_\A+\alpha_\B)$ and absorbing $\alpha_\A+\alpha_\B$ into the definition of $g_t$ allows the pointing operation to be written in terms of the deviation from ideality,
+In this notation, $\alpha_{\A/\B}$ is the total optical power transmission for horn A and B. Defining the transmission imbalance for a given radiometer pair $x_\mathrm{im}\equiv(\alpha_\A-\alpha_\B)/(\alpha_\A+\alpha_\B)$ (and absorbing $\alpha_\A+\alpha_\B$ into the definition of $g_t$ \textbf{Comment: This parenthesized part does not seem to affect the following equation}) allows the pointing operation to be written in terms of the deviation from ideality,
 \begin{align}
 	\mathsf P_{t,p}s_p
 	&=(1+x_\mathrm{im})(T_{p_\A}+Q_{p_\A}\cos2\gamma_\A + U_{p_\A}\sin2\gamma_\A)
@@ -422,7 +422,7 @@ derived by \citet{Stevenson_2014} as an analytical approximation to the spinning
 
 \subsection{Posterior distribution and Gibbs sampling}
 
-As shown in \citet{bp01}, this parametric description of the instrumental effects and skythis parametric description of the instrumental effects and sky  allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modelled, the data should be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. Given this model, we can evaluate the likelihood for arbitrary chunks of time-ordered data in the context of the entire model, so that individual chunks of data with poor fits can be more easily identified. In general, the likelihood is written
+As shown in \citet{bp01}, this parametric description of the instrumental effects and sky allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modelled, the data should be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. Given this model, we can evaluate the likelihood for arbitrary chunks of time-ordered data in the context of the entire model, so that individual chunks of data with poor fits can be more easily identified. In general, the likelihood is written
 \begin{equation}
 	P(\boldsymbol d\mid\boldsymbol\omega)\propto\exp\left(-\frac12\sum_t\frac{(d_t-s^\mathrm{tot}_t(\boldsymbol\omega))^2}{\sigma_0^2}
 	\right).
@@ -533,14 +533,14 @@ Since $\mathsf M_{c,j}$ encodes the bandpass response of every detector $j$ to e
 \begin{equation}
 	\delta s_{t,j}^\mathrm{leak}=\mathsf P_{t,p}^j\mathsf B_{p,p'}^j\left(\boldsymbol m_{j,p'}-\boldsymbol m_{p'}\right).
 \end{equation}
-This leakage term uses the expected bandpass
+This leakage term uses the expected bandpass (\textbf{Unfinished sentence?})
 
 Once the instrumental parameters have been sampled, \commanderthree\ computes the calibrated TOD for each band,
 \begin{equation}
 	r_{t,j}=\frac{d_{t,j}-n_{t,j}^\mathrm{corr}}{g_{t,j}}-\left(s_{t,j}^\mathrm{orb}
 	+s_{t,j}^\mathrm{fsl}+\delta s_{t,j}^\mathrm{leak}+s_{t,j}^\mathrm{inst}\right)
 \end{equation}
-where $\s^\mathrm{orb}$ is the orbital dipole, $\s^\mathrm{fsl}$ is the far sidelobe timestream, $\delta\s^\mathrm{leak}$ is the bandpass leakage, and $\s^\mathrm{inst}$ is the set of instrumental parameters, e.g., the 1\,Hz spike in LFI. With the a correlated noise realization removed, one can perform simple binned mapmaking, weighting each pixel by the white noise amplitude.
+where $\s^\mathrm{orb}$ is the orbital dipole, $\s^\mathrm{fsl}$ is the far sidelobe timestream, $\delta\s^\mathrm{leak}$ is the bandpass leakage, and $\s^\mathrm{inst}$ is the set of instrumental parameters (\textbf{Is "parameters" the best word here?}), e.g., the 1\,Hz spike in LFI. With the a correlated noise realization removed, one can perform simple binned mapmaking, weighting each pixel by the white noise amplitude.
 
 % Component separation for intensity and polarization are described in \citet{bp13} and \citet{bp14}, respectively.
 
