@@ -45,9 +45,6 @@ gainK[inds] = np.nan
 
 
 
-wmapgain = np.loadtxt('regressed_gains.txt')
-
-
 vmin = -110
 vmax =  160
 
@@ -74,16 +71,11 @@ mjd_gsfc = [52130, 55412]
 #   gain
 ###############
 
-mjd_gain = gainK[0,0] + np.arange(1,3280+1)/3280. * (gainK[-1,0]-gainK[0,0])
-wmap2 = wmapgain[0,:]
-inds = (np.abs(wmap2) < 0.01)
-for i in range(len(inds)):
-    if inds[i]:
-        wmap2[i] = wmap2[i-1]
 
 ax1 = plt.subplot2grid((7, 1), (0, 0))
-plt.plot(mjd_gain,1./np.abs(wmap2), linewidth=0.5, color='red')
 plt.plot(gainK[:,0],gainK[:,1], linewidth=1, color='black')
+data = np.loadtxt('K113_g0.txt')
+plt.plot(data[::73,0], abs(data[::73,1]), linewidth=0.5, color='red')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
@@ -98,6 +90,9 @@ ax1.yaxis.labelpad = 10*width/17.
 
 ax2 = plt.subplot2grid((7, 1), (1, 0))
 plt.plot(baseK[:,0],baseK[:,1], linewidth=1, color='black', label='CG')
+data = np.loadtxt('K113_b0.txt')
+mu = data[::73,1].mean()
+plt.plot(data[::73,0], -(data[::73,1] - mu), linewidth=0.5, color='red')
 plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
 plt.setp( ax2.get_yticklabels(), visible=True)
