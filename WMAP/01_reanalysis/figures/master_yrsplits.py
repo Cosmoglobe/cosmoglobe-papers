@@ -18,7 +18,7 @@ nside = 512
 
 # Read mask and apodize it on a scale of ~1deg
 mask = hp.read_map(
-    "/mn/stornext/d16/cmbco/bp/dwatts/WMAP/data_WMAP/wmap_kq75_TQU_mask_r9.fits"
+    "/mn/stornext/d16/cmbco/bp/dwatts/WMAP/data_WMAP/data/wmap_kq75_TQU_mask_r9.fits"
 )
 
 

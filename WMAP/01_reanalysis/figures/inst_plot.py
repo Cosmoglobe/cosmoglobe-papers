@@ -1,9 +1,9 @@
 import cosmoglobe
 import matplotlib.pyplot as plt
 
-DIR = "/mn/stornext/u3/duncanwa/Cosmoglobe/v0"
+DIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
 
-chain = cosmoglobe.Chain(f"{DIR}/BP_c0001_v0.h5")
+chain = cosmoglobe.Chain(f"{DIR}/CG_c0001_v0.h5")
 bands = [
     "023-WMAP_K",
     "030-WMAP_Ka",

@@ -74,7 +74,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("K30_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("K30_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d0,
     sig=2,
@@ -86,7 +86,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("K30_deltaU.pdf", bbox_inches="tight")
+plt.savefig("K30_deltaU.pdf", bbox_inches="tight", dpi=300)
 
 cg.plot(
     d1,
@@ -100,7 +100,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("30Ka_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("30Ka_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d1,
     sig=2,
@@ -112,7 +112,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("30Ka_deltaU.pdf", bbox_inches="tight")
+plt.savefig("30Ka_deltaU.pdf", bbox_inches="tight", dpi=300)
 
 cg.plot(
     d2,
@@ -126,7 +126,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("Q_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("Q_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d2,
     sig=2,
@@ -138,7 +138,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("Q_deltaU.pdf", bbox_inches="tight")
+plt.savefig("Q_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d3,
     sig=1,
@@ -151,7 +151,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("V_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("V_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d3,
     sig=2,
@@ -163,7 +163,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("V_deltaU.pdf", bbox_inches="tight")
+plt.savefig("V_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d4,
     sig=1,
@@ -178,7 +178,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d4,
     sig=2,
@@ -192,7 +192,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("W_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d5,
     sig=1,
@@ -207,7 +207,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("44Q_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("44Q_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d5,
     sig=2,
@@ -221,7 +221,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("44Q_deltaU.pdf", bbox_inches="tight")
+plt.savefig("44Q_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d6,
     sig=1,
@@ -236,7 +236,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("V70_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("V70_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d6,
     sig=2,
@@ -250,7 +250,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("V70_deltaU.pdf", bbox_inches="tight")
+plt.savefig("V70_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d7,
     sig=1,
@@ -265,7 +265,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W70_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("W70_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d6,
     sig=2,
@@ -279,7 +279,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W70_deltaU.pdf", bbox_inches="tight")
+plt.savefig("W70_deltaU.pdf", bbox_inches="tight", dpi=300)
 plt.close("all")
 
 
@@ -353,7 +353,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("K30_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("K30_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d0,
     sig=2,
@@ -365,7 +365,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("K30_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("K30_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 
 cg.plot(
     d1,
@@ -379,7 +379,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("30Ka_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("30Ka_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d1,
     sig=2,
@@ -391,7 +391,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("30Ka_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("30Ka_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 
 cg.plot(
     d1,
@@ -405,7 +405,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("KKa_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("KKa_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d1,
     sig=2,
@@ -417,7 +417,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("KKa_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("KKa_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d2,
     sig=1,
@@ -430,7 +430,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("Q_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("Q_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d2,
     sig=2,
@@ -442,7 +442,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("Q_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("Q_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d3,
     sig=1,
@@ -455,7 +455,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("V_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("V_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d3,
     sig=2,
@@ -467,7 +467,7 @@ cg.plot(
     width=width,
     fontsize=fontsize,
 )
-plt.savefig("V_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("V_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d4,
     sig=1,
@@ -482,7 +482,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("W_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d4,
     sig=2,
@@ -496,7 +496,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("W_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d5,
     sig=1,
@@ -511,7 +511,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("44Q_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("44Q_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d5,
     sig=2,
@@ -525,7 +525,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("44Q_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("44Q_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d6,
     sig=1,
@@ -540,7 +540,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("V70_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("V70_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d6,
     sig=2,
@@ -554,7 +554,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("V70_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("V70_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d7,
     sig=1,
@@ -569,7 +569,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W70_W_deltaQ.pdf", bbox_inches="tight")
+plt.savefig("W70_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     d6,
     sig=2,
@@ -583,7 +583,7 @@ cg.plot(
     fontsize=fontsize,
     cbar=False,
 )
-plt.savefig("W70_W_deltaU.pdf", bbox_inches="tight")
+plt.savefig("W70_W_deltaU.pdf", bbox_inches="tight", dpi=300)
 plt.close("all")
 
 Clhat0 = hp.anafast(d0)

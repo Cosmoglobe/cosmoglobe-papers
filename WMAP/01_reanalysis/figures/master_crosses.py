@@ -18,7 +18,7 @@ nside = 512
 
 # Read mask and apodize it on a scale of ~1deg
 mask = hp.read_map(
-    "/mn/stornext/d16/cmbco/bp/dwatts/WMAP/data_WMAP/wmap_kq75_TQU_mask_r9.fits"
+    "/mn/stornext/d16/cmbco/bp/dwatts/WMAP/data_WMAP/data/wmap_kq75_TQU_mask_r9.fits"
 )
 
 
@@ -47,19 +47,19 @@ wmap_maps = [
     "/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W3_v5.fits",
     "/mn/stornext/d16/cmbco/ola/wmap/freq_maps/wmap_iqusmap_r9_9yr_W4_v5.fits",
 ]
-CG_DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_857_KKaQVW_a_230110"
+CG_DIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
 
 cg_maps = [
-    f"{CG_DIR}/tod_023-WMAP_K_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_030-WMAP_Ka_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_040-WMAP_Q1_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_040-WMAP_Q2_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_060-WMAP_V1_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_060-WMAP_V2_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_090-WMAP_W1_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_090-WMAP_W2_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_090-WMAP_W3_map_c0001_k000010.fits",
-    f"{CG_DIR}/tod_090-WMAP_W4_map_c0001_k000010.fits",
+    f"{CG_DIR}/CG_023-WMAP_K_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_030-WMAP_Ka_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_040-WMAP_Q1_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_040-WMAP_Q2_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_060-WMAP_V1_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_060-WMAP_V2_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W1_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W2_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W3_IQU_n0512_v1.fits",
+    f"{CG_DIR}/CG_090-WMAP_W4_IQU_n0512_v1.fits",
 ]
 
 bands = ["K", "Ka", "Q1", "Q2", "V1", "V2", "W1", "W2", "W3", "W4"]
