@@ -322,9 +322,10 @@ for n, b in enumerate(bands):
         max=3.4e3,
         width=width,
         xsize=xsize,
-        sub=(3, 1, 1),
         extend="both",
     )
+    plt.tight_layout()
+    plt.savefig(f"{b}_map_I.pdf", bbox_inches="tight")
     cg.plot(
         mu_s,
         sig=1,
@@ -334,9 +335,10 @@ for n, b in enumerate(bands):
         xsize=xsize,
         rlabel=rlabel,
         llabel="Q",
-        sub=(3, 1, 2),
         cbar=False,
     )
+    plt.tight_layout()
+    plt.savefig(f"{b}_map_Q.pdf", bbox_inches="tight")
     cg.plot(
         mu_s,
         sig=2,
@@ -346,12 +348,11 @@ for n, b in enumerate(bands):
         xsize=xsize,
         rlabel=rlabel,
         llabel="U",
-        sub=(3, 1, 3),
         extend="both",
         unit=r"\mathrm{\mu K}",
     )
     plt.tight_layout()
-    plt.savefig(f"{b}_map.pdf", bbox_inches="tight")
+    plt.savefig(f"{b}_map_U.pdf", bbox_inches="tight")
     plt.close()
 
     if ("023-WMAP_K" in b) or ("030-WMAP_Ka" in b):

@@ -23,7 +23,7 @@ dip = d_x*x + d_y*y + d_z*z
 
 m = hp.read_map(f'{DIR}/CG_cmb_IQU_n1024_v1.fits')
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', min=-3400, max=3400,
-    width=8)
+    width=8, xsize=800)
 plt.savefig('cmb_I_dipole.pdf', bbox_inches='tight')
 
 
