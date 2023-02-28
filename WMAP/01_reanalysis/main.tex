@@ -66,7 +66,7 @@
 \def\sroll2{\texttt{SRoll2}}
 
 \newcommand{\phm}{\phantom{-}}
-\renewcommand{\d}[0]{\vec{d}}
+\newcommand{\dv}[0]{\vec{d}}
 \renewcommand{\t}[0]{\vec{t}}
 \newcommand{\A}[0]{\mathrm{A}}
 \newcommand{\B}[0]{\mathrm{B}}
@@ -201,7 +201,7 @@
 \titlerunning{\cosmoglobe\ \wmap{}  analysis}
 
 \abstract{
-  We present the first joint analysis of \textit{WMAP} and \textit{Planck} LFI time-ordered data, processed within the Bayesian end-to-end \cosmoglobe\ framework. This framework builds directly on a similar analysis of the LFI measurements by the \BP\ collaboration, and approaches the CMB analysis challenge through Gibbs sampling of a global posterior distribution. The computational cost of producing one complete \WMAP+LFI Gibbs sample is 581\,CPU-hr, including calibration, map-making, and component separation, of which 389\,CPU-hr is spent on \WMAP\ low-level processing; this demonstrates that end-to-end Bayesian analysis of the \WMAP\. We find that our \WMAP\ posterior mean temperature sky maps are largely consistent with the official maps. The most notable differences are associated with the gain model; for example, our $K$-band calibration is on average {\color{red} 0.6\,\%} lower and it exhibits weaker bi-annual variations. Our polarization maps exhibits significantly weaker transmission imbalance residuals than the official maps, and it is particularly noteworthy that our $W$-band sky maps appear for the first time statistically consistent with the $V$-band maps. At a higher level, \WMAP-minus-LFI frequency map differences appear for the first time visually consistent with white noise over most of the sky. However, although these new products clearly represent an important step forward in understanding both the \WMAP\ and LFI measurements, we do identify three specific issues that require further work, namely 1) noise mismodelling at high temporal frequencies, 2) a quadrupolar $V$-band temperature residual at the 2\muK\ level; and 3) a strong degeneracy between the absolute $K$-band calibration and the dipole of the anomalous microwave emission component. Nevertheless, the reprocessed \WMAP\ maps presented here are significantly cleaner in terms of systematic uncertainties than the official \WMAP\ maps, and we believe that they should be preferrable for most scientific analyses that require \WMAP\ data. Both sky maps and the associated code are made publicly available through the \cosmoglobe\ web page. 
+  We present the first joint analysis of \textit{WMAP} and \textit{Planck} LFI time-ordered data, processed within the Bayesian end-to-end \cosmoglobe\ framework. This framework builds directly on a similar analysis of the LFI measurements by the \BP\ collaboration, and approaches the CMB analysis challenge through Gibbs sampling of a global posterior distribution. The computational cost of producing one complete \WMAP+LFI Gibbs sample is 581\,CPU-hr, including calibration, map-making, and component separation, of which 389\,CPU-hr is spent on \WMAP\ low-level processing; this demonstrates that end-to-end Bayesian analysis of the \WMAP\ data is computationally feasible. We find that our \WMAP\ posterior mean temperature sky maps are largely consistent with the official maps, and the resulting CMB power spectrum is in excellent agreement with previous results. The most notable difference is a slightly lower CMB quadrupole amplitude of $\sigma_2 = 98^{+14}_{-6}\muK^2$, as compared to $\sigma_2 = 229\pm97\muK^2$ from LFI alone. In contrast, our \WMAP\ polarization maps differs more notably from the official results, and in general they exhibit weaker transmission imbalance residuals; it is particularly noteworthy that our $W$-band sky maps appear statistically consistent with the $V$-band maps. At a higher level, \WMAP-minus-LFI frequency map differences appear for the first time visually consistent with instrumental noise over most of the sky. Still, we identify three specific issues that require additional work, namely 1) noise mismodelling at high temporal frequencies, 2) a quadrupolar $V$-band temperature residual at the 2\muK\ level; and 3) a strong degeneracy between the absolute $K$-band calibration and the dipole of the anomalous microwave emission component. Nevertheless, we believe that the reprocessed \WMAP\ maps presented here are significantly cleaner in terms of systematic uncertainties than the official \WMAP\ maps, and they should be preferrable for most scientific analyses that rely on \WMAP\ measurements. Both sky maps and the associated code are made publicly available through the \cosmoglobe\ web page. 
 }
 
 \keywords{ISM: general -- Cosmology: observations, polarization,
@@ -481,13 +481,13 @@ This is allowed by probability theory given that the joint distribution $P(\g,\n
 \end{equation}
 where $q$ labels the time interval for which we assume the gain is constant over, e.g., a single scan. In order to sample the gain, we write down a generative model for the TOD,
 \begin{equation}
-	\d_i=\g_{i}\s_{i}^\mathrm{tot} +\n_{i}^\mathrm{tot}\sim\mathcal N(\g_i\s_{i}^\mathrm{tot},\mathsf N_i).
+	\dv_i=\g_{i}\s_{i}^\mathrm{tot} +\n_{i}^\mathrm{tot}\sim\mathcal N(\g_i\s_{i}^\mathrm{tot},\mathsf N_i).
 \end{equation}
-Since the $\d_i$ is given as a linear combination of the fixed signal and the gains, a random sample of the gain can be drawn by solving\footnote{See, e.g., Appendix A.2 of \citet{bp01} for a derivation of this result.}
+Since the $\dv_i$ is given as a linear combination of the fixed signal and the gains, a random sample of the gain can be drawn by solving\footnote{See, e.g., Appendix A.2 of \citet{bp01} for a derivation of this result.}
 \begin{equation}
 	\label{eq:gain_gauss_samp}
 	[(\s_i^\mathrm{tot})^T\mathsf N_i^{-1}\s_i^\mathrm{tot}]\g_i
-	=(\s_i^\mathrm{tot})^T\N^{-1}_i\d_i
+	=(\s_i^\mathrm{tot})^T\N^{-1}_i\dv_i
 	+(\s_i^\mathrm{tot})^T\N^{-1/2}_i\boldsymbol\eta.
 \end{equation}
 Note that the $\mathsf N_i$ depends implicitly on the noise PSD $\boldsymbol \xi_n$, while the specific realization of $\ncorr$ is accounted for in the covariance matrix.
@@ -495,10 +495,10 @@ In practice, as shown in \citet{bp07}, \commanderthree\ samples $g_0$, $\Delta g
 
 The correlated noise sampling, described in \citet{bp06}, follows a similar procedure to gain sampling, except now conditioned upon the gain estimate, sampled just before correlated noise in the code. Similar to the gain case, we can write a generative model for the data
 \begin{equation}
-	\d_i=\g_i\s_i^\mathrm{tot}+\n_i^\mathrm{corr}+\n^\mathrm{wn}_i
+	\dv_i=\g_i\s_i^\mathrm{tot}+\n_i^\mathrm{corr}+\n^\mathrm{wn}_i
 	\sim\mathcal N(\g_i\s_i^\mathrm{tot},\N_{\mathrm{corr},i}+\N_{\mathrm{wn},i}).
 \end{equation}
-Given fixed $\boldsymbol r_i=\d_i-\g_i\s_i^\mathrm{tot}$, we can again write a sampling equation, 
+Given fixed $\boldsymbol r_i=\dv_i-\g_i\s_i^\mathrm{tot}$, we can again write a sampling equation, 
 \begin{equation}
 	\label{eq:ncorr_gauss_samp}
 	(\N_{\mathrm{corr},i}^{-1}+\N_{\mathrm{wn},i}^{-1})
