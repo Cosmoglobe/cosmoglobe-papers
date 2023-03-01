@@ -68,12 +68,12 @@ cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', comp='synch', sig=2, width=4,
     rlabel=r'\langle A_\mathrm s\rangle', norm='linear', min=-30, max=30)
 plt.savefig('synch_U.pdf', bbox_inches='tight', dpi=300)
 
-cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', sig=7, width=4,
+cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', sig=7, width=4, extend='both',
     rlabel=r'\sigma_\mathrm s', llabel='Q', min=0, max=7.5, cmap='binary_r')
-plt.savefig('synch_Q_std.pdf', bbox_inches='tight', dpi=300, extend='both')
-cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', sig=8, width=4,
+plt.savefig('synch_Q_std.pdf', bbox_inches='tight', dpi=300)
+cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', sig=8, width=4, extend='both',
     rlabel=r'\sigma_\mathrm s', llabel='U', min=0, max=7.5, cmap='binary_r')
-plt.savefig('synch_U_std.pdf', bbox_inches='tight', dpi=300, extend='both')
+plt.savefig('synch_U_std.pdf', bbox_inches='tight', dpi=300)
 
 cg.plot(f'{DIR}/CG_freefree_I_n1024_v1.fits', comp='ff', width=4,
     rlabel=r'\langle A_\mathrm{ff}\rangle', llabel='T')
