@@ -212,7 +212,7 @@ axes[2].set_ylabel(r'$n_\mathrm{corr}\ \mathrm{[mK]}$')
 axes[3].set_ylabel(r'$s_\mathrm{orb}\ \mathrm{[mK]}$')
 axes[4].set_ylabel(r'$s_\mathrm{sl}\ \mathrm{[mK]}$')
 axes[5].set_ylabel(r'$s_\mathrm{leak}\ \mathrm{[mK]}$')
-axes[6].set_ylabel(r'$s_\mathrm{res}\ [\sigma]$')
+axes[6].set_ylabel(r'$d_\mathrm{res}\ [\sigma]$')
 
 
 bline = np.median(ztod[inds])
