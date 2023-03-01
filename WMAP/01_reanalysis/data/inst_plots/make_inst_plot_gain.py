@@ -4,6 +4,7 @@ from matplotlib.ticker import MaxNLocator
 import numpy as N
 import scipy.stats
 import healpy as hp
+import cosmoglobe
 
 import plotly.colors as pcol
 import matplotlib as mpl
@@ -71,9 +72,22 @@ plot_text_coords = ([[52200, 1.25]] * 4 +  # K
     [[52200, 0.286]] * 2 + [[52200, 0.24]] * 2 # W4
 )
 
+chain_fname1 = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206/chain_c0001.h5'
+chain_fname2 = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203/chain_c0001.h5'
+chain1 = cosmoglobe.h5.chain.Chain(chain_fname1)
+chain2 = cosmoglobe.h5.chain.Chain(chain_fname2)
+chain_names = ['023-WMAP_K',
+               '030-WMAP_Ka',
+               '040-WMAP_Q1',
+               '040-WMAP_Q2',
+               '060-WMAP_V1',
+               '060-WMAP_V2',
+               '090-WMAP_W1',
+               '090-WMAP_W2',
+               '090-WMAP_W3',
+               '090-WMAP_W4']
+
 for i in range(40):
-    print(i)
-    print(plot_text_coords[i])
 #ax1 = plt.subplot2grid((10, 4), (0, 0))
     if i % 4 == 0:
         currax = plt.subplot2grid((10, 4), (i//4, i % 4))
@@ -84,11 +98,19 @@ for i in range(40):
         currax = plt.subplot2grid((10, 4), (i//4, i%4), sharey=firstax)
     axs.append(currax)
     data = np.loadtxt(fnames[i])
+    samples1 = chain1.get(f'tod/{chain_names[i//4]}/gain')
+    samples2 = chain2.get(f'tod/{chain_names[i//4]}/gain')
+    tot_samples = np.concatenate((samples1[50:],  samples2[50:]), axis=0)
+    mean = np.mean(tot_samples, axis=0)
+    std = np.std(tot_samples, axis=0)
     curr_wmap_data = wmap_data[i//4]
-    plt.plot(curr_wmap_data[:,0],curr_wmap_data[:,(i % 4) + 1], linewidth=1, color='black')
-#    mean = np.mean(abs(data[:, 1]))
-#    std = np.std(abs(data[:, 1]))
-    plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
+    accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
+    #x_chain = np.arange(52200, 52200 + len(curr_wmap_data[:, 0]))
+    plt.errorbar(curr_wmap_data[:, 0][accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1)
+#    plt.plot(curr_wmap_data[:,0][accept], mean[i%4][accept], linewidth=0.5, color='black')
+#    plt.plot(curr_wmap_data[:,0],curr_wmap_data[:,(i % 4) + 1], linewidth=1, color='black')
+    plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red', zorder=2)
+#    plt.errorbar(x_chain[accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5)
     plt.grid(False, which="major", axis="both")
     if i >= 36:
         plt.setp( currax.get_xticklabels(), visible=True)
