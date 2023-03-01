@@ -195,7 +195,7 @@ in spherical harmonics space where $d_{\ell m}$ is the observed data, $A_\ell$ i
 
 The covariance matrices are given as $\langle s_{\ell m}s_{\ell' m'}^* \rangle = C_{\ell} \delta_{\ell \ell'}\delta_{mm'}$ and $\langle n_{\ell m}n_{\ell' m'}^* \rangle = N_{\ell m, \ell' m'}$. With isotropic noise and no mask, $N_{\ell m, \ell' m'} $ becomes diagonal, i.e. $N_{\ell m, \ell' m'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$. But for a realistic setup with anisotropic instrumental noise and partial sky coverage, it will be non-diagonal and can be dense.
 
-The goal is to sample the joint density $P(\theta, s_{\ell m} | d_{\ell m})$ where $\theta$ is the set of cosmological parameters. In this work, we limit ourselves to the 6 $\Lambda$CDM parameters, i.e. $\theta=(\Omega_{\textrm{b}}h^2, \Omega_{\textrm{CDM}}h^2, H_0, \tau, A_s, n_s)$.
+The goal is to sample the joint density $P(\theta, s_{\ell m} | d_{\ell m})$ where $\theta$ is the set of cosmological parameters. In this work, we sample the 6 $\Lambda$CDM parameters, i.e. $\theta=(\Omega_{\textrm{b}}h^2, \Omega_{\textrm{CDM}}h^2, H_0, \tau, A_s, n_s)$. Here, $\Omega_\mathrm{b}$ and $\Omega_\mathrm{CDM}$ are the current density of baryonic and cold dark matter, respectively. $H_0$ si the Hubble constant today, while $h$ is the normalized Hubble constant, $h=\frac{H_0}{100\,\mathrm{km s}^{-1} \mathrm{MPc}^{-1}}$. $\tau$ is the optical depth at reionization, $A_s$ is the amplitude and $n_s$ is the tilt of the scalar primordial power spectrum.
 
 \subsection{Joint sampling}
 
@@ -235,7 +235,7 @@ If we only analyze temperature fluctuations in a setup with isotropic noise and 
 \end{align}
 In a more realistic scenario with anisotropic noise and masking, Eq.~\eqref{eq:mapmakingeq} becomes a computationally hard equation to solve. In Appendix A, we show how we can solve this equation for a constant latitude mask with isotropic noise computationally fast. We will use this solution to verify our algorithm implementation in Commander later.
 
-Following \cite{racine:2016} we make a slight altercation. Instead of generating a new fluctuation term that we enter into the acceptance rate, we scale the fluctuation term of the last accepted sample.
+Following \cite{racine:2016} we make a slight altercation. Instead of generating a new fluctuation term that we enter into the acceptance rate, we scale the fluctuation map of the last accepted sample.
 \begin{equation}
     f_{\ell m}^{\textrm{scaled}, i+1} = \left(\textbf{C}^{i+1}_{\ell}\right)^{1/2}\left(\textbf{C}^{i}_{\ell}\right)^{-1/2} f_{\ell m}^{i},
 \end{equation}
@@ -247,7 +247,7 @@ C^{TE}_\ell & C^{EE}_\ell & 0\\
 0 & 0 & C^{BB}_\ell
 \end{bmatrix}.
 \end{equation}
-Here, we have set the parity-odd power spectra to zero, i.e. $C^{EB}_\ell =C^{TB}_\ell = 0$.
+Here, we have set the parity-odd power spectra to zero, i.e. $C^{EB}_\ell =C^{TB}_\ell = 0$ as predicted by \LCDM.
 
 The acceptance rate for this proposal was calculated in \cite{racine:2016} to be
 \begin{equation}
@@ -320,19 +320,17 @@ We have shown that the algorithm presented in \cite{racine:2016} works well in t
 \label{sec:appendix}
 
 
-The goal of this appendix is to show how we can calculate $N_{\ell m, \ell' m'}^{-1}$ exactly for a constant latitude mask and uniform noise, and how this makes the map making equation computationally faster to solve. The noise can be written as this in pixel space:
+The goal of this appendix is to show how we can calculate $N_{\ell m, \ell' m'}^{-1}$ exactly for a constant latitude mask and uniform noise, and how this expression makes the map making equation computationally fast to solve. The noise can be written as this in pixel space:
 $$
 \left(N^{-1} \right)_{pp'} = \frac{N_{\mathrm{pix}}}{\sigma^2} \delta_{pp'} H(|\theta(p) -\pi/2|-b).
 $$
 where $H$ is the Heavyside function, meaning that we mask every pixel $p$ where $|\theta(p) -\pi/2| < b$ for some latitude $b$ in radians. For a masked pixel, $\left(N^{-1} \right)_{pp}=0$ which means that $N_{pp} = \infty$ for that pixel, as we want.
 
-We then want to calculate $\left(N^{-1}\right)_{\ell m\ell'm'}$. Using that
+Using that
 $$
 \left(N^{-1}\right)_{pp'} = \sum_{\ell m}\sum_{\ell' m'} \left(N^{-1}\right)_{\ell m, \ell'm'} Y_{\ell m}\left(p\right)Y^*_{\ell' m'}\left(p'\right),
 $$
-where $Y_{\ell m}\left(p\right) = Y_{\ell m}\left(\hat{n}(p)\right)$ and $\hat{n}(p)$ are the spherical coordinates for pixel $p$.
-
-Transforming this to spherical harmonics space gives us
+where $Y_{\ell m}\left(p\right) = Y_{\ell m}\left(\hat{n}(p)\right)$ and $\hat{n}(p)$ are the spherical coordinates for pixel $p$, we can transform to spherical harmonics space,
 \begin{align}
 \nonumber
 \left(N^{-1}\right)_{\ell m, \ell' m'} &= \sum_{p p'}\left(N^{-1}\right)_{pp'}Y^{*}_{\ell m}(p)Y_{\ell' m'}(p')\\
@@ -344,7 +342,7 @@ Transforming this to spherical harmonics space gives us
 \end{align}
 Here, we used that $Y_{\ell m}(p) = \tilde{Y}_{\ell m} e^{im\phi}$ where it is implied that $\tilde{Y}_{\ell m}=\tilde{Y}_{\ell m}(\theta)$, and $\theta$ and $\phi$ are functions of $p$.
 
-We now take the limit where there is an infinite amount of pixels with equal surface area each. In this limit, we change the sum into an integration where we account for the number of pixels per area element
+We now take the limit where there is a large amount of pixels with equal surface area each. In this limit, we change the sum into an integration where we account for the number of pixels per area element
 \begin{equation}
 \sum_p \rightarrow \frac{N_{\mathrm{pix}}}{4\pi}\int d\Omega  = \frac{N_{\mathrm{pix}}}{4\pi}\int_{0}^{2\pi} d\phi \int_{0}^{\pi} d\theta \sin(\theta).
 \end{equation}
@@ -363,14 +361,14 @@ This gives us in spherical coordinates
 \end{align}
 Writing the above equation in terms of Legendre polynomials $P_{\ell m}(\cos(\theta)))$, we have
 $\Tilde{Y}_{\ell m} = \Delta_{\ell m}P_{\ell m}(\cos(\theta)))$, where ${\Delta_{\ell m}=(-1)^m \sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell - m)!}{(\ell+m)!}}}$.
- Writing $x=\cos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or antisymmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and antisymmetric when $\ell+m$ = odd. Since $m=m'$, an important feature is that the two integrals cancel each other if $\ell+\ell' =$ odd. We therefore only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, for $\ell + \ell'=$ even, we get
+ Writing $x=\cos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or antisymmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and antisymmetric when $\ell+m$ = odd. Since $m=m'$, we note that the two integrals cancel each other if $\ell+\ell' =$ odd. We, therefore, only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, for $\ell + \ell'=$ even, we get
 \begin{align}
 \nonumber
 \left(N^{-1}\right)_{\ell m, \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{0}^{\pi/2-b} d\theta \sin(\theta)\Tilde{Y}_{\ell m}(\theta)\Tilde{Y}_{\ell' m'}(\theta)\\
 \label{eq:finished_n_inv}
 &=\frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{\sin(b)}^{1} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)).
 \end{align}
-This integral can be solved numerically by gridding $x$ and the spherical harmonics without phase can be calculated in Python using a library like ...
+This integral can be solved numerically by gridding $x$, and the spherical harmonics where the phase factor is removed can be calculated in Python using a library like ...
 
 Since the masks used for this work are $\sin(b)\geq 0.2$, we require much fewer grid points for $x$ if we use the following identity for $\ell+\ell' = $ even:
 \begin{align}
