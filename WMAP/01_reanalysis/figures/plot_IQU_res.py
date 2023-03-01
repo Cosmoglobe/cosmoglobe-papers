@@ -55,6 +55,7 @@ for i,m in enumerate(maps):
 
 fnames = glob(f"{DIR}/res_*WMAP*k??????.fits")
 fnames.sort()
+
 fnames_i = []
 for b in bands:
   for f in fnames:
@@ -72,6 +73,8 @@ W1 = hp.read_map(fnames[6], field=(0, 1, 2))*1e3
 W2 = hp.read_map(fnames[7], field=(0, 1, 2))*1e3
 W3 = hp.read_map(fnames[8], field=(0, 1, 2))*1e3
 W4 = hp.read_map(fnames[9], field=(0, 1, 2))*1e3
+
+maps = [K, Ka, Q1, Q2, V1, V2, W1, W2, W3, W4]
 
 for i,m in enumerate(maps):
     cg.plot(m, sig=0, min=-10, max=10, fwhm=5*u.deg, cbar=False,
