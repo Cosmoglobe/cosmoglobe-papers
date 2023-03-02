@@ -10,6 +10,7 @@ import plotly.colors as pcol
 import matplotlib as mpl
 
 from glob import glob
+from scipy.interpolate import interp1d
 
 cmap = "Plotly"
 colors = getattr(pcol.qualitative, cmap)
@@ -88,13 +89,10 @@ chain_names = ['023-WMAP_K',
                '090-WMAP_W4']
 
 for i in range(40):
-#ax1 = plt.subplot2grid((10, 4), (0, 0))
     if i % 4 == 0:
         currax = plt.subplot2grid((10, 4), (i//4, i % 4))
         firstax = currax
-#        axs.append(plt.subplot2grid((10, 4), (i//4, i%4)))
     else:
-#        axs.append(plt.subplot2grid((10, 4), (i//4, i%4), sharey=axs[i//4]))
         currax = plt.subplot2grid((10, 4), (i//4, i%4), sharey=firstax)
     axs.append(currax)
     data = np.loadtxt(fnames[i])
@@ -105,12 +103,8 @@ for i in range(40):
     std = np.std(tot_samples, axis=0)
     curr_wmap_data = wmap_data[i//4]
     accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
-    #x_chain = np.arange(52200, 52200 + len(curr_wmap_data[:, 0]))
     plt.errorbar(curr_wmap_data[:, 0][accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1)
-#    plt.plot(curr_wmap_data[:,0][accept], mean[i%4][accept], linewidth=0.5, color='black')
-#    plt.plot(curr_wmap_data[:,0],curr_wmap_data[:,(i % 4) + 1], linewidth=1, color='black')
     plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red', zorder=2)
-#    plt.errorbar(x_chain[accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5)
     plt.grid(False, which="major", axis="both")
     if i >= 36:
         plt.setp( currax.get_xticklabels(), visible=True)
@@ -141,3 +135,60 @@ for i in range(0, len(axs), 4):
 
 # save to pdf with right bounding box
 plt.savefig("../../figures/instpar_CG_gain_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+
+plt.close('all')
+
+
+fig = plt.figure(figsize=(cm2inch(width), 1.35*cm2inch(width)))
+
+fig.tight_layout()
+fig.subplots_adjust(hspace=0,wspace=0)
+
+for i in range(40):
+    if i % 4 == 0:
+        currax = plt.subplot2grid((10, 4), (i//4, i % 4))
+        firstax = currax
+    else:
+        currax = plt.subplot2grid((10, 4), (i//4, i%4), sharey=firstax)
+    axs.append(currax)
+    data = np.loadtxt(fnames[i])
+    samples1 = chain1.get(f'tod/{chain_names[i//4]}/gain')
+    samples2 = chain2.get(f'tod/{chain_names[i//4]}/gain')
+    tot_samples = np.concatenate((samples1[50:],  samples2[50:]), axis=0)
+    mean = np.mean(tot_samples, axis=0)
+    std = np.std(tot_samples, axis=0)
+    curr_wmap_data = wmap_data[i//4]
+    accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
+    f0 = interp1d(curr_wmap_data[:, 0][accept],mean[i%4, :][accept])
+    f0_err = interp1d(curr_wmap_data[:,0][accept], std[i%4][accept])
+    f1 = interp1d(data[::thin,0], abs(data[::thin,1]))
+    t = np.linspace(curr_wmap_data[:, 0][accept].min(), curr_wmap_data[:, 0][accept].max(), 1000)
+    plt.errorbar(t, 100*(f0(t)/f1(t) - 1), yerr=100*f0_err(t)/f1(t), linewidth=0.5, color='black', zorder=1)
+    plt.grid(False, which="major", axis="both")
+    if i >= 36:
+        plt.setp( currax.get_xticklabels(), visible=True)
+    else:
+        plt.setp( currax.get_xticklabels(), visible=False)
+    if i % 4 == 0:
+        plt.setp( currax.get_yticklabels(), visible=True)
+    else:
+        plt.setp( currax.get_yticklabels(), visible=False)
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    plt.text(54500, 1, plot_texts[i], fontsize=10)
+    plt.ylim([-1.5, 1.5])
+    if i % 4 == 0:
+        plt.ylabel(r"$\Delta g/g$ [\%]");
+        currax.yaxis.labelpad = 10*width/17.
+    if i >= 36:
+        if i % 4 == 0:
+            plt.xticks([52000,53000,54000,55000], [r"$52\,000$", r"$53\,000$", r"$54\,000$", r"$55\,000$"])
+        else:
+            plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
+        ## labels
+        plt.xlabel(r"MJD");
+
+for i in range(0, len(axs), 4):
+    for ticklabel in axs[i].yaxis.get_ticklabels():
+        ticklabel.set_rotation("vertical")
+
+plt.savefig("../../figures/instpar_CG_dgain_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
