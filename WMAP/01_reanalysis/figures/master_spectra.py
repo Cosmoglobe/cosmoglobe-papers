@@ -115,6 +115,8 @@ for i in range(len(cg_maps)):
 
     axs3[n].semilogx(ell_eff, Clhat_W / Clhat_C)
     axs3[n].text(0.25, 0.75, r"\textit{" + bands[i] + "}", transform=axs3[n].transAxes)
+    #if i == 5:
+    #    n += 3
     if i == 5:
         n += 3
     else:
@@ -224,28 +226,30 @@ for i in range(len(cg_maps)):
     axs4[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs4[n].transAxes)
     axs5[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs5[n].transAxes)
     axs6[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs6[n].transAxes)
-    if i == 5:
+    #if i == 5:
+    #    n += 3
+    if i == 3:
         n += 3
     else:
         n += 1
 
-axs1[6].axis("off")
-axs1[7].axis("off")
-axs2[6].axis("off")
-axs2[7].axis("off")
-axs3[6].axis("off")
-axs3[7].axis("off")
-axs4[6].axis("off")
-axs4[7].axis("off")
-axs5[6].axis("off")
-axs5[7].axis("off")
-axs6[6].axis("off")
-axs6[7].axis("off")
+axs1[2].axis("off")
+axs1[3].axis("off")
+axs2[2].axis("off")
+axs2[3].axis("off")
+axs3[2].axis("off")
+axs3[3].axis("off")
+axs4[2].axis("off")
+axs4[3].axis("off")
+axs5[2].axis("off")
+axs5[3].axis("off")
+axs6[2].axis("off")
+axs6[3].axis("off")
 
-axs1[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
-axs2[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
-axs3[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
-axs4[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
+axs1[2].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
+axs2[2].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
+axs3[2].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
+axs4[2].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
 
 fig1.supxlabel(r"$\ell$")
 fig2.supxlabel(r"$\ell$")

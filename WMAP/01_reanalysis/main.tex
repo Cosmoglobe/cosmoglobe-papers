@@ -1508,48 +1508,48 @@ The variation of these TOD corrections is more important than the absolute ampli
 
 
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.32\textwidth]{figures/megadiff_K_I.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_K_Q.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_K_U.pdf}\\\vspace*{-4mm}
-	\includegraphics[width=0.32\textwidth]{figures/megadiff_Ka_I.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_Ka_Q.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_Ka_U.pdf}\\\vspace*{-4mm}
-	\includegraphics[width=0.32\textwidth]{figures/megadiff_Q_I.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_Q_Q.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_Q_U.pdf}\\\vspace*{-4mm}
-	\includegraphics[width=0.32\textwidth]{figures/megadiff_V_I.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_V_Q.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_V_U.pdf}\\\vspace*{-4mm}
-	\includegraphics[width=0.32\textwidth]{figures/megadiff_W_I.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_W_Q.pdf}
-        \includegraphics[width=0.32\textwidth]{figures/megadiff_W_U.pdf}\\\vspace*{-4mm}
-%	\includegraphics[width=0.8\textwidth]{figures/cbar_10uK_symlog2.pdf}
-	\caption{Difference maps between the \cosmoglobe\ and 9-year \WMAP\ frequency maps. Columns show Stokes $T$, $Q$, and $U$ parameter maps, while rows show \K-, \Ka-, \Q-, \V-, and \W-band maps. The temperature maps are smoothed to an angular resolution of $1^{\circ}$ FWHM, while the polarization maps are smoothed to $5^{\circ}$ FWHM.}
-        \label{fig:megadiff_wmap}
-\end{figure*}
 
 
 %\subsection{Angular power spectra}
 
 %Will combine these spectra shortly
-As a final inspection of the \cosmoglobe\ map products of themselves, we 
+As a final inspection of the \cosmoglobe\ map products of themselves, we take the angular power spectra of the maps themselves and compare with the \WMAPnine\ results in Figs.~\ref{fig:tt_cg}--\ref{fig:bb_cg}. To compute the power spectrum, we mask the data using the extended temperature analysis mask which allows a sky fraction of 68.8\,\% and obtain the pseudo-$C_\ell$ power spectra using the \texttt{NaMaster} \citep{namaster}\footnote{\url{https://github.com/LSSTDESC/NaMaster}} \texttt{compute\_full\_master} routine, returning a set of decoupled bandpowers.
+
+As the temperature power spectra are signal-dominated up to $\ell\sim200$ for all DAs, it is more useful to look at the ratio of spectra in Fig.~\ref{fig:tt_ratio}. Here we see that the spectra are conssitent with each other at all but the very largest and smallest scales. The largest scale differences are due to mode-coupling effects -- the \WMAPnine\ maps were produced by removing the Solar dipole in the timestream before mapmaking, while the \cosmoglobe\ maps needed a dipole estimate to be removed as a post-processing step. The small scale differences above $\ell\sim200$ can be attributed to the white noise treatment. In particular, the \WMAPnine\ processing gain solution varies every 23\,s compared to the \cosmoglobe\ solution which uses constant gain per scan. Conversely, the \cosmoglobe\ radiometer noise estimate varies per scan, whereas there is no mention of raw instrumental noise variation with time in the \WMAP\ suite of papers.
+
 
 \begin{figure*}
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/TT_spectra.pdf}
 	\caption{TT power spectra}
+	\label{fig:tt_cg}
 \end{figure*}
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/TT_spectra_ratio.pdf}
+	\caption{TT ratios}
+	\label{fig:tt_ratio}
+\end{figure*}
+
+The $E$-mode power spectra, displayed in Fig.~\ref{fig:ee_cg}, mainly noise and polarized synchrotron emission. As expected, the large scale foreground-dominated multipoles decrease in amplitude according to the relative amplitude of the synchrotron spectrum. Aside from the $\ell=8$ \W2 multipole, the \cosmoglobe\ power spectra are well-behaved across all bands. The large fluctuations in the \WMAP\ power spectrum, in particular \W2 and \W4, are almost completely gone in the \cosmoglobe\ analysis.
+
+The $B$-mode power spectra, displayed in Fig.~\ref{fig:bb_cg}, should follow the same pattern as in the $E$-modes, but with foregrounds reduced by a factor of $\simeq2$ \citep{bennett2012}. Indeed, with the notable exception of the \Ka\ and \Q1 $\ell=3$ multipoles and the \W3 $\ell=7$ multipole, this pattern is largely borne out, with nearly white noise across all angular scales. The $C_{\ell=3}^\mathrm{BB}$ mode has been identified as being poorly measured by, e.g., \citet{jarosik2010}, due to its symmetry aligning with $\gtrsim10\,\mathrm{min}$ signals in the TOD induced by the \WMAP\ scan strategy.
+
+In general, we find that the reprocessed \WMAP\ maps produced in the \cosmoglobe\ framework have map and power spectrum properties that have few artifacts of the observation strategy. To fully assess the quality of these frequency maps compared to the official \WMAPnine\ products, we compare the maps explicitly in Sect.~\ref{sec:wmap_comparison}.
+
+
+
 \begin{figure*}
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/EE_spectra.pdf}
 	\caption{EE power spectra}
+	\label{fig:ee_cg}
 \end{figure*}
 \begin{figure*}
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/BB_spectra.pdf}
 	\caption{BB power spectra}
+	\label{fig:bb_cg}
 \end{figure*}
 %\begin{figure*}
 %	\centering
@@ -1566,21 +1566,16 @@ As a final inspection of the \cosmoglobe\ map products of themselves, we
 %	\includegraphics[width=0.8\textwidth]{figures/BB_spectra_zoom.pdf}
 %	\caption{BB power spectra zoom}
 %\end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.8\textwidth]{figures/TT_spectra_ratio.pdf}
-	\caption{TT ratios}
-\end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.8\textwidth]{figures/EE_spectra_ratio.pdf}
-	\caption{EE ratios}
-\end{figure*}
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.8\textwidth]{figures/BB_spectra_ratio.pdf}
-	\caption{BB ratios}
-\end{figure*}
+%\begin{figure*}
+%	\centering
+%	\includegraphics[width=0.8\textwidth]{figures/EE_spectra_ratio.pdf}
+%	\caption{EE ratios}
+%\end{figure*}
+%\begin{figure*}
+%	\centering
+%	\includegraphics[width=0.8\textwidth]{figures/BB_spectra_ratio.pdf}
+%	\caption{BB ratios}
+%\end{figure*}
 
 
 %\section{Preliminary astrophysical results}
@@ -1714,6 +1709,27 @@ W4 &   15.5  & -6.8 & 52 \cr
   \label{fig:Kimbal}
 \end{figure}
 
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.32\textwidth]{figures/megadiff_K_I.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_K_Q.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_K_U.pdf}\\\vspace*{-4mm}
+	\includegraphics[width=0.32\textwidth]{figures/megadiff_Ka_I.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_Ka_Q.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_Ka_U.pdf}\\\vspace*{-4mm}
+	\includegraphics[width=0.32\textwidth]{figures/megadiff_Q_I.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_Q_Q.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_Q_U.pdf}\\\vspace*{-4mm}
+	\includegraphics[width=0.32\textwidth]{figures/megadiff_V_I.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_V_Q.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_V_U.pdf}\\\vspace*{-4mm}
+	\includegraphics[width=0.32\textwidth]{figures/megadiff_W_I.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_W_Q.pdf}
+        \includegraphics[width=0.32\textwidth]{figures/megadiff_W_U.pdf}\\\vspace*{-4mm}
+%	\includegraphics[width=0.8\textwidth]{figures/cbar_10uK_symlog2.pdf}
+	\caption{Difference maps between the \cosmoglobe\ and 9-year \WMAP\ frequency maps. Columns show Stokes $T$, $Q$, and $U$ parameter maps, while rows show \K-, \Ka-, \Q-, \V-, and \W-band maps. The temperature maps are smoothed to an angular resolution of $1^{\circ}$ FWHM, while the polarization maps are smoothed to $5^{\circ}$ FWHM.}
+        \label{fig:megadiff_wmap}
+\end{figure*}
 
 \subsection{Consistency within \WMAP\ channels}
 \label{sec:internal_consistency}
@@ -1914,8 +1930,14 @@ It has been noted since COBE-DMR that the quadrupole amplitude of our CMB is low
 \subsubsection{Angular temperature power spectrum}
 \label{sec:cls}
 
+\begin{figure*}
+	\includegraphics[width=\textwidth]{figures/cl_TT_CG_v1.pdf}
+	\caption{Temperature power spectra from \cosmoglobe, \bp, \WMAPnine, and \Planck\ DR4, compared with the \Planck\ 2018 \LCDM\ prediction.}
+\end{figure*}
+
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/GaussCl_CG_lmax50.pdf}
+	\caption{Low-multipole temperature power spectrum}
 \end{figure}
 
 
