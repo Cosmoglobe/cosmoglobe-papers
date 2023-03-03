@@ -165,6 +165,6 @@ plt.savefig(f'diff_CG_U.pdf', bbox_inches='tight')
 plt.show()
 
 cg.standalone_colorbar("planck", ticks=[-10,0,10], extend='both',
-    unit=r"$\mathrm{\mu K}$", fontsize=18, width=6)
+    unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
 
 plt.savefig('cbar_10uK.pdf', bbox_inches='tight')

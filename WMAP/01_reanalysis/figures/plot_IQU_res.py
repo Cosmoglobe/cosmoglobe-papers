@@ -89,15 +89,15 @@ for i,m in enumerate(maps):
 
 
 cg.standalone_colorbar("planck", ticks=[-5,0,5], extend='both',
-        unit=r"$\mathrm{\mu K}$", fontsize=18, width=6)
+        unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
 
 plt.savefig('cbar_5uK.pdf', bbox_inches='tight')
 
 cg.standalone_colorbar("planck", ticks=[-3,0,3], extend='both',
-        unit=r"$\mathrm{\mu K}$", fontsize=18, width=6)
+        unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
 plt.savefig('cbar_3uK.pdf', bbox_inches='tight')
 
 cg.standalone_colorbar("planck", ticks=[-10,0,10], extend='both',
-        unit=r"$\mathrm{\mu K}$", fontsize=18, width=6)
+        unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
 
 plt.savefig('cbar_10uK.pdf', bbox_inches='tight')

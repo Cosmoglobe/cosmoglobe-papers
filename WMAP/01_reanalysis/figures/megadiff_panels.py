@@ -413,6 +413,6 @@ plt.close()
     
 cg.standalone_colorbar("planck_log",  ticks=[-10, -7.5, -5, -2.5, -1, 0, 1, 2.5, 5, 7.5, 10],
     extend='both',
-            unit=r"$\mathrm{\mu K}$", width=width*2)
+            unit=r"$\mathrm{\mu K_\mathrm{CMB}}$")#, width=width*2)
 plt.savefig('cbar_10uK_symlog2.pdf', bbox_inches='tight')
 
