@@ -4,6 +4,7 @@ from matplotlib.ticker import MaxNLocator
 import numpy as N
 import scipy.stats
 import healpy as hp
+import cosmoglobe
 
 import plotly.colors as pcol
 import matplotlib as mpl
@@ -120,31 +121,6 @@ for i in range(40):
     if i % 4 == 3:
         ind2name[i] = f'{name}24'
 
-data = {}
-gain = {}
-mask = {}
-
-distinct_chans = list(set(ind2chan.values()))
-
-for channel in distinct_chans:
-    data[channel] = np.loadtxt(f'sigma0_CG_{channel}_v1.dat')
-    gain[channel] = np.loadtxt(f'gain_CG_{channel}_v1.dat')
-    mask[channel] = np.loadtxt(f'mask_CG_{channel}_v1.dat')
-    if channel in ('023-WMAP_K', '030-WMAP_Ka'):
-        factor = 12
-    elif 'Q' in channel:
-        factor = 15
-    elif 'V' in channel:
-        factor = 20
-    elif 'WMAP_W' in channel:
-        factor = 30
-    else:
-        print(channel)
-        print('OOPs')
-    data[channel][:, 1:5] = data[channel][:, 1:5] / gain[channel][:, 1:5] * np.sqrt(1.536 / factor) / np.sqrt(2.)
-    inds = np.where(mask[channel] == 0)
-    data[channel][inds] = np.nan
-
 # Create the plot
 fig = plt.figure(figsize=(cm2inch(width), 1.35*cm2inch(width)))
 # this should be changed for making a panel of multiple figures
@@ -169,6 +145,10 @@ plot_text_coords = ([[52200, 0.835]] * 4 +  # K
     [[52200, 2.35]] * 4 # W4
 )
 
+chain_fname1 = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206/chain_c0001.h5'
+chain_fname2 = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203/chain_c0001.h5'
+chain1 = cosmoglobe.h5.chain.Chain(chain_fname1)
+chain2 = cosmoglobe.h5.chain.Chain(chain_fname2)
 axs = []
 for i in range(40):
     if i % 4 == 0:
@@ -177,19 +157,26 @@ for i in range(40):
     else:
         currax = plt.subplot2grid((10, 4), (i//4, i%4), sharey=firstax)
     axs.append(currax)
-#    data = np.loadtxt(fnames[i])
-#    samples1 = chain1.get(f'tod/{chain_names[i//4]}/gain')
-#    samples2 = chain2.get(f'tod/{chain_names[i//4]}/gain')
-#    tot_samples = np.concatenate((samples1[50:],  samples2[50:]), axis=0)
-#    mean = np.mean(tot_samples, axis=0)
-#    std = np.std(tot_samples, axis=0)
-#    curr_wmap_data = wmap_data[i//4]
-#    accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
-#    plt.errorbar(curr_wmap_data[:, 0][accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1)
-#    plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red', zorder=2)
     channel = ind2chan[i]
-#    plt.plot(dataK[:,0],dataK[:,1], linewidth=1, color='black', label='CG')
-    plt.plot(data[channel][:, 0], data[channel][:, (i % 4) + 1], linewidth=1, color='black', label='CG')
+    if channel in ('023-WMAP_K', '030-WMAP_Ka'):
+        factor = 12
+    elif 'Q' in channel:
+        factor = 15
+    elif 'V' in channel:
+        factor = 20
+    elif 'WMAP_W' in channel:
+        factor = 30
+    else:
+        print(channel)
+        print('OOPs')
+    samples1 = chain1.get(f'tod/{channel}/xi_n')[:, 0, :, :] / chain1.get(f'tod/{channel}/gain') * np.sqrt(1.536 / factor) / np.sqrt(2.0)
+    samples2 = chain2.get(f'tod/{channel}/xi_n')[:, 0, :, :] / chain2.get(f'tod/{channel}/gain') * np.sqrt(1.536 / factor) / np.sqrt(2.0)
+    tot_samples = np.concatenate((samples1[50:],  samples2[50:]), axis=0)
+    mean = np.mean(tot_samples, axis=0)
+    std = np.std(tot_samples, axis=0)
+    accept = chain1.get(f'tod/{channel}/accept')[-1, i % 4, :].astype(bool)
+    mjd = chain1.get(f'tod/{channel}/MJD')[-1, :]
+    plt.errorbar(mjd[accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1, label = 'CG')
     plt.plot(mjd_wmap,[wmap[i][0],wmap[i][0]], linewidth=1, color='red', linestyle=':', label='WMAP')
     plt.plot(mjd_gsfc,[gsfc[i][0],gsfc[i][0]], linewidth=1, color='orange', linestyle=':', label='GSFC')
 
@@ -231,4 +218,3 @@ for i in range(0, len(axs), 4):
 
 # save to pdf with right bounding box
 plt.savefig("../../figures/instpar_CG_sigma0_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
-
