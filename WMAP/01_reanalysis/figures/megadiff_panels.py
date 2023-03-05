@@ -90,7 +90,7 @@ cg.plot(
     min=-lim,
     max=lim,
     cbar=False,
-    fwhm=1 * u.deg,
+    fwhm=2 * u.deg,
     #remove_dip='auto',
 )
 plt.savefig('megadiff_K_I.pdf')
@@ -176,7 +176,7 @@ cg.plot(
     max=lim,
     cbar=False,
     #remove_dip='auto',
-    fwhm=1 * u.deg,
+    fwhm=2 * u.deg,
 )
 plt.savefig('megadiff_Ka_I.pdf')
 plt.close()
@@ -216,7 +216,7 @@ cg.plot(
     llabel="Q",
     min=-lim,
     max=lim,
-    fwhm=1 * u.deg,
+    fwhm=2 * u.deg,
     remove_mono="auto",
     cbar=False,
     #remove_dip='auto',
@@ -299,7 +299,7 @@ cg.plot(
     min=-lim,
     max=lim,
     remove_mono="auto",
-    fwhm=1 * u.deg,
+    fwhm=2 * u.deg,
     cbar=False,
     #remove_dip='auto',
 )
@@ -381,7 +381,7 @@ cg.plot(
     extend="both",
     min=-lim,
     max=lim,
-    fwhm=1 * u.deg,
+    fwhm=2 * u.deg,
     remove_mono="auto",
     cbar=False,
     #remove_dip='auto',
