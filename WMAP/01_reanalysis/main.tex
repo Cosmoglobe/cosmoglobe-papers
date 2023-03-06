@@ -449,16 +449,36 @@ In general, this model is nearly identical to the one adopted by \citet{bp01}. H
 %	\caption{AME exponential}
 %\end{figure}
 
-\subsection{Priors}
+\subsection{Priors and poorly measured modes}
 \label{sec:priors}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{figures/ame_g01_178.pdf}
+	\includegraphics[width=\columnwidth]{figures/ame_g01_181.pdf}
+	\includegraphics[width=\columnwidth]{figures/ame_g01_185.pdf}
+	\includegraphics[width=0.5\columnwidth]{figures/cbar_100uK.pdf}
+	\caption{Dependence on AME amplitude evaluated at 22\,GHz as a function of absolute calibration. Each map comes from the fifth iteration of a dedicated \commander\ run that fixed $g_0$ while letting all other TOD parameters be fit. The values of $g_0=1.178$ and $g_0=1.185$ represent $3.5\sigma$ draws from the prior distribution with mean $1.1815$ and standard deviation $0.001$. The dipole visible in the top and bottom panels is aligned perfectly with the Solar dipole, and is directly due to variations in the \K-band absolute calibration.}
+	\label{fig:g0_ame}
+\end{figure}
 
-The model described in Sects.~\ref{sec:wmap_instmodel} and \ref{subsec:sky_model} is prone to several degeneracies, allowing for unphysical solutions to be explored in the Gibbs chain. Some degeneracies are expected in the context of calibration -- as shown in \citet{bp07}, there is a perfect degeneracy between the absolute calibration and the sky amplitude. In this case, the orbital dipole's amplitude is set by monopole temperature from \citet{fixsen2009}. At the same time, less obvious degeneracies can become apparent in an end-to-end sampling routine. For absolute calibration, \citet{bp07} showed that the $C_{\ell=2}^\mathrm{EE}$ mode can mimic the orbital dipole in timestreams, necessitating applying a prior specifically on this multipole.
+The model described in Sects.~\ref{sec:wmap_instmodel} and \ref{subsec:sky_model} is prone to several degeneracies, allowing for unphysical solutions to be explored in the Gibbs chain. Such unphysical degeneracies are highly undesirable for two main reasons. First, they increase the statistical uncertainties on most (if not all) other important parameters in the model --- sometimes to the point that the target quantity is rendered entirely unmeasurable. Secondly, and perhaps even more importantly, the data model described above is known to be a (sometimes crude) approximation to the real observations, and there will invariably be modelling errors. Degeneracies then generally tend to amplify their impact, in the sense that any unconstrained parameters will typically be used to fit such small modelling errors. For both these reasons, it is generally preferrable to impose either informative or algorithmic priors on the unconstrained parametes, rather than to leave them entirely unconstrained in the model.
 
-For component separation, the \bp\ analysis required spatial priors on the foreground amplitudes and external priors on all spectral indices \citep{bp13}.
+An important example of an algorithmic prior is the foreground smoothing prior used by \citet{planck2016-l04,bp12}, which dictates that astrophysical foregrounds has to be smooth on small angular scales. This is justified by noting that the angular spectrum on large and intermediate scales typically falls as a power-law in multipole space; extrapolating this into the noise dominated regime prevents the overall foreground model from becoming degenerate at small scales.
 
-\textit{Write more} We added one high S/N band whose absolute calibration is highly degenerate with the sky signal. Therefore, we use the same amplitude priors, and keep the spectral indices as prior-sampled.
+Correspondingly, important examples of informative priors are the use of HFI constraints on the thermal dust SED parameters, $\beta_{\mathrm{d}}$ and $T_{\mathrm{d}}$ in \bp. Because that analysis only included the highest HFI frequency channels, they had very little constraining power on the thermal dust SED. Rather than trying to fit these directly from LFI \WMAP\ alone, they instead imposed informative Gaussian priors on each of these parameters, as derived from the HFI observations \citep{planck2016-l04}.
 
+In the current analysis, and unless otherwise noted, we adopt the same algorithmic and informative priors as \citet{bp01}. However, there are three notable exceptions, as detailed below, all of which are dictated either by the fact that we include the \WMAP\ \K-band channel (which has a strong impact on the low-frequency foreground model), or by the fact that we now process the \WMAP\ data in time-domain, and therefore are subject to the same degeneracies as the official \WMAP\ low-level pipeline, and that were solved with similar implicit or explicit prior in the original analysis.
+
+First and foremost, and as detailed in Sect.~\ref{sec:ame_Kband}, we observe in the current analysis a very strong degeneracy between the absolute calibration of the \K-band channel and the dipole of the AME map. This makes intuitively sense, since \K-band is by far the strongest channel in terms of AME signal-to-noise ratio, exceeding that of LFI 30\,GHz by about a factor of four; see Sect.~\ref{sec:s2n}. Effectively, a small variation in the absolute gain may be countered by subtracting corresponding CMB Solar dipole variation from the AME map, and end up with a nearly identical total $\chi^2$; the orbital CMB dipole is not bright enough at 23\,GHz relative to AME emission to break this degeneracy.
+
+This is illustrated in Fig.~\ref{fig:g0_ame}, which shows the derived AME amplitude map for three different values of the mean \K-band gain, $g_0$, namely 1.178, 1.181, and 1.184\,du/mK; the extreme values differ only by 0.25\,\%. All of these three values appear equally acceptable from a pure $\chi^2$ point-of-view, relative to the noise level and modelling errors of these data. At the same time, it is obviously clear from visual inspection that only the middle value actually makes physical sense, as compared to what we know about the structure of the Milky Way. For this reason, we apply a Gaussian prior on the absolute \K-band gain of $g_0 \sim N(1.181, 0.001^2)$ in the following, to regularize this issue. Thus, the extreme panels in Fig.~\ref{fig:g0_ame} represent $\pm2.5\,\sigma$ outliers, respectively, and will appear in our Markov chains with a frequency of about 1-in-100.
+
+It is reasonable to ask why the \WMAP\ pipeline produced sensible results without applying such a prior during their calibration procedure. It is then important to recall the main difference between the two approaches: While \cosmoglobe\ attempts to fit a single overall parametric model to all data at once, the \WMAP\ pipeline calibrated each channel independently by co-adding data from one channel into a map; subtracting that map from the TOD; fitting the gain to the orbital dipole; and iterating until the solution became stable. An obvious advantage of such a single-channel approach is that the solution is independent of the assumed sky model. However, an equally obvious disadvantage is that it is impossible to break any potential inherent degeneracies with that approach; it cannot be combined with external observations in any meaningful way. And one important degeneracy for the \WMAP\ data is a strong degeneracy between the transmission imbalance factors and the polarized sky signal; it is exceedingly difficult to break this degeneracy using data from only one radiometer alone, and the resulting errors will propagate to most other aspects in the analysis. In the global approach, on the other hand, the polarization modes that are poorly measured by \WMAP\ alone are well measured by \Planck, and the result is an overall better fit. 
+
+Second, as reported by \citet{bp14} for the \BP\ analysis, another important degeneracy in the current global model concerns the spectral index of polarized synchrotron emission versus the time-variable detector gain; when fitting both the polarized synchrotron amplitude and calibration freely without priors, the synchrotron spectral index at high Galactic latitudes tend to be biased toward unreasonably flat values, $\beta \lesssim -2.5$, which was likely due to a low level of unmodelled systematics, for instance temperature-to-polarization leakage, rather than true polarized synchrotron emission. In turn, this resulted in a clearly contaminated CMB sky map with a strong synchrotron morphology. To break this degeneracy, \citet{bp14} chose to marginalize the high-latitude synchrotron spectral index over a Gaussian prior of $N(-3.30,0.1^2)$, informed by \citet{planck2016-l05}, rather than estimate it from the data themselves. In the current analysis, we observe the same degeneracy, and the introduction of the \K-band data is not sufficient to break it on its own. For this reason, we choose to apply the same informative prior in the current analysis.
+
+Third and finally, we also marginalize over the AME scale index with a prior of $\beta_{\mathrm{AME}}=N(3.56, 0.1)$. The parameters of these priors were determined by running a grid over $\beta_{\mathrm{AME}}$, and identifying the range that resulted in reasonable residuals near the Galactic plane, similar to that shown in Fig.~\ref{fig:g0_ame} for the absolute calibration of \K-band. We note that this prior should in principle be replaced with direct $\chi^2$-based posterior optimization, combined with a properly tailored analysis mask. However, the recent release of the QUIJOTE data \citep{QUIJOTE_IV}, which covers the all-important 11--19\,GHz frequency range, suggests that the entire AME model should be revisited in a future joint \WMAP+LFI+QUIJOTE analysis, and we therefore leave detailed prior and SED optimization to that work. For further information regarding AME modelling with the current dataset, we refer the interested reader to \citet{watts2023_ame}.
 
 \subsection{Posterior distribution and Gibbs sampling}
 
@@ -1956,15 +1976,6 @@ The quality of the component separation procedure is evaluated through a reduced
 \subsection{Degeneracy between $K$-band calibration and AME dipole}
 \label{sec:ame_Kband}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{figures/ame_g01_178.pdf}
-	\includegraphics[width=\columnwidth]{figures/ame_g01_181.pdf}
-	\includegraphics[width=\columnwidth]{figures/ame_g01_185.pdf}
-	\includegraphics[width=0.5\columnwidth]{figures/cbar_100uK.pdf}
-	\caption{Dependence on AME amplitude evaluated at 22\,GHz as a function of absolute calibration. Each map comes from the fifth iteration of a dedicated \commander\ run that fixed $g_0$ while letting all other TOD parameters be fit. The values of $g_0=1.178$ and $g_0=1.185$ represent $3.5\sigma$ draws from the prior distribution with mean $1.1815$ and standard deviation $0.001$. The dipole visible in the top and bottom panels is aligned perfectly with the Solar dipole, and is directly due to variations in the \K-band absolute calibration.}
-	\label{fig:g0_ame}
-\end{figure}
 
 \subsection{Other minor effects}
 \label{sec:minor}
