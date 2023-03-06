@@ -16,5 +16,5 @@ cg.plot(f'{DIR}/chains_grid_g0_1.185/ame_c0001_k000005.fits', min=-1e2, max=1e2,
 plt.savefig('ame_g01.186.pdf', bbox_inches='tight', dpi=300)
 
 cg.standalone_colorbar("coolwarm", ticks=[-100,0,100], extend='both',
-    unit=r'$\mathrm{\mu K}$ @ 22\,GHz')
+    unit=r'$\mathrm{\mu K_{CMB}}$ @ 22\,GHz')
 plt.savefig('cbar_100uK.pdf', bbox_inches='tight', dpi=300)
