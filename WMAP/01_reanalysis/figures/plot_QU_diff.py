@@ -254,7 +254,7 @@ plt.savefig("KKa_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     deltaKKa,
     sig=2,
-    rlabel="Q, \mathrm{CG}",
+    rlabel="U, \mathrm{CG}",
     llabel=r"\mathit{K}-\mathit{Ka}",
     min=-10,
     max=10,
@@ -574,7 +574,7 @@ plt.savefig("KKa_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
 cg.plot(
     deltaKKa_wmap,
     sig=2,
-    rlabel="Q, \mathrm{WMAP}",
+    rlabel="U, \mathrm{WMAP}",
     llabel=r"\mathit{K}-\mathit{Ka}",
     min=-10,
     max=10,
