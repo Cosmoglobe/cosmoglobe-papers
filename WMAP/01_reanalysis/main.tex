@@ -713,7 +713,7 @@ For a single-horn experiment, i.e., \Planck\ LFI, this reduces to a $3\times3$ m
 	\mathsf P^T_\mathrm{am}\mathsf N^{-1}\mathsf P\boldsymbol m
 	=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d.
 \end{equation}
-This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$ \textcolor{red}{units. K?, uK?}, which typically takes about 20 iterations for producing frequency maps.
+This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$, which typically takes about 20 iterations for producing frequency maps.
 
 
 \subsubsection{Transmission imbalance estimation}
@@ -800,7 +800,7 @@ we redistribute the data into scans of length $2^N$, where $N=22$ for \K--\Q, $N
 These datastream lengths are short enough to be processed quickly and distributed efficiently across multiple processors, while being long enough to properly characterize the noise properties of the timestreams, whose $f_\mathrm{knee}$ values are on the order $1\,\mathrm{mHz}$. Most importantly, \texttt{FFTW} performs fastest when the datastream is of length $2^N$. 
 
 When redistributing the data, timestreams of length $2^N$ were interrupted by events logged in Table~1.8 of \citet{wmapexsupp}.
-When we encountered these events, TOD segments that were interrupted by the event (as well as the final chunk) were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led us to discard these otherwise useful data. In addition, when $>10\%$ of the TOD was flagged, the large number of gaps in the data made the constrained realizations unreliable, as well as biasing the noise PSD parameters. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite being of acceptable quality. We present the full flagging statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data volume can be entirely accounted for by the cuts described in this paragraph. \textcolor{red}{What percentage of the chunks end up actually being $2^N$? Could that go in table 1?}
+When we encountered these events, TOD segments that were interrupted by the event (as well as the final chunk) were appended to the previous TOD, in most cases creating TODs with lengths $>2^N$. We found that events of length $<2^N$ were too short to accurately estimate the noise PSD parameters. This criterion led us to discard these otherwise useful data. In addition, when $>10\%$ of the TOD was flagged, the large number of gaps in the data made the constrained realizations unreliable, as well as biasing the noise PSD parameters. Together, these two effects led to $\simeq1\%$ of the data to be discarded despite being of acceptable quality. We present the full flagging statistics for our maps in Table~\ref{table:flagged_data}. In total, the \Cosmoglobe\ maps use slightly less data than the \textit{WMAP9} official products, which had a total efficiency of $\simeq98.4\%$ \citep{bennett2012}. The total difference in data volume can be entirely accounted for by the cuts described in this paragraph. 
 
 \begin{table}
 \caption{Flagging statistics}              % title of Table
@@ -1039,7 +1039,7 @@ $\chi^2$ of $-7.5$, equivalent to $\chi^2/n=0.993$. The line plots demonstrate a
 To compare the calibrated TODs from \WMAP\ versus \cosmoglobe, it is  important to look at the \WMAP\ gain model,
 \begin{equation}
 	\label{eq:wmap_gain}
-	g=\alpha\frac{\overline V-V_\circ-\beta(T_\mathrm{RXB}-290\,K)}
+	g=\alpha\frac{\overline V-V_\circ-\beta(T_\mathrm{RXB}-290\,\mathrm K)}
 	{T_\mathrm{FPA}-T_\circ}+(m\Delta t+c),
 \end{equation}
 where $\alpha$, $\V_\circ$, $\beta$, $T_\circ$, $m$, and $c$ are fit to a constant value across the mission for each radiometer. $\overline V$ represents the radio frequency bias powers per detector, and $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ are the receiver box and focal plane assembly temperatures, which are recorded every 23.04\,s. 
@@ -1519,7 +1519,7 @@ The variation of these TOD corrections is more important than the absolute ampli
 
 \begin{figure*}
   \center	
-   \includegraphics[width=\linewidth]{figures/components_power_spectrum_std_masked_WMAP_new_rms.pdf}
+   \includegraphics[width=0.95\linewidth]{figures/components_power_spectrum_std_masked_WMAP_new_rms.pdf}
   \caption{Pseudo-spectrum standard deviation for each instrumental
     systematic correction shown in
     Fig.~\ref{fig:tod_corrections} (\emph{thin
@@ -1528,7 +1528,7 @@ The variation of these TOD corrections is more important than the absolute ampli
     standard deviation of the same (i.e., the full systematic
     uncertainty); gray lines show white noise realizations; and black lines
     show the power spectra of the maps themselves. Columns show results for \K,
-    \Ka, \Q1, and \Q2, respectively, while rows show results for each of
+    \Ka, \Q1, and \W4, respectively, while rows show results for each of
     the six polarization states ($TT$, $EE$, $BB$, $TE$, $TB$, and
     $EB$). All spectra have been derived outside the CMB confidence
     mask presented by \citet{bp13} using the HEALPix \texttt{anafast}
@@ -1596,7 +1596,7 @@ In general, we find that the reprocessed \WMAP\ maps produced in the \cosmoglobe
 	\centering
 	\includegraphics{figures/TT_ratio.pdf}
 	\includegraphics{figures/EE_BB_spec.pdf}
-	\caption{TT, EE, and BB specs}
+	\caption{Comparison of the $C_ell^\mathrm{TT}$, $C_\ell^\mathrm{EE}$, and $C_\ell^\mathrm{BB}$ from \WMAPnine\ and \cosmoglobe. Each row corresponds to a different DA, with frequency increasing from top to bottom. \textit{(left):} ratio of $C_\ell^\mathrm{TT}$ from \cosmoglobe\ compared to \WMAPnine. \textit{(middle/right):} $C_\ell^\mathrm{EE/BB}$ power spectra with \WMAPnine\ in blue and \cosmoglobe\ in orange.}
 	\label{fig:map_spectra}
 \end{figure*}
 
