@@ -77,6 +77,7 @@
 \newcommand{\s}[0]{\vec{s}}
 \renewcommand{\a}[0]{\vec{a}}
 \newcommand{\m}[0]{\vec{m}}
+\newcommand{\bv}[0]{\vec{b}}
 \newcommand{\f}[0]{\vec{f}}
 \newcommand{\F}[0]{\tens{F}}
 \newcommand{\T}[0]{\tens{T}}
@@ -286,7 +287,7 @@ The \bp\ project \citep{bp01} was the first true application of end-to-end Gibbs
 
 This work was highly successful, and the \bp\ collaboration was able to generate the first LFI maps with true joint estimation of sky components and underlying instrumental parameters through a statistical process called Gibbs sampling \citep{bp01,bp03,bp10}. The code used for this process was called \commanderthree\ \citep{bp03}. The resulting Gibbs chains allowed for data-driven estimates of the instrumental properties to be determined by exploring the degeneracies between the low-level instrumental parameters themselves and our knowledge of the sky \citep{bp13,bp14}, and in doing so resulted in new state-of-the-art and low-systematics LFI maps.
 
-\subsection{Official \WMAP\ instrument characterization and analysis pipeline}
+\subsection{Official \WMAP\ instrument model and analysis pipeline}
 \label{sec:official_pipeline}
 
 The main goal of the current paper is to perform a similar analysis with the \WMAP\ time-ordered data, and thereby solve some of the long-standing unresolved issues with the official maps, in particular related to poorly constrained large-scale polarization modes. Before presenting our algorithm, however, it is useful for reference purposes to briefly review the official \WMAP\ instrument model and analysis pipeline, which improved gradually over a total of five data releases, often referred to as the 1-, 3-, 5-, 7, and 9-year data releases, respectively. Unless otherwise noted, we will in the following refer to the final 9-year results in the following.
@@ -306,7 +307,7 @@ Far sidelobes were estimated using a combination of laboratory measurements and 
 
 The \WMAP\ pointing solution was determined using the boresight vectors of individual feedhorns in spacecraft coordinates, in combination with on-board star trackers. Thermal flexure of the tracking structure introduced small pointing errors, as discussed by \citet{jarosik2007}. Using the temperature variation measured by housekeeping data, the quaternion pointing solution was corrected using a linear model that depends on arcsecond per kelvin. The residual pointing errors were computed using observations of Jupiter and Saturn, and the reported upper limit was given by 10\arcsec\ \citep{bennett2012,wmapexsupp}.
 
-The \WMAP\ data were calibrated by jointly estimating the time-dependent gains and baselines, as described by \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
+The \WMAP\ data were calibrated by jointly estimating the time-dependent gains, $\g$, and baselines, $\bv$, as described by \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
 The TOD were intially modeled as having
 constant gain and baseline for a 1--24\,hour period, with parameters that were fit to the orbital
 dipole assuming $T_0$ from \citet{mather:1999} and a map made from a previous
@@ -314,82 +315,9 @@ iteration of the mapmaking procedure. Once the gain and baseline solution had
 converged, the data were fit to a parametric form of the radiometer response
 as a function of housekeeping data, given in Appendix~A of \citet{wmapexsupp}.
 
-As noted above, the \WMAP\ radiometers were inherently differential in nature, and measured the signal differences in two directions through two horns, referred to as the A- and B-sides. The responsivity of the two sides was not identical, and this effective gain imbalance is referred to as ``transmission imbalance''. The amplitude of this effect is parameterized by $x_\mathrm{im}=(\alpha_A-\alpha_B)/2$, where $\alpha_A$ and $\alpha_B$ are the transmission coefficients of each side, and this parameter is zero in the case of an ideal differential radiometer. In practice, an unpolarized sky map generates a timestream
+One unique feature of the \WMAP\ instrument is that it includes differential pointing. That is, \WMAP\ had two primary mirrors positioned on opposite sides of the vertical satellite axis, tilted approximately $19.5^\circ$ downwards. In total, when horn A was pointed at pixel $p_\A$, horn B was pointed at a pixel $p_\B$ approximately $141^\circ$ away \citep{page2003:MAP}. The incoming radiation was differenced in the electronics before being deposited on the detectors, essentially recording radiation proportional to $\boldsymbol m_\A-\boldsymbol m_\B$ and $\boldsymbol m_\B-\boldsymbol m_\A$ \citep{jarosik2003:MAP}. Each pair of radiometers had a partner pair of radiometers that observed the same pixels with sensitivity to the orthogonal polarization direction. Taking these effects all into account, the total data model for a single radiometer is given by
 \begin{align}
-	d_t^\mathrm{imbal}&\propto (1+x_\mathrm{im})T_{p_\A}-(1-x_\mathrm{im})T_{p_\B}
-	\\
-	&=(T_{p_\A}-T_{p_\B})+x_\mathrm{im}(T_{p_\A}+T_{p_\B}).
-\end{align}
-This effect is taken into account during mapmaking. However, inaccuracies in the determination of $x_\mathrm{im}$ will yield a spurious polarization component, and create artificial imbalance modes due to coupling with the sky signal, in particular with the bright Solar CMB dipole \citep{jarosik2007}. The \WMAP\ transmission imbalance factors were fit to the Solar dipole in TOD space, accounting for both common and differential modes \citep{jarosik2003a,jarosik2007}.
-
-
-
-Data were flagged and masked before the final mapmaking step. In particular, station-keeping maneuevers, solar flares, and unscheduled events caused certain data to be unusable -- the full catalog of these events is listed in Table~1.8 of \citet{wmapexsupp}. In addition, data were masked depending on the channel frequency and the planet itself, with the full list of exclusion radii enumerated in Table~4 of \citet{bennett2012}.
-
-To create the sky maps $\boldsymbol m$, the calibrated data were put into the asymmetric mapmaking equation,
-\begin{equation}
-	\mathsf P_\mathrm{am}^T\mathsf N^{-1}\mathsf P\boldsymbol m=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d,
-\end{equation}
-where $\mathsf P$ is implicitly defined for detectors $\boldsymbol d_1$ and $\boldsymbol d_2$ sensitive to different polarization orientations,
-\begin{align}
-	\boldsymbol d_1&=\mathsf P_1\boldsymbol m
-	\nonumber
-	\\
-	&=(1+x_\mathrm{im})[T_\A+Q_\A\cos2\gamma_\A+U_\A\sin2\gamma_\A+S_\A]
-	\nonumber
-	\\
-	&+(1-x_\mathrm{im})[-T_\B-Q_\B\cos2\gamma_\B-U_\B\sin2\gamma_\B-S_\B],
-\end{align}
-and
-\begin{align}
-	\\
-	\boldsymbol d_2&=\mathsf P_2\boldsymbol m
-	\nonumber
-	\\
-	&=(1+x_\mathrm{im})[T_\A-Q_\A\cos2\gamma_\A-U_\A\sin2\gamma_\A-S_\A]
-	\nonumber
-	\\
-	&+(1-x_\mathrm{im})[-T_\B+Q_\B\cos2\gamma_\B+U_\B\sin2\gamma_\B+S_\B].
-\end{align}
-In this formalism, $S$ acts as an extra Stokes parameter that absorbs the effects of differing bandpass responses between radiometers $\boldsymbol d_1$ and $\boldsymbol d_2$ \citep{jarosik2007}.
-The asymmetric mapmaking matrix, $\boldsymbol P_\mathrm{am}$, was used because, as noted in \citet{jarosik2010}, large signals observed in one beam could leak into the solution for the pixel observed by the other beam, leading to incorrect signals in the final map. The asymmetric mapmaking solution essentially works by only updating the matrix multiplication for beam A when beam A is in a high emission region and beam B is not, and vice versa. \citet{bennett2012} also identified that these effects are pronounced when there is a steep gradient in the emission across the $N_\mathrm{side}=512$ pixels within an $N_\mathrm{side}=16$ superpixel, leading to excesses $140^\circ$ away from the Galactic center.
-
-An accurate noise model was necessary to perform the maximum likelihood mapmaking, as it required the evaluation of the dense time-space inverse noise covariance matrix  $\mathsf N^{-1}$. The time-space autocorrelation function was estimated for each year of data, which is then Fourier transformed, inverted, and Fourier transformed again to create an effective inverse noise operator $N_{tt'}^{-1}$. 
-Finally, to create the sky maps themselves, the data are treated one year at a time, and the iterative Bi-conjugate Gradient Stabilized Method \citep[BiCG-STAB][]{bicgstab,bicgstab_template} is applied to the maps.
-
-
-\subsection{Instrument model}
-\label{sec:wmap_instmodel}
-
-As opposed to the \WMAP\ pipeline, the \cosmoglobe\ uses a generative model for every aspect of the data, including the sky and instrumental effects at once.
-In the \cosmoglobe\ paradigm, it is simplest to characterize the data's goodness-of-fit to a model,
-\begin{equation}
-	\label{eq:model}
-	\boldsymbol d =\mathsf G\mathsf P[\mathsf B^\mathrm{symm}\mathsf M\boldsymbol a+\mathsf B^\mathrm{4\pi}(\boldsymbol s^\mathrm{orb}
-	+\boldsymbol s^\mathrm{fsl})] + \boldsymbol s^\mathrm{inst}+\boldsymbol n^\mathrm{corr}+\boldsymbol n^\mathrm w,
-\end{equation}
-where $\mathsf G$ is the time-dependent gain in the form of the matrix $\mathrm{diag}(g_t)$, $\mathsf P$ is the $n_p\times n_t$ pointing matrix, where $n_p$ is the number of pixels and $n_t$ the number of TOD datapoints,
-$\mathsf B^\mathrm{symm}$ and $\mathsf B^{4\pi}$ are the symmetrized and full asymmetric beam, respectively, $\mathsf M$ is the mixing matrix between a given component $c$ with spectral energy distribution $f_c(\nu/\nu_{0,c})$ and a detector $j$ with bandpass $\tau_j(\nu)$, given by
-\begin{equation}
-	\mathsf M_{cj}=\int d\nu\,\tau_j(\nu)f_c(\nu/\nu_{c,0}).
-\end{equation}
-The maps $\boldsymbol a$ are the component amplitudes, $\boldsymbol s^\mathrm{orb}$ is the orbital dipole induced by the motion of the telescope with respect to the Sun, and $\boldsymbol s^\mathrm{fsl}$ is the time-dependent far sidelobe signal. In the \commanderthree\ \citep{bp03} implementation, $\boldsymbol n^\mathrm{corr}$ is a realization of the correlated noise component whose power spectrum is parametrized by $P(f\mid\boldsymbol\xi_n)$, where $\boldsymbol\xi_n$ generally includes $f_\mathrm{knee}$, a slope $\alpha$, and an amplitude fixed by the white noise $\sigma_0$. 
-Similarly, each experiment has particular signals that are specific to the instrument in question, e.g., the 1\,Hz spike in \Planck\ LFI or the large baseline in \WMAP, which can be modeled by $\boldsymbol s^\mathrm{inst}$. 
-
-The bandpass mismatch is explicitly modeled in \commanderthree. Using the calibrated sky model, the expected calibrated sky signal is given by
-\begin{equation}
-	m_{p,j}=\mathsf B_{p,p'}\sum_c\mathsf M_{c,j}a^c_{p'}+n_{j,p}^\mathrm w.
-\end{equation}
-Since $\mathsf M_{c,j}$ encodes the bandpass response of every detector $j$ to every sky component $c$, the maps $\boldsymbol m_j$ will each be slightly different depending on their bandpass $\tau_j$. More importantly, differences in signal between different detectors can be attributed to a spurious polarization signal, giving spurious polarized maps. Therefore, before averaging different detectors together, \commanderthree\ estimates the average over all detectors in a given frequency channel $\boldsymbol m\equiv \langle \boldsymbol m_j\rangle$, and subtracts it directly in the timestream;
-\begin{equation}
-	\delta s_{t,j}^\mathrm{leak}=\mathsf P_{t,p}^j\mathsf B_{p,p'}^j\left(\boldsymbol m_{j,p'}-\boldsymbol m_{p'}\right).
-\end{equation}
-This leakage term uses the expected bandpass response to remove the expected component that deviates from the mean in the timestream, directly reducing polarization contamination.
-
-
-The most unique feature of the \WMAP\ data is that it includes differential pointing.  \WMAP\ has two primary mirrors approximately reflected along the vertical satellite axis, and are tilted approximately $19.5^\circ$ downwards -- in total, when horn A is pointed at pixel $p_\A$, horn B is pointed at a pixel $p_\B$ that is approximately $141^\circ$ away \citep{page2003:MAP}. The incoming radiation is differenced in the electronics before being deposited on the detectors, essentially recording radiation proportional to $\boldsymbol m_\A-\boldsymbol m_\B$ and $\boldsymbol m_\B-\boldsymbol m_\A$ \citep{jarosik2003:MAP}. Each pair of radiometers has a partner pair of radiometers that observes the same pixels with sensitivity to the orthogonal polarization direction. Taking these effects all into account, the total data model for a single radiometer is given by
-\begin{align}
-	d_{t}&=g_{t}\mathsf P_{t,p}s_{p} + s^\mathrm{inst}_t+n_t
+	d_{t}&=g_{t}\mathsf P_{t,p}s_{p} + +n_t
 	\\
 	&=g_t\Big[\alpha_\A(T_{p_\A(t)}+Q_{p_\A(t)}\cos2\gamma_\A(t) + U_{p_\A(t)}\sin2\gamma_\A(t))
 	\nonumber
@@ -399,10 +327,11 @@ The most unique feature of the \WMAP\ data is that it includes differential poin
 	\nonumber
 	\\
 	&\phantom{g_t\Big[}
-	+ s_t^\mathrm{inst}+n_t,
+	+n_t,
 \end{align}
-where $s_p$ is the total sky signal $\mathsf B\mathsf M\boldsymbol a$, $\gamma_{\A/\B}$ are the time-dependent polarization angles, and $p_{\A/\B}$ are the A and B pixel locations.
-In this notation, $\alpha_{\A/\B}$ is the total optical power transmission for horn A and B. Defining the transmission imbalance for a given radiometer pair $x_\mathrm{im}\equiv(\alpha_\A-\alpha_\B)/(\alpha_\A+\alpha_\B)$ and absorbing $\alpha_\A+\alpha_\B$ into the definition of $g_t$ allows the pointing operation to be written in terms of the deviation from ideality,
+where $s_p$ is the total sky signal $\mathsf B\mathsf M\boldsymbol a$, $\gamma_{\A/\B}$ are the time-dependent polarization angles, and $p_{\A/\B}$ are the A and B pixel locations. In this notation, $\alpha_{\A/\B}$ is the total optical power transmission for horn A and B.
+
+For an ideal radiometer, $\alpha_B = \alpha_B$. However, for a real detectors the two transmissions vary slightly, and this effect is called ``transmission imbalance''. Defining the transmission imbalance for a given radiometer pair as $x_\mathrm{im}\equiv(\alpha_\A-\alpha_\B)/(\alpha_\A+\alpha_\B)$, and absorbing $\alpha_\A+\alpha_\B$ into the definition of $g_t$, allows the pointing operation to be written in terms of the deviation from ideality,
 \begin{align}
 	\mathsf P_{t,p}s_p
 	&=(1+x_\mathrm{im})(T_{p_\A}+Q_{p_\A}\cos2\gamma_\A + U_{p_\A}\sin2\gamma_\A)
@@ -411,9 +340,42 @@ In this notation, $\alpha_{\A/\B}$ is the total optical power transmission for h
 	&
 	-(1-x_\mathrm{im})(T_{p_\B}+Q_{p_\B}\cos2\gamma_\B + U_{p_\A}\sin2\gamma_\B).
 \end{align}
+It is important to note that inaccuracies in the determination of $x_\mathrm{im}$ will yield a spurious polarization component, effectively leaking the bright temperature signal into the polarization maps. In particular coupling with the bright Solar CMB dipole is an important effect that give rise to polarization-specific artefacts with a clear signature defined by relative orientation of the Solar dipole and the \WMAP\ scanning strategy \citep{jarosik2007}. To account for this effect, the \WMAP\ pipeline fit $x_\mathrm{im}$ to the Solar dipole in TOD space, while simultaneously accounting for both common and differential TOD modes \citep{jarosik2003a,jarosik2007}.
+
+Data were flagged and masked before the final mapmaking step. In particular, station-keeping maneuevers, solar flares, and unscheduled events caused certain data to be unusable --- the full catalog of these events is listed in Table~1.8 of \citet{wmapexsupp}. In addition, observations near planets were masked depending on the channel frequency and the planet itself, with the full list of exclusion radii enumerated in Table~4 of \citet{bennett2012}.
+
+To create the sky maps $\boldsymbol m$, calibrated data of the form $\dv = (\dv_{\mathrm{raw}}-\bv)/\g$ were fed into the asymmetric mapmaking equation,
+\begin{equation}
+	\mathsf P_\mathrm{am}^T\mathsf N^{-1}\mathsf P\boldsymbol m=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d,
+\end{equation}
+where $\mathsf N$ is the time-domain covariance matrix and $\mathsf P$ is the pointing matrix implicitly defined for detectors $\boldsymbol d_1$ and $\boldsymbol d_2$ sensitive to different polarization orientations as follows,
+\begin{align}
+	\boldsymbol d_1&=\mathsf P_1\boldsymbol m
+	\nonumber
+	\\
+	&=(1+x_\mathrm{im})[T_\A+Q_\A\cos2\gamma_\A+U_\A\sin2\gamma_\A+S_\A]
+	\nonumber
+	\\
+	&\quad+(1-x_\mathrm{im})[-T_\B-Q_\B\cos2\gamma_\B-U_\B\sin2\gamma_\B-S_\B],
+\end{align}
+and
+\begin{align}
+	\boldsymbol d_2&=\mathsf P_2\boldsymbol m
+	\nonumber
+	\\
+	&=(1+x_\mathrm{im})[T_\A-Q_\A\cos2\gamma_\A-U_\A\sin2\gamma_\A-S_\A]
+	\nonumber
+	\\
+	&\quad+(1-x_\mathrm{im})[-T_\B+Q_\B\cos2\gamma_\B+U_\B\sin2\gamma_\B+S_\B].
+\end{align}
+In this formalism, $S$ acts as an extra Stokes parameter that absorbs the effects of differing bandpass responses between radiometers $\boldsymbol d_1$ and $\boldsymbol d_2$ \citep{jarosik2007}.
+The asymmetric mapmaking matrix, $\boldsymbol P_\mathrm{am}$, was used because, as noted in \citet{jarosik2010}, large gradients within a single pixel observed in one beam, for instance due to bright Galactic foregrounds or point sources, could leak into the solution for the pixel observed by the other beam, leading to artefacts in the final map. The asymmetric mapmaking solution essentially works by only updating the matrix multiplication for beam A when beam A is in a high emission region and beam B is not, and vice versa. %\citet{bennett2012} also identified that these effects are pronounced when there is a steep gradient in the emission across the $N_\mathrm{side}=512$ pixels within an $N_\mathrm{side}=16$ superpixel, leading to excesses $140^\circ$ away from the Galactic center.
+The noise covariance matrix, $\mathsf N$, was modelled in terms of the autocorrelation function estimated separately for each year of data.
+Finally, to create the sky maps themselves, the data were processed one year at a time, applying the iterative Bi-conjugate Gradient Stabilized Method \citep[BiCG-STAB][]{bicgstab,bicgstab_template} to solve for the actual maps.
 
 
-For a specific realization of the components listed in this section, we display the TOD for a ten-minute segment of \WMAP's \K113 radiometer in Fig.~\ref{fig:timestreams}. The uncalibrated data, $\boldsymbol d_\mathrm{raw}$, is displayed in the top panel, with the sky signal $\boldsymbol s_\mathrm{sky}=\mathsf P\mathsf B^\mathrm{symm}\mathsf M\boldsymbol a$ plotted directly underneath. In addition, we plot the instrumental corrections for this timestream, including the correlated noise realization $\boldsymbol n_\mathrm{corr}$, the orbital dipole $\boldsymbol s_\mathrm{orb}$, the far sidelobe contribution $\boldsymbol s_\mathrm{sl}$, and the bandpass leakage $\boldsymbol s_\mathrm{leak}$. We also plot the time-ordered residual for this segment of data, in units of the estimated white noise level. We will discuss the goodness-of-fit and sampling of these quantities in the following subsections.
+\subsection{\cosmoglobe\ instrument model}
+\label{sec:wmap_instmodel}
 
 \begin{figure*}
 	\includegraphics[width=\textwidth]{figures/K113_timestreams.pdf}
@@ -422,30 +384,64 @@ For a specific realization of the components listed in this section, we display 
 	\label{fig:timestreams}
 \end{figure*}
 
+Perhaps the most fundamental difference between the \cosmoglobe\ and \WMAP\ (and those of most other CMB experiments) analysis pipelines is that while the \WMAP\ pipeline models each channel in isolation, the \cosmoglobe\ framework simultaneously considers all data, both internally within \WMAP, and also from all other sources, most notably also including \Planck. The main advantage of such a global approach is significantly reduced parameter degeneracies, as data from observations with different frequency coverages and instrumental designs break the same degeneracies. For this approach to be computationally tractable, one must establish a global parametric model that simultaneously accounts for both the astrophysical sky and all relevant instruments. For the current \WMAP+LFI oriented analysis, we adopt the following expression \citep{bp01},
+\begin{equation}
+	\label{eq:model}
+	\boldsymbol d =\mathsf G\mathsf P[\mathsf B^\mathrm{symm}\mathsf M\boldsymbol a+\mathsf B^\mathrm{4\pi}(\boldsymbol s^\mathrm{orb}
+	+\boldsymbol s^\mathrm{fsl})] + \boldsymbol s^\mathrm{inst}+ \boldsymbol n^\mathrm{corr}+\boldsymbol n^\mathrm w,
+\end{equation}
+where $\mathsf G$ is the time-dependent gain in the form of the matrix $\mathrm{diag}(g_t)$; $\mathsf P$ is the $n_p\times n_t$ pointing matrix, where $n_p$ is the number of pixels and $n_t$ the number of TOD datapoints;
+$\mathsf B^\mathrm{symm}$ and $\mathsf B^{4\pi}$ are the symmetrized and full asymmetric beam, respectively; $\mathsf M$ is the mixing matrix between a given component $c$ with spectral energy distribution $f_c(\nu/\nu_{0,c})$ and a detector $j$ with bandpass $\tau_j(\nu)$, given by
+\begin{equation}
+	\mathsf M_{cj}=\int d\nu\,\tau_j(\nu)f_c(\nu/\nu_{c,0}).
+\end{equation}
+The maps $\boldsymbol a$ represent the Stokes parameters for each astrophysical component, while $\boldsymbol s^\mathrm{orb}$ is the orbital dipole induced by the motion of the telescope with respect to the Sun, and $\boldsymbol s^\mathrm{fsl}$ is the time-dependent far sidelobe signal. Following \citet{bp06}, we model the correlated noise component $\boldsymbol n^\mathrm{corr}$ in terms of a $1/f$ power spectral density (PSD), which explicitly takes the form $P_\mathrm{n}(f) = \sigma^2_0 (1 + (f/f_\mathrm{k})^\alpha)$, where $\sigma_0$ denotes the white noise amplitude, $f_\mathrm{knee}$ is the so-called $1/f$ knee frequency, and $\alpha$ is a free power law slope. For notational purposes, we denote the set of all correlated noise parameters by $\xi_{\mathrm{n}} = \{\sigma_0, f_{\mathrm{k}}, \alpha\}$. We note that this model represents a significant approximation, as the actual \WMAP\ noise is known to exhibit a significantly colored noise at high temporal frequencies. The main impact of this approximation is a worse-than-expected $\chi^2$ goodness-of-fit statistic. However, measured in absolute noise levels the effect is very small, and has very little if any impact on the final science results; for further discussion of this approximation, see Sect.~\ref{sec:noisemodel}. 
+
+The term $\boldsymbol s^\mathrm{inst}$ denotes any instrument-specific terms that might be required for a given experiment. For instance, for LFI it is used to model the 1\,Hz spike contribution due to electronic cross-talk. For \WMAP, we use it for first-order baseline corrections, and set $s^\mathrm{WMAP}_t = b_0 + b_1\,t$, where $b_0$ and $b_1$ represent the mean and slope of the baselines over the data segment in question. We note that while the \WMAP\ team fitted a single constant baseline over either 1- or 24-hour periods, our data segments are typically about 3\,days long (corresponding to a number of samples that is an exact power of 2 to optimize Fourier transforms). A natural question is therefore whether non-linear baseline variations could induce artefacts. In this regard, it is important to note that the correlated noise component effectively acts as a single-sample baseline correction that can absorbe by far most such non-linearities, as long as their total effect on the power spectrum does not exceed that imposed by the $1/f$ model. In practice, that is a very mild constraint. At the same time, visual inspection of $\n^{\mathrm{corr}}$ projected into sky maps provides a very powerful check on any potential baseline residuals; these will appear as correlated stripes aligned with the \WMAP\ scanning path. In sum, it is important to note that \cosmoglobe\ model allows for a more flexible baseline behaviour than the \WMAP\ pipeline.
+
+A third notable difference between the \WMAP\ and \cosmoglobe\ data models concerns bandpass mismatch. While the \WMAP\ pipeline simply projects out any bandpass difference from the polarization maps by solving for the spurious $S$ maps, we model it explicitly through the use of the global astrophysical sky model \citep{bp09}. Explicitly, the expected calibrated sky signal for radiometer $j$ is given by
+\begin{equation}
+	m_{p,j}=\mathsf B_{p,p'}\sum_c\mathsf M_{c,j}a^c_{p'}+n_{j,p}^\mathrm w.
+\end{equation}
+Since $\mathsf M_{c,j}$ encodes the bandpass response of every detector $j$ to every sky component $c$, the detector-specific maps, $\boldsymbol m_j$, will each be slightly different depending on their bandpass $\tau_j$. Therefore, before averaging different detectors together, we estimate the average over all detectors in a given frequency channel $\boldsymbol m\equiv \langle \boldsymbol m_j\rangle$, and subtracts it directly in the timestream;
+\begin{equation}
+	\delta s_{t,j}^\mathrm{leak}=\mathsf P_{t,p}^j\mathsf B_{p,p'}^j\left(\boldsymbol m_{j,p'}-\boldsymbol m_{p'}\right).
+\end{equation}
+This leakage term uses the expected bandpass response to remove the expected component that deviates from the mean in the timestream, directly reducing polarization contamination. 
+
+To build intuition regarding this model, we plot in Fig.~\ref{fig:timestreams} both the TOD and the individual model components for an arbitrarily selected ten-minute segment for the \WMAP's \K113 radiometer. The uncalibrated data, $\boldsymbol d_\mathrm{raw}$, is displayed in the top panel, with the sky signal $\boldsymbol s_\mathrm{sky}=\mathsf P\mathsf B^\mathrm{symm}\mathsf M\boldsymbol a$ plotted directly underneath. The next four panels show the correlated noise realization $\boldsymbol n_\mathrm{corr}$, the orbital dipole $\boldsymbol s_\mathrm{orb}$, the far sidelobe contribution $\boldsymbol s_\mathrm{sl}$, and the bandpass leakage $\boldsymbol s_\mathrm{leak}$. Finally, we also plot the time-ordered residual for this segment of data, obtained by subtracting the model from the raw data, in units of the estimated white noise level. 
+
+
 \subsection{Sky model}\label{subsec:sky_model}
 
-Following \citet{bp01}, we assume that the sky ($\boldsymbol a$ in Eq. \ref{eq:model}) can be modeled as a linear combination of CMB fluctuations ($\vec{a}_{\mathrm{CMB}}$ and $\vec{a}_{\mathrm{quad}}$), synchrotron ($\vec{a}_{\mathrm{s}}$), free-free emission ($\vec{a}_{\mathrm{ff}}$), anomalous microwave emission ($\vec{a}_{\mathrm{ame}}$), thermal dust ($\vec{a}_{\mathrm{d}}$), and radio point sources ($\vec{a}_{j,\mathrm{src}}$). The parametric sky model we adopt is given in brightness temperature units as
+Following \citet{bp01}, we assume that the sky (as defined by $\M\boldsymbol a$ in Eq.~\ref{eq:model}) across the \WMAP\ frequencies can be modeled as a linear combination of CMB fluctuations ($\vec{a}_{\mathrm{CMB}}$), synchrotron ($\vec{a}_{\mathrm{s}}$), free-free emission ($\vec{a}_{\mathrm{ff}}$), anomalous microwave emission ($\vec{a}_{\mathrm{ame}}$), thermal dust ($\vec{a}_{\mathrm{d}}$), and radio point sources ($\vec{a}_{j,\mathrm{src}}$). Explicitly, we assume that the astrophysical sky (in units of brightness temperature) may be modelled as follows,
 \begin{align}
   \vec{s}_{\mathrm{RJ}} &= \left(\vec{a}_{\mathrm{CMB}}+\vec{a}_{\mathrm{quad}}(\nu)\right) \frac{x^2 \e^x}{(\e^x -1)^2}+\label{eq:cmb_astsky}\\
   &+ \vec{a}_{\mathrm{s}} \left(\frac{\nu}{\nuzeros}\right)^{\bsynch} + \label{eq:synch_astsky}\\
   &+ \vec{a}_{\mathrm{ff}} \left(\frac{\nuzeroff}{\nu}\right)^2 \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)} +\label{eq:ff_astsky}\\
   %&+ \vec{a}_{\mathrm{ame}} \left(\frac{\nuzeroame}{\nu}\right)^2 \frac{f_{\mathrm{ame}} \left(\nu\cdot \frac{30.0\,\mathrm{GHz}}{\nup}\right)}{f_{\mathrm{ame}} \left(\nuzeroame\cdot \frac{30.0\,\mathrm{GHz}}{\nup}\right)}+\label{eq:ame_astsky}  \\
-  &+ \vec{a}_{\mathrm{ame}} \e^{\beta(\nu-\nu_{0,\mathrm{ame}})}+\label{eq:ame_astsky}  \\
+  &+ \vec{a}_{\mathrm{ame}} \e^{\beta_{\mathrm{AME}}(\nu-\nu_{0,\mathrm{ame}})}+\label{eq:ame_astsky}  \\
   &+ \vec{a}_{\mathrm{d}} \left(\frac{\nu}{\nuzerod}\right)^{\bdust+1} \frac{\e^{h\nuzerod/\kB\Tdust}-1}{\e^{h\nu/\kB\Tdust}-1}+ \label{eq:dust_astsky}\\
-  &+ U_{\mathrm{mJy}} \sum_{j=1}^{N_{\mathrm{src}}} \vec{a}_{j,\mathrm{src}} \left(\frac{\nu}{\nuzerosrc}\right)^{\alpha_{j,\mathrm{src}}-2}. \label{eq:sum_ptsrc}
+  &+ U_{\mathrm{mJy}} \sum_{j=1}^{N_{\mathrm{src}}} \vec{a}_{j,\mathrm{src}} \left(\frac{\nu}{\nuzerosrc}\right)^{\alpha_{j,\mathrm{src}}-2}, \label{eq:sum_ptsrc}
 \end{align}
-Note that the AME model we adopt is a pure exponential, rather than the spectral energy distribution (SED) template $\boldsymbol s_0^\mathrm{sd}(\nu)$ computed using \texttt{SpDust2} \citep{ali-haimoud:2009, ali-haimoud:2010, silsbee:2011}. The \texttt{SpDust2} model was parameterized in \citet{bp01} by a peak frequency $\nu_\mathrm p$ such that
-\begin{equation}
-	s^\mathrm{sd}_\mathrm{RJ}(\nu)\propto\nu^{-2}\boldsymbol s_0^\mathrm{sd}\left(\nu\cdot\frac{30\,\mathrm{GHz}}{\nu_\mathrm p}\right).
-\end{equation}
-In the \WMAP\ and LFI frequency range, the exponential model and the \texttt{SpDust2} are phenomenologically quite similar, despite their very different descriptions. 
+where $x=h\nu/kT_{\mathrm{CMB}}$; $\nu_{0,i}$ is a reference frequency for component $i$; $\beta_{\mathrm{s}}$ is a power-law index for synchrotron emission (which may take different values for temperature and polarization); $T_e$ is the electron temperature, and $g_{\mathrm{ff}}$ is the so-called Gaunt factor \citet{dickinson2003}; $\beta_{\mathrm{AME}}$ is an exponential scale factor for AME emission (see below); $\beta_{\mathrm{d}}$ and $T_{\mathrm{d}}$ are the emissitivity and temperature parameters for a single modified blackbody thermal dust model; $\alpha_{j,\mathrm{sr}}$ is the spectral index of point source $j$ relative to the same source catalog as used by \citet{planck2016-l04}; and $U_{\mathrm{mJy}}$ is the conversion factor between flux density (in millijansky) and brightness temperature (in $K_{\mathrm{RJ}}$) for the channel in question. Also, $\a_{\mathrm{quad}}$ accounts for a relativistic quadrupole correction due to the Earth's motion through space \citep{Notari:2015}.
+
+In general, this model is nearly identical to the one adopted by \citet{bp01}. However, there is one notable exception, namely the spectral energy density (SED) for the AME component, $\boldsymbol s_0^\mathrm{sd}(\nu)$. In this current work, we adopt a simple exponential function for this component, as for instance proposed by \citet{hensley:2015}, which is notably different from the \texttt{SpDust2} model \citep{ali-haimoud:2009, ali-haimoud:2010, silsbee:2011} that was used in the \bp\ analysis. The motivation for this modification is discussed in detail by \citet{watts2023_ame}: First and foremost, the current combination of \WMAP\ and LFI data appears to prefer a higher signal amplitude at frequencies between 40 and 60\,GHz than can easily supported by \texttt{SpDust2}. This was first noted by \citet{planck2014-a11}, who solved this issue by introducing a second independent AME component. For the original \bp\ analysis, on the other hand, this excess was not statistically significant, simply because that analysis did not include the powerful \WMAP\ \K-band data. In the current analysis, the excess is obvious. The observation that a simple one-parameter exponential model fits the data as well as the complicated multi-parameter model of \citet{planck2014-a11} is a novel result from the current work. Indeed, it fits also about as well as the commonly used log-normal model derived by \citet{Stevenson_2014}, which also has one extra parameter. By virtue of having fewer degrees of freedom than any of the previous models, we adopt the exponential model in the following.
+
+%, the simple exponential model has one fewer parameter than the often-used phenomenological log-normal model, while also appearing to perform at least roughly equally well for the current data. At the same time, it is obvious that the exponential model cannot be extrapolated to lower frequencies, and the \cosmoglobe\ model presented here is therefore only applicable to data at frequencies higher than 23\,\GHz. (For lower-frequency data used in the following, namely the Haslam 408\,MHz observations, we set the AME amplitude to zero by hand.)
+
+%\citet{bp01} by a peak frequency $\nu_\mathrm p$ such that
+%\begin{equation}
+%	s^\mathrm{sd}_\mathrm{RJ}(\nu)\propto\nu^{-2}\boldsymbol s_0^\mathrm{sd}\left(\nu\cdot\frac{30\,\mathrm{GHz}}{\nu_\mathrm p}\right).
+%\end{equation}
+%In the \WMAP\ and LFI frequency range, the exponential model and the \texttt{SpDust2} are phenomenologically quite similar, despite their very different descriptions. 
 %As we describe in (\ldots), 
-The exponential model is a simple fit with $\beta$ drawn from a prior value of $-3.57$, and is a clear parametric form that is easy to interpret. An alternative model is the two-parameter log-normal AME SED,
-\begin{equation}
-	\boldsymbol s_\mathrm{RJ}^\textrm{ame,log-N}=\boldsymbol a_\mathrm{ame}
-	\left(\frac{\nu}{\nu_\mathrm{ame}}\right)^{-2}\exp\left(-\frac12\left[\frac{\ln(\nu/\nu_\mathrm{ame})}{W_\mathrm{ame}}\right]^2\right),
-\end{equation}
-derived by \citet{Stevenson_2014} as an analytical approximation to the spinning dust emission. This has also been employed in the latest QUIJOTE analaysis, e.g., \citet{QUIJOTE_V}, as it allows for variation of the peak frequency $\nu_\mathrm{ame}$ and width $W_\mathrm{ame}$. Although this work is not dependent on the specific parametric form of the AME, we opt for the exponential form described above, as it provides an excellent fit to the diffuse AME with a single parameter.
+%The exponential model is a simple fit with $\beta$ drawn from a prior value of $-3.57$, and is a clear parametric form that is easy to interpret. An alternative model is the two-parameter log-normal AME SED,
+%\begin{equation}
+%	\boldsymbol s_\mathrm{RJ}^\textrm{ame,log-N}=\boldsymbol a_\mathrm{ame}
+%	\left(\frac{\nu}{\nu_\mathrm{ame}}\right)^{-2}\exp\left(-\frac12\left[\frac{\ln(\nu/\nu_\mathrm{ame})}{W_\mathrm{ame}}\right]^2\right),
+%\end{equation}
+%derived by \citet{Stevenson_2014} as an analytical approximation to the spinning dust emission. This has also been employed in the latest QUIJOTE analaysis, e.g., \citet{QUIJOTE_V}, as it allows for variation of the peak frequency $\nu_\mathrm{ame}$ and width $W_\mathrm{ame}$. Although this work is not dependent on the specific parametric form of the AME, we opt for the exponential form described above, as it provides an excellent fit to the diffuse AME with a single parameter.
 
 %\begin{figure}
 %	\centering
@@ -1640,24 +1636,16 @@ W4 &   15.5  & -6.8 & 52 \cr
 \subsection{Consistency within \WMAP\ channels}
 \label{sec:internal_consistency}
 
-An important test for how well the instrumental systematics are being modeled is by checking the agreement within each of the \WMAP\ channels. As described in Sec.~\ref{sec:official_pipeline}, the $Q$-band $V$-band each have two DAs, while the $W$-band had four DAs. Checking for discrepancies between each of the individual DA maps within the same frequency channel can highlight mismodeled systematics. While the \K-band and \Ka-band have different central frequencies, they are close enough that we can compare them by scaling \K-band assuming a polarized synchrotron power law of $\beta_\mathrm s=-3.1$.
+An important test for how well the instrumental systematics are being modeled is by checking the agreement within each of the \WMAP\ channels. As described in Sec.~\ref{sec:official_pipeline}, the \Q-band and \V-band channels each had two DAs, while the \W-band had four DAs. Checking for discrepancies between each of the individual DA maps within the same frequency channel can highlight mismodeled systematics. While the \K-band and \Ka-band have different central frequencies, they are close enough that we can compare them by scaling \K-band assuming a polarized synchrotron power law of $\beta_\mathrm s=-3.1$.
 
 The interchannel maps for Stokes $Q$ and $U$ are shown in Fig.~\ref{fig:internal_diff}. 
-For the \K-\Ka\ difference, there are coherent signals in both the \WMAPnine\ and \cosmoglobe\ difference maps. An unsurprising difference is along the Galactic plane, due to the sky not being well-described by polarized synchrotron in this region. However, the large-scale Stokes $Q$ map has a large scale residual that is not matched in $U$. This coherent structure is present in both the \WMAPnine\ and \cosmoglobe\ maps, although in \WMAPnine\ the structure is interrupted by the poorly measured modes. In comparison, the \cosmoglobe\ $U$ map has much less large-scale structure than the \WMAPnine\ difference map.
+For the \K-\Ka\ difference, there are coherent signals in both the \WMAPnine\ and \cosmoglobe\ difference maps. An unsurprising difference is along the Galactic plane, due to the sky not being well-described by a simple global power law in this region. However, the large-scale Stokes $Q$ map has a large scale residual that is not matched in $U$. This coherent structure is present in both the \WMAPnine\ and \cosmoglobe\ maps, although in \WMAPnine\ the structure is interrupted by the poorly measured modes. In comparison, the \cosmoglobe\ $U$ map has much less large-scale structure than the \WMAPnine\ difference map.
 
-The internal DA differences provide a cleaner comparison, with no astrophysical assumptions required. The \Q-band and \V-band half-difference maps from \cosmoglobe\ have virtually no trace of the poorly measured modes, and the difference patterns are well-traced by the rms maps, with smaller differences at the ecliptic poles and larger differences along the ecliptic plane. The largest visual improvement is in the \W-band half-difference, where the \cosmoglobe\ case is almost entirely consistent with white noise, as opposed to the \WMAPnine\ difference that is dominated by the poorly measured modes.  Based on these visual comparisons, the \cosmoglobe\ maps themselves contain essentially none of the poorly-measured modes, and are more self-consistent than the \WMAPnine\ frequency maps.
+The internal DA differences provide a cleaner comparison, with no astrophysical assumptions required. The \Q-band and \V-band half-difference maps from \cosmoglobe\ have virtually no trace of the poorly measured modes, and the difference patterns are well-traced by the rms maps, with smaller differences at the ecliptic poles and larger differences along the ecliptic plane. The largest visual improvement is in the \W-band half-difference, where the \cosmoglobe\ case is almost entirely consistent with white noise, as opposed to the \WMAPnine\ difference that is dominated by the poorly measured modes.  Based on these visual comparisons, the \cosmoglobe\ maps themselves contain essentially none of the poorly-measured modes and are more self-consistent than the \WMAPnine\ frequency maps.
 
 
 \begin{figure*}
 	\centering
-	%\includegraphics[width=0.24\textwidth]{figures/K30_deltaQ.pdf}
-	%\includegraphics[width=0.24\textwidth]{figures/K30_W_deltaQ.pdf}
-	%\includegraphics[width=0.24\textwidth]{figures/K30_deltaU.pdf}
-	%\includegraphics[width=0.24\textwidth]{figures/K30_W_deltaU.pdf}
-	%\includegraphics[width=0.24\textwidth]{figures/30Ka_deltaQ.pdf}
-	%\includegraphics[width=0.24\textwidth]{figures/30Ka_W_deltaQ.pdf}
-	%\includegraphics[width=0.24\textwidth]{figures/30Ka_deltaU.pdf}
-	%\includegraphics[width=0.24\textwidth]{figures/30Ka_W_deltaU.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/KKa_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/KKa_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/KKa_deltaU.pdf}
@@ -1695,11 +1683,65 @@ As noted by \citet{jarosik2010}, the low-$\ell$ \W-band polarization data were e
 \subsection{Consistency between \WMAP\ and LFI}
 \label{sec:lfi_consistency}
 
-As \WMAP\ and LFI cover nearly identical frequency channels, it is vital to assess how well these two experiments agree with each other, as the sky they observe is the same. Inspecting comparisons of the two experiments' sky maps can help elucidate systematic differences between them. Figure~\ref{fig:wmap_lfi_compare} shows comparisons between the \WMAP\ $K$- and $Ka$-bands and the LFI 30 GHz channel, between the \WMAP\ $Q$-band and LFI 44 GHz, and finally between \WMAP\ $V$-band and LFI 70 GHz. For demonstration, the sky maps produced in this work are compared against the offical \WMAPnine\ and \BP\ maps.
 
-Starting with the \cosmoglobe\ maps, we see in the first and third columns of Fig.~\ref{fig:wmap_lfi_compare} that the magnitude of the differences are small in both Stokes $Q$ and $U$. Overall, across all four frequency map comparisons we see small levels of variation, with structure contained to the Galacic plane. Notably, however, is a larger sky signal within the $Ka$-band -- 30 GHz Stokes $Q$ comparison. \textcolor{red}{This will be commented on here by Duncan or HK as I don't know exactly what I should say.} Deviations at high Galactic latitudes are low, demonstrating a robust ability to remove poorly measured modes from both experiments thanks to the joint processing.
+As \WMAP\ and LFI observe an overlapping frequency range, it is vital to assess
+how well these two experiments agree with each other, as the sky they observe
+is the same. Inspecting comparisons of the two experiments' sky maps can help
+elucidate differences between them induced by scan strategy and instrument
+design. Figure~\ref{fig:wmap_lfi_compare} shows comparisons between the \WMAP\
+$K$- and $Ka$-bands and the LFI 30 GHz channel, between the \WMAP\ $Q$-band and
+LFI 44 GHz, and finally between \WMAP\ $V$-band and LFI 70 GHz. For
+demonstration, the sky maps produced in this work are compared against the
+offical \WMAPnine\ and \BP\ maps. Additionally, we compare the mean \W-band
+maps with the DR4 100\,GHz channel. In this comparison, the HFI map has had no
+input from \commanderthree\ so this difference map is an independent comparison
+between two datasets and processing methods.
 
-Columns two and four of Fig.~\ref{fig:wmap_lfi_compare} show the differences between the official \WMAPnine\ and \BP\ LFI frequency maps. Similar to the \cosmoglobe\ sky map comparisons, we see differences in the Galactic center, and to a lesser degree along the Galactic plane due to the slight differences in the frequency coverage. When comparing the official \WMAP\ maps, particularly for $K$-band, we see structures sweeping across large angular scales across the sky, likely due to \textcolor{red}{some effect Duncan totally knows how to describe here in detail}. These structures were noted within the \BP\ project, particularly in the polarized component separation and large-scale polarized AME studies \citep{bp14,bp15}. We see that the magnitude of both the Galactic and non-Galactic differences decrease with frequency as the central frequencies approach the foreground minimum \textcolor{red}{where calibration uncertainties are the lowest.} All frequency channels in this comparison do show large-scale modes which are difficult to constrain without joint processing.
+Starting with the \cosmoglobe\ maps, we see in the first and third columns of
+Fig.~\ref{fig:wmap_lfi_compare} that the magnitude of the differences are small
+in both Stokes $Q$ and $U$. Overall, across all five frequency map comparisons
+we see small levels of variation, with structure contained to the Galactic
+plane. Notably, however, there is a larger sky signal within the
+$\mathit{Ka}-30$ Stokes $Q$ comparison.  This deviation is consistent with that
+from the $\mathit{Ka}-\mathit{K}$ comparison in Fig.~\ref{fig:internal_diff}.
+The fact that this difference persists between these two difference maps
+indicates that this large-scale signal is confined to \Ka, and is due either to
+data processing artifacts unique to this DA or to unmodeled sky polarization in
+the \Ka\ bandpass. This large-scale difference also exists in the $\mathit
+Q-44$ Stokes $Q$, but did not appear in the internal \Q\ half-difference map.
+This strengthens the hypothesis that the signal is on the sky, but could still
+be a result of \WMAP\ data processing, as the signal consistently appears in
+the \WMAP\ data.  Overall, across all frequency map comparisons, deviations at
+high Galactic latitudes are low, demonstrating a robust ability to remove
+poorly measured modes from both experiments thanks to the joint processing. The
+clearest improvement in reprocessing is shown in the final row of
+Fig.~\ref{fig:wmap_lfi_compare}. The structure of the \cosmoglobe\ difference
+maps in both Stokes $Q$ and $U$ shows ery low levels of variation, in both the
+Galactic plane and at high latitudes. 
+
+
+Columns two and four of Fig.~\ref{fig:wmap_lfi_compare} show the differences
+between the official \WMAPnine\ and \BP\ LFI frequency maps. Similar to the
+\cosmoglobe\ sky map comparisons, we see differences in the Galactic center,
+and to a lesser degree along the Galactic plane due to the slight differences
+in the frequency coverage. When comparing the official \WMAP\ maps,
+particularly for \K-band, we see structures sweeping across large angular
+scales across the sky, likely due to the poorly measured modes in \K-band. 
+These structures were noted within the
+\BP\ project, particularly in the polarized component separation and
+large-scale polarized AME studies \citep{bp14,bp15}. 
+
+
+Of particular note is the $100-\mathit W$ difference map. The \cosmoglobe\
+difference maps here have a similar level of white noise and Galactic
+contamination as the $\mathit V-70$ maps,  whereas the \WMAPnine\ differences
+are driven by the transmission imbalance modes, each with an opposite sign and
+magnitude. The difference between 100\,GHz and \W\ demonstrates that the good
+agreement between the \WMAP\ and \Planck\ LFI is not simply due to fitting
+low-level parameters in a joint analysis framework -- by obtaining \W-band maps
+that are consistent with an independent 100\,GHz polarization map, we have
+shown that the \WMAP\ is not simply the result of adding more free parameters
+to the fit, but a genuine improvement in data processing.
 
 
 
@@ -1708,60 +1750,28 @@ Columns two and four of Fig.~\ref{fig:wmap_lfi_compare} show the differences bet
 	\includegraphics[width=0.24\textwidth]{figures/K30_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/K30_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/K30_deltaU.pdf}
-	\includegraphics[width=0.24\textwidth]{figures/K30_W_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/K30_W_deltaU.pdf}\\
 	\includegraphics[width=0.24\textwidth]{figures/30Ka_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/30Ka_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/30Ka_deltaU.pdf}
-	\includegraphics[width=0.24\textwidth]{figures/30Ka_W_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/30Ka_W_deltaU.pdf}\\
 	\includegraphics[width=0.24\textwidth]{figures/44Q_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/44Q_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/44Q_deltaU.pdf}
-	\includegraphics[width=0.24\textwidth]{figures/44Q_W_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/44Q_W_deltaU.pdf}\\
 	\includegraphics[width=0.24\textwidth]{figures/70V_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/70V_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/70V_deltaU.pdf}
-	\includegraphics[width=0.24\textwidth]{figures/70V_W_deltaU.pdf}
+	\includegraphics[width=0.24\textwidth]{figures/70V_W_deltaU.pdf}\\
 	\includegraphics[width=0.24\textwidth]{figures/100W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/100W_W_deltaQ.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/100W_deltaU.pdf}
 	\includegraphics[width=0.24\textwidth]{figures/100W_W_deltaU.pdf}
 	
         \includegraphics[width=0.25\textwidth]{figures/cbar_10uK.pdf}
-	\caption{Difference maps between similar \WMAP\ and LFI frequency maps. The comparison plots go, by column: Stokes $Q$ for the \cosmoglobe\ sky maps, Stokes $Q$ for official \WMAP\ and \BP\ data products, Stokes $U$ for the \cosmoglobe sky maps, and Stokes $U$ for the official data products. (Top row) \WMAP\ LFI 30 GHz minus $K$-band, scaled by the synchrotron power-law. (Top middle row) \WMAP\ $Ka$-band minus LFI 30 GHz, also scaled by the synchrotron power-law. (Bottom middle row) \WMAP\ $Q$-band compared to the LFI 44 GHz sky maps, scaled by the synchrotron power-law. (Bottom row) \WMAP\ $V$-band minus LFI 70 GHz, with unit scalings for each band.}
+	\caption{Difference maps between similar \WMAP\ and \Planck\ frequency maps. The comparison plots go, by column: Stokes $Q$ for the \cosmoglobe\ sky maps, Stokes $Q$ for official \WMAP\ and \BP\ data products, Stokes $U$ for the \cosmoglobe sky maps, and Stokes $U$ for the official data products. (Top row) \WMAP\ LFI 30 GHz minus \K-band, scaled by the synchrotron power-law. (Top middle row) \WMAP\ \Ka-band minus LFI 30 GHz, also scaled by the synchrotron power-law. (Middle row) \WMAP\ \Q-band compared to the LFI 44 GHz sky maps, scaled by the synchrotron power-law. (Bottom middle row) \WMAP\ \V-band minus LFI 70 GHz, with unit scalings for each band. (Bottom row) The \Planck\ DR4 100 GHz map minus the \WMAP\ \W-band\, also with unit scalings for each band.}
 	\label{fig:wmap_lfi_compare}
 \end{figure*}
-
-
-%\begin{figure*}
-%	\centering
-%	%\includegraphics[width=0.93\linewidth]{figures/megadiff.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_K_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_K_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_K_U.pdf}\\
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_030_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_030_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_030_U.pdf}\\
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_Ka_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_Ka_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_Ka_U.pdf}\\
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_044_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_044_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_044_U.pdf}\\
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_Q_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_Q_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_Q_U.pdf}\\
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_V_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_V_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_V_U.pdf}\\
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_070_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_070_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_070_U.pdf}\\
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_W_I.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_W_Q.pdf}
-%	\includegraphics[width=0.24\textwidth]{figures/megadiff_W_U.pdf}\\
-%	\includegraphics[width=0.5\textwidth]{figures/cbar_10uK_symlog2.pdf}
-%	\caption{Differences between Commander-processed chains and official maps (BP10 and WMAP9)}
-%\end{figure*}
 
 
 \section{Preliminary astrophysical results}
@@ -1794,15 +1804,87 @@ Cosmological parameter estimation is left for future work, in large part because
 \subsubsection{Solar dipole}
 \label{sec:dipole}
 
+
+\begin{table*}
+\newdimen\tblskip \tblskip=5pt
+\caption{Comparison of Solar dipole measurements from \COBE, \WMAP, and \Planck. }
+\label{tab:dipole}
+\vskip -4mm
+\footnotesize
+\setbox\tablebox=\vbox{
+ \newdimen\digitwidth
+ \setbox0=\hbox{\rm 0}
+ \digitwidth=\wd0
+ \catcode`*=\active
+ \def*{\kern\digitwidth}
+%
+  \newdimen\dpwidth
+  \setbox0=\hbox{.}
+  \dpwidth=\wd0
+  \catcode`!=\active
+  \def!{\kern\dpwidth}
+%
+  \halign{\hbox to 2.5cm{#\leaderfil}\tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&
+    #\hfil \tabskip 0em\cr
+\noalign{\doubleline}
+\omit&&\multispan2\hfil\sc Galactic coordinates\hfil\cr
+\noalign{\vskip -3pt}
+\omit&\omit&\multispan2\hrulefill\cr
+\noalign{\vskip 3pt} 
+\omit&\omit\hfil\sc Amplitude\hfil&l&b\cr
+\omit\hfil\sc Experiment\hfil&[\muK_{\rm
+CMB}]&\omit\hfil[deg]\hfil&\omit\hfil[deg]\hfil&\hfil\sc Reference\hfil\cr
+\noalign{\vskip 3pt\hrule\vskip 5pt}
+\COBE \rlap{$^{\rm a,b}$}&                  3358!**\pm23!**&     264.31*\pm0.16*&
+     48.05*\pm0.09*&\citet{lineweaver1996}\cr
+\WMAP\ \rlap{$^{\rm c}$}&                  3355!**\pm*8!**&     263.99*\pm0.14*&
+     48.26*\pm0.03*&\citet{hinshaw2009}\cr
+\noalign{\vskip 3pt}
+LFI 2015 \rlap{$^{\rm b}$}&              3365.5*\pm*3.0*&     264.01*\pm0.05*&
+     48.26*\pm0.02*&\citet{planck2014-a03}\cr
+HFI 2015 \rlap{$^{\rm d}$}&              3364.29\pm*1.1*&     263.914\pm0.013&
+     48.265\pm0.002&\citet{planck2014-a09}\cr
+\noalign{\vskip 3pt}
+LFI 2018 \rlap{$^{\rm b}$}&              3364.4*\pm*3.1*&     263.998\pm0.051&
+     48.265\pm0.015&\citet{planck2016-l02}\cr
+HFI 2018 \rlap{$^{\rm d}$}&              3362.08\pm*0.99&     264.021\pm0.011&
+     48.253\pm0.005&\citet{planck2016-l03}\cr
+\noalign{\vskip 3pt}
+Bware & 3361.90\pm*0.40 & 263.959\pm0.019 & 48.260\pm0.008  & \citet{delouis:2021}  \cr
+\Planck\ PR4\ \rlap{$^{\rm a,c}$}& 3366.6*\pm*2.6*& 263.986\pm0.035&
+48.247\pm0.023&\citet{planck2020-LVII}\cr
+\noalign{\vskip 3pt}
+\BP\ \rlap{$^{\rm e}$} & 3362.7*\pm*1.4*& 264.11*\pm0.07*&
+ 48.279\pm0.026&\citet{bp11}\cr
+\noalign{\vskip 3pt}
+\bf\cosmoglobe\ \rlap{$^{\rm e}$} & \bf3366.2*\pm*1.4*& \bf264.08*\pm0.07*&
+ \bf48.273\pm0.024&This work\cr
+\noalign{\vskip 5pt\hrule\vskip 5pt}}}
+\endPlancktablewide
+\tablenote {{\rm a}} Statistical and systematic uncertainty estimates are added in quadrature.\par
+\tablenote {{\rm b}} Computed with a naive dipole estimator that does not account for higher-order CMB fluctuations.\par
+\tablenote {{\rm c}} Computed with a Wiener-filter estimator that estimates, and marginalizes over, higher-order CMB fluctuations jointly with the dipole.\par
+\tablenote {{\rm d}} Higher-order fluctuations as estimated by subtracting a dipole-adjusted CMB-fluctuation map from frequency maps prior to dipole evaluation. \par
+\tablenote {{\rm e}} Estimated with a sky fraction of 68\,\%. Error bars include only statistical uncertainties, as defined by the global \BP\ posterior framework, and they thus account for instrumental noise, gain fluctuations, parametric foreground variations etc. 
+\par
+\end{table*}
+
+As argued by \citet{thommesen:2019}, estimating the Solar dipole is one of the more difficult parameters to accurately constrain. This is in part due to the effect of mode-coupling when masking the Galactic plane, but also due to the Solar dipole in the calibration step. In essence, the Solar dipole's amplitude couples strongly to the calibration parameters. Misestimation of the calibration can propagate to an incorrect CMB dipole, and vice-versa.
+
+The results of our Solar dipole estimate are displayed in Table~\ref{tab:dipole} and Fig.~\ref{fig:dip_amp}. We find that the dipole direction is consistent with the \citet{bp11} result, but is $11\,\mathrm{\mu K}$ higher than the result from \citet{hinshaw2009}. Assuming a $3400\,\mathrm{\mu K}$ Solar dipole amplitude, an absolute calibration error of $0.3\,\%$ is sufficient to to induce an $11\,\mathrm{\mu K}$ error. In fact, the 0.2\,\% absolute calibration error reported by \citet{bennett2012} can induce a $6.7\,\mathrm{\mu K}$ Solar dipole amplitude error, dominating the error budget for the final reported Solar dipole.
+
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/dip_amplitude.pdf}
+	\caption{CMB dipole amplitude as a function of sky fraction. The gray band indicates the 68\,\% posterior confidence region.}
+	\label{fig:dip_amp}
 \end{figure}
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/dip_longitude.pdf}
-\end{figure}
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/dip_latitude.pdf}
-\end{figure}
+
+It is also noteworthy that the \bp\ Solar dipole differs from the \cosmoglobe\ Solar dipole with a higher significance even than the \WMAPnine\ result, despite using a nearly identical framework and almost identical datasets. First, we note that the \Planck\ PR4 analysis \citep{npipe} showed a similarly paradoxical discrepancy. On its face, the LFI 2018 and HFI 2018 Solar dipole values would average according to their uncertainties to $\sim3362.3\,\mathrm{\mu K}$. In this analysis, \citet{npipe} identify relative calibration uncertainty between 100 and 143\,GHz as the dominant source of uncertainty.
+
+In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noise among all low freuqency components, while being absolutely calibrated using a prior distribution. Therefore, it is likely that the chosen prior mean directly impacts the final Solar dipole amplitude, as it sets the amplitude of all low frequency components.
 
 \subsubsection{Low-$\ell$ anomalies}
 \label{sec:anomalies}
