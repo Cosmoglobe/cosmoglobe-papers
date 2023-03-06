@@ -276,47 +276,51 @@ The rest of this paper is organized as follows. In Sect.~\ref{sec:methods}, we p
 \section{End-to-end Bayesian CMB analysis}
 \label{sec:methods}
 
-We begin by discussing the \WMAP\ analysis from uncalibrated TOD to maps. Section~\ref{sec:lfi_bp} gives an overview of the \bp\ project's reanalysis of \Planck\ LFI data, Sect.~\ref{sec:official_pipeline} provides a brief overview of the official \WMAP\ pipeline, and Sect.~\ref{sec:wmap_instmodel} constructs the data model that is used in the end-to-end Gibbs sampling analysis.
+The general computational analysis framework used in this work has been described in detail by \citet{bp01} and \citet{bp17} and references therein. In this section, we give a brief summary of the main points, and emphasize in particular the differences with respect to earlier work. 
+%In particular, Sect.~\ref{sec:lfi_bp} gives an overview of the \bp\ project's reanalysis of \Planck\ LFI data, Sect.~\ref{sec:official_pipeline} provides a brief overview of the official \WMAP\ pipeline, and Sect.~\ref{sec:wmap_instmodel} details the data model that is used in the current LFI+\WMAP\ end-to-end Gibbs sampling analysis.
 
 \subsection{LFI and \bp}
 \label{sec:lfi_bp}
 
-The \bp\ project \citep{bp01} was the first true application of end-to-end Gibbs sampling in the framework of CMB data analysis. The \Planck\ Low Frequency Instrument data had been gradually improved through each \Planck\ data release, specifically  PR1 \citep{planck2014-a03}, PR2 \citep{planck2014-a03}, PR3 \citep{planck2016-l02}, and PR4 \citep{planck2014-a03}. Even after PR4, the LFI data still failed polarization null tests and contained visually striking poorly measured modes corresponding to relative gain uncertainties between different detectors. It was during the PR3 analysis when it became clear that there was a degeneracy between the assumption of the sky's polarization and the gain differences, a problem that affected the final PR4 maps.
+The \bp\ project \citep{bp01} was the first true application of end-to-end Gibbs sampling in the framework of CMB data analysis. The \Planck\ LFI data had been gradually improved through each \Planck\ data release, specifically  PR1 \citep{planck2014-a03}, PR2 \citep{planck2014-a03}, PR3 \citep{planck2016-l02}, and PR4 \citep{planck2014-a03}. Even after PR4, however, the final LFI maps still failed significant polarization null tests (in particular for the 44\,GHz frequency channel), in particular due to contained poorly measured realtive gain uncertainty modes. Indeed, already the PR3 analysis noted a strong degeneracy between the LFI gain solution and the astrophysical foreground model, and to break these the \Planck\ LFI Data Processing Center (DPC) implemented an iterative scheme in which the various low-level processing and component separation operations were performed sequentially and repeatedly. However, because these iterations were performed manually with significant amounts of human interactions, these scheme was very slow, and only four full cycles were completed before the \Planck\ collaboration ended. A main motivation for the \BP\ project was to automate this process, and perform thousands of such iterations, rather than just four. 
 
-The \bp\ analysis generated the first clean LFI maps by Gibbs sampling the sky components and underlying instrumental parameters jointly \citep{bp01,bp03,bp10}. The \commanderthree\ pipeline was used to perform the low-level data analysis conditioned on a sky model that was created through component separation, and the reprocessed maps were used to perform component separation once again. This Gibbs chain allowed for data-driven estimates of the instrumental properties to be determined, created the best LFI maps to date, and in doing so fully explored the degeneracies between the low-level instrumental parameters themselves and our knowledge of the sky \citep{bp13,bp14}.
+This work was highly successful, and the \bp\ collaboration was able to generate the first LFI maps with true joint estimation of sky components and underlying instrumental parameters through a statistical process called Gibbs sampling \citep{bp01,bp03,bp10}. The code used for this process was called \commanderthree\ \citep{bp03}. The resulting Gibbs chains allowed for data-driven estimates of the instrumental properties to be determined by exploring the degeneracies between the low-level instrumental parameters themselves and our knowledge of the sky \citep{bp13,bp14}, and in doing so resulted in new state-of-the-art and low-systematics LFI maps.
 
-\subsection{Official \WMAP\ pipeline}
+\subsection{Official \WMAP\ instrument characterization and analysis pipeline}
 \label{sec:official_pipeline}
 
+The main goal of the current paper is to perform a similar analysis with the \WMAP\ time-ordered data, and thereby solve some of the long-standing unresolved issues with the official maps, in particular related to poorly constrained large-scale polarization modes. Before presenting our algorithm, however, it is useful for reference purposes to briefly review the official \WMAP\ instrument model and analysis pipeline, which improved gradually over a total of five data releases, often referred to as the 1-, 3-, 5-, 7, and 9-year data releases, respectively. Unless otherwise noted, we will in the following refer to the final 9-year results in the following.
+
 The \WMAP\ satellite carried forty differential polarization-sensitive
-radiometers grouped as differencing assemblies (DAs), where one pair was
-sensitive to the difference in signal at one polarization orientation and the
-other pair sensitive to the orthogonal polarization. In total, the DAs were
-allocated as: 1 \K\ (23\,GHz), 1 \Ka\ (30\,GHz), 2 \Q\ (40\,GHz), 2 \V\
-(60\,GHz), and 4 \W\ (90\,GHz).
+radiometers grouped as differencing assemblies (DAs), where one pair
+was sensitive to the difference in signal at one polarization
+orientation and the other pair sensitive to the orthogonal
+polarization. In total, there were ten DAs, which were distributed as
+one \K-band (23\,GHz), one \Ka-band (33\,GHz), two \Q-band (41\,GHz),
+two \V-band (61\,GHz), and four \W-band (94\,GHz) DAs.
+
+The \WMAP\ bandpasses were measured pre-launch on ground, sweeping a signal source through 201 frequencies and recording the output \citep{jarosik2003:MAP}. The bandpass responses have not been updated since the initial data release. However, as noted in \citet{bennett2012}, there has been an observed drift in the center frequency of \K, \Ka, \Q, and \V-band corresponding to a $\sim$$\,0.1\,\%$ decrease over time. In practice, this did not affect the \WMAP\ data processing because each year was mapped separately and co-added afterwards. An effective frequency calculator was delivered in the DR5 release as part of the IDL library to mitigate this effect during astrophysical analyses.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/m_sw.html}}
+
+The beams were characterized in the form of maps, with separate products for the near-field and far-field. The main beam and near sidelobes were characterized using a combination of physical optics codes and observations of Jupiter for each horn separately. The maps of Jupiter were then combined with the best-fit physical optics codes to create a map of the beam response \citep{hill2009,weiland2010,bennett2012}.
+Far sidelobes were estimated using a combination of laboratory measurements and Moon data taken during the mission \citep{barnes2003}, as well as a physical optics model described by \citet{hinshaw2009}. To remove the far sidelobe  in the TOD, an estimate was calculated by convolving the intensity map and the orbital dipole signal with the measured sidelobe signal \citep{jarosik2007}. Although the sidelobe pickup was modeled by \citet{barnes2003}, it was determined that the results were small enough to be neglected and have not been explicitly reported in any of the subsequent \WMAP\ data releases.
 
 The \WMAP\ pointing solution was determined using the boresight vectors of individual feedhorns in spacecraft coordinates, in combination with on-board star trackers. Thermal flexure of the tracking structure introduced small pointing errors, as discussed by \citet{jarosik2007}. Using the temperature variation measured by housekeeping data, the quaternion pointing solution was corrected using a linear model that depends on arcsecond per kelvin. The residual pointing errors were computed using observations of Jupiter and Saturn, and the reported upper limit was given by 10\arcsec\ \citep{bennett2012,wmapexsupp}.
 
-The \WMAP\ bandpasses were measured directly pre-launch, sweeping a signal source through 201 frequencies and recording the output \citep{jarosik2003:MAP}. The bandpass responses have not been updated since the initial data release. However, as noted in \citet{bennett2012}, there has been an observed drift in the center frequency of \K, \Ka, \Q, and \V-band corresponding to a $\sim0.1\,\%$ decrease over time. In practice, this did not affect the \WMAP\ data processing because each year was mapped separately and co-added afterwards. An effective frequency calculator was delivered in the DR5 release as part of the IDL library to mitigate this effect during astrophysical analyses.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/m_sw.html}}
-
-The beams were characterized in the form of maps, with separate products for the near-field and far-field. The main beam and near sidelobes were characterized using a combination of physical optics codes and observations of Jupiter for each horn separately. The maps of Jupiter were then combined with the best-fit physical optics codes to create a map of the beam response \citep{hill2009,weiland2010,bennett2012}.
-Far sidelobes were estimated using a combination of laboratory measurements and Moon data taken during the mission \citep{barnes2003}, as well as a physical optics model described in \citet{hinshaw2009}. To remove the far sidelobe  in the TOD, an estimate was calculated by convolving the intensity map and the orbital dipole signal with the measured sidelobe signal \citep{jarosik2007}. Although the sidelobe pickup was modeled in \citet{barnes2003}, it was determined that the results were small enough to be neglected and have not been explicitly reported in any of the \WMAP\ data releases.
-
-The \WMAP\ data were calibrated by jointly estimating the time-dependent gains and baselines, as described in \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
+The \WMAP\ data were calibrated by jointly estimating the time-dependent gains and baselines, as described by \citet{hinshaw2007}, \citet{hinshaw2009}, and \citet{jarosik2010}.
 The TOD were intially modeled as having
-constant gain and baseline for a 1--24\,hour period, and are fit to the orbital
+constant gain and baseline for a 1--24\,hour period, with parameters that were fit to the orbital
 dipole assuming $T_0$ from \citet{mather:1999} and a map made from a previous
 iteration of the mapmaking procedure. Once the gain and baseline solution had
-converged, the data were fit to a parametric form of the radiometer performance
-as a function of housekeeping data, given in Appendix A of \citet{wmapexsupp}.
+converged, the data were fit to a parametric form of the radiometer response
+as a function of housekeeping data, given in Appendix~A of \citet{wmapexsupp}.
 
-Transmission imbalance, i.e., the effect of different sky signal transmission from the A-side and B-side optics, is parameterized using $x_\mathrm{im}$, which is zero in the case of an ideal differential radiometer. In practice, an unpolarized sky map generates a timestream
+As noted above, the \WMAP\ radiometers were inherently differential in nature, and measured the signal differences in two directions through two horns, referred to as the A- and B-sides. The responsivity of the two sides was not identical, and this effective gain imbalance is referred to as ``transmission imbalance''. The amplitude of this effect is parameterized by $x_\mathrm{im}=(\alpha_A-\alpha_B)/2$, where $\alpha_A$ and $\alpha_B$ are the transmission coefficients of each side, and this parameter is zero in the case of an ideal differential radiometer. In practice, an unpolarized sky map generates a timestream
 \begin{align}
 	d_t^\mathrm{imbal}&\propto (1+x_\mathrm{im})T_{p_\A}-(1-x_\mathrm{im})T_{p_\B}
 	\\
 	&=(T_{p_\A}-T_{p_\B})+x_\mathrm{im}(T_{p_\A}+T_{p_\B}).
 \end{align}
-If the $x_\mathrm{im}$ value were inaccurate, this would yield a spurious polarization component, and create imbalance modes due to coupling with the Solar dipole \citep{jarosik2007}. The transmission imbalance factors were fit by using the Solar dipole in TOD space and fitting the common-mode and differential signals in TOD space directly \citep{jarosik2003a,jarosik2007}.
+This effect is taken into account during mapmaking. However, inaccuracies in the determination of $x_\mathrm{im}$ will yield a spurious polarization component, and create artificial imbalance modes due to coupling with the sky signal, in particular with the bright Solar CMB dipole \citep{jarosik2007}. The \WMAP\ transmission imbalance factors were fit to the Solar dipole in TOD space, accounting for both common and differential modes \citep{jarosik2003a,jarosik2007}.
 
 
 
