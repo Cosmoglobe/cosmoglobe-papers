@@ -555,18 +555,18 @@ Third and finally, we also marginalize over the AME scale index with a prior of 
 
 \subsection{Posterior distribution and Gibbs sampling}
 
-As shown in \citet{bp01}, this parametric description of the instrumental effects and sky allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modeled, the data should be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. Given this model, we can evaluate the likelihood for arbitrary chunks of time-ordered data in the context of the entire model, so that individual chunks of data with poor fits can be more easily identified. In general, the likelihood is written
+As shown by \citet{bp01}, this joint parametric description of the instrumental effects and sky allows us to write down a total model for the data, $\boldsymbol d=\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)+\boldsymbol n^\mathrm w$, where $\boldsymbol s^\mathrm{tot}$ encompasses all of the terms in Eq.~\eqref{eq:model} except for the white noise term. Assuming that all instrumental effects have been modeled adequately, and that the white noise is Gaussian distributed, the data should then also be Gaussian distributed with a mean of $\boldsymbol s^\mathrm{tot}(\boldsymbol\omega)$ and variance $\boldsymbol \sigma_0^2$. In general, the likelihood reads
 \begin{equation}
 	P(\boldsymbol d\mid\boldsymbol\omega)\propto\exp\left(-\frac12\sum_t\frac{(d_t-s^\mathrm{tot}_t(\boldsymbol\omega))^2}{\sigma_0^2}
 	\right).
 \end{equation}
-If $\boldsymbol d\sim\mathcal N(\boldsymbol s^\mathrm{tot},\boldsymbol\sigma_0^2)$ is the correct model for the data, the argument of the exponent is proportional to a $\chi^2$-distribution with $n_\mathrm{TOD}$ degrees of freedom. In the limit of large $n$, a $\chi^2$ distribution is well-approximated by a Gaussian with mean $n$ and variance $2n$. Therefore we define and use the reduced-$\chi^2$ statistic,
+If $\boldsymbol d\sim\mathcal N(\boldsymbol s^\mathrm{tot},\boldsymbol\sigma_0^2)$ is the correct model for the data, the argument of the exponent is proportional to a $\chi^2$-distribution with $n_\mathrm{TOD}$ degrees of freedom. In the limit of large $n$, a $\chi^2$ distribution is well-approximated by a Gaussian with mean $n$ and variance $2n$. Therefore we define and use in the following the reduced normalized $\chi^2$ statistic,
 \begin{equation}
 	\chi^2\equiv \frac{\sum_t((d_t-s_t^\mathrm{tot})^2/\sigma_0^2 - n_\mathrm{TOD}}{\sqrt{2n_\mathrm{TOD}}},
 \end{equation}
 which is approximately drawn from the standard normal distribution $\mathcal N(0,1)$.
 
-The \cosmoglobe\ Gibbs chain for this analysis is given by
+Following \citet{bp01}, the \cosmoglobe\ Gibbs chain for this analysis is given by
 \begin{alignat}{10}
 \label{eq:gain_samp_dist}\g &\,\leftarrow          P(\g&\,               \mid \data, &\,    &          &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\boldsymbol a, &\,C_{\ell},&\,\boldsymbol\theta)\\
 \label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,           \mid \data, &\,\g, &\,        &\,\boldsymbol\xi_n,  &\,\boldsymbol s^\mathrm{inst}, &\,\boldsymbol\beta, &\,\boldsymbol a, &\,C_{\ell},&\,\boldsymbol\theta)\\ 
@@ -582,26 +582,26 @@ with each step requiring its own dedicated sampling algorithm. The \commanderthr
 %MG: not sure this bit is particularily relevant for this paper, feel free to overrule me
 %To add another data set to the Gibbs chain, one can either add a map or TODs. To add a TOD, one must implement Eqs.~\eqref{eq:gain_samp_dist}--\eqref{eq:samp_inst} for each instrument, as was done in \citet{bp01} and \citet{bp10} for \Planck\ LFI and in \citet{bp17} for \WMAP. To add a map, one must simply pass processed maps with beam, mask, and noise information to Eqs.~\eqref{eq:beta_samp}--\eqref{eq:param_samp}, as was done for the Haslam 408\,MHz map \citep{haslam1982,remazeilles2014} and the \Planck\ 353 and 857\,GHz maps.
 
-Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI and \WMAP\ data, we summarize the TOD processing steps in Sect.~\ref{sec:algorithms}.
+
 
 
 
 \subsection{Sampling algorithms}
 \label{sec:algorithms}
 
-Each step of the Gibbs chain requires its own distribution to be sampled from. In Sect.~\ref{ssec:oldsamplers} we review the sampling algorithms implemented in the \bp\ suite of papers, while Sects.~\ref{ssec:mapmaking}--\ref{ssec:baseline} provide an overview of the \WMAP-specific processing steps.
+Before we discuss the results of this Gibbs chain as applied to the \Planck\ LFI and \WMAP\ data, we summarize the TOD processing steps in this section. Each step of the Gibbs chain requires its own conditional distribution sampling algorithm. In Sect.~\ref{ssec:oldsamplers} we review the sampling algorithms implemented in the \bp\ suite of papers, while Sects.~\ref{ssec:mapmaking}--\ref{ssec:baseline} provide an overview of the \WMAP-specific processing steps.
 
 \subsubsection{Review of sampling algorithms}
 \label{ssec:oldsamplers}
 
 
-Several of the techniques required for \WMAP\ data analysis have already been implemented and described in the \bp\ framework and implemented in \commanderthree. This section includes a summary of the algorithms that were used previously for the analysis of LFI data. In each of these cases, every part of the model not explicitly mentioned is held fixed unless specified otherwise.
+By far most of the techniques required for \WMAP\ data analysis have already been implemented and described in the \bp\ framework and implemented in \commanderthree. This section includes a summary of the algorithms that were used previously for the analysis of LFI data. In each of these cases, every part of the model not explicitly mentioned is held fixed unless specified otherwise.
 
-Noise estimation and calibration, described in \citet{bp06} and \citet{bp07} respectively, are highly degenerate, given that the timestream
+Noise estimation and calibration are described by \citet{bp06} and \citet{bp07}, respectively. As noted in those works, these two steps are strongly correlated, simply because the timestream
 \begin{equation}
 	d_{t,i}=g_{q,i}s_{t,i}^\mathrm{tot}+n_{t,i}^\mathrm{corr}+n_{t,i}^\mathrm{wn}
 \end{equation}
-is equally well fit by two solutions if $g'=gs^\mathrm{tot}/(s^\mathrm{tot})'$ or ${(n^\mathrm{corr})'=n^\mathrm{corr}+gs^\mathrm{tot}+g'(s^\mathrm{tot})'}$. In practice, this is dealt with by marginalizing over the correlated noise realization $\boldsymbol n^\mathrm{corr}$ assuming a fixed PSD $\boldsymbol\xi_n$, so that Eqs.~\eqref{eq:gain_samp_dist} and \eqref{eq:ncorr_samp_dist} are evaluated as
+may be almost equally well fit by two solutions defined by $g'=gs^\mathrm{tot}/(s^\mathrm{tot})'$ or ${(n^\mathrm{corr})'=n^\mathrm{corr}+gs^\mathrm{tot}+g'(s^\mathrm{tot})'}$; the only thing that breaks this degeneracy is the noise PSD, which is a relatively loose constraint. A Gibbs sampler is by nature not very effective for nearly degenerate distributions, and we therefore instead define a joint sampling step for the correlated noise and gain. In practice, this is done by first drawing the calibration from its marginal distribution with respect to $\boldsymbol n^\mathrm{corr}$, and then drawing $\boldsymbol n^\mathrm{corr}$ from its conditional distribution with respect to $g$,
 \begin{alignat}{10}
 	\g&\,\leftarrow P(\g&\,\mid\data, &\, &\,&\,\boldsymbol\xi_n,\ldots)
 	\label{eq:gmarg}
@@ -609,13 +609,13 @@ is equally well fit by two solutions if $g'=gs^\mathrm{tot}/(s^\mathrm{tot})'$ o
 	\ncorr&\,\leftarrow P(\ncorr&\,\mid\data, &\,\g, &\,&\,\boldsymbol\xi_n,\ldots).
 	\label{eq:ncorr_only}
 \end{alignat}
-This is allowed by probability theory given that the joint distribution $P(\g,\ncorr\mid\boldsymbol\omega)=P(\ncorr\mid\g,\boldsymbol\omega)P(\g\mid\boldsymbol\omega)$, so that Eqs.~\eqref{eq:gmarg} and \eqref{eq:ncorr_only} evaluated in sequence is equivalent to drawing a joint sample from $P(\g,\ncorr\mid\boldsymbol\omega)$. In practice, this means that when sampling for $\g$, the covariance matrix $\mathsf N=\mathsf N_\textrm{wn}+\mathsf N_\textrm{corr}$ must be used, rather than just $\mathsf N_\mathrm{wn}$.
+It is easy to see that this is a valid sample from the joint distribution sipmly from the defintion of a conditional distribution, $P(\g,\ncorr\mid\boldsymbol\omega)=P(\ncorr\mid\g,\boldsymbol\omega)P(\g\mid\boldsymbol\omega)$. In practice, this simply means that when sampling for $\g$, the covariance matrix $\mathsf N=\mathsf N_\textrm{wn}+\mathsf N_\textrm{corr}$ must be used, rather than just $\mathsf N_\mathrm{wn}$.
 
 \commanderthree\ models the gain at each timesteam $t$ for a detector $i$ as
 \begin{equation}
 	g_{t,i}=g_0+\Delta g_i+\delta g_{q,i}
 \end{equation}
-where $q$ labels the time interval for which we assume the gain is constant, e.g., a single scan. In order to sample the gain, we write down a generative model for the TOD,
+where $q$ labels the time interval for which we assume the gain is constant, typically a single scan. In order to sample the gain, we write down a generative model for the TOD,
 \begin{equation}
 	\dv_i=\g_{i}\s_{i}^\mathrm{tot} +\n_{i}^\mathrm{tot}\sim\mathcal N(\g_i\s_{i}^\mathrm{tot},\mathsf N_i).
 \end{equation}
@@ -627,9 +627,9 @@ Since the $\dv_i$ is given as a linear combination of the fixed signal and the g
 	+(\s_i^\mathrm{tot})^T\N^{-1/2}_i\boldsymbol\eta.
 \end{equation}
 Note that the $\mathsf N_i$ depends implicitly on the noise PSD $\boldsymbol \xi_n$, while the specific realization of $\ncorr$ is accounted for in the covariance matrix.
-In practice, as shown in \citet{bp07}, \commanderthree\ samples $g_0$, $\Delta g_i$, and $\delta g_{q,i}$ in separate sampling steps. Formally, the Gibbs chain is broken by fitting the absolute gain $g_0$ to the orbital dipole rather than the full sky signal. However, this makes the sampling much more robust to unmodeled systematic effects, so the trade-off in rigor is justified.
+As detailed by \citet{bp07}, \commanderthree\ samples in practice $g_0$, $\Delta g_i$, and $\delta g_{q,i}$ in separate sampling steps. Specifically, the absolute calibration $g_0$ is for the CMB-dominated channels only fitted using the orbital dipole, while the relative calibrations, $\Delta g_i$, exploits the full sky signal. The same is true for the time-dependent gain fluctuations, $\delta g_{q,i}$, and in this casee an additional smoothness prior is applied through an effective Wiener filter. It is worth noting that the Gibbs chain is formally broken by fitting the absolute gain $g_0$ to the orbital dipole alone, as opposed to the full sky signal. However, this makes the sampling more robust with respect to unmodeled systematic effects, somewhat analogous to applying a confidence mask when estimating the CMB power spectrum.
 
-The correlated noise sampling, described in \citet{bp06}, follows a similar procedure to gain sampling, except now conditioned upon the gain estimate, sampled just before correlated noise in the code. Similar to the gain case, we can write a generative model for the data
+The correlated noise sampling, described by \citet{bp06}, follows a similar procedure, except this now conditions upon the previous gain estimate, which is sampled immediately before the correlated noise component in the code. Similar to the gain case, we can write a generative model for the data,
 \begin{equation}
 	\dv_i=\g_i\s_i^\mathrm{tot}+\n_i^\mathrm{corr}+\n^\mathrm{wn}_i
 	\sim\mathcal N(\g_i\s_i^\mathrm{tot},\N_{\mathrm{corr},i}+\N_{\mathrm{wn},i}).
@@ -643,14 +643,14 @@ Given fixed $\boldsymbol r_i=\dv_i-\g_i\s_i^\mathrm{tot}$, we can again write a 
 	+\N^{-1/2}_{\mathrm{wn},i}\boldsymbol\eta_1
 	+\N^{-1/2}_{\mathrm{corr},i}\boldsymbol\eta_2.
 \end{equation}
-This gives a sample of the true underlying correlated noise that occurred when the instrument was taking data. In practice, this is equivalent to the destriping mapmaking algorithm \texttt{Madam}, and returns equivalent results to the classical method \citep{bp02}.
+This gives a sample of the underlying correlated noise. %In practice, this is equivalent to the destriping mapmaking algorithm \texttt{Madam}, and returns equivalent results to the classical method \citep{bp02}.
 
-To solve for the correlated noise parameters, we assume that the correlated noise is drawn from a correlated Gaussian and form the posterior distribution
+To sample the correlated noise parameters, we assume that the correlated noise is drawn from a correlated Gaussian and form the conditional posterior distribution,
 \begin{equation}
 	P(\boldsymbol\xi_n\mid\n^\mathrm{corr})\propto\frac{\exp{[-\frac12(\n^\mathrm{corr})^T\N_\mathrm{corr}^{-1}\n^\mathrm{corr}]}}
 	{\sqrt{|\N_\mathrm{corr}|}}P(\boldsymbol\xi_n).
 \end{equation}
-The simplest parameterization for correlated noise is given by
+The simplest and most commonly used parameterization for correlated noise is given by
 \begin{equation}
 	\mathsf N_\mathrm{corr}(f)=\sigma_0^2\left(\frac f{f_\mathrm{knee}}\right)^\alpha.
 \end{equation}
@@ -659,7 +659,7 @@ This can in principal be modified, and for \Planck\ LFI a Gaussian log-normal bu
 	\sigma_0^2\equiv\frac{\mathrm{Var}(r_{t+1}-r_t)}2,
 \end{equation}
 where $t$ and $t+1$ are consecutive time samples, and ${\boldsymbol r\equiv\boldsymbol d-\boldsymbol g\boldsymbol s^\mathrm{tot}
--\boldsymbol n^\mathrm{corr}}$. In practice, this makes $\sigma_0$ a deterministic function of the sampled sky and gain parameters. The parameters $\alpha$ and $f_\mathrm{knee}$ are not linear in the data, so must be sampled using the general inversion sampler.\footnote{See, e.g., Appendix A.3 of \citet{bp01} and Chapter 7.3.2 of \citet{numerical_recipes} for further details.} In practice, this requires computing the posterior over a linear grid  one parameter at a time.
+-\boldsymbol n^\mathrm{corr}}$. In practice, this makes $\sigma_0$ a deterministic function of the sampled sky and gain parameters. The parameters $\alpha$ and $f_\mathrm{knee}$ are not linear in the data, and they can be sampled efficiently using a standard inversion sampler (see, e.g., Appendix~A.3 of \citet{bp01} or Chapter~7.3.2 of \citet{numerical_recipes} for further details). In practice, this requires computing the posterior over a linear grid one parameter at a time.
 
 
 Once the instrumental parameters have been sampled, \commanderthree\ computes the calibrated TOD for each band,
@@ -667,7 +667,7 @@ Once the instrumental parameters have been sampled, \commanderthree\ computes th
 	r_{t,j}=\frac{d_{t,j}-n_{t,j}^\mathrm{corr}}{g_{t,j}}-\left(s_{t,j}^\mathrm{orb}
 	+s_{t,j}^\mathrm{fsl}+\delta s_{t,j}^\mathrm{leak}+\vec{s}_{t,j}^\mathrm{inst}\right)
 \end{equation}
-where $\s^\mathrm{orb}$ is the orbital dipole, $\s^\mathrm{fsl}$ is the far sidelobe timestream, $\delta\s^\mathrm{leak}$ is the bandpass leakage, and $\s^\mathrm{inst}$ is the set of instrumental parameters, e.g., the 1\,Hz spike in LFI. With a correlated noise realization removed, one can perform simple binned mapmaking, weighting each pixel by the white noise amplitude.
+where $\s^\mathrm{orb}$ is the orbital dipole \citep{bp07}, $\s^\mathrm{fsl}$ is the far sidelobe timestream \citep{bp08}, $\delta\s^\mathrm{leak}$ is the bandpass leakage \citep{bp09}, and $\s^\mathrm{inst}$ is some instrumental-specific contribution, e.g., the 1\,Hz electronic spike for LFI. With a correlated noise realization removed, one can perform simple binned mapmaking, weighting each pixel by the white noise amplitude.
 
 % Component separation for intensity and polarization are described in \citet{bp13} and \citet{bp14}, respectively.
 
@@ -679,9 +679,7 @@ where $\s^\mathrm{orb}$ is the orbital dipole, $\s^\mathrm{fsl}$ is the far side
 \subsubsection{Differential mapmaking}
 \label{ssec:mapmaking}
 
-The first additional algorithm that needed to be added to \commanderthree\ when adding \WMAP\ TOD data was differential mapmaking, since the \Planck\ LFI data came from a standard single-horn instrument.  
-
-After calibration and correction for instrumental effects, the TOD can be modeled as
+The first additional algorithm that needs to be added to \commanderthree\ in order to process \WMAP\ TOD data is support for differential mapmaking \citep{bp17}. After calibration and correction for instrumental effects, the TOD can be modeled as
 \begin{equation}
 	\boldsymbol d=\mathsf P\boldsymbol m+\boldsymbol n^\mathrm{w},
 \end{equation}
@@ -697,23 +695,24 @@ is the expected map for each detector after removing the orbital dipole, far sid
 	+\delta_{p^Q_{\phantom\A}p^Q_\A}\cos2\psi_\A
 	+\delta_{p^U_{\phantom\A}p^U_\A}\sin2\psi_\A)
 	\\
-	&-(1-x_\mathrm{im})(\delta_{p^I_{\phantom\B}p_\B^I}
+	&\quad-(1-x_\mathrm{im})(\delta_{p^I_{\phantom\B}p_\B^I}
 	-\delta_{p^Q_{\phantom\A}p^Q_\B}\cos2\psi_\B
-	-\delta_{p^U_{\phantom\A}p^U_\B}\sin2\psi_\B)
+	-\delta_{p^U_{\phantom\A}p^U_\B}\sin2\psi_\B)\nonumber
 \end{align}
-where $p_\A$ and $p_\B$ are the time-dependent pointings for each Differencing Assembly (DA). The maximum likelihood map can in principal be solved using the usual mapmaking equation,
+where $p_\A$ and $p_\B$ are the time-dependent pointings for each DA. The maximum likelihood map can now in principle be derived using the usual mapmaking equation,
 \begin{equation}
 	\label{eq:mapmapking_eqn1}
 	\mathsf P^T\mathsf N^{-1}\mathsf P\boldsymbol m=\mathsf P^T\mathsf N^{-1}\boldsymbol d.
 \end{equation}
-For a single-horn experiment, i.e., \Planck\ LFI, this reduces to a $3\times3$ matrix that can be inverted for each pixel independently. For the pointing matrix in Eq.~\eqref{eq:wmap_pointing}, this is no longer possible, as there is inherently coupling between horns A and B in the timestreams. The $3N_\mathrm{pix}\times3N_\mathrm{pix}$ matrix can be solved using an iterative algorithm, e.g., preconditioned conjugate gradients.
+For a single-horn experiment, i.e., \Planck\ LFI, this reduces to a $3\times3$ matrix that can be inverted for each pixel independently. For the pointing matrix in Eq.~\eqref{eq:wmap_pointing}, this is no longer possible, as there is inherently coupling between horns A and B in the timestreams. The $3N_\mathrm{pix}\times3N_\mathrm{pix}$ matrix can be solved using an iterative algorithm, e.g., preconditioned conjugate gradients \citep{shewchuk:1994}.
 
-\citet{jarosik2010} identified an issue where a large difference in the sky temperature values at pixel A versus pixel B induced artifacts in the mapmaking procedure. We adopt the procedure first described in \citet{hinshaw2003a} where only the pixel in a bright region, defined by a small processing mask \citep{bennett2012} is accumulated, thus modifying the mapmaking equation to
+\citet{jarosik2010} identified an issue where a large difference in the sky temperature values at pixel A versus pixel B induced artifacts in the mapmaking procedure. We adopt the procedure first described by \citet{hinshaw2003a} where only the pixel in a bright region, defined by a small processing mask \citep{bennett2012} is accumulated, thus modifying the mapmaking equation to
 \begin{equation}
 	\mathsf P^T_\mathrm{am}\mathsf N^{-1}\mathsf P\boldsymbol m
 	=\mathsf P^T_\mathrm{am}\mathsf N^{-1}\boldsymbol d.
 \end{equation}
-This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$ \textcolor{red}{units. K?, uK?}, which typically takes about 20 iterations for producing frequency maps.
+This equation can be solved using the BiCG-STAB algorithm for a non-symmetric matrix $\mathsf A$ where $\mathsf A\boldsymbol x=\boldsymbol b$. We apply a preconditioner $\mathsf M$ by numerically inverting the same problem with $N_\mathrm{side}=16$ maps and applying a diagonal noise matrix. Numerically, we define convergence as when the residual $\boldsymbol r\equiv\boldsymbol b-\mathsf A\boldsymbol x$ satisfies $\boldsymbol r^T\mathsf M^{-1}\boldsymbol r/\boldsymbol b^T\mathsf M^{-1}\boldsymbol b<10^{-10}$, which typically takes about 20 iterations for producing frequency maps.
+% HKE: The convergence criterion is a ratio, and therefore unitless
 
 
 \subsubsection{Transmission imbalance estimation}
@@ -740,12 +739,12 @@ The \WMAP\ procedure, described in \citet{jarosik2003a}, fit for common-mode and
 \subsubsection{Baseline sampling}
 \label{ssec:baseline}
 
-The data model adopted in \citet{hinshaw2003a} can be written in raw digital units (du) as
+The data model adopted by \citet{hinshaw2003a} can be written in raw digital units (du) as
 \begin{equation}
 	\data = \mathsf{GPBM}\boldsymbol a+\boldsymbol n+\boldsymbol b,
 \end{equation}
 where $\boldsymbol b$ is the instrumental baseline and $\boldsymbol n$ is the
-total instrumental noise. As detailed in \citet{bp06}, \commanderthree\ divides
+total instrumental noise. As noted above, \commanderthree\ divides
 the noise into $\n=\n^\mathrm w+\n^\mathrm{corr}$, a white noise term and a
 correlated noise term. By definition, the white noise does not have any
 correlations between adjacent pixels, so that any pixel-pixel covariance should
@@ -760,19 +759,25 @@ Gibbs chain, as we are not formally sampling $b_0$ and $b_1$ for each TOD
 chunk. In practice, baseline estimation uncertainty propagates to correlated
 noise realizations and PSD parameters, as discussed below.
 
-The approach detailed in \citet{hinshaw2003a} and the \commander\
-implementation differ mainly in the assumed stable timescale -- the initial
-\WMAP\ baseline is estimated over one hour timescales, whereas \commander\
-assumes constant values throught the entire time chunk, 3--7 days depending on
-the band in question. As noted in \citet{hinshaw2003a}, residual baseline
-variations manifest as correlated noise stripes in the final maps. \WMAPnine\
-solves this using a time-domain filter, downweighting the data based off of the
-noise characterization. This approach is equivalent to the \commanderthree\
-procedure of removing a constrained realization of correlated noise from the
-timestream directly, based on the best-fit to the noise PSD.
-
-
-
+The approach detailed by \citet{hinshaw2003a} and the
+\commander\ implementation differ mainly in two ways. First, the
+assumed stable timescales are different --- the initial
+\WMAP\ baseline is estimated over one hour timescales, and assumed to
+be an actual constant, whereas \commander\ assumes constant values
+throught the entire time chunk, which is 3--7 days depending on the
+band in question, but allows a linear term in the baseline. Second,
+the two methods differs in how they treat non-linear residuals in the
+first-order baseline model.  As noted in \citet{hinshaw2003a},
+residual baseline variations manifest as correlated noise stripes in
+the final maps, and\WMAPnine\ solves this using a time-domain filter,
+downweighting the data based off of the noise characterization. This
+is fundamentally similar to the \commanderthree\ approach, which
+accounts for this as part of the correlated noise component. The main
+advantages of the latter is that it allows for proper error
+propagation at all angular scales without the use of a dense
+pixel-pixel noise covariance, and also that it provides a convenient
+means for inspecting the residuals visually by binning the correlated
+noise into a sky map.
 
 \section{Data and data processing}
 \label{sec:data}
