@@ -113,11 +113,11 @@
 \newcommand{\lfi}[0]{LFI}
 \newcommand{\hfi}[0]{HFI}
 \newcommand{\npipe}[0]{\texttt{NPIPE}}
-\newcommand{\K}[0]{\textsl K}
-\newcommand{\Ka}[0]{\textsl{Ka}}
-\newcommand{\Q}[0]{\textsl Q}
-\newcommand{\V}[0]{\textsl V}
-\newcommand{\W}[0]{\textsl W}
+\newcommand{\K}[0]{\textit K}
+\newcommand{\Ka}[0]{\textit{Ka}}
+\newcommand{\Q}[0]{\textit Q}
+\newcommand{\V}[0]{\textit V}
+\newcommand{\W}[0]{\textit W}
 \newcommand{\e}{\mathrm e}
 \newcommand{\cvar}{\ensuremath{c(\vartheta, \varphi, \psi)}}
 
@@ -196,7 +196,7 @@
 
 \begin{document}
 
-\title{\bfseries{\Cosmoglobe\ DR 1. I. Improved \emph{Wilkinson Microwave Anisotropy Probe} frequency maps by Bayesian end-to-end analysis}}
+\title{\bfseries{\Cosmoglobe\ I. Improved \emph{Wilkinson Microwave Anisotropy Probe} frequency maps through Bayesian end-to-end analysis}}
 \input{authors.tex}
 %\authorrunning{From BeyondPlanck to Cosmoglobe}
 \authorrunning{Watts et al.}
@@ -239,7 +239,7 @@ Towards the end of the \Planck\ analysis phase it became clear that the interpla
 Rather than simply probing the degeneracy between instrument calibration and component separation, a better solution is to actually break it. The optimal approach to do so is by jointly analyzing complementary datasets, each of which provide key information regarding the full system. This insight led to the \cosmoglobe\footnote{\url{https://cosmoglobe.uio.no}} initiative, which is an Open Source and community-wide effort that aims to derive a single joint model of the radio, microwave, and sub-millimeter sky by combining all available state-of-the-art experiments. An obvious first extension of the LFI-oriented \BP\ project is to analyze the \WMAP\ measurements in the same framework. Indeed, already as part of the \BP\ suite of papers, \citet{bp17} integrated \WMAP\ \Q-band time-ordered data (TOD) into the \commanderthree\ framework, calibrated off of the \BP\ sky model.
 %Beyond demonstrating that \commanderthree\ can be applied to non-\Planck\ data, this analysis uncovered an instrumental effect not previously described in the literature, namely a spurious polarization signal induced by the coupling of the Solar dipole, sidelobes, and horn transmission imbalance. 
 
-In this paper, we present the first end-to-end Bayesian analysis of the full \WMAP\ TOD, processed within the \commander\ framework, and this constitutes the first \cosmoglobe\ Data Release (DR1). In doing so, this paper in fact also presents the first ever joint analysis of two major CMB experiments (LFI and \WMAP) at the lowest possible level, and it therefore constitutes a major milestone of the \cosmoglobe\ initiative. In the future, many more datasets will be added, gradually providing stronger and stronger constraints on the true astrophysical sky. Each new experiment will then also in turn improve the instrumental calibration of all previous experiments. 
+In this paper, we present the first end-to-end Bayesian analysis of the full \WMAP\ TOD, processed within the \commander\ framework. As such, this paper also presents the first ever joint analysis of two major CMB experiments (LFI and \WMAP) at the lowest possible level, and it therefore constitutes a major milestone of the \cosmoglobe\ initiative. In the future, many more datasets will be added, gradually providing stronger and stronger constraints on the true astrophysical sky. Each new experiment will then also in turn improve the instrumental calibration of all previous experiments. 
 
 The rest of this paper is organized as follows. In Sect.~\ref{sec:methods}, we provide a brief review of the Bayesian end-to-end statistical framework used in this work, before describing the underlying data and computational expenses in Sect.~\ref{sec:data}. The main results, as defined by the global posterior distribution, are described in Sects.~\ref{sec:instrument}--\ref{sec:astrophysics}, summarizing instrumental parameters, frequency sky maps, and astrophysical results, respectively. In Sect.~\ref{sec:systematics} we quantify the systematic error budget for this analysis, while we address a few minor unresolved issues in Sect.~\ref{sec:issues} that should be addressed in future work. We conclude in Sect.~\ref{sec:conclusions}, and lay a path forward for the \cosmoglobe\ project.
 
@@ -292,7 +292,13 @@ This work was highly successful, and the \bp\ collaboration was able to generate
 
 The main goal of the current paper is to perform a similar analysis with the \WMAP\ time-ordered data, and thereby solve some of the long-standing unresolved issues with the official maps, in particular related to poorly constrained large-scale polarization modes. Before presenting our algorithm, however, it is useful for reference purposes to briefly review the official \WMAP\ instrument model and analysis pipeline, which improved gradually over a total of five data releases, often referred to as the 1-, 3-, 5-, 7, and 9-year data releases, respectively. Unless otherwise noted, we will refer to the final 9-year results in the following. The official \WMAP\ results delivered by \citet{bennett2012} will be referred to by \WMAPnine.
 
-The \WMAP\ satellite carried forty differential polarization-sensitive radiometers grouped as differencing assemblies (DAs), where one pair was sensitive to the difference in signal at one polarization orientation and the other pair sensitive to the orthogonal polarization. In total, there were ten DAs, which were distributed as one \K-band (23\,GHz), one \Ka-band (33\,GHz), two \Q-band (41\,GHz), two \V-band (61\,GHz), and four \W-band (94\,GHz) DAs.  Each DA is labelled, \textsl{Xn}, where \textsl{X} is the band label and \textsl{n} is index of the DA in question, e.g., \K1 or \W3. A second digit \textsl{m} is used to denote whether which linear polarization, ``1'' or ``2'', the radiometer is sensitive to. Additionally, each detector is a two-channel device that is internally left or right ``jammed'' with a $180^\circ$ phase lag in the electronics \citep{jarosik2003:MAP}. These datastreams are further labeled by an integer \textsl{k} that takes values ``3'' or ``4'' \citep{hinshaw2003a}. For example, the label \Q223 refers to the second \Q-band DA with corresponding to the second polarization orientation's first channel.
+The \WMAP\ satellite carried forty differential polarization-sensitive
+radiometers grouped as differencing assemblies (DAs), where one pair
+was sensitive to the difference in signal at one polarization
+orientation and the other pair sensitive to the orthogonal
+polarization. In total, there were ten DAs, which were distributed as
+one \K-band (23\,GHz), one \Ka-band (33\,GHz), two \Q-band (41\,GHz),
+two \V-band (61\,GHz), and four \W-band (94\,GHz) DAs.
 
 The \WMAP\ bandpasses were measured pre-launch on ground, sweeping a signal source through 201 frequencies and recording the output \citep{jarosik2003:MAP}. The bandpass responses have not been updated since the initial data release. However, as noted in \citet{bennett2012}, there has been an observed drift in the center frequency of \K, \Ka, \Q, and \V-band corresponding to a $\sim$$\,0.1\,\%$ decrease over time. In practice, this did not affect the \WMAP\ data processing because each year was mapped separately and co-added afterwards. An effective frequency calculator was delivered in the DR5 release as part of the IDL library to mitigate this effect during astrophysical analyses.\footnote{\url{https://lambda.gsfc.nasa.gov/product/wmap/dr5/m_sw.html}}
 
@@ -926,7 +932,7 @@ When we encountered these events, interrupted TOD segments (as well as the final
 %Compare with Table 2 of \citet{bennett2003a}, Table 1 of \citet{hinshaw2007}, Table 2 of \citet{hinshaw2009}. Total observing efficiency was 98.4\% \citep{bennett2012}
 
 
-\subsection{Computational resources and future analysis plan}
+\subsection{Computational resources and future plans}
 \label{sec:resources}
 
 
@@ -1987,11 +1993,17 @@ In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noi
 \subsubsection{Angular temperature power spectrum}
 \label{sec:cls}
 
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/cl_TT_CG_v1.pdf}
-	\caption{\textit{(Top:)} CMB temperature power spectrum, $D_\ell^\mathrm{TT}$, as derived by \cosmoglobe\ (black), \bp\ (green), \planck\ (red), and \WMAPnine\ (blue). The best-fit \planck\ 2018 \LCDM\ spectrum is showed in dashed gray. \textit{(Middle:)} Residual power spectrum relative to \LCDM, measured relative to the quoted error bars, $(D_\ell-D_\ell^\mathrm{\Lambda CDM})/\sigma_\ell$. For pipelines that report asymmetric error bars, $\sigma_\ell$ is taken to be the average of the upper and lower error bar. \textit{(Bottom:)} Fractional difference with respect to the \planck\ \LCDM\ spectrum. In this panel, each curve has been boxcar averaged with a window of $\Delta\ell=100$ to suppress random fluctuations.}
+\begin{figure*}
+	\includegraphics[width=\textwidth]{figures/cl_TT_CG_v1.pdf}
+	\caption{\textit{(Top:)} Angular CMB temperature power spectrum, $D_\ell^\mathrm{TT}$, as derived by \cosmoglobe\ (black), \bp\ (green), \planck\ (red), and \WMAPnine\ (blue). The best-fit \planck\ 2018 \LCDM\ spectrum is showed in dahsed gray. \textit{(Middle:)} Residual power spectrum relative to \LCDM, measured relative to the quoted error bars, $(D_\ell-D_\ell^\mathrm{\Lambda CDM})/\sigma_\ell$. For pipelines that report asymmetric error bars, $\sigma_\ell$ is taken to be the average of the upper and lower error bar. \textit{(Bottom:)} Fractional difference with respect to the \planck\ \LCDM\ spectrum. In this panel, each curve has been boxcar averaged with a window of $\Delta\ell=100$ to suppress random fluctuations.}
 	\label{fig:cl_tt}
-\end{figure}
+\end{figure*}
+
+%\begin{figure}
+%	\includegraphics[width=\columnwidth]{figures/GaussCl_CG_lmax50.pdf}
+%	\caption{Low-multipole temperature power spectrum}
+%	\label{fig:cl_tt_lowl}
+%\end{figure}
 
 
 Figure~\ref{fig:cl_tt} shows the angular temperature power spectrum derived from the CMB samples from the main Gibbs chain, obtained using a Blackwell-Rao estimator \citep{chu2005,bp11}. We compare with the official \WMAP\ \citep{hinshaw2012} and \planck\ \citep{planck2016-l05} power spectra, as well as the \bp\ \citep{bp11} spectrum. For reference, the best-fit \planck\ 2018 \LCDM\ spectrum is plotted along side them. The middle panel shows the deviation from the \planck\ \LCDM\ solution, in units of $\sigma_\ell$ from each individual pipeline, while the bottom panel shows the fractional difference with respect to the \planck\ \LCDM\ spectrum.
@@ -2004,29 +2016,24 @@ At $\ell\gtrsim500$, the \WMAPnine\ solution becomes noise dominated, and there 
 \subsubsection{Low-$\ell$ anomalies}
 \label{sec:anomalies}
 
-Even though the CMB is well described by \LCDM, there are several anomalies, especially at low multipoles, that seem to be in tension with \LCDM. As a rule, the existence of these anomalies is not debated, but rather their significance within \LCDM. Indeed, as argued by \citet{bennett2010}, the existence of these anomalies may simply be described using a posteriori predictions rather than confirming pre-existing predictions. The relevant question is not ``How unlikely is \LCDM\ given this effect's existence?'', but rather, ``How unlikely is this effect's existence given \LCDM?''. Additionally, it is difficult in the standard methodology to determine how much of a given effect is due to unmodeled systematic errors. In this section, we use the full propagation of uncertainty to re-evaluate the significance of outstanding low-$\ell$ anomalies,
+Even thought the CMB is well described by \LCDM, there are several anomalies, especially at low multipoles, that seem to be in tension with \LCDM. As a rule, the existence of these anomalies is not debated, but rather their significance within \LCDM. Indeed, as argued by \citet{bennett2010}, the existence of these anomalies may simply be described by the look-elsewhere effect. The relevant question is not ``How unlikely is \LCDM\ given this effect?'' but rather ``How unlikely is this effect given \LCDM?''.
 
-It has been noted since \COBE-DMR that the quadrupole amplitude of our CMB is lower than expected from \LCDM\ \citep{bennett:1992}. This has later been confirmed in \wmap\ \citep{hinshaw2003a} and \planck\ \citep{planck2013-XV}, but with large discrepancies in mean value and error bars. Here we compare our estimate of the true realization of the quadrupole, $\sigma_2$, with the mean value predicted by \LCDM, $C_2^\mathrm{\Lambda CDM}$. 
-From the marginal distribution $P(\sigma_2\mid\data)$, we find that $\sigma_2=120\pm65\,\mathrm{\mu K^2}$, on its face a $\gtrsim14\sigma$ deviation from the \LCDM\ prediction of $C_2^\mathrm{\Lambda CDM}=1064.7\,\mathrm{\mu K^2}$. 
-A more meaningful comparison is against the realizations of $\sigma_2$ observed given \LCDM\ compared to the posterior probability distribution $P(\sigma_2\mid\data)$. To evaluate this, we draw $10^5$ simulations of $\sigma_2$ given $C_2^\mathrm{\Lambda CDM}=1064.7\,\mathrm{\mu K^2}$. In Fig.~\ref{fig:quad_realizations}, we show this comparison with the \BP\ and \cosmoglobe\ posterior distributions.
-Following \citet{bp11}, we compute the Blackwell-Rao likelihood for the true $C_2$ given the ensemble of observed $\sigma_2$ in Fig.~\ref{fig:blackwell_rao}. From this analysis, we find the probability-to-exceed (PTE) $C_2^\mathrm{\Lambda CDM}$ to be 10\,\% for the \cosmoglobe\ results. In comparison, the \bp\ result had a PTE of 21\,\%. 
-
-
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/WMAP_P_sig_d_c.pdf}
-	\caption{Histogram of 100 000 realizations of $C_2$ given $C_2^{\Lambda \mathrm{CDM}} = 1064.7$ compared with the measured power spectrum $\sigma_2$ of our universe for \Cosmoglobe\ (black) and \BP\ (blue).}
-	\label{fig:quad_realizations}
-\end{figure}
+It has been noted since \COBE-DMR that the quadrupole amplitude of our CMB is lower than expected from \LCDM\ \citep{bennett:1992}. This has later been confirmed in \wmap\ \citep{hinshaw2003a} and \planck\ \citep{planck2013-XV}, but with large discrepancies in mean value and error bars. In general, the relevant question is not how significant the 
 
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/WMAP_blackwell-rao.pdf}
 	\caption{Marginal probability distribution of the ensemble-averaged $C_2$ given the data, $P(C_2|d)$, as measured by \Cosmoglobe\ (black) and \BP\ (blue).}
-	\label{fig:blackwell_rao}
 \end{figure}
 
 \begin{figure}
+	\includegraphics[width=\columnwidth]{figures/WMAP_P_sig_d_c.pdf}
+	\caption{Histogram of 100 000 realizations of $C_2$ given $C_2^{\Lambda \mathrm{CDM}} = 1064.7$ compared with the measured power spectrum $\sigma_2$ of our universe for \Cosmoglobe\ (black) and \BP\ (blue).}
+\end{figure}
+
+
+\begin{figure}
 	\includegraphics[width=\columnwidth]{figures/WMAP_n_2_n_3.pdf}
-	\caption{The quadrupole-octopole alignment of \Cosmoglobe\ compared with \BP.}
+	\caption{The quadrupole-octopole alignment of \Cosmoglobe compared with \BP.}
 \end{figure}
 
 \begin{figure}
@@ -2036,7 +2043,7 @@ Following \citet{bp11}, we compute the Blackwell-Rao likelihood for the true $C_
 
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/WMAP_best_q_fit.pdf}
-	\caption{Best-fit amplitude, $q$, of the low multipole power spectrum $C_{\ell} = q C^{\Lambda \mathrm{CDM}}_{\ell}$, $2 \leq \ell \leq \ell_{\mathrm{max}}$ compared to \planck\ 2015 (grey) and \BP\ (blue).}
+	\caption{Best-fit amplitude, $q$, of the low multipole power spectrum $C_{\ell} = q C^{\Lambda \mathrm{CDM}}_{\ell}$, $2 \leq \ell \leq \ell_{\mathrm{max}}$ compared to \planck\ 2015 (grey) and BeyondPlanck (blue).}
 \end{figure}
 
 
@@ -2063,7 +2070,7 @@ The Stokes $Q$ and $U$ synchrotron amplitude mean and standard deviations are sh
 
 \subsubsection{$\chi^2$ and map space residuals}\label{subsub:compsep_chisq}
 
-The quality of the component separation procedure is evaluated through a reduced-$\chi^2$   map, shown in Fig.~\ref{fig:reduced_chisq}, as well as through the map space residuals Fig.~\ref{fig:compsep_residual}. Figure~\ref{fig:reduced_chisq} shows a sum of all three Stokes parameters, and we can see, morphologically, that the poorly fit parts of the sky are driven by structures associated with features in total intensity. The poorly pixels are mostly constrained to the Galactic plane, mostly at the Galactic center, though some notably poor fits in regions such as the Orion region, $\rho$ Ophiucus, and Large Magellanic Cloud. Future work to find a more complete model of AME will likely help clean up this picture.
+The quality of the component separation procedure is evaluated through a reduced-$\chi^2$   map, shown in Fig.~\ref{fig:reduced_chisq}, as well as through the map space residuals Fig.~\ref{fig:compsep_residual}. Figure~\ref{fig:reduced_chisq} shows a sum of all three Stokes parameters, and we can see, morphologically, that the poorly fit parts of the sky are driven by structures associated with features in total intensity. The poorly fit pixels are generally constrained to the Galactic plane, mostly at the Galactic center, though we note some poor fits in regions such as the Orion region, $\rho$ Ophiucus, and Large Magellanic Cloud. Future work to find a more complete model of AME will likely help clean up this picture.
 
 %The map space residuals are displayed in Fig.~\ref{fig:compsep_residual} 
 
@@ -2090,24 +2097,18 @@ The quality of the component separation procedure is evaluated through a reduced
 	\includegraphics[width=\linewidth]{figures/chisq_IQU.pdf}
 	\newline
 	\includegraphics[width=0.3\textwidth]{figures/cbar_3sigma.pdf}
-	\caption{Reduced-$\chi^2$, using $n_\mathrm{dof}=900$, which comes from fitting to the regions outside of the \K-band processing mask.}\label{fig:reduced_chisq}
+	\caption{Reduced-$\chi^2$, using $n_\mathrm{dof}=300$, which comes from fitting to the regions outside of the \K-band processing mask.}\label{fig:reduced_chisq}
 \end{figure}
 
 
 \subsection{\WMAP-versus-LFI signal-to-noise ratio comparison}
 \label{sec:s2n}
 
-With a robust estimate of the sky model within the instrumental uncertainties, we can quantitatively assess the relative importance of each channel for constraining individual foreground components. In Fig.~\ref{fig:fg_s2n}, we \textbf{how do we do this exactly?} to find the relative constraining power each individual band from \K\ to \W\ inclusive contributes to the foreground fit. In particular, by comparing the relative uncertainty of each band to the amplitude of the signal we expect it to observe, we can assign a ranked relative importance of each band within the component separation solution. Note that we leave out Haslam and \Planck\ 353 and 857\,GHz in this comparison, as they essentially act as pure noiseless templates in this framework.
-
-For the CMB and thermal dust, we find that LFI's 70\,GHz channel contains the most constraining power, both in temperature and polarization. In particular, thermal dust is constrained better by 70\,GHz than \W-band due to its lower white noise level. More surprising is the strength of \K-band to constrain all low-frequency foregrounds in both intensity and polarization. At 23\,GHz, the \K-band  measurement is the lowest-frequency full-sky map of polarizaed synchrotron emission, which has been rightly recognized as part of the longstanding legacy of the \WMAP\ experiment. However, the strength of \K-band with respect to, e.g., the LFI 30\,GHz channel in intensity is more surprising, as the white noise level of 30\,GHz is lower than that of \K-band, and the spectral dependence of free-free and AME is less dramatic than for synchrotron.
-
-\textbf{Say a bit more about the long-lasting legacy of K-band}
-
 
 \begin{figure}
   \center	
   \includegraphics[width=\linewidth]{figures/fg_s2n_v1.pdf}
-  \caption{Relative signal-to-noise ratios for \WMAP\ and LFI channels and various components. }
+  \caption{Relative signal-to-noise ratios for WMAP and LFI channels and various components. }
   \label{fig:fg_s2n}
 \end{figure}
 
