@@ -203,7 +203,7 @@
 \titlerunning{\cosmoglobe\ \wmap{}  analysis}
 
 \abstract{
-  We present the first joint analysis of \textit{WMAP} and \textit{Planck} LFI time-ordered data, processed within the Bayesian end-to-end \commander\ framework. This framework builds directly on a similar analysis of the LFI measurements by the \BP\ collaboration, and approaches the CMB analysis challenge through Gibbs sampling of a global posterior distribution. The computational cost of producing one complete \WMAP+LFI Gibbs sample is 581\,CPU-hr, including calibration, mapmaking, and component separation, of which 389\,CPU-hr is spent on \WMAP\ low-level processing; this demonstrates that end-to-end Bayesian analysis of the \WMAP\ data is computationally feasible. We find that our \WMAP\ posterior mean temperature sky maps are largely consistent with the official maps, and the resulting CMB power spectrum is in excellent agreement with previous results. The most notable difference is a slightly lower CMB quadrupole amplitude of $\sigma_2 = 132\pm69\muK^2$, as compared to $\sigma_2 = 229\pm97\muK^2$ in the \BP\ analysis. In contrast, our \WMAP\ polarization maps differ more notably from the official results, and in general they exhibit  lower large-scale residuals, most likely attributable to a better constrained gain and transmission imbalance model; it is particularly noteworthy that our \W-band sky maps appear statistically consistent with the \V-band maps. For the first time, \WMAP-minus-LFI frequency map differences appear visually consistent with instrumental noise over most of the sky. Still, we identify three specific issues that require additional work, namely 1) low-level noise modeling, 2) quadrupole residuals in the $V$- and $W$-band temperature maps at the 2\muK\ level; and 3) a strong degeneracy between the absolute $K$-band calibration and the dipole of the anomalous microwave emission component. Nevertheless, we believe that the reprocessed \WMAP\ maps presented here are significantly cleaner in terms of systematic uncertainties than the official \WMAP\ maps. Both sky maps and the associated code are made publicly available through the \cosmoglobe\ web page. 
+  We present the first joint analysis of \textit{WMAP} and \textit{Planck} LFI time-ordered data, processed within the Bayesian end-to-end \commander\ framework. This framework builds directly on a similar analysis of the LFI measurements by the \BP\ collaboration, and approaches the CMB analysis challenge through Gibbs sampling of a global posterior distribution. The computational cost of producing one complete \WMAP+LFI Gibbs sample is 812\,CPU-hr, including calibration, mapmaking, and component separation, of which 603\,CPU-hr is spent on \WMAP\ low-level processing; this demonstrates that end-to-end Bayesian analysis of the \WMAP\ data is computationally feasible. We find that our \WMAP\ posterior mean temperature sky maps are largely consistent with the official maps, and the resulting CMB power spectrum is in excellent agreement with previous results. The most notable difference is a slightly lower CMB quadrupole amplitude of $\sigma_2 = 132\pm71\muK^2$, as compared to $\sigma_2 = 229\pm97\muK^2$ in the \BP\ analysis. In contrast, our \WMAP\ polarization maps differ more notably from the official results, and in general they exhibit  lower large-scale residuals, most likely attributable to a better constrained gain and transmission imbalance model; it is particularly noteworthy that our \W-band sky maps appear statistically consistent with the \V-band maps. For the first time, \WMAP-minus-LFI frequency map differences appear visually consistent with instrumental noise over most of the sky. Still, we identify three specific issues that require additional work, namely 1) low-level noise modeling, 2) quadrupole residuals in the $V$- and $W$-band temperature maps at the 2\muK\ level; and 3) a strong degeneracy between the absolute $K$-band calibration and the dipole of the anomalous microwave emission component. Nevertheless, we believe that the reprocessed \WMAP\ maps presented here are significantly cleaner in terms of systematic uncertainties than the official \WMAP\ maps. Both sky maps and the associated code are made publicly available through the \cosmoglobe\ web page. 
 }
 
 \keywords{ISM: general -- Cosmology: observations, polarization,
@@ -789,7 +789,7 @@ noise into a sky map.
   \caption{Computational resources required for end-to-end
     \cosmoglobe\ processing. All times correspond to CPU hours, and all data volumes are reported in GB. Reported times are
     averaged over more than 100 samples, and vary by $\lesssim\,5\,\%$ from sample to
-    sample. %\textbf{Preliminary numbers, not all accurate}
+    sample. Note that the average cost per sample takes into account the undersampling of 70, \V, and \W.
 	}
   \label{tab:resources}
   \nointerlineskip
@@ -854,29 +854,31 @@ noise into a sky map.
         %\hskip 10pt {\bf Total RAM requirements} &  &  &  & **{\bf1\,520}& \cr      
         \noalign{\vskip 2pt}      
       \multispan5\textit{Processing time (cost per run)}\hfil\cr
-      \hskip 10pt TOD initialization/IO time                    &1.8& 2.5& 9.3& 0.3& 0.3& 0.4& 0.4& 0.4& 0.4& 0.5& 0.5& 0.5& 0.5& *17.8\cr
-      \hskip 10pt Other initialization                                &  &  &  &  & & & & & & & & & & *13.4\cr
-      \hskip 10pt {\bf Total initialization}                          &  &  &  &  & & & & & & & & & & {\bf *31.2}\cr
+      \hskip 10pt TOD initialization/IO time                    &1.8& 2.5& 7.8& 0.7& 0.6& 0.8& 0.7& 0.9& 0.8& 1.3& 1.3& 1.0& 0.9& *21.1\cr
+      \hskip 10pt Other initialization                                &  &  &  &  & & & & & & & & & & *14.6\cr
+      \hskip 10pt {\bf Total initialization}                          &  &  &  &  & & & & & & & & & & {\bf *35.7}\cr
       \noalign{\vskip 2pt}      
       \multispan5\textit{Gibbs sampling steps (cost per sample)}\hfil\cr
       %\noalign{\vskip 2pt}
-      \hskip 10pt Huffman decompression                            & 1.1& 2.1& 10.5& 0.9& 0.8& 1.0& 1.0& 1.3& 1.3& 1.8& 1.8& 1.8& 1.8& *27.2\cr
-      \hskip 10pt TOD projection ($\P$ operation)                  & 0.4& 0.9&  4.2& 2.6& 2.6& 3.3& 3.4& 4.3& 4.3& 6.4& 6.3& 6.3& 6.4& *54.0\cr
-      \hskip 10pt Sidelobe evaluation                              & 1.0& 2.1&  7.6& 2.9& 2.9& 3.5& 3.5& 4.7& 4.8& 7.0& 6.9& 6.9& 6.9& *60.7\cr
-      \hskip 10pt Orbital dipole                                   & 0.9& 1.9& 7.1& 1.3& 1.3& 1.7& 1.7& 2.2& 2.3& 3.4& 3.3& 3.3& 3.3& *33.7\cr
-      \hskip 10pt Gain sampling                                    & 0.5& 0.8& 1.9& 0.8& 0.8& 0.5& 0.5& 0.9& 0.9& 0.7& 0.7& 0.7& 0.7& *10.4\cr
-      \hskip 10pt 1\,Hz spike sampling                             & 0.3& 0.4& 1.6& & & & & & & & & & & **2.4\cr      
-      \hskip 10pt Correlated noise sampling                        & 2.0& 4.0& 21.7& 2.8& 2.9& 3.3& 3.6& 5.1& 5.4& 8.0& 7.7& 7.2& 8.5& *81.3\cr
-      \hskip 10pt Correlated noise PSD sampling                    & 4.8& 5.9& 1.5& 0.2& 0.2& 0.3& 0.3 & 0.5& 0.4& 0.7& 0.6& 0.6& 0.7& *16.7\cr
-      \hskip 10pt TOD binning ($\P^t$ operation)                   & 0.1& 0.1& 4.0& 0.5& 0.5& 0.7& 0.8& 0.8& 0.8& 1.2& 12& 1.2& 1.2& *13.1\cr
-      \hskip 10pt Mapmaking                                        & & & & 6.4& 7.0& 8.9& 8.1& 11.1& 9.5& 14.4& 14.3& 15.3& 16.4& 119.5\cr
-      \hskip 10pt Sum of other TOD processing                      & 4.4& 8.6& 44.4& 14.7& 4.6& 5.1& 5.0& 9.4& 7.7& 8.1& 6.8& 8.6& 8.7& 136.1\cr
-      \hskip 10pt {\bf TOD processing cost per sample}             & {\bf 15.5}& {\bf 26.8}& {\bf 104.5}&  {\bf 23.0}& {\bf 24.1}& {\bf 27.6}& {\bf 27.9}& {\bf 40.3}& {\bf 37.4}& {\bf 51.7}& {\bf 50.6}& {\bf 51.9}& {\bf 54.6}& {\bf 535.9}\cr
+      \hskip 10pt Huffman decompression                            & 1.2& 2.2& 23.2& 0.8& 0.9& 1.1& 1.1& 1.5& 1.4& 2.0& 2.0& 2.0& 2.0& *41.4\cr
+      \hskip 10pt Array allocation                                 & 0.4& 0.9& 51.6& 1.3& 1.3& 1.5& 1.5& 3.1& 3.3& 4.0& 3.8& 4.0& 4.0& *80.7\cr
+      \hskip 10pt TOD projection ($\P$ operation)                  & 0.9& 2.0&  12.3& 6.1& 7.1& 8.7& 8.9& 11.4& 11.3& 15.9& 15.8& 15.7& 15.8& 131.9\cr
+      \hskip 10pt Sidelobe evaluation                              & 1.2& 2.6&  9.5& 3.0& 3.5& 4.1& 4.2& 5.5& 5.4& 7.8& 7.7& 7.7& 7.5& *69.7\cr
+      \hskip 10pt Orbital dipole                                   & 0.9& 2.0& 9.0& 1.2& 1.5& 1.8& 1.9& 2.6& 2.5& 3.8& 3.8& 3.8& 3.8& *38.6\cr
+      \hskip 10pt Gain sampling                                    & 0.6& 0.9& 2.2& 1.3& 1.3& 0.8& 0.8& 1.3& 1.3& 1.2& 1.2& 1.2& 1.2& *15.3\cr
+      \hskip 10pt 1\,Hz spike sampling                             & 0.3& 0.4& 1.9& & & & & & & & & & & **2.7\cr      
+      \hskip 10pt Correlated noise sampling                        & 2.1& 4.3& 24.8& 2.7& 2.9& 3.7& 3.8& 6.2& 5.4& 7.7& 7.4& 6.9& 8.3& *86.4\cr
+      \hskip 10pt Correlated noise PSD sampling                    & 5.0& 6.2& 1.6& 0.3& 0.3& 0.3& 0.3& 0.5& 0.5& 0.7& 0.6& 0.6& 0.7& *17.6\cr
+      \hskip 10pt TOD binning ($\P^t$ operation)                   & 0.1& 0.1& 10.5& 0.8& 0.8& 1.0& 1.0& 1.7& 1.6& 2.4& 2.4& 2.4& 2.4& *27.2\cr
+      \hskip 10pt Mapmaking                                        & & & & 9.2& 9.7& 13.1& 12.7& 21.7& 20.2& 35.4& 34.9& 36.1& 39.3& 232.3\cr
+      \hskip 10pt MPI load-balancing                      & 1.2& 1.7& 9.2& 2.2& 2.0& 2.2& 2.1& 3.6& 3.3& 4.8& 4.6& 4.5& 4.6&*46.0\cr
+      \hskip 10pt Sum of other TOD processing                      & 0.7& 1.6& 13.1& 0.1& 0.2& 0.5& 0.4& 0.7& 0.8& 0.9& 1.0& 0.9& 1.2&*22.1\cr
+      \hskip 10pt {\bf TOD processing cost per sample}             & {\bf 14.6}& {\bf 24.9}& {\bf 169.7}&  {\bf 28.8}& {\bf 31.5}& {\bf 38.7}& {\bf 38.7}& {\bf 59.8}& {\bf 57.0}& {\bf 86.6}& {\bf 85.2}& {\bf 85.8}& {\bf 90.8}& {\bf 812.1}\cr
       \noalign{\vskip 2pt}
-      \hskip 10pt Amplitude sampling  &&&&&&&&&&&   &  &  & *14.0\cr
-      \hskip 10pt Spectral index sampling  &&&&&&&&&&&   &  &  & *25.5\cr
+      \hskip 10pt Amplitude sampling  &&&&&&&&&&&   &  &  & *16.2\cr
+      \hskip 10pt Spectral index sampling  &&&&&&&&&&&   &  &  & *32.1\cr
       \noalign{\vskip 2pt}
-      \hskip 10pt {\bf Total cost per sample}                  &&&&&&&&&& &   &  &  &  {\bf 581.2}\cr
+      \hskip 10pt {\bf Average cost per sample}                  &&&&&&&&&& &   &  &  &  {\bf 418.9}\cr
       \noalign{\vskip 4pt\hrule\vskip 5pt} } }
   \endPlancktablewide \endgroup
 \end{table*}
@@ -891,7 +893,7 @@ The full \WMAP\ dataset is hosted at the Legacy Archive for Microwave Background
 
 For this analysis, we keep certain instrumental parameters fixed to the reported values. For example, we have made no attempts to rederive the pointing solutions, re-estimate the main beam response and far sidelobe pickup, or recover data that were flagged in the \WMAP\ event log. These and other analyses, such as estimating the bandpass shift over the course of the mission, are certainly possible within the larger Gibbs sampling framework. However, in this work we limit ourselves to recalibrating the TOD, estimating the noise properties, and applying bandpass corrections to the data before mapmaking.
 
-\subsection{TOD pre-processing and data selection}
+\subsection{TOD preprocessing and data selection}
 \label{sec:preprocessing}
 
 
@@ -942,7 +944,7 @@ Gain sampling and correlated noise sampling include multiple FFTs. Typical LFI T
 	\label{fig:correlation}
 \end{figure*}
 
-For the current analysis, which aims primarily to derive posterior-based \WMAP\ frequency maps, we produce a total of 500 main Gibbs samples, divided into two chains. Noting that the computational cost of the \W-channel carries almost half of the total expense of the \WMAP\ TOD processing, while being of less scientific importance than, say, the \K-band, we choose to only re-process this channel every fourth main sample. Likewise, we only reprocess the \V-band every other main sample, and the LFI 70\,GHz sample every fourth sample. The total cost for producing 500 \WMAP\ \K, \Ka, \Q, \Planck\ 30, and 44\,GHz samples, 250 \V-band samples, and 125 \W-band samples is 210k CPU-hrs, and the total walltime is 33 days. Noting that the \bp\ analysis required 4000 samples to reach full convergence in terms of the optical depth of reionization \citep{bp12}, a corresponding complete LFI+\WMAP\ analysis will cost about 1.7M CPU-hrs, and take about 9 months of continous runtime on two cluster nodes. While entirely feasible, this is sufficiently expensive that we choose to perform the analysis in two stages; first we present preliminary frequency maps in the current paper, and use these to identify potential outstanding issues, either in terms of data model or Markov chain stability. An important goal of this phase is also to invite the larger community to study these preliminary maps, and thereby identify additional problems that we may have missed. Then, when all issues appear to have been resolved, we will restart the process, and generate sufficient samples to achieve full convergence.
+For the current analysis, which aims primarily to derive posterior-based \WMAP\ frequency maps, we produce a total of 500 main Gibbs samples, divided into two chains. Noting that the computational cost of the \W-channel carries almost half of the total expense of the \WMAP\ TOD processing, while being of less scientific importance than, say, the \K-band, we choose to only reprocess this channel every fourth main sample. Likewise, we only reprocess the \V-band every other main sample, and the LFI 70\,GHz sample every fourth sample. The total cost for producing 500 \WMAP\ \K, \Ka, \Q, \Planck\ 30, and 44\,GHz samples, 250 \V-band samples, and 125 \W-band samples is 210k CPU-hrs, and the total walltime is 33 days. Noting that the \bp\ analysis required 4000 samples to reach full convergence in terms of the optical depth of reionization \citep{bp12}, a corresponding complete LFI+\WMAP\ analysis will cost about 1.7M CPU-hrs, and take about 9 months of continous runtime on two cluster nodes. While entirely feasible, this is sufficiently expensive that we choose to perform the analysis in two stages; first we present preliminary frequency maps in the current paper, and use these to identify potential outstanding issues, either in terms of data model or Markov chain stability. An important goal of this phase is also to invite the larger community to study these preliminary maps, and thereby identify additional problems that we may have missed. Then, when all issues appear to have been resolved, we will restart the process, and generate sufficient samples to achieve full convergence.
 
 
 
