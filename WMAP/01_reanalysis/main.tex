@@ -1018,6 +1018,7 @@ where $\overline V$ represents the radio frequency bias powers per detector; $T_
 	\label{fig:cal_comp_10min}
 \end{figure}
 
+
 Rather, we estimate the gains and baselines by comparing the uncalibrated \WMAP\ data with the calibrated \WMAP\ data, after subtracting a far sidelobe contribution convolved with the delivered \WMAPnine\ DA maps plus the Solar dipole.  We find that the calibrated and uncalibrated data can be related by
 \begin{equation}
 	d^\mathrm{raw}_t=g(d^\mathrm{cal}_t+s^\mathrm{sl}_t)+\sum_{i=0}^3c_i(t-t_0)^i,
@@ -1033,82 +1034,78 @@ The impact of these differences at the TOD level is illustrated in Fig.~\ref{fig
 Another interesting feature in Fig.~\ref{fig:cal_comp_10min} is slow correlated variations at a timescale of $\sim$\,20\,sec timescale. There is nothing in the \cosmoglobe\ instrument model that varies on such short timescales, and this must therefore come from \WMAP. The most likely explanation is the fact that the the \WMAP\ gain model depends directly on housekeeping data that are recorded with a 23.04\,sec sample rate, and these values appear to have been applied without any smoothing, resulting in sharp jumps in the final \WMAP\ gain model. At the same time, it is also important to note that the \cosmoglobe\ gain model does not include any time-varying structure within a single scan, and if any artifacts resulting from this is identified in the current products, it may be worth incorporating housekeeping data in a future  \cosmoglobe\ data release.
 
 
+\begin{table}
+\newdimen\tblskip \tblskip=5pt
+\caption{Transmission imbalance parameters for each \WMAP\ radiometer as estimated in the current analysis (\emph{second column}) and in the official 9-year \WMAP\ analysis (\emph{third column}). Our uncertainties indicate $1\,\sigma$ marginal posterior standard deviations. }
+\label{tab:xim}
+\vskip -8mm
+\footnotesize
+\setbox\tablebox=\vbox{
+ \newdimen\digitwidth
+ \setbox0=\hbox{\rm 0}
+ \digitwidth=\wd0
+ \catcode`*=\active
+ \def*{\kern\digitwidth}
+%
+  \newdimen\dpwidth
+  \setbox0=\hbox{.}
+  \dpwidth=\wd0
+  \catcode`!=\active
+  \def!{\kern\dpwidth}
+%
+  \halign{\hbox to 1.8cm{#\leaderfil}\tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&
+    \hfil$#$\hfil \tabskip 0em\cr
+\noalign{\doubleline}
+\omit\hfil\sc Radiometer \hfil& x_{\mathrm{im}}^{\mathrm{CG}}& x_{\mathrm{im}}^{\mathrm{WMAP}}\cr
+\noalign{\vskip 3pt\hrule\vskip 5pt}
+K11 &   0.00018 \pm  0.00013  &  -0.00067 \pm  0.00017\phantom{-} \cr
+K12 &   0.00388 \pm  0.00015  &   0.00536 \pm  0.00014 \cr
+Ka11 &   0.00339 \pm  0.00012  &   0.00353 \pm  0.00017 \cr
+Ka12 &   0.00150 \pm  0.00010  &   0.00154 \pm  0.00008 \cr
+Q11 &   0.00081 \pm  0.00016  &  -0.00013 \pm  0.00046\phantom{-} \cr
+Q12 &   0.00517 \pm  0.00027  &   0.00414 \pm  0.00025 \cr
+Q21 &   0.00985 \pm  0.00042  &   0.00756 \pm  0.00052 \cr
+Q22 &   0.01235 \pm  0.00011  &   0.00986 \pm  0.00115 \cr
+V11 &   0.00012 \pm  0.00041  &   0.00053 \pm  0.00020 \cr
+V12 &   0.00212 \pm  0.00089  &   0.00250 \pm  0.00057 \cr
+V21 &   0.00246 \pm  0.00012  &   0.00352 \pm  0.00033 \cr
+V22 &   0.00323 \pm  0.00070  &   0.00245 \pm  0.00098 \cr
+W11 &   0.01169 \pm  0.00105  &   0.01134 \pm  0.00199 \cr
+W12 &   0.00442 \pm  0.00109  &   0.00173 \pm  0.00036 \cr
+W21 &   0.01595 \pm  0.00052  &   0.01017 \pm  0.00216 \cr
+W22 &   0.01540 \pm  0.00167  &   0.01142 \pm  0.00121 \cr
+W31 &  -0.00089 \pm  0.00010\phantom{-}  &  -0.00122 \pm  0.00062\phantom{-} \cr
+W32 &   0.00354 \pm  0.00084  &   0.00463 \pm  0.00041 \cr
+W41 &   0.02734 \pm  0.00219  &   0.02311 \pm  0.00380 \cr
+W42 &   0.01882 \pm  0.00282  &   0.02054 \pm  0.00202 \cr
+\noalign{\vskip 5pt\hrule\vskip 5pt}}}
+\endPlancktablewide
+\end{table}
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\linewidth]{figures/x_im_CG_v1.pdf}
+	\caption{Comparison of the transmission imbalance factors, $x_{\mathrm{im}}$, estimated by \cosmoglobe\ (dark colors) and \WMAPnine\ (light colors) for each radiometer.}
+	\label{fig:x_im}
+\end{figure}
 
 
 \subsection{Transmission imbalance}
 \label{sec:xim}
 
-The transmission imbalance parameters $x_\mathrm{im}$ are crucial to measure correctly because their misestimation can induce a large polarized signal that is coupled to the Solar dipole \citep{jarosik2007,bp17}. The uncertainty in $x_\mathrm{im}$ was quoted as the source of large-scale polarized features in the \WMAPnine\ maps, and a template of this effect was explicitly projected out in the pixel-space polarized covariance matrix. 
+Closely related to the gain model is the transmission imbalance factor, $x_{\mathrm{im}}$, quantifying the difference between responsivity in the two horns. These are listed for each radiometer in Table~\ref{tab:xim} for both \cosmoglobe\ and \WMAPnine; for \cosmoglobe\ the reported values correspond to marginal posterior means and standard deviations. The same information is plotted in Fig.~\ref{fig:x_im}.
 
-We find $x_\mathrm{im}$ values that are largely consistent with the values reported by \citet{bennett2012}, albeit with some outliers. We find in general that the 68\,\% confidence intervals from \cosmoglobe\ are smaller than the fiducial values, although we caution against a direct comparison of these values since such different procedures were used for estimating the uncertainties.
+At first glance, the two estimates appear in reasonable agreement, and except for \K-band, they are always within $1\,\sigma$ from each other. However, there are subtle differences that could play an important role in the final maps and uncertainty estimates. The reason for this is that these parameters couple directly to the astrophysical sky signal, and in particular to the bright 3\,mK Solar CMB dipole. Even an inaccuracy at the $\mathcal{O}(10^{-3})$ level can therefore in principle excite correlated large-scale artefacts at the microkelvin level, which is comparable to or larger than the expected cosmological reionization of about 0.5\muK.
 
-%\begin{figure}[t]
-%	\centering
-%	\includegraphics[width=\linewidth]{figures/x_im_CG_v1.pdf}
-%	\caption{Transmission imbalance}
-%	\label{fig:x_im}
-%\end{figure}
+With this in mind, we first note that the \K-band imbalance factors differ by 2--3\,$\sigma$. For this particular channel, it is important to note both that the foregrounds are very bright and that the effective bandpass of each radiometer differ. Minor details in both foreground and bandpass modelling are therefore likely to have a significant impact of the estimated parameters. 
 
-%\begin{table}
-%\newdimen\tblskip \tblskip=5pt
-%\caption{Transmission imbalance parameters for each \WMAP\ radiometer as estimated in the current analysis (\emph{second column}) and in the official 9-year \WMAP\ analysis (\emph{third column}). Our uncertainties indicate $1\,\sigma$ marginal posterior standard deviations. }
-%\label{tab:dipole}
-%\vskip -8mm
-%\footnotesize
-%\setbox\tablebox=\vbox{
-% \newdimen\digitwidth
-% \setbox0=\hbox{\rm 0}
-% \digitwidth=\wd0
-% \catcode`*=\active
-% \def*{\kern\digitwidth}
-%%
-%  \newdimen\dpwidth
-%  \setbox0=\hbox{.}
-%  \dpwidth=\wd0
-%  \catcode`!=\active
-%  \def!{\kern\dpwidth}
-%%
-%  \halign{\hbox to 1.8cm{#\leaderfil}\tabskip 2em&
-%    \hfil$#$\hfil \tabskip 2em&
-%    \hfil$#$\hfil \tabskip 0em\cr
-%\noalign{\doubleline}
-%\omit\hfil\sc Radiometer \hfil& x_{\mathrm{im}}^{\mathrm{CG}}& x_{\mathrm{im}}^{\mathrm{WMAP}}\cr
-%\noalign{\vskip 3pt\hrule\vskip 5pt}
-%K11 &   0.00018 \pm  0.00013  &  -0.00067 \pm  0.00017 \cr
-%K12 &   0.00388 \pm  0.00015  &   0.00536 \pm  0.00014 \cr
-%Ka11 &   0.00339 \pm  0.00012  &   0.00353 \pm  0.00017 \cr
-%Ka12 &   0.00150 \pm  0.00010  &   0.00154 \pm  0.00008 \cr
-%Q11 &   0.00081 \pm  0.00016  &  -0.00013 \pm  0.00046 \cr
-%Q12 &   0.00517 \pm  0.00027  &   0.00414 \pm  0.00025 \cr
-%Q21 &   0.00985 \pm  0.00042  &   0.00756 \pm  0.00052 \cr
-%Q22 &   0.01235 \pm  0.00011  &   0.00986 \pm  0.00115 \cr
-%V11 &   0.00012 \pm  0.00041  &   0.00053 \pm  0.00020 \cr
-%V12 &   0.00212 \pm  0.00089  &   0.00250 \pm  0.00057 \cr
-%V21 &   0.00246 \pm  0.00012  &   0.00352 \pm  0.00033 \cr
-%V22 &   0.00323 \pm  0.00070  &   0.00245 \pm  0.00098 \cr
-%W11 &   0.01169 \pm  0.00105  &   0.01134 \pm  0.00199 \cr
-%W12 &   0.00442 \pm  0.00109  &   0.00173 \pm  0.00036 \cr
-%W21 &   0.01595 \pm  0.00052  &   0.01017 \pm  0.00216 \cr
-%W22 &   0.01540 \pm  0.00167  &   0.01142 \pm  0.00121 \cr
-%W31 &  -0.00089 \pm  0.00010  &  -0.00122 \pm  0.00062 \cr
-%W32 &   0.00354 \pm  0.00084  &   0.00463 \pm  0.00041 \cr
-%W41 &   0.02734 \pm  0.00219  &   0.02311 \pm  0.00380 \cr
-%W42 &   0.01882 \pm  0.00282  &   0.02054 \pm  0.00202 \cr
-%\noalign{\vskip 5pt\hrule\vskip 5pt}}}
-%\endPlancktablewide
-%\end{table}
-
-
+Second, we see that for many several channels, the two methods disagree strongly on the marginal uncertainties. For instance, the \WMAP\ \Q22 uncertainty is about a factor of ten larger than the \cosmoglobe\ uncertainty, and the corresponding mean differs from the \cosmoglobe\ mean by about $8\sigma$ as measured in units of \cosmoglobe\ uncertainties. These differences are important both in terms of final sky maps (which depend on the mean value) and error propagation. In particular, it is important to note that while the \cosmoglobe\ sampling approach accounts for all couplings between the specific value of $x_{\mathrm{im}}$ and all other parameters (gain, baselines, correlated noise, CMB dipole, large-scale polarization etc.) at every single step of the Markov chain, the \WMAP\ approach only marginalizes over two linear templates in the low-resolution covariance matrix. These two templates are derived by changing $x_{\mathrm{im}}$ by respectively 10 and 20\,\% with respect to their mean values, respectively, and recomputing the maps. Clearly, this linear low-resolution approach can only capture a limited sub-volume of the full non-linear effect of transmission imbalance uncertainties. Even cases for which the mean estimates formally agree within $1\,\sigma$ may therefore in practice result in significantly different sky maps. We will return to this issue in Sect.~\ref{sec:maps}. 
 
 
 \subsection{Instrumental noise and goodness-of-fit}
 \label{sec:noise}
 
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10hr.pdf}
-	\caption{\textit{(top):} Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP. \textit{(Bottom):} Raw correlated noise (gray) and smoothed data with Gaussian kernel (black). This shows more clearly the hourly baseline subtraction from the \WMAP\ treatment.}
-	\label{fig:cal_comp}
-\end{figure}
 
 
 
@@ -1264,6 +1261,11 @@ necessity in future \cosmoglobe\ endeavors, and will be used to improve the
 \end{figure}
 
 
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10hr.pdf}
+	\caption{\textit{(top):} Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP. \textit{(Bottom):} Raw correlated noise (gray) and smoothed data with Gaussian kernel (black). This shows more clearly the hourly baseline subtraction from the \WMAP\ treatment.}
+	\label{fig:cal_comp}
+\end{figure}
 
 
 
