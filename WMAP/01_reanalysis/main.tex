@@ -219,8 +219,6 @@
 \section{Introduction}
 \label{sec:introduction}
 
-%\textbf{Describe WMAP highlights, establishment of firm LCDM model. Brief summary of Planck, Commander, BeyondPlanck, and then Cosmoglobe; WMAP is first major extension of the end-to-end framework, and marks the transition from classical single-experiment TOD analysis to multi-experiment TOD analysis. A brave new world.}
-
 The discovery of the cosmic microwave background (CMB) by \citet{penzias:1965} marked a paradigm shift in the field of cosmology, providing direct evidence that the Universe was once much hotter than it is today, effectively ruling out the steady-state theory of the universe \citep{dicke:1965}. This discovery spurred a series of ground-breaking cosmological experiments, including the Nobel Prize-winning measurements by \COBE-FIRAS that confirmed the blackbody nature of the CMB \citep{mather:1994} and \COBE-DMR that measured temperature variations from the primordial gravitational field \citep{smoot:1992}.
 
 The NASA-funded \textit{Wilkinson Microwave Anisotropy Probe} (\WMAP; \citealp{bennett2003:MAP}) mission was launched a decade after \COBE-DMR, and mapped the microwave sky with 45 times higher sensitivity and 33 times higher angular resolution, and thereby revolutionizing our understanding of early universe physics \citep{bennett2003:MAP}. As quantified by \citet{bennett2012}, the permissable parameter space volume for a standard $\Lambda$CDM model was decreased by a factor of 68,000 by \WMAP, and the best pre-\WMAP\ determination of the age of the universe was $t_0<14\,\mathrm{Gyr}$ from Boomerang \citep{lange:2001}, with best-fit values of 9--11\,Gyr; the latter values in apparent contradiction with direct measurements of the oldest globular clusters \citep{hu:2001}.
@@ -229,53 +227,18 @@ The ESA-led \Planck\ satellite \citep{planck2016-l01} was developed concurrently
 
 \Planck\ comprised two independent experiments, namely the Low Frequency Instrument (LFI; \citealp{planck2016-l02}) and High Frequency Instrument (HFI; \citealp{planck2016-l03}), respectively. The LFI detectors were based on HEMT (high electron mobility transistor) amplifiers, spanning three frequency channels between 30 and 70\,GHz, while the HFI detectors were based on TES (transition edge sensitive) bolometers, and spanned six frequency channels between 100 and 857\,GHz. For comparison, \WMAP\ was also HEMT-based, with comparable sensitivity to LFI alone, and spanned five frequencies between 23 and 94\,GHz. At the same time, the two experiments implemented very different scanning strategies, and as a result they are highly complementary and synergistic; together they provide a clearer view of the low-frequency microwave sky than either can alone.
 
-%As opposed to \WMAP, which used minimal \COBE\ data in its fiducial analysis, \Planck's initial release calibrated off of \WMAP's Solar dipole solution, and the Galactic component separation solution found in  \citet{planck2014-a12} by \commander\ \citep{jewell2004,eriksen:2004,eriksen2006,eriksen2008} made use of \WMAP\ frequency maps. Most crucially, the \Planck\ and \WMAP\ maps are of similar quality that meaningful comparisons can be made between them. This last aspect has been critical, especially for the \Planck\ Low Frequency Instrument (LFI), whose channels lie between those of \WMAP.
-
 Towards the end of the \Planck\ analysis phase it became clear that the interplay between instrument calibration and astrophysical component separation represented a main limiting factor in terms of systematic effects for high signal-to-noise measurements \citep{planck2016-l02}. Specifically, in order to calibrate the instrument to sufficient precision, it became clear that it was necessary to know the true sky to a comparably high precision -- but to know the sky, it was also necessary to know the instrumental calibration. The data analysis is thus fundamentally circular and global in nature. The final official \Planck\ LFI analysis performed four complete iterations between calibration and component separation \citep{planck2016-l02}, aiming to probe this degeneracy. However, it was clearly recognized that this was not sufficient to reach full convergence, and this sub-optimality led to the \BP\ project \citep{bp01}, which aimed to perform thousands of complete analysis cycles, as opposed to just a handful. This framework was implemented using the \commanderthree\ \citep{bp03} code, a CMB Gibbs sampler that performs integrated high-level and low-level parameter estimation in a single integrated framework. This analysis demonstrated the feasibility of a full end-to-end Gibbs sampling analysis in the CMB framework, while providing the highest-quality LFI maps to date.
 
 Rather than simply probing the degeneracy between instrument calibration and component separation, a better solution is to actually break it. The optimal approach to do so is by jointly analyzing complementary datasets, each of which provide key information regarding the full system. This insight led to the \cosmoglobe\footnote{\url{https://cosmoglobe.uio.no}} initiative, which is an Open Source and community-wide effort that aims to derive a single joint model of the radio, microwave, and sub-millimeter sky by combining all available state-of-the-art experiments. An obvious first extension of the LFI-oriented \BP\ project is to analyze the \WMAP\ measurements in the same framework. Indeed, already as part of the \BP\ suite of papers, \citet{bp17} integrated \WMAP\ \Q-band time-ordered data (TOD) into the \commanderthree\ framework, calibrated off of the \BP\ sky model.
-%Beyond demonstrating that \commanderthree\ can be applied to non-\Planck\ data, this analysis uncovered an instrumental effect not previously described in the literature, namely a spurious polarization signal induced by the coupling of the Solar dipole, sidelobes, and horn transmission imbalance. 
 
 In this paper, we present the first end-to-end Bayesian analysis of the full \WMAP\ TOD, processed within the \commander\ framework. As such, this paper also presents the first ever joint analysis of two major CMB experiments (LFI and \WMAP) at the lowest possible level, and it therefore constitutes a major milestone of the \cosmoglobe\ initiative. In the future, many more datasets will be added, gradually providing stronger and stronger constraints on the true astrophysical sky. Each new experiment will then also in turn improve the instrumental calibration of all previous experiments. 
 
 The rest of this paper is organized as follows. In Sect.~\ref{sec:methods}, we provide a brief review of the Bayesian end-to-end statistical framework used in this work, before describing the underlying data and computational expenses in Sect.~\ref{sec:data}. The main results, as defined by \textbf{"as expressed by/through?"} the global posterior distribution, are described in Sects.~\ref{sec:instrument}--\ref{sec:astrophysics}, summarizing instrumental parameters, frequency sky maps, and astrophysical results, respectively. In Sect.~\ref{sec:issues} we address unresolved issues that should be addressed in future work. We conclude in Sect.~\ref{sec:conclusions}, and lay a path forward for the \cosmoglobe\ project.
 
-
-% A to-do list:
-% 
-% \begin{itemize}
-%	\item Find the time it takes for each beam to cross itself.
-%	\item Fix AME model (\textit{I'm not sure what motivated this, perhaps not necessary?}
-%	\item Fix noise model (\textit{Explained because of the Bessel filter plus linear trend})
-% \end{itemize}
-% 
-% A table to include
-% \begin{itemize}
-%	\item Spin rate -- 0.464\,rpm (7.57 mHz), but translations to $2.6$ degrees per second in boresight?
-%	\item Precession -- 1 rev/hour (0.3 mHz)
-%	\item Signal bandwidth extends from 0.008--8 Hz \citep{jarosik2003a}
-%	\item Beam size in degrees -- 0.88, 0.66, 0.51, 0.35, 0.22.
-% \end{itemize}
-
-
-%The cosmic microwave background (CMB) is the most direct probe of the initial state of the Universe. Since the initial discovery of the CMB \citep{penzias:1965}, subsequent experiments have continually refined the measurements, to the extent that the \WMAP\ results are generally considered bringing cosmology into the regime of precision science \citep{bennett2012}. Prior to \WMAP, it was common for CMB experiments to be superseded by more sensitive successors, with the noteworthy exceptions of \COBE/FIRAS and \COBE/DIRBE.
-%
-%The \planck\ experiment, rather than superseding \WMAP, consistently used \WMAP\ data in its calibration, component separation, and cosmological analyses. The most direct comparison between \WMAP\ and \Planck\ is through analysis of the two experiments' frequency maps, as \WMAP's \K, \Ka, \Q, \V, and \W\ maps are interleaved by the \Planck\ LFI's 30, 44, and 70\,GHz bands. Since the initial \Planck\ data release, there have been several analyses comparing the two experiments by members of the \WMAP\ team \citep{larson2014,addison:2016,huang:2018,weiland:2018,weiland:2022} and by the \Planck\ team \citep{planck2014-a13,planck2016-l06,planck2016-l05}.
-%
-%While the \WMAP\ low-level analysis has remained stable since \citet{bennett2012}, there has been continued work on \Planck\ time-ordered data processing, notably \bp\ for the LFI instrument \citep{bp01}, \sroll2\ for the HFI instrument \citep{delouis:2019}, and \Planck\ DR4 for both LFI and HFI \citep[\npipe,][]{npipe}. The LFI instrument in particular has had several systematics mitigated by improved analysis, particularly a smoothed gain solution and an improved noise model \citep{npipe,bp06,bp07,bp10}. When comparing \WMAP\ \K-band with the \Planck\ LFI data, the residuals are mainly characterized by \WMAP's poorly measured modes, which can be seen clearly in Figures 50 and 51 of \citet{npipe} and Figures 4 and 7 of \citet{bp14}.
-%
-%One of the primary outcomes of the \BP\ project is that end-to-end analysis of a dataset with poorly measured modes can be mitigated by a joint analysis with another dataset that measures these modes well. In particular, \Planck\ LFI had large scale polarizated modes aligned with the instrument's scan strategy, induced by relative errors between different polarization-sensitive radiometers \citep{bp07}. The \bp\ project mitigated this by using \WMAP's polarized \Ka--\V\ maps for component separation, where these modes were well-measured. In order to properly combine these datasets, the polarized maps were the $N_\mathrm{side}=16$ \healpix\footnote{\url{http://healpix.sourceforge.net} \citep{gorski2005}} products with a pixel-pixel covariance matrix that explicitly projected out the poorly measured modes.
-%
-%In principle, the \Planck\ experiment can be used to identify \WMAP's poorly measured modes in the same way that \WMAP\ removed \Planck's poorly measured modes. This was shown in \citet{bp17}, in which \WMAP\ data was calibrated against the \bp\ sky model, and the resulting maps differed from the \WMAPnine\ products mainly through the lack of the poorly measured modes. This work mainly functioned as a demonstration that the \commanderthree\ framework could be applied to the \WMAP\ dataset, and was not a true end-to-end analysis.
-%
-%In this work, we present the first joint TOD analysis in the \cosmoglobe\footnote{\url{cosmoglobe.uio.no}} framework, in which we analyze the full \WMAP\ dataset along with time-ordered \Planck\ LFI data. In Sect.~\ref{sec:methods}, we review the \cosmoglobe\ statistical framework and the data processing for \Planck\ LFI and \WMAP\ in the \commanderthree\ pipeline. In Sect.~\ref{sec:freqmaps}, we present the \Planck\ and \WMAP\ joint frequency maps, and compare these frequency maps with the fiducial analyses in Sect.~\ref{sec:comparison}. We discuss outstanding systematic errors and the propagation of uncertainty in Sect.~\ref{sec:systematics}. We summarize our results and lay a path forward in Sect.~\ref{sec:conclusions}.
-
-
 \section{End-to-end Bayesian CMB analysis}
 \label{sec:methods}
 
 The general computational analysis framework used in this work has been described in detail by \citet{bp01} and \citet{bp17} and references therein. In this section, we give a brief summary of the main points, and emphasize in particular the differences with respect to earlier work. 
-%In particular, Sect.~\ref{sec:lfi_bp} gives an overview of the \bp\ project's reanalysis of \Planck\ LFI data, Sect.~\ref{sec:official_pipeline} provides a brief overview of the official \WMAP\ pipeline, and Sect.~\ref{sec:wmap_instmodel} details the data model that is used in the current LFI+\WMAP\ end-to-end Gibbs sampling analysis.
 
 \subsection{LFI and \bp}
 \label{sec:lfi_bp}
@@ -1814,7 +1777,7 @@ In this section, we present initial results for the astrophysical component sepa
 \subsection{CMB results}
 \label{sec:cmb}
 
-Cosmological parameter estimation is left for future work, in large part because the two chains of length 250 are too short to reliably estimate cosmological parameters in this framework. For comparison, \citet{bp12} demonstrated that at least 2000 Gibbs samples were required before the reionizaiton optical depth $\tau$ value had converged. Similarly, for \bp\ in the temperature case, the Gelman-Rubin statistic is just above $R=1.01$ for $\ell\lesssim600$ then continues to increase, indicating marginally acceptable convergence across all multipoles. Therefore, the results for the CMB presented here serve mainly as consistency checks. Given these caveats, we present preliminary CMB analysis in Sects.~\ref{sec:dipole}--\ref{sec:cls}.
+Cosmological parameter estimation is left for future work, in large part because the two chains of length 250 are too short to reliably estimate cosmological parameters in this framework. For comparison, \citet{bp12} demonstrated that at least 4000 Gibbs samples were required before the reionizaiton optical depth $\tau$ value had converged. Similarly, for \bp\ in the temperature case, the Gelman-Rubin statistic is just above $R=1.01$ for $\ell\lesssim600$ then continues to increase, indicating marginally acceptable convergence across all multipoles. Therefore, the results for the CMB presented here serve mainly as consistency checks. Given these caveats, we present preliminary CMB analysis in Sects.~\ref{sec:dipole}--\ref{sec:cls}.
 
 
 
@@ -1919,7 +1882,7 @@ The results of our Solar dipole estimate are displayed in Table~\ref{tab:dipole}
 
 It is also noteworthy that the \bp\ Solar dipole differs from the \cosmoglobe\ Solar dipole with a higher significance even than the \WMAPnine\ result, despite using a nearly identical framework and almost identical datasets. First, we note that the \Planck\ PR4 analysis \citep{npipe} showed a similarly apparently paradoxical discrepancy. On its face, the LFI 2018 and HFI 2018 Solar dipole values would average according to their uncertainties to $\sim3362.3\,\mathrm{\mu K}$. In this analysis, \citet{npipe} identify relative calibration uncertainty between 100 and 143\,GHz as the dominant source of uncertainty.
 
-In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noise among all low freuqency components, while being absolutely calibrated using a prior distribution. Therefore, it is likely that the chosen prior mean directly impacts the final Solar dipole amplitude, as it sets the amplitude of all low frequency components. 
+In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noise among all low frequency components, while being absolutely calibrated using a prior distribution. Therefore, it is likely that the chosen prior mean directly impacts the final Solar dipole amplitude, as it sets the amplitude of all low frequency components. 
 
 
 
@@ -1943,7 +1906,7 @@ In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noi
 
 Figure~\ref{fig:cl_tt} shows the angular temperature power spectrum derived from the CMB samples from the main Gibbs chain, obtained using a Blackwell-Rao estimator \citep{chu2005,bp11}. We compare with the official \WMAP\ \citep{hinshaw2012} and \planck\ \citep{planck2016-l05} power spectra, as well as the \bp\ \citep{bp11} spectrum. For reference, the best-fit \planck\ 2018 \LCDM\ spectrum is plotted along side them. The middle panel shows the deviation from the \planck\ \LCDM\ solution, in units of $\sigma_\ell$ from each individual pipeline, while the bottom panel shows the fractional difference with respect to the \planck\ \LCDM\ spectrum.
 
-The spectrum has been computed following the same Gaussianized Blackwell-Rao (GBR) \citep{rudjord:2009} analysis described in \citep{bp11}. We performed a CMB temperature resampling by imposing a prior on the spacial correlations of the CMB, and masking the galactic plane with the \bp\ temperature mask. The GBR estimator is computed using 500 CMB samples.
+The spectrum has been computed following the same Gaussianized Blackwell-Rao (GBR) \citep{rudjord:2009} analysis described in \citep{bp11}. We performed a CMB temperature resampling by imposing a prior on the spatial correlations of the CMB, and masking the Galactic plane with the \bp\ temperature mask. The GBR estimator is computed using 500 CMB samples.
 
 At $\ell\lesssim500$, each of these datasets are signal-dominated, and each of the spectra agree at nearly every multipole. Notable exceptions include specifically the quadrupole, which we will discuss in Sect.~\ref{sec:anomalies}, and $50\lesssim\ell\lesssim100$. In the latter, the \cosmoglobe\ multipoles are consistently $\geq5\,\%$ higher than the \LCDM\ solution.
 
@@ -1957,15 +1920,16 @@ Even thought the CMB is well described by \LCDM, there are several anomalies, es
 
 In standard analysis of CMB anomalies, one computes the traditional maximum-likelihood maps of the CMB and generate a single value for each of the anomaly statistics. One then compares these values to simulations of the \LCDM\ in a frequenctist approach to see how rare it is for a random realization of the CMB to exhibit the anomalies.
 
-In our case, we have a set of CMB maps outputted from the Gibbs chain, which allows us to create histograms of these statistics. This allows us to get full control over systematic uncertainties of the low-$\ell$ anomalies which is difficult in traditional approaches. This allows us to answer the question of wether the anomalies acutally are in our CMB, or if previous measurements of the CMB simply have not accounted for all systematic effects.
+In our case, we have a set of CMB maps output from the Gibbs chain, which we use to create histograms of these statistics. As such, we have full control over systematic uncertainties of the low-$\ell$ anomalies which is difficult in traditional approaches. This allows us to answer the question of wether the anomalies acutally are in our CMB, or if previous measurements of the CMB simply have not accounted for all systematic effects.
 
-This section will look at some of statistics of well-known the low-$\ell$ anomalies and compare our findings with the previous  results in the \bp\ analysis in \citet{bp11}. This will tell us how much more information is gained about these anomalies by including the \WMAP\ dataset to the LFI of \Planck.
+This section will look at some of statistics of well-known the low-$\ell$ anomalies and compare our findings with the previous  results in the \bp\ analysis in \citet{bp11}. This will tell us how much more information is gained about these anomalies by including the \WMAP\ dataset in addition to \Planck\ LFI.
 
-It has been noted since \COBE-DMR that the quadrupole amplitude of our CMB is lower than expected from \LCDM\ \citep{bennett:1992}. This has later been confirmed in \wmap\ \citep{hinshaw2003a} and \planck\ \citep{planck2013-XV}, but with large discrepancies in mean value and error bars.
+It has been noted since \COBE-DMR that the quadrupole amplitude of our CMB is lower than expected from \LCDM\ \citep{bennett:1992}. This has later been confirmed by \WMAP\ \citep{hinshaw2003a} and \planck\ \citep{planck2013-XV}, but with large discrepancies in mean value and error bars.
 
-The \WMAP\ team found in the 7-year analysis a best-fit value of $201\,\mu\mathrm{K}^2$ \citep{larson2010} which dropped to $151\,\mu\mathrm{K}^2$ in the 9-year analysis \citep{hinshaw2012}. The naive Fisher uncertainty on $\sigma_2$ was reported by \citet{hinshaw2012} to be $9\mu \mathrm{K}^2$ which only accounted for a noise-only estimate. This error bar corresponds to a roughly $5\sigma$ discrepancy.
 
-\Planck\ later found in 2013 and 2018 $\sigma_2$ to be 299 and 226~$\mu \mathrm{K}^2$, repectively, with a naive Fisher uncertainty yielded a $8\sigma$ discrepancies. This shows that measuring $\sigma_2$ is difficult and that instrumental white-noise is not the dominant source of uncertatinty.
+The \WMAP\ team found in the 7-year analysis a best-fit value of $201\,\mu\mathrm{K}^2$ \citep{larson2010} which dropped to $151\,\mu\mathrm{K}^2$ in the 9-year analysis \citep{hinshaw2012}. The naive Fisher uncertainty on $\sigma_2$ was reported by \citet{hinshaw2012} to be $9\,\mu \mathrm{K}^2$ which only accounted for a noise-only estimate. This error bar corresponds to a roughly $5~\sigma$ discrepancy.
+
+\textcolor{red}{citations here? ->}\Planck\ later found in 2013 and 2018 $\sigma_2$ to be 299 and 226 $\mu \mathrm{K}^2$, repectively, with a naive Fisher uncertainty yielded a $8~\sigma$ discrepancies. This shows that measuring $\sigma_2$ is difficult and that instrumental white-noise is not the dominant source of uncertatinty.
 
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/WMAP_P_sig_d_c.pdf}
@@ -1973,7 +1937,8 @@ The \WMAP\ team found in the 7-year analysis a best-fit value of $201\,\mu\mathr
 	\label{fig:sigma_2_hist}
 \end{figure}
 
-With the set of \cosmoglobe\ maps of the CMB we can quanitify the marginal posterior distribution $P(\sigma_2 \mid \data)$, and we show the posterior distribution represented as a Gaussian with ${\sigma_2 = 132 \pm 71\ \mu \mathrm{K}^2}$ in Fig.~\ref{fig:sigma_2_hist}. Despite the fact that \Cosmoglobe\ also incorporates the LFI dataset, this is an 8-fold of the \WMAP\ Fisher uncertainty. This is a clear demonstration of  why one must take instrumental and astrophysical parameters into account when measuring $\sigma_2$. Fig.~\ref{fig:sigma_2_hist} compares the \cosmoglobe\ results with \bp\ which found $\sigma_2 = 229\pm 97\ \mu\mathrm{K}^2$, showing that the inclusion of \WMAP\ significantly lowers the measured value of $\sigma_2$. We also show $10^5$ realizations of $\sigma_2$ given \Planck\ 2018 best-fit $C^{\Lambda \mathrm{CDM}}_2 = 1064.6\ \mu\mathrm{K}^2$.
+
+With the set of \cosmoglobe\ maps of the CMB we can quanitify the marginal posterior distribution $P(\sigma_2 | \mathbf{d})$, and we show posterior distribution represented as a Gaussian with $\sigma_2 = 132 \pm 71 \mu \mathrm{K}^2$ in Fig.~\ref{fig:sigma_2_hist}. Despite the fact that \Cosmoglobe\ also incorporates the LFI dataset, this is an 8-fold of the \WMAP\ Fisher uncertainty. This proves why one needs to take instrumental and astrophysical parameters into account when measuring $\sigma_2$. Fig.~\ref{fig:sigma_2_hist} compares the \cosmoglobe\ results with \bp\ which found $\sigma_2 = 229\pm 97\,\mu\mathrm{K}^2$, showing that the inclusion of \WMAP\ significantly lowers the measured value of $\sigma_2$. We also show $10^5$ realizations of $\sigma_2$ given Planck 2018 best-fit $C^{\Lambda \mathrm{CDM}}_2 = 1064.6\, \mu\mathrm{K}^2$.
 
 
 \begin{figure}
@@ -1982,7 +1947,8 @@ With the set of \cosmoglobe\ maps of the CMB we can quanitify the marginal poste
 	\label{fig:blackwell_rao_sigma_2}
 \end{figure}
 
-To better understand how anomalous $\sigma_2$ is, we can ask what the probablity of $C_2$ be large given our set of measured $\sigma_2$. This can be done by applying the Blackwell-Rao esimator described by \citet{chu2005}. We map out the marginal posterior distribution $P(C_2 \mid \sigma_2)$ as a function of $C_2$ and mark where $C^{\Lambda \mathrm{CDM}}_2 = 1064.6\ \mu\mathrm{K}^2$ by a grey vertical line. We show this in Fig.~\ref{fig:blackwell_rao_sigma_2} find that the probability for $C_2$ to exceed $C^{\Lambda \mathrm{CDM}}_2$ to be $11.1\,\%$ for \cosmoglobe\ (LFI + \WMAP) and $21.7\,\%$ for \bp\ (LFI) shown as shaded areas.
+
+To get a better understanding of how anomalous $\sigma_2$ is, we can ask what the probablity of $C_2$ be large given our set of measured $\sigma_2$. This can be done by applying the Blackwell-Rao estimator described in \citet{chu2005}. We map out the marginal posterior distribution $P(C_2 |\sigma_2)$ as a function of $C_2$ and mark where $C^{\Lambda \mathrm{CDM}}_2 = 1064.6\, \mu\mathrm{K}^2$ by a grey vertical line. We show this in Fig.~\ref{fig:blackwell_rao_sigma_2} find that the probability for $C_2$ to exceed $C^{\Lambda \mathrm{CDM}}_2$ to be $11.1\,\%$ for \cosmoglobe\ (LFI + \WMAP) and $21.7\,\%$ for \bp\ (LFI) shown as shaded areas.
 
 
 \begin{figure}
