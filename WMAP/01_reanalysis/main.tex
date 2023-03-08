@@ -1029,6 +1029,20 @@ where the second term is a cubic polynomial with coefficients $c_i$ referenced t
 
 A complete comparison between the  \WMAP\ and \cosmoglobe\ gain and baseline models for all diodes is provided in Appendix~\ref{sec:survey}. In particular, Fig.~\ref{fig:baseline} shows the baseline differences as a function of time, and here we see that most diodes differences scatter around a constant value that is close to zero; the precise constant value is of limited importance, since that only corresponds to a difference in the overall monopole of the maps, which for \WMAP\ is determined through post-processing. However, there are a few notable features. First, we see that the two \Q11 diodes exhibit large variations at the very beginning of the mission, with typical values of a few du's, and individual scans shows notable spikes for many diodes. These are all relatively isolated in time, and will therefore have relatively minor impact on the final maps. Far more significant are the \W-band differences, for which one sees both slow drifts and abrupt changes. Furthermore, in many cases they vary notably between diodes within the same DA, and this will obviously translate into differences in the large-scale polarization maps derived from the two pipelines.
 
+
+Similarly, Fig.~\ref{fig:gain} compares the gain solutions directly, while Fig.~\ref{fig:dgain} shows the fractional differences in units of percent. Overall, we see that the two gain models agree to typically about 0.5\,\% in an absolute sense, and better than typically 0.1\,\% in terms of relative agreement between neighboring scans. By far the most striking feature in this plot is an annual variation that trace the \WMAP\ satellite's motion around the Sun. In general, such an oscillatory gain behaviour is entirely expected, because of known temperature variations in the satellite. However, the difficulty lies in estimating the magnitude of the oscillations, as different radiometers can respond differently to these temperature variations. In this respect, it is useful to recall that the \WMAP\ and \cosmoglobe\ gain estimation algorithms differ at a fundamental level; while the \WMAP\ analysis considers each DA in isolation, and attempts to fit a handful of instrumental parameters, defined by Eq.~\eqref{eq:wmap_gain}, to the orbital dipole seen by that DA alone, the \cosmoglobe\ analysis considers the problem globally, and attempts to fit all gain parameters to the full sky signal (including both the Solar and orbital CMB dipole) simultaneously, without the use of a strong instrumental model prior. Returning to the absolute gains shown in Fig.~\ref{fig:gain}, it is difficult to determine visually which approach better at this level alone, as the two models are quite similar; in some cases, such as \Ka124 and \Q214, the \WMAP\ model oscillates more strongly than the \cosmoglobe\ model, while in others, such as \K113 and \K114, the opposite is true. We also see the impact of the strong instrumental priors in the \WMAP\ solution particularly well in \W-band, where the \cosmoglobe\ gains are far more noisy than the \WMAP\ gains. 
+
+
+The impact of these differences at the TOD level is illustrated in Fig.~\ref{fig:cal_comp_10min}, which shows the calibrated \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ minus the \WMAP\ calibrated signal in units of microkelvin. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. Differences of order $50\,\mathrm{\mu K}$ are seen where the absolute sky brightness is about $10\,\mathrm{mK}$, and this is equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainty estimated in \citet{bennett2012} based on end-to-end simulations.
+
+Another interesting feature in Fig.~\ref{fig:cal_comp_10min} is slow correlated variations at a timescale of $\sim$\,20\,sec timescale. There is nothing in the \cosmoglobe\ instrument model that varies on such short timescales, and this must therefore come from \WMAP. The most likely explanation is the fact that the the \WMAP\ gain model depends directly on housekeeping data that are recorded with a 23.04\,sec sample rate, and these values appear to have been applied without any smoothing, resulting in sharp jumps in the final \WMAP\ gain model. At the same time, it is also important to note that the \cosmoglobe\ gain model does not include any time-varying structure within a single scan, and if any artifacts resulting from this is identified in the current products, it may be worth incorporating housekeeping data in a future  \cosmoglobe\ data release.
+
+
+
+
+\subsection{Transmission imbalance}
+\label{sec:xim}
+
 \begin{table}
 \newdimen\tblskip \tblskip=5pt
 \caption{Transmission imbalance parameters for each \WMAP\ radiometer as estimated in the current analysis (\emph{second column}) and in the official 9-year \WMAP\ analysis (\emph{third column}). Our uncertainties indicate $1\,\sigma$ marginal posterior standard deviations. }
@@ -1078,6 +1092,13 @@ W42 &   0.01882 \pm  0.00282  &   0.02054 \pm  0.00202 \cr
 \endPlancktablewide
 \end{table}
 
+
+Closely related to the gain model is the transmission imbalance factor, $x_{\mathrm{im}}$, quantifying the difference between responsivity in the two horns. These are listed for each radiometer in Table~\ref{tab:xim} for both \cosmoglobe\ and \WMAPnine; for \cosmoglobe\ the reported values correspond to marginal posterior means and standard deviations. The same information is plotted in Fig.~\ref{fig:x_im}.
+
+At first glance, the two estimates appear in reasonable agreement, and except for \K-band, they are always within $1\,\sigma$ from each other. However, there are subtle differences that could play an important role in the final maps and uncertainty estimates. The reason for this is that these parameters couple directly to the astrophysical sky signal, and in particular to the bright 3\,mK Solar CMB dipole. Even an inaccuracy at the $\mathcal{O}(10^{-3})$ level can therefore in principle excite correlated large-scale artefacts at the microkelvin level, which is comparable to or larger than the expected cosmological reionization of about 0.5\muK.
+
+With this in mind, we first note that the \K-band imbalance factors differ by 2--3\,$\sigma$. For this particular channel, it is important to note both that the foregrounds are very bright and that the effective bandpass of each radiometer differ. Minor details in both foreground and bandpass modelling are therefore likely to have a significant impact of the estimated parameters. 
+
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\linewidth]{figures/x_im_CG_v1.pdf}
@@ -1085,7 +1106,7 @@ W42 &   0.01882 \pm  0.00282  &   0.02054 \pm  0.00202 \cr
 	\label{fig:x_im}
 \end{figure}
 
-Similarly, Fig.~\ref{fig:gain} compares the gain solutions directly, while Fig.~\ref{fig:dgain} shows the fractional differences in units of percent. Overall, we see that the two gain models agree to typically about 0.5\,\% in an absolute sense, and better than typically 0.1\,\% in terms of relative agreement between neighboring scans. By far the most striking feature in this plot is an annual variation that trace the \WMAP\ satellite's motion around the Sun. In general, such an oscillatory gain behaviour is entirely expected, because of known temperature variations in the satellite. However, the difficulty lies in estimating the magnitude of the oscillations, as different radiometers can respond differently to these temperature variations. In this respect, it is useful to recall that the \WMAP\ and \cosmoglobe\ gain estimation algorithms differ at a fundamental level; while the \WMAP\ analysis considers each DA in isolation, and attempts to fit a handful of instrumental parameters, defined by Eq.~\eqref{eq:wmap_gain}, to the orbital dipole seen by that DA alone, the \cosmoglobe\ analysis considers the problem globally, and attempts to fit all gain parameters to the full sky signal (including both the Solar and orbital CMB dipole) simultaneously, without the use of a strong instrumental model prior. Returning to the absolute gains shown in Fig.~\ref{fig:gain}, it is difficult to determine visually which approach better at this level alone, as the two models are quite similar; in some cases, such as \Ka124 and \Q214, the \WMAP\ model oscillates more strongly than the \cosmoglobe\ model, while in others, such as \K113 and \K114, the opposite is true. We also see the impact of the strong instrumental priors in the \WMAP\ solution particularly well in \W-band, where the \cosmoglobe\ gains are far more noisy than the \WMAP\ gains. 
+Second, we see that for many several channels, the two methods disagree strongly on the marginal uncertainties. For instance, the \WMAP\ \Q22 uncertainty is about a factor of ten larger than the \cosmoglobe\ uncertainty, and the corresponding mean differs from the \cosmoglobe\ mean by about $8\sigma$ as measured in units of \cosmoglobe\ uncertainties. These differences are important both in terms of final sky maps (which depend on the mean value) and error propagation. In particular, it is important to note that while the \cosmoglobe\ sampling approach accounts for all couplings between the specific value of $x_{\mathrm{im}}$ and all other parameters (gain, baselines, correlated noise, CMB dipole, large-scale polarization etc.) at every single step of the Markov chain, the \WMAP\ approach only marginalizes over two linear templates in the low-resolution covariance matrix. These two templates are derived by changing $x_{\mathrm{im}}$ by respectively 10 and 20\,\% with respect to their mean values, respectively, and recomputing the maps. Clearly, this linear low-resolution approach can only capture a limited sub-volume of the full non-linear effect of transmission imbalance uncertainties. Even cases for which the mean estimates formally agree within $1\,\sigma$ may therefore in practice result in significantly different sky maps. We will return to this issue in Sect.~\ref{sec:maps}. 
 
 \begin{table*}
 \newdimen\tblskip \tblskip=5pt
@@ -1167,37 +1188,6 @@ W42  &  1  &  1.43  &  1.65  &   2.221 \pm  0.017  &  5.31  &  26.0  &   16.10 \
 \endPlancktablewide
 \end{table*}
 
-The impact of these differences at the TOD level is illustrated in Fig.~\ref{fig:cal_comp_10min}, which shows the calibrated \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ minus the \WMAP\ calibrated signal in units of microkelvin. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. Differences of order $50\,\mathrm{\mu K}$ are seen where the absolute sky brightness is about $10\,\mathrm{mK}$, and this is equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainty estimated in \citet{bennett2012} based on end-to-end simulations.
-
-Another interesting feature in Fig.~\ref{fig:cal_comp_10min} is slow correlated variations at a timescale of $\sim$\,20\,sec timescale. There is nothing in the \cosmoglobe\ instrument model that varies on such short timescales, and this must therefore come from \WMAP. The most likely explanation is the fact that the the \WMAP\ gain model depends directly on housekeeping data that are recorded with a 23.04\,sec sample rate, and these values appear to have been applied without any smoothing, resulting in sharp jumps in the final \WMAP\ gain model. At the same time, it is also important to note that the \cosmoglobe\ gain model does not include any time-varying structure within a single scan, and if any artifacts resulting from this is identified in the current products, it may be worth incorporating housekeeping data in a future  \cosmoglobe\ data release.
-
-
-
-
-\subsection{Transmission imbalance}
-\label{sec:xim}
-
-Closely related to the gain model is the transmission imbalance factor, $x_{\mathrm{im}}$, quantifying the difference between responsivity in the two horns. These are listed for each radiometer in Table~\ref{tab:xim} for both \cosmoglobe\ and \WMAPnine; for \cosmoglobe\ the reported values correspond to marginal posterior means and standard deviations. The same information is plotted in Fig.~\ref{fig:x_im}.
-
-At first glance, the two estimates appear in reasonable agreement, and except for \K-band, they are always within $1\,\sigma$ from each other. However, there are subtle differences that could play an important role in the final maps and uncertainty estimates. The reason for this is that these parameters couple directly to the astrophysical sky signal, and in particular to the bright 3\,mK Solar CMB dipole. Even an inaccuracy at the $\mathcal{O}(10^{-3})$ level can therefore in principle excite correlated large-scale artefacts at the microkelvin level, which is comparable to or larger than the expected cosmological reionization of about 0.5\muK.
-
-With this in mind, we first note that the \K-band imbalance factors differ by 2--3\,$\sigma$. For this particular channel, it is important to note both that the foregrounds are very bright and that the effective bandpass of each radiometer differ. Minor details in both foreground and bandpass modelling are therefore likely to have a significant impact of the estimated parameters. 
-
-Second, we see that for many several channels, the two methods disagree strongly on the marginal uncertainties. For instance, the \WMAP\ \Q22 uncertainty is about a factor of ten larger than the \cosmoglobe\ uncertainty, and the corresponding mean differs from the \cosmoglobe\ mean by about $8\sigma$ as measured in units of \cosmoglobe\ uncertainties. These differences are important both in terms of final sky maps (which depend on the mean value) and error propagation. In particular, it is important to note that while the \cosmoglobe\ sampling approach accounts for all couplings between the specific value of $x_{\mathrm{im}}$ and all other parameters (gain, baselines, correlated noise, CMB dipole, large-scale polarization etc.) at every single step of the Markov chain, the \WMAP\ approach only marginalizes over two linear templates in the low-resolution covariance matrix. These two templates are derived by changing $x_{\mathrm{im}}$ by respectively 10 and 20\,\% with respect to their mean values, respectively, and recomputing the maps. Clearly, this linear low-resolution approach can only capture a limited sub-volume of the full non-linear effect of transmission imbalance uncertainties. Even cases for which the mean estimates formally agree within $1\,\sigma$ may therefore in practice result in significantly different sky maps. We will return to this issue in Sect.~\ref{sec:maps}. 
-
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/ps_test_W4_det1.pdf}
-	\caption{PSD for radiometer \W413 that spans MJDs 52252.3--52254.8. The power spectrum of the blue line corresponds to the residual, while the gray line is the residual with a correlated noise realization removed.}
-	\label{fig:W413_psd}
-\end{figure}
-
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/ps_test_W4_det1_zoom.pdf}
-	\caption{PSD for radiometer \W413 that spans MJDs 52252.3--52254.8. 
-	The black dashed line is a sample of the theoretical PSD, while the blue line is the smoothed residual power spectrum.
-	}
-	\label{fig:W413_psd_zoom}
-\end{figure}
 
 
 \subsection{Instrumental noise}
@@ -1222,6 +1212,20 @@ Another issue worth pointing out is the fact that we are not yet accounting for 
 In summary, we have not yet been able to identify the cause of the major difference in reported white noise levels at \W-band; while we do detect goodness-of-fit failures of as much as 5--10\,$\sigma$ for many of these diodes at the TOD level (see Sect.~\ref{sec:summary_stats}), such significances correspond to sub-percent errors in the white noise level. For comparison, a white noise misestimation of 50\,\% would translate into an 800\,$\sigma$ $\chi^2$ failure. This is left to be understood through future work, but we do not expect it to indicate a real failure in either analysis, but it is more likely just a matter of different conventions.
 
 Turning our attention to the low-frequency parameters, we see in Table~\ref{tab:noise} and Fig.~\ref{fig:fknee} that our knee frequencies lie between the \WMAP\ ground and laboratory measurements, almost without exception, which on the one hand indicates generally good agreement between the two analyses. However, on the other hand, it is also implies that our values are in fact closer to the \WMAP\ laboratory measurements than the \WMAP\ flight measurements. This may possibly be due to the longer time-scales used in the \cosmoglobe\ analysis.
+
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/ps_test_W4_det1.pdf}
+	\caption{PSD for radiometer \W413 that spans MJDs 52252.3--52254.8. The power spectrum of the blue line corresponds to the residual, while the gray line is the residual with a correlated noise realization removed.}
+	\label{fig:W413_psd}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/ps_test_W4_det1_zoom.pdf}
+	\caption{PSD for radiometer \W413 that spans MJDs 52252.3--52254.8. 
+	The black dashed line is a sample of the theoretical PSD, while the blue line is the smoothed residual power spectrum.
+	}
+	\label{fig:W413_psd_zoom}
+\end{figure}
 
 Most radiometers have constant $f_\mathrm{knee}$ throughout the mission, with a few notable exceptions. First, all \W-band channels display some amount of temporal variation that does not seem to be associated with any sinusoidal features. Second, all \Q2 channels, \V223, and \V224 all display a similar asymptotic drift in time. We have not found any instrumental effects that share this feature.
 The PSD slope $\alpha$ is around $-1$ for each radiometer, albeit with high scatter for the lower frequencies. As expected, the uncertainty in $\alpha$ decreases as $f_\mathrm{knee}$ increases, since there are more datapoints to fit below $f_\mathrm{knee}$ where the constraining power on $\alpha$ is the strongest.
