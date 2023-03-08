@@ -1,37 +1,32 @@
-name: Build Papers
+name: Build PDFs
+
 on: [push]
+
 jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v3
-      - name: Compile parameter estimation
-        uses: xu-cheng/latex-action@v2
-        with:
-          root_file: "parameter-estimation/main.tex"
-          work_in_root_file_dir: true
-          continue_on_error: true
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          wmap:
+            - 'WMAP/01_reanalysis/**'
+    - if: steps.changes.outputs.wmap == 'true'
       - name: Compile WMAP reanalysis
         uses: xu-cheng/latex-action@v2
         with:
           root_file: "WMAP/01_reanalysis/main.tex"
           work_in_root_file_dir: true
-          continue_on_error: true
-      - name: Compile synchrotron polarization
-        uses: xu-cheng/latex-action@v2
-        with:
-          root_file: "WMAP/04_synch/main.tex"
-          work_in_root_file_dir: true
-          continue_on_error: true
-      - name: Push pdf
+          continue_on_error: true      
+      - name: Push WMAP pdf
         run: |
           mkdir -p PDFs
           mv WMAP/01_reanalysis/main.pdf PDFs/WMAP_reanalysis.pdf
-          mv WMAP/04_synch/main.pdf PDFs/CG_synch.pdf
-          mv parameter-estimation/main.pdf PDFs/parameter-estimation.pdf
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add PDFs/*.pdf
-          git commit -m "Uploading PDF"
+          git add PDFs/WMAP_reanalysis.pdf
+          git commit -m "Uploading WMAP pdf"
           git push
