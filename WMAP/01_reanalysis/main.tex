@@ -1198,6 +1198,32 @@ Second, we see that for many several channels, the two methods disagree strongly
 \end{figure}
 
 
+\subsection{Instrumental noise}
+\label{sec:noise}
+
+Next, we consider the instrumental noise parameters, $\xi_\mathrm{n}=\{\sigma_0, f_{\mathrm{k}}, \alpha\}$. In this case, we recall three major differences between the \cosmoglobe\ and \WMAP\ analysis. First, while we model the noise explicitly with a $1/f$ noise profile in Fourier domain, the \WMAP\ analysis adopts a model-independent approach by simply measuring the auto-correlation function directly. A notable advantage of the latter approach is that it naturally accounts for the non-white noise at high-frequency without algorithmic modifications, while this has to be added manually in the parametric \cosmoglobe\ approach. A second difference is the fact that while \WMAP\ uses 1- or 24-hour segments to estimate the noise model, we use 3--5 days, and are therefore able to trace noise correlations to longer time-scales. Thirdly, while \WMAP\ assumed the noise filter to be constant within each year of operations, we allow it to vary between scans, that is, on a timescale of days.
+
+With these differences in mind, Figs.~\ref{fig:sigma0}--\ref{fig:alpha} provides a complete overview of the noise parameters for all 40 \WMAP\ diodes. As in Fig.~\ref{fig:inst_K113}, the solid black lines show \cosmoglobe\ results, while the dotted red and orange lines show the corresponding 1-year and GSFC measurements (where available). Starting with the white noise level, we see that these are overall relatively constant in time, although with slight traces for annual variations in some channels (e.g., \K113); slight instabilities near the beginning and/or end of the mission in other channels (e.g., \Ka); and slight drifts in yet others (e.g., \Q12 and \W32).
+
+When comparing the \cosmoglobe\ values with the \WMAP\ values, it is worth noting that \WMAP\ only published results for each diode-pair, not for individual diodes. All \WMAP\ values are therefore the same for each diode pair. Still, from the \cosmoglobe\ results, which are reported individually for each diode, we see that diode pairs generally have quite similar white noise levels, and vary at most by a percent.
+
+To facilitate a more quantitative comparison, Table~\ref{tab:noise} compares the \cosmoglobe\ posterior mean results with the reported \WMAP\ results. Note that for $\sigma_0$, the \cosmoglobe\ values have been scaled by a factor of $\sqrt{2}$, in order to account for the fact that these apply to individual diodes, as opposed to diode-pairs. Both in Table~\ref{tab:noise} and Fig.~\ref{fig:sigma0}, we see that about half of the \cosmoglobe\ values lie between the two \WMAP\ results, while the other half are higher. In particular the \W-band noise levels are much higher, sometimes by as much as 50\,\%.
+
+In this respect, it is worth recalling that the white noise level in raw du is in \cosmoglobe\ not strictly sampled from the full posterior distribution, but rather estimated deterministically from the highest frequencies. This makes our estimate more sensitive to possible colored noise at high frequencies \citep{bp17}. At the same time, the calibrated white noise level $\sigma_0[\mathrm K]=\sigma_0[\mathrm{du}]/g$ depends on the gain, and this  allows us to test the effects of the calibration on the instrument senstivity itself. The calibrated white noise level follows a biannual trend indicative of a system temperature variation, which is to be expected given the radiometer equation
+\begin{equation}
+	\sigma_0[\mathrm V]\propto gT_\mathrm{sys}.
+\end{equation}
+Aside from an overall amplitude shift due to the absolute calibration variation, the shape of the white noise level is stable throughout the Gibbs chain.
+
+Another issue worth pointing out is the fact that we are not yet accounting for correlations between the white noise in diode pairs. However, these are {\color{red} write something more here.}
+
+In summary, we have not yet been able to identify the cause of the major difference in reported white noise levels at \W-band; while we do detect goodness-of-fit failures of as much as 5--10\,$\sigma$ for many of these diodes at the TOD level (see Sect.~\ref{sec:summary_stats}), such significances correspond to sub-percent errors in the white noise level. For comparison, a white noise misestimation of 50\,\% would translate into an 800\,$\sigma$ $\chi^2$ failure. This is left to be understood through future work, but we do not expect it to indicate a real failure in either analysis, but it is more likely just a matter of different conventions.
+
+Turning our attention to the low-frequency parameters, we see in Table~\ref{tab:noise} and Fig.~\ref{fig:fknee} that our knee frequencies lie between the \WMAP\ ground and laboratory measurements, almost without exception, which on the one hand indicates generally good agreement between the two analyses. However, on the other hand, it is also implies that our values are in fact closer to the \WMAP\ laboratory measurements than the \WMAP\ flight measurements. This may possibly be due to the longer time-scales used in the \cosmoglobe\ analysis.
+
+Most radiometers have constant $f_\mathrm{knee}$ throughout the mission, with a few notable exceptions. First, all \W-band channels display some amount of temporal variation that does not seem to be associated with any sinusoidal features. Second, all \Q2 channels, \V223, and \V224 all display a similar asymptotic drift in time. We have not found any instrumental effects that share this feature.
+The PSD slope $\alpha$ is around $-1$ for each radiometer, albeit with high scatter for the lower frequencies. As expected, the uncertainty in $\alpha$ decreases as $f_\mathrm{knee}$ increases, since there are more datapoints to fit below $f_\mathrm{knee}$ where the constraining power on $\alpha$ is the strongest.
+
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10hr.pdf}
 	\caption{\textit{(top):} Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP. \textit{(Bottom):} Raw correlated noise (gray) and smoothed data with Gaussian kernel (black). This shows more clearly the hourly baseline subtraction from the \WMAP\ treatment.}
@@ -1205,58 +1231,39 @@ Second, we see that for many several channels, the two methods disagree strongly
 \end{figure}
 
 
-\subsection{Instrumental noise and goodness-of-fit}
-\label{sec:noise}
+For completeness, Fig.~\ref{fig:chisq} shows a summary of the reduced
+normalized $\chi^2$ for all diodes. The most striking features in
+these figures are its amplitude and its semiannual periodicity.  Given
+the noise model and data residual, we can evaluate the goodness-of-fit
+in the form of the relative $\chi^2$. Here, we find that approximately
+half of the radiometers have a $\chi^2$ value at least $6\sigma$ above
+or below the expected value.  Given perfect Gaussian residuals, we
+would expect these values to be within $\pm1$ 68\,\% of the time. For
+a typical \W-band scan of length $n_\mathrm{TOD}=2^{22}$, a $10\sigma$
+model failure corresponds to $\chi^2/n_\mathrm{TOD}=1.003$. It is
+therefore exceedingly difficult to look at any given \WMAP\ scan in
+the time domain and identify a model failure. To illustrate this,
+Fig.~\ref{fig:W413_psd} compares the observed noise PSD with the
+best-fit model for the \W413 diode. This is a $7\sigma$ outlier;
+despite this, the $1/f$ model appears to perform exceedingly well over
+seven orders of magnitude in frequency.
 
-
-
-
-
-The noise fitting, as outlined in Sect.~\ref{sec:algorithms}, inherently depends on the data being fit well by both the sky model and the instrument model. In practice, correlated noise fitting can model any unmodeled signals, so the power spectrum and TODs must be carefully scrutinized before any conclusions can be made about the corresponding maps.
-
-The white noise level in raw du is not strictly sampled, but is estimated conditioned on the instrumental parameters and the sky parameters. However, the calibrated white noise level $\sigma_0[\mathrm K]=\sigma_0[\mathrm{du}]/g$ does depend on the gain quite directly, which allows us to test the effects of the calibration on the instrument senstivity itself. The calibrated white noise level follows a biannual trend indicative of a system temperature variation, which is to be expected given the radiometer equation
-\begin{equation}
-	\sigma_0[\mathrm V]\propto gT_\mathrm{sys}.
-\end{equation}
-Aside from an overall amplitude shift due to the absolute calibration variation, the shape of the white noise level is stable throughout the Gibbs chain.
-
-On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most prominent feature is a varying signal of amplitude $0.2\,\mathrm{mK}$. This likely due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assigning a linear baseline solution for the entire scan. The variations are commensurate with correlated noise, which for \K113 has ${f_\mathrm{knee}\sim0.5\,\mathrm{mHz}}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. To test this hypothesis, we plot a realization of correlated noise generated by \commander, and find that the signals are very similar, both in amplitude and morphology.
-
-
-
-The knee frequencies for each channel lie between the reported values by \citet{jarosik2003a} for both the Goddard Space Flight Center (GSFC) laboratory measurements and those from the first year of data collection. Nearly all radiometers have constant $f_\mathrm{knee}$ throughout the mission, with a few notable exceptions. First, all \W-band channels display some amount of temporal variation that does not seem to be associated with any sinusoidal features. Second, all \Q2 channels, \V223, and \V224 all display a similar asymptotic drift in time. We have not found any instrumental effects that share this feature.
-The PSD slope $\alpha$ is around $-1$ for each radiometer, albeit with high scatter for the lower frequencies. As expected, the uncertainty in $\alpha$ decreases as $f_\mathrm{knee}$ increases, since there are more datapoints to fit below $f_\mathrm{knee}$ where the constraining power on $\alpha$ is the strongest.
-
-
-The most striking feature of the reduced normalized $\chi^2$ is its amplitude
-and its semiannual periodicity.  Given the noise model and data residual, we
-can evaluate the goodness-of-fit in the form of the relative $\chi^2$. Here, we
-find that approximately half of the radiometers have a $\chi^2$ value at least
-$6\sigma$ above or below the expected value.  Given perfect Gaussian residuals,
-we would expect the reduced sum of squares to be $n_\mathrm{tod}=2^N$ and be
-within $\sqrt{2n_\mathrm{tod}}=2^{(N+1)/2}$ 68\,\% of the time. For a typical
-\W-band scan of length $n_\mathrm{TOD}=2^{22}$, a $10\sigma$ model failure
-corresponds to $\chi^2/n_\mathrm{TOD}=1.003$. Therefore, it is exceedingly
-difficult to look at any given \WMAP\ scan in the time domain and identify a
-model failure. In power spectrum space, i.e., in Fig.~\ref{fig:W413_psd}, the
-data are still characterized well at all scales, despite this scan having a
-$\chi^2$ that is $7\sigma$ above the expectation value. 
-
-
-
-
-Only with aggressive smoothing, as in Fig.~\ref{fig:W413_psd_zoom}, does the
-model failure become apparent at frequencies 1--10\,Hz.  Here, it is clear that
-despite fitting the data well at the highest and lowest frequencies, it is in
-the intermediate range of 1--5\,Hz where the $1/f$ model is a less accurate
-fit to the residual power spectrum. Part of the cause of this failure is that the white
-noise level is essentially fixed by the value of the power spectrum at the
-Nyquist frequency, as it was computed by differencing adjacent samples. The
-power spectrum has a downward trend beyond above 1\,Hz, indicating that the
-data would be better fit by one or more terms proportional to $f^\alpha$. This
-is phenomenologically similar to the \WMAP\ collaboration's approach of
-describing the time-space autocorrelation as a cubic polynomial in $\log\Delta t$ \citep{jarosik2007}.  
-
+Only with aggressive smoothing does the model failure become apparent
+at frequencies 1--10\,Hz. This is illustrated in
+Fig.~\ref{fig:W413_psd_zoom}, which shows exactly the same underlying
+data as in Fig.~\ref{fig:W413-psd}, but heavily smoothed. Here, it is
+clear that despite fitting the data well at the highest and lowest
+frequencies, it is in the intermediate range of 1--5\,Hz where the
+$1/f$ model is a less accurate fit to the residual power
+spectrum. Part of the cause of this failure is that the white noise
+level is essentially fixed by the value of the power spectrum at the
+Nyquist frequency, as it was computed by differencing adjacent
+samples. The power spectrum has a downward trend beyond above 1\,Hz,
+indicating that the data would be better fit by one or more terms
+proportional to $f^\alpha$. This is phenomenologically similar to the
+\WMAP\ collaboration's approach of describing the time-space
+autocorrelation as a cubic polynomial in $\log\Delta t$
+\citep{jarosik2007}.
 
 In practice, the $1/f$ model has a small effect on the final data products, and
 was not visible in noise models when we modeled the data in one day scans
@@ -1268,6 +1275,10 @@ high frequencies is also present in, e.g., the \Planck\ HFI data
 \citep[Fig.~1]{planck2014-a10}, so improved modeling of this form will be a
 necessity in future \cosmoglobe\ endeavors, and will be used to improve the
 \WMAP\ data processing.
+
+Before concluding this section, we recall the close relationship between the correlated noise component and the baseline model. This is illustrated in Fig.~\ref{fig:cal_comp}, which shows the difference between the calibrated \cosmoglobe\ and \WMAP\ TOD data, i.e., the same as Fig.~\ref{fig:cal_comp_10min}, but plotted for 24 hours instead of 10 minutes. The bottom panel shows the \cosmoglobe\ correlated noise realization for the same period, both raw and smoothed. The most prominent feature in this figure is a varying signal of amplitude $0.2\,\mathrm{mK}$. This is due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assigning a linear baseline solution for the entire scan, and then accounting for the non-linearity through $\n^{\mathrm{corr}}$. The variations are commensurate with the correlated noise correlation length, which for \K113 has ${f_\mathrm{knee}\sim0.5\,\mathrm{mHz}}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. 
+
+
 
 
 
