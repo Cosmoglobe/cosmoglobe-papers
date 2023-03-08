@@ -14,18 +14,20 @@ jobs:
             wmap:
               - 'WMAP/01_reanalysis/**'
 
-      - name: Compile and upload WMAP pdf
+      - name: Compile WMAP pdf
         if: steps.filter.outputs.wmap == 'true'
         uses: xu-cheng/latex-action@v2
         with:
           root_file: "WMAP/01_reanalysis/main.tex"
           work_in_root_file_dir: true
           continue_on_error: true
-          run: |
-            mkdir -p PDFs
-            mv WMAP/01_reanalysis/main.pdf PDFs/WMAP_reanalysis.pdf
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add PDFs/WMAP_reanalysis.pdf
-            git commit -m "Uploading WMAP pdf"
-            git push
+      - name: Upload WMAP pdf
+        if: steps.filter.outputs.wmap == 'true'
+        run: |
+          mkdir -p PDFs
+          mv WMAP/01_reanalysis/main.pdf PDFs/WMAP_reanalysis.pdf
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add PDFs/WMAP_reanalysis.pdf
+          git commit -m "Uploading WMAP pdf"
+          git push
