@@ -10,6 +10,8 @@ fwhm_P = 32 / 60  # degrees
 fwhm_W = 0.88  # degrees
 width = 4
 
+DIR = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203'
+
 
 try:
     P_18 = hp.read_map("P_18.fits", field=(0, 1, 2))
@@ -58,13 +60,13 @@ W_DR5 = (
 )
 W_CG = (
     hp.read_map(
-        "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_857_KKaQVW_a_230110/tod_023-WMAP_K_map_c0001_k000009.fits",
+        f"{DIR}/tod_023-WMAP_K_map_c0001_k000009.fits",
         field=(0, 1, 2),
     )
     * 1e3
 )
 P_CG = hp.read_map(
-    "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_857_KKaQVW_a_230110/tod_030_map_c0001_k000009.fits",
+    f"{DIR}/tod_030_map_c0001_k000009.fits",
     field=(0, 1, 2),
 )
 
@@ -163,6 +165,6 @@ plt.savefig(f'diff_CG_U.pdf', bbox_inches='tight')
 plt.show()
 
 cg.standalone_colorbar("planck", ticks=[-10,0,10], extend='both',
-    unit=r"$\mathrm{\mu K}$", fontsize=18, width=6)
+    unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
 
 plt.savefig('cbar_10uK.pdf', bbox_inches='tight')

@@ -4,7 +4,14 @@ import matplotlib.pyplot as plt
 import cosmoglobe as cg
 import astropy.units as u
 
+from setup_matplotlib import *
+
+
 from glob import glob
+
+
+width = cm2inch(17)
+height = 2**0.5*width
 
 # Import the NaMaster python wrapper
 import pymaster as nmt
@@ -73,9 +80,14 @@ plt.subplots_adjust(wspace=0, hspace=0)
 fig3, axes3 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
 plt.subplots_adjust(wspace=0, hspace=0)
 
+fig_large, axes_large = plt.subplots(sharex=True, nrows=10,
+    ncols=1, figsize=(width/3, height))
+plt.subplots_adjust(hspace=0)
+
 axs1 = axes1.flatten()
 axs2 = axes2.flatten()
 axs3 = axes3.flatten()
+axs_large = axes_large.flatten()
 
 n = 0
 for i in range(len(cg_maps)):
@@ -115,6 +127,11 @@ for i in range(len(cg_maps)):
 
     axs3[n].semilogx(ell_eff, Clhat_W / Clhat_C)
     axs3[n].text(0.25, 0.75, r"\textit{" + bands[i] + "}", transform=axs3[n].transAxes)
+
+    axs_large[i].semilogx(ell_eff, Clhat_W / Clhat_C, 'k')
+    axs_large[i].set_ylim([0.85, 1.15])
+    #if i == 5:
+    #    n += 3
     if i == 5:
         n += 3
     else:
@@ -145,28 +162,25 @@ plt.savefig(f"TT_spectra_zoom.pdf", bbox_inches="tight")
 plt.figure(fig3.number)
 plt.savefig(f"TT_spectra_ratio.pdf", bbox_inches="tight")
 print("here we are")
-plt.close("all")
+#plt.close("all")
 
+axs_large[0].set_title(r'$C_\ell^{\mathrm{TT},\mathrm{Cosmoglobe}}/C_\ell^{\mathrm{TT},\mathit{WMAP}}$')
+axs_large[9].set_xlabel(r'$\ell$')
+plt.figure(fig_large.number)
+plt.savefig('TT_ratio.pdf', bbox_inches='tight')
 
 fig1, axes1 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
 plt.subplots_adjust(wspace=0, hspace=0)
 fig2, axes2 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
 plt.subplots_adjust(wspace=0, hspace=0)
-fig3, axes3 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
-plt.subplots_adjust(wspace=0, hspace=0)
-fig4, axes4 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
-plt.subplots_adjust(wspace=0, hspace=0)
-fig5, axes5 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
-plt.subplots_adjust(wspace=0, hspace=0)
-fig6, axes6 = plt.subplots(sharex=True, sharey=True, nrows=3, ncols=4)
-plt.subplots_adjust(wspace=0, hspace=0)
+
+
+fig_large, axes_large = plt.subplots(sharex=True, sharey='row', nrows=10,
+    ncols=2, figsize=(width/3*2, height))
+plt.subplots_adjust(hspace=0, wspace=0)
 
 axs1 = axes1.flatten()
 axs2 = axes2.flatten()
-axs3 = axes3.flatten()
-axs4 = axes4.flatten()
-axs5 = axes5.flatten()
-axs6 = axes6.flatten()
 
 
 n = 0
@@ -196,80 +210,53 @@ for i in range(len(cg_maps)):
     axs2[n].set_ylim([2e-3, 1e3])
     plt.savefig(f"BB_spectra.pdf", bbox_inches="tight")
 
-    inds = ell_eff > 400
-    axs3[n].plot(ell_eff[inds], Clhat_W[0][inds], label="WMAP")
-    axs3[n].plot(ell_eff[inds], Clhat_C[0][inds], label="Cosmoglobe")
-    axs4[n].plot(ell_eff[inds], Clhat_W[3][inds], label="WMAP")
-    axs4[n].plot(ell_eff[inds], Clhat_C[3][inds], label="Cosmoglobe")
 
-    axs3[n].set_ylim([0.002, 0.19])
-    plt.figure(fig3.number)
-    plt.savefig(f"EE_spectra_zoom.pdf", bbox_inches="tight")
-    axs4[n].set_ylim([0.002, 0.19])
-    plt.figure(fig4.number)
-    plt.savefig(f"BB_spectra_zoom.pdf", bbox_inches="tight")
 
-    axs5[n].semilogx(ell_eff, Clhat_W[0] / Clhat_C[0])
-    axs6[n].semilogx(ell_eff, Clhat_W[3] / Clhat_C[3])
+    axes_large[i,0].loglog(ell_eff, Clhat_W[0])
+    axes_large[i,0].loglog(ell_eff, Clhat_C[0])
+    axes_large[i,1].loglog(ell_eff, Clhat_W[3])
+    axes_large[i,1].loglog(ell_eff, Clhat_C[3])
 
-    axs5[n].set_ylim([0.6, 1.4])
-    plt.figure(fig5.number)
-    plt.savefig(f"EE_spectra_ratio.pdf", bbox_inches="tight")
-    axs6[n].set_ylim([0.6, 1.4])
-    plt.figure(fig6.number)
-    plt.savefig(f"BB_spectra_ratio.pdf", bbox_inches="tight")
+
+    #axes_large[i,1].sharey(axes_large[i,2])
+
     axs1[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs1[n].transAxes)
     axs2[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs2[n].transAxes)
-    axs3[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs3[n].transAxes)
-    axs4[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs4[n].transAxes)
-    axs5[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs5[n].transAxes)
-    axs6[n].text(0.75, 0.75, r"\textit{" + bands[i] + "}", transform=axs6[n].transAxes)
-    if i == 5:
+    axes_large[i,1].text(0.75, 0.75, r"\textit{" + bands[i] + "}", 
+        transform=axes_large[i,1].transAxes)
+    #if i == 5:
+    #    n += 3
+    if i == 3:
         n += 3
     else:
         n += 1
 
-axs1[6].axis("off")
-axs1[7].axis("off")
-axs2[6].axis("off")
-axs2[7].axis("off")
-axs3[6].axis("off")
-axs3[7].axis("off")
-axs4[6].axis("off")
-axs4[7].axis("off")
-axs5[6].axis("off")
-axs5[7].axis("off")
-axs6[6].axis("off")
-axs6[7].axis("off")
+axs1[2].axis("off")
+axs1[3].axis("off")
+axs2[2].axis("off")
+axs2[3].axis("off")
 
-axs1[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
-axs2[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
-axs3[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
-axs4[6].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
+axs1[2].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
+axs2[2].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"])
+axes_large[0,0].legend(handles=[l1, l2], labels=[r"\textit{WMAP}", r"\textsc{Cosmoglobe}"], 
+    fontsize=8)
+
+axes_large[0,0].set_title(r'$C_\ell^\mathrm{EE}\ [\mathrm{\mu K}]$')
+axes_large[0,1].set_title(r'$C_\ell^\mathrm{BB}\ [\mathrm{\mu K}]$')
+
+axes_large[9,0].set_xlabel(r'$\ell$')
+axes_large[9,1].set_xlabel(r'$\ell$')
 
 fig1.supxlabel(r"$\ell$")
 fig2.supxlabel(r"$\ell$")
-fig3.supxlabel(r"$\ell$")
-fig4.supxlabel(r"$\ell$")
-fig5.supxlabel(r"$\ell$")
-fig6.supxlabel(r"$\ell$")
 
 fig1.supylabel(r"$C_\ell^\mathrm{EE}\ [\mathrm{\mu K}^2]$")
 fig2.supylabel(r"$C_\ell^\mathrm{BB}\ [\mathrm{\mu K}^2]$")
-fig3.supylabel(r"$C_\ell^\mathrm{EE}\ [\mathrm{\mu K}^2]$")
-fig4.supylabel(r"$C_\ell^\mathrm{BB}\ [\mathrm{\mu K}^2]$")
-fig5.supylabel(r"$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$")
-fig6.supylabel(r"$C_\ell^\mathit{WMAP}/C_\ell^\mathrm{Cosmoglobe}$")
 
 plt.figure(fig1.number)
 plt.savefig(f"EE_spectra.pdf", bbox_inches="tight")
 plt.figure(fig2.number)
 plt.savefig(f"BB_spectra.pdf", bbox_inches="tight")
-plt.figure(fig3.number)
-plt.savefig(f"EE_spectra_zoom.pdf", bbox_inches="tight")
-plt.figure(fig4.number)
-plt.savefig(f"BB_spectra_zoom.pdf", bbox_inches="tight")
-plt.figure(fig5.number)
-plt.savefig(f"EE_spectra_ratio.pdf", bbox_inches="tight")
-plt.figure(fig6.number)
-plt.savefig(f"BB_spectra_ratio.pdf", bbox_inches="tight")
+
+plt.figure(fig_large)
+plt.savefig('EE_BB_spec.pdf', bbox_inches='tight')

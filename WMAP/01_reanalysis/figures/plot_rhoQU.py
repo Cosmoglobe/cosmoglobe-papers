@@ -3,9 +3,9 @@ import cosmoglobe as cg
 import numpy as np
 import matplotlib.pyplot as plt
 
-DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_LFI_KaQVW_221201"
-d_Ka = hp.read_map(f"{DIR}/tod_030-WMAP_Ka_rms_c0001_k000001.fits", field=(1, 2, 3))
-d_30 = hp.read_map(f"{DIR}/tod_030_rms_c0001_k000001.fits", field=(1, 2, 3))
+DIR ="/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206/"
+d_Ka = hp.read_map(f"{DIR}/tod_030-WMAP_Ka_rms_c0001_k000011.fits", field=(1, 2, 3))
+d_30 = hp.read_map(f"{DIR}/tod_030_rms_c0001_k000011.fits", field=(1, 2, 3))
 
 rho_Ka = d_Ka[2] / np.sqrt(d_Ka[0] * d_Ka[1])
 rho_30 = d_30[2] / np.sqrt(d_30[0] * d_30[1])

@@ -4,7 +4,7 @@ import cosmoglobe as cg
 import h5py
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
-#from setup_matplotlib import *
+from setup_matplotlib import *
 
 def G_K(V, TRXB, TFPA):
     T0 = 5.3235e1
@@ -33,6 +33,8 @@ def mnem_to_K(arr, Win, aeu=0):
   return Res
 
 
+width_col = cm2inch(9)
+width = cm2inch(17)
 
 CGDIR = '/mn/stornext/d5/data/duncanwa/WMAP/chains_writeW2_230217'
 chain = cg.Chain(f'{CGDIR}/chain_c0001.h5')
@@ -190,7 +192,7 @@ d_calib = (tod - n_corr)/gain - s_tot + s_sky - bpcorr
 res = (tod - n_corr)/gain - s_tot
 
 
-fig, axes = plt.subplots(sharex=True, nrows=7, figsize=(8, 8*6/7))
+fig, axes = plt.subplots(sharex=True, nrows=7, figsize=(width, width*6/7))
 fig.tight_layout()
 fig.subplots_adjust(hspace=0,wspace=0)
 
@@ -212,7 +214,7 @@ axes[2].set_ylabel(r'$n_\mathrm{corr}\ \mathrm{[mK]}$')
 axes[3].set_ylabel(r'$s_\mathrm{orb}\ \mathrm{[mK]}$')
 axes[4].set_ylabel(r'$s_\mathrm{sl}\ \mathrm{[mK]}$')
 axes[5].set_ylabel(r'$s_\mathrm{leak}\ \mathrm{[mK]}$')
-axes[6].set_ylabel(r'$s_\mathrm{res}\ [\sigma]$')
+axes[6].set_ylabel(r'$d_\mathrm{res}\ [\sigma]$')
 
 
 bline = np.median(ztod[inds])
@@ -255,15 +257,20 @@ axes[0].set_xlim([0,600])
 plt.savefig('K113_timestreams.pdf', bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
 plt.close('all')
 
-plt.figure(figsize=(4, 2))
+inds = t < 3600*24
+inds = (t < 120)
+plt.figure(figsize=(width_col, width_col/2))
 plt.plot(t[inds], 1e3*(tod[inds]/gain - sl[inds] -
     d2[f'{pid:06}/K113/tod'][inds]), '.', ms=0.75, color='k')
 plt.xlabel('Time [seconds]')
 #plt.ylabel(r'$d_\mathrm{cal}/g-s_\mathrm{sl}-d_\mathrm{cal}^\mathit{WMAP}$ [mK]')
 plt.ylabel(r'$\Delta d_\mathrm{cal}\ [\mathrm{\mu K}]$')
-plt.xlim([0,600])
 
 ax = plt.gca()
+ax.set_xlim([0,120])
+ax.set_xticks(np.arange(5,125,5), minor=True)
+ax.set_xticks(np.arange(0,140,20))
+ax.set_xticklabels(np.arange(0,140,20))
 for ticklabel in ax.yaxis.get_ticklabels():
   ticklabel.set_rotation("vertical")
   ticklabel.set_verticalalignment("center")
@@ -282,7 +289,7 @@ axes[3].plot((time3[inds]-time3[inds][0])*3600*24, RFB2[inds])
 
 
 inds = t < 3600*24
-fig, axes = plt.subplots(sharex=True, sharey=True, nrows=2, figsize=(4, 4))
+fig, axes = plt.subplots(sharex=True, sharey=True, nrows=2, figsize=(width_col, width_col))
 fig.tight_layout()
 fig.subplots_adjust(hspace=0,wspace=0)
 axes[1].plot(t[inds]/3600, n_corr[inds], lw=1, alpha=0.5, color='k')

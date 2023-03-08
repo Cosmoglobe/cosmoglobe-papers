@@ -4,11 +4,13 @@ from matplotlib.ticker import MaxNLocator
 import numpy as N
 import scipy.stats
 import healpy as hp
+import cosmoglobe
 
 import plotly.colors as pcol
 import matplotlib as mpl
 
 from glob import glob
+from scipy.interpolate import interp1d
 
 cmap = "Plotly"
 colors = getattr(pcol.qualitative, cmap)
@@ -56,606 +58,137 @@ fig.subplots_adjust(hspace=0,wspace=0)
 #   K-band
 ###############
 
-
-i = 0
-
-ax1 = plt.subplot2grid((10, 4), (0, 0))
-data = np.loadtxt(fnames[i])
-plt.plot(dataK[:,0],dataK[:,1], linewidth=1, color='black')
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-plt.grid(False, which="major", axis="both")
-plt.setp( ax1.get_xticklabels(), visible=False)
-plt.setp( ax1.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.25,r"K113", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax1.yaxis.labelpad = 10*width/17.
-i += 1
-
-        
-data = np.loadtxt(fnames[i])
-ax2 = plt.subplot2grid((10, 4), (0, 1), sharey=ax1)
-plt.plot(dataK[:,0],dataK[:,2], linewidth=1, color='black')
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-plt.grid(False, which="major", axis="both")
-plt.setp( ax2.get_xticklabels(), visible=False)
-plt.setp( ax2.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.25,r"K114", fontsize=10)
-i += 1
-
-data = np.loadtxt(fnames[i])
-ax3 = plt.subplot2grid((10, 4), (0, 2), sharey=ax1)
-plt.plot(dataK[:,0],dataK[:,3], linewidth=1, color='black')
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-plt.grid(False, which="major", axis="both")
-plt.setp( ax3.get_xticklabels(), visible=False)
-plt.setp( ax3.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.25,r"K123", fontsize=10)
-i += 1
-
-
-ax4 = plt.subplot2grid((10, 4), (0, 3), sharey=ax1)
-plt.plot(dataK[:,0],dataK[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-plt.grid(False, which="major", axis="both")
-plt.setp( ax4.get_xticklabels(), visible=False)
-plt.setp( ax4.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.25,r"K124", fontsize=10)
-i += 1
-
-
-###############
-#   Ka-band
-###############
-
-        
-ax5 = plt.subplot2grid((10, 4), (1, 0))
-plt.plot(dataKa[:,0],dataKa[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax5.get_xticklabels(), visible=False)
-plt.setp( ax5.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.16,r"Ka113", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax5.yaxis.labelpad = 10*width/17.
-
-ax6 = plt.subplot2grid((10, 4), (1, 1), sharey=ax5)
-plt.plot(dataKa[:,0],dataKa[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax6.get_xticklabels(), visible=False)
-plt.setp( ax6.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.16,r"Ka114", fontsize=10)
-
-        
-ax7 = plt.subplot2grid((10, 4), (1, 2), sharey=ax5)
-plt.plot(dataKa[:,0],dataKa[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax7.get_xticklabels(), visible=False)
-plt.setp( ax7.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.16,r"Ka123", fontsize=10)
-
-ax8 = plt.subplot2grid((10, 4), (1, 3), sharey=ax5)
-plt.plot(dataKa[:,0],dataKa[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax8.get_xticklabels(), visible=False)
-plt.setp( ax8.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.16,r"Ka124", fontsize=10)
-
-###############
-#   Q1-band
-###############
-
-
-ax9 = plt.subplot2grid((10, 4), (2, 0))
-plt.plot(dataQ1[:,0],dataQ1[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax9.get_xticklabels(), visible=False)
-plt.setp( ax9.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.55,r"Q113", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax9.yaxis.labelpad = 10*width/17.
-
-
-ax10 = plt.subplot2grid((10, 4), (2, 1), sharey=ax9)
-plt.plot(dataQ1[:,0],dataQ1[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax10.get_xticklabels(), visible=False)
-plt.setp( ax10.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.55,r"Q114", fontsize=10)
-
-
-ax11 = plt.subplot2grid((10, 4), (2, 2), sharey=ax9)
-plt.plot(dataQ1[:,0],dataQ1[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax11.get_xticklabels(), visible=False)
-plt.setp( ax11.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.06,r"Q123", fontsize=10)
-
-
-ax12 = plt.subplot2grid((10, 4), (2, 3), sharey=ax9)
-plt.plot(dataQ1[:,0],dataQ1[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax12.get_xticklabels(), visible=False)
-plt.setp( ax12.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.06,r"Q124", fontsize=10)
-
-
-###############
-#   Q2-band
-###############
-
-ax13 = plt.subplot2grid((10, 4), (3, 0))
-plt.plot(dataQ2[:,0],dataQ2[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax13.get_xticklabels(), visible=False)
-plt.setp( ax13.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.10,r"Q213", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax13.yaxis.labelpad = 10*width/17.
-
-        
-ax14 = plt.subplot2grid((10, 4), (3, 1), sharey=ax13)
-plt.plot(dataQ2[:,0],dataQ2[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax14.get_xticklabels(), visible=False)
-plt.setp( ax14.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.10,r"Q214", fontsize=10)
-
-        
-ax15 = plt.subplot2grid((10, 4), (3, 2), sharey=ax13)
-plt.plot(dataQ2[:,0],dataQ2[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax15.get_xticklabels(), visible=False)
-plt.setp( ax15.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.10,r"Q223", fontsize=10)
-
-        
-ax16 = plt.subplot2grid((10, 4), (3, 3), sharey=ax13)
-plt.plot(dataQ2[:,0],dataQ2[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax16.get_xticklabels(), visible=False)
-plt.setp( ax16.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,1.10,r"Q224", fontsize=10)
-
-
-###############
-#   V1-band
-###############
-
-        
-ax17 = plt.subplot2grid((10, 4), (4, 0))
-plt.plot(dataV1[:,0],dataV1[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax17.get_xticklabels(), visible=False)
-plt.setp( ax17.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.55,r"V113", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax17.yaxis.labelpad = 10*width/17.
-
-        
-ax18 = plt.subplot2grid((10, 4), (4, 1), sharey=ax17)
-plt.plot(dataV1[:,0],dataV1[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax18.get_xticklabels(), visible=False)
-plt.setp( ax18.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.55,r"V114", fontsize=10)
-
-        
-ax19 = plt.subplot2grid((10, 4), (4, 2), sharey=ax17)
-plt.plot(dataV1[:,0],dataV1[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax19.get_xticklabels(), visible=False)
-plt.setp( ax19.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.55,r"V123", fontsize=10)
-
-        
-ax20 = plt.subplot2grid((10, 4), (4, 3), sharey=ax17)
-plt.plot(dataV1[:,0],dataV1[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax20.get_xticklabels(), visible=False)
-plt.setp( ax20.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.55,r"V124", fontsize=10)
-
-
-###############
-#   V2-band
-###############
-
-
-ax21 = plt.subplot2grid((10, 4), (5, 0))
-plt.plot(dataV2[:,0],dataV2[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax21.get_xticklabels(), visible=False)
-plt.setp( ax21.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.46,r"V213", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax21.yaxis.labelpad = 10*width/17.
-
-
-ax22 = plt.subplot2grid((10, 4), (5, 1), sharey=ax21)
-plt.plot(dataV2[:,0],dataV2[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax22.get_xticklabels(), visible=False)
-plt.setp( ax22.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.46,r"V214", fontsize=10)
-
-
-ax23 = plt.subplot2grid((10, 4), (5, 2), sharey=ax21)
-plt.plot(dataV2[:,0],dataV2[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax23.get_xticklabels(), visible=False)
-plt.setp( ax23.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.46,r"V223", fontsize=10)
-
-
-ax24 = plt.subplot2grid((10, 4), (5, 3), sharey=ax21)
-plt.plot(dataV2[:,0],dataV2[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax24.get_xticklabels(), visible=False)
-plt.setp( ax24.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.46,r"V224", fontsize=10)
-
-
-
-###############
-#   W1-band
-###############
-
-
-ax25 = plt.subplot2grid((10, 4), (6, 0))
-plt.ylim([0.2, 0.4])
-plt.plot(dataW1[:,0],dataW1[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax25.get_xticklabels(), visible=False)
-plt.setp( ax25.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.25,r"W113", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax25.yaxis.labelpad = 10*width/17.
-
-
-ax26 = plt.subplot2grid((10, 4), (6, 1), sharey=ax25)
-plt.ylim([0.2, 0.4])
-plt.plot(dataW1[:,0],dataW1[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax26.get_xticklabels(), visible=False)
-plt.setp( ax26.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.25,r"W114", fontsize=10)
-
-
-ax27 = plt.subplot2grid((10, 4), (6, 2), sharey=ax25)
-plt.ylim([0.2, 0.4])
-plt.plot(dataW1[:,0],dataW1[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax27.get_xticklabels(), visible=False)
-plt.setp( ax27.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.31,r"W123", fontsize=10)
-
-
-ax28 = plt.subplot2grid((10, 4), (6, 3), sharey=ax25)
-plt.ylim([0.2, 0.4])
-plt.plot(dataW1[:,0],dataW1[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax28.get_xticklabels(), visible=False)
-plt.setp( ax28.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.31,r"W124", fontsize=10)
-
-
-###############
-#   W2-band
-###############
-
-
-ax29 = plt.subplot2grid((10, 4), (7, 0))
-plt.plot(dataW2[:,0],dataW2[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax29.get_xticklabels(), visible=False)
-plt.setp( ax29.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.305,r"W213", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax29.yaxis.labelpad = 10*width/17.
-
-
-ax30 = plt.subplot2grid((10, 4), (7, 1), sharey=ax29)
-plt.plot(dataW2[:,0],dataW2[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax30.get_xticklabels(), visible=False)
-plt.setp( ax30.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.305,r"W214", fontsize=10)
-
-
-ax31 = plt.subplot2grid((10, 4), (7, 2), sharey=ax29)
-plt.plot(dataW2[:,0],dataW2[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax31.get_xticklabels(), visible=False)
-plt.setp( ax31.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.305,r"W223", fontsize=10)
-
-
-ax32 = plt.subplot2grid((10, 4), (7, 3), sharey=ax29)
-plt.plot(dataW2[:,0],dataW2[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax32.get_xticklabels(), visible=False)
-plt.setp( ax32.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.305,r"W224", fontsize=10)
-
-
-###############
-#   W3-band
-###############
-
-
-ax33 = plt.subplot2grid((10, 4), (8, 0))
-plt.plot(dataW3[:,0],dataW3[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax33.get_xticklabels(), visible=False)
-plt.setp( ax33.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.282,r"W313", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax33.yaxis.labelpad = 10*width/17.
-
-
-ax34 = plt.subplot2grid((10, 4), (8, 1), sharey=ax33)
-plt.plot(dataW3[:,0],dataW3[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax34.get_xticklabels(), visible=False)
-plt.setp( ax34.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.282,r"W314", fontsize=10)
-
-
-ax35 = plt.subplot2grid((10, 4), (8, 2), sharey=ax33)
-plt.plot(dataW3[:,0],dataW3[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax35.get_xticklabels(), visible=False)
-plt.setp( ax35.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.282,r"W323", fontsize=10)
-
-
-ax36 = plt.subplot2grid((10, 4), (8, 3), sharey=ax33)
-plt.plot(dataW3[:,0],dataW3[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax36.get_xticklabels(), visible=False)
-plt.setp( ax36.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.282,r"W324", fontsize=10)
-
-
-###############
-#   W4-band
-###############
-
-
-ax37 = plt.subplot2grid((10, 4), (9, 0))
-plt.plot(dataW4[:,0],dataW4[:,1], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax37.get_xticklabels(), visible=True)
-plt.setp( ax37.get_yticklabels(), visible=True)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.286,r"W413", fontsize=10)
-plt.ylabel(r"$g$ [du/mK]");
-ax37.yaxis.labelpad = 10*width/17.
-
-
-plt.xticks([52000,53000,54000,55000], [r"$52\,000$", r"$53\,000$", r"$54\,000$", r"$55\,000$"])
-plt.xlabel(r"MJD");
-ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
-
-ax38 = plt.subplot2grid((10, 4), (9, 1), sharey=ax37)
-plt.plot(dataW4[:,0],dataW4[:,2], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax38.get_xticklabels(), visible=True)
-plt.setp( ax38.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.286,r"W414", fontsize=10)
-
-
-plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
-plt.xlabel(r"MJD");
-ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
-
-ax39 = plt.subplot2grid((10, 4), (9, 2), sharey=ax37)
-plt.plot(dataW4[:,0],dataW4[:,3], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax39.get_xticklabels(), visible=True)
-plt.setp( ax39.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.24,r"W423", fontsize=10)
-
-
-plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])        
-plt.xlabel(r"MJD");
-ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
-
-ax40 = plt.subplot2grid((10, 4), (9, 3), sharey=ax37)
-plt.plot(dataW4[:,0],dataW4[:,4], linewidth=1, color='black')
-data = np.loadtxt(fnames[i])
-plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red')
-i += 1
-plt.grid(False, which="major", axis="both")
-plt.setp( ax40.get_xticklabels(), visible=True)
-plt.setp( ax40.get_yticklabels(), visible=False)
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(52200,0.24,r"W424", fontsize=10)
-
-plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
-# labels
-plt.xlabel(r"MJD");
-ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
-
-
-
-
-# set vertical y axis ticklables
-for ticklabel in ax1.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax5.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax9.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax13.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax17.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax21.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax25.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax29.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax33.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")
-
-for ticklabel in ax37.yaxis.get_ticklabels():
-    ticklabel.set_rotation("vertical")        
+axs = []
+wmap_data = [dataK, dataKa, dataQ1, dataQ2, dataV1, dataV2, dataW1, dataW2, dataW3, dataW4]
+plot_texts = [r"K113", r"K114", r"K123", r"K124", r"Ka113", r"Ka114", r"Ka123", r"Ka124", r"Q113", r"Q114", r"Q123", r"Q124", r"Q213", r"Q214", r"Q223", r"Q224", r"V113", r"V114", r"V123", r"V124", r"V213", r"V214", r"V223", r"V224", r"W113", r"W114", r"W123", r"W124", r"W213", r"W214", r"W223", r"W224", r"W313", r"W314", r"W323", r"W324", r"W413", r"W414", r"W423", r"W424"]
+plot_text_coords = ([[52200, 1.25]] * 4 +  # K
+    [[52200, 1.16]] * 4 +  # Ka
+    [[52200, 0.55]] * 2 +  [[52200, 1.06]] * 2 +  # Q1
+    [[52200, 1.10]] * 4 +  # Q2
+    [[52200, 0.55]] * 4 +  # V1
+    [[52200, 0.46]] * 4 +  # V2
+    [[52200, 0.25]] * 2 + [[52200, 0.31]] * 2 + # W1
+    [[52200, 0.305]] * 4 +  # W2
+    [[52200, 0.282]] * 4 +  # W3
+    [[52200, 0.286]] * 2 + [[52200, 0.24]] * 2 # W4
+)
+
+chain_fname1 = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206/chain_c0001.h5'
+chain_fname2 = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203/chain_c0001.h5'
+chain1 = cosmoglobe.h5.chain.Chain(chain_fname1)
+chain2 = cosmoglobe.h5.chain.Chain(chain_fname2)
+chain_names = ['023-WMAP_K',
+               '030-WMAP_Ka',
+               '040-WMAP_Q1',
+               '040-WMAP_Q2',
+               '060-WMAP_V1',
+               '060-WMAP_V2',
+               '090-WMAP_W1',
+               '090-WMAP_W2',
+               '090-WMAP_W3',
+               '090-WMAP_W4']
+
+for i in range(40):
+    if i % 4 == 0:
+        currax = plt.subplot2grid((10, 4), (i//4, i % 4))
+        firstax = currax
+    else:
+        currax = plt.subplot2grid((10, 4), (i//4, i%4), sharey=firstax)
+    axs.append(currax)
+    data = np.loadtxt(fnames[i])
+    samples1 = chain1.get(f'tod/{chain_names[i//4]}/gain')
+    samples2 = chain2.get(f'tod/{chain_names[i//4]}/gain')
+    tot_samples = np.concatenate((samples1[50:],  samples2[50:]), axis=0)
+    mean = np.mean(tot_samples, axis=0)
+    std = np.std(tot_samples, axis=0)
+    curr_wmap_data = wmap_data[i//4]
+    accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
+    plt.errorbar(curr_wmap_data[:, 0][accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1)
+    plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red', zorder=2)
+    plt.grid(False, which="major", axis="both")
+    if i >= 36:
+        plt.setp( currax.get_xticklabels(), visible=True)
+    else:
+        plt.setp( currax.get_xticklabels(), visible=False)
+    if i % 4 == 0:
+        plt.setp( currax.get_yticklabels(), visible=True)
+    else:
+        plt.setp( currax.get_yticklabels(), visible=False)
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    plt.text(plot_text_coords[i][0],plot_text_coords[i][1], plot_texts[i], fontsize=10)
+    if i % 4 == 0:
+        plt.ylabel(r"$g$ [du/mK]");
+        currax.yaxis.labelpad = 10*width/17.
+    if i >= 36:
+        if i % 4 == 0:
+            plt.xticks([52000,53000,54000,55000], [r"$52\,000$", r"$53\,000$", r"$54\,000$", r"$55\,000$"])
+        else:
+            plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
+        ## labels
+        plt.xlabel(r"MJD");
+
+for i in range(0, len(axs), 4):
+    for ticklabel in axs[i].yaxis.get_ticklabels():
+        ticklabel.set_rotation("vertical")
 
 
 
 # save to pdf with right bounding box
 plt.savefig("../../figures/instpar_CG_gain_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
 
+plt.close('all')
+
+
+fig = plt.figure(figsize=(cm2inch(width), 1.35*cm2inch(width)))
+
+fig.tight_layout()
+fig.subplots_adjust(hspace=0,wspace=0)
+
+for i in range(40):
+    if i % 4 == 0:
+        currax = plt.subplot2grid((10, 4), (i//4, i % 4))
+        firstax = currax
+    else:
+        currax = plt.subplot2grid((10, 4), (i//4, i%4), sharey=firstax)
+    axs.append(currax)
+    data = np.loadtxt(fnames[i])
+    samples1 = chain1.get(f'tod/{chain_names[i//4]}/gain')
+    samples2 = chain2.get(f'tod/{chain_names[i//4]}/gain')
+    tot_samples = np.concatenate((samples1[50:],  samples2[50:]), axis=0)
+    mean = np.mean(tot_samples, axis=0)
+    std = np.std(tot_samples, axis=0)
+    curr_wmap_data = wmap_data[i//4]
+    accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
+    f0 = interp1d(curr_wmap_data[:, 0][accept],mean[i%4, :][accept])
+    f0_err = interp1d(curr_wmap_data[:,0][accept], std[i%4][accept])
+    f1 = interp1d(data[::thin,0], abs(data[::thin,1]))
+    t = np.linspace(curr_wmap_data[:, 0][accept].min(), curr_wmap_data[:, 0][accept].max(), 1000)
+    plt.errorbar(t, 100*(f0(t)/f1(t) - 1), yerr=100*f0_err(t)/f1(t), linewidth=0.5, color='black', zorder=1)
+    plt.grid(False, which="major", axis="both")
+    if i >= 36:
+        plt.setp( currax.get_xticklabels(), visible=True)
+    else:
+        plt.setp( currax.get_xticklabels(), visible=False)
+    if i % 4 == 0:
+        plt.setp( currax.get_yticklabels(), visible=True)
+    else:
+        plt.setp( currax.get_yticklabels(), visible=False)
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    plt.text(54500, 1, plot_texts[i], fontsize=10)
+    plt.ylim([-1.5, 1.5])
+    if i % 4 == 0:
+        plt.ylabel(r"$\Delta g/g$ [\%]");
+        currax.yaxis.labelpad = 10*width/17.
+    if i >= 36:
+        if i % 4 == 0:
+            plt.xticks([52000,53000,54000,55000], [r"$52\,000$", r"$53\,000$", r"$54\,000$", r"$55\,000$"])
+        else:
+            plt.xticks([53000,54000,55000], [r"$53\,000$", r"$54\,000$", r"$55\,000$"])
+        ## labels
+        plt.xlabel(r"MJD");
+
+for i in range(0, len(axs), 4):
+    for ticklabel in axs[i].yaxis.get_ticklabels():
+        ticklabel.set_rotation("vertical")
+
+plt.savefig("../../figures/instpar_CG_dgain_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
