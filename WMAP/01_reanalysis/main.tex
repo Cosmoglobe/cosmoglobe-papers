@@ -928,6 +928,19 @@ Gain sampling and correlated noise sampling include multiple FFTs. Typical LFI T
 
 %\textit{(Need to expand ``other'')}
 
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\linewidth]{figures/instpar_CG_K113_samples_v1.pdf}
+	\caption{Trace plots of the \K113 gain and noise parameters for a single scan starting on MJD 52285.2. The two colors correspond to the two independent Markov chains produced in this analysis.}
+	\label{fig:inst_K113_gibbs}
+\end{figure}
+
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=\textwidth]{figures/noise_parameter_correlation.pdf}
+	\caption{Noise parameter correlation matrix. We average over all Gibbs samples of the noise parameters $\xi^n=\{\alpha,f_\mathrm{knee},\sigma_0\}$ for each PID. We then find the correlation in time between these averages for the different bands and detector. The results here are for the calibrated white noise level, $\sigma_0[\mathrm{mK}]$. The values for each detector are ordered 13, 14, 23, and 24.}
+	\label{fig:correlation}
+\end{figure*}
 
 For the current analysis, which aims primarily to derive posterior-based \WMAP\ frequency maps, we produce a total of 500 main Gibbs samples, divided into two chains. Noting that the computational cost of the \W-channel carries almost half of the total expense of the \WMAP\ TOD processing, while being of less scientific importance than, say, the \K-band, we choose to only re-process this channel every fourth main sample. Likewise, we only reprocess the \V-band every other main sample, and the LFI 70\,GHz sample every fourth sample. The total cost for producing 500 \WMAP\ \K, \Ka, \Q, \Planck\ 30, and 44\,GHz samples, 250 \V-band samples, and 125 \W-band samples is 210k CPU-hrs, and the total walltime is 33 days. Noting that the \bp\ analysis required 4000 samples to reach full convergence in terms of the optical depth of reionization \citep{bp12}, a corresponding complete LFI+\WMAP\ analysis will cost about 1.7M CPU-hrs, and take about 9 months of continous runtime on two cluster nodes. While entirely feasible, this is sufficiently expensive that we choose to perform the analysis in two stages; first we present preliminary frequency maps in the current paper, and use these to identify potential outstanding issues, either in terms of data model or Markov chain stability. An important goal of this phase is also to invite the larger community to study these preliminary maps, and thereby identify additional problems that we may have missed. Then, when all issues appear to have been resolved, we will restart the process, and generate sufficient samples to achieve full convergence.
 
@@ -966,6 +979,18 @@ For the current analysis, which aims primarily to derive posterior-based \WMAP\ 
 \section{Instrumental parameters}
 \label{sec:instrument}
 
+We are now ready to present the main results from the \cosmoglobe\ DR1 analysis, which may be summarized in terms of the joint posterior distribution. For organizational purposes, we will discuss instrumental parameters, frequency maps, and astrophysical results separately in this and the next two sections, but it is important to remember that these results are all derived from one single highly multivariate posterior distribution, and every parameter is in principle correlated with all others. In this section, we focus on instrumental parameters, starting with visual inspection of the basic Markov chains and posterior means, before considering each instrumental parameter in turn.
+
+\subsection{Markov chains, correlations and posterior mean statistics}
+\label{sec:summary_stats}
+
+To build intuition regarding the general Markov chain properties, we show in Fig.~\ref{fig:inst_K113_gibbs} the Markov chains for the gain and noise parameters for one randomly selected diode (\K113) and scan. Each panel corresponds to one single parameter, and the observed variation quantify the uncertainty in that single parameter due to the combination of white noise and correlations with other parameters. Here we immediately see that the different parameters have quite different correlation length; the gain (shown in the top panel) has a very short auto-correlation length, as in just a few samples, while the noise parameters have typical correlation lengths of a few tens of samples. Even for these parameters, however, the full set of 500 samples provides a fairly robust estimate of the full marginal mean and uncertainty.
+
+The bottom panel shows the reduced normalized $\chi^2$ for the same scan in units of $\sigma$, and we see that this also shows similar correlation lengths as the noise parameters. This makes intuitively sense, since the TOD residual at the level of a single-sample is strongly noise dominated. In contrast, small variations in either the sky signal or gain have relatively small impacts on this particular $\chi^2$; the goodness-of-fit of such global parameters is better measured through map-level residuals and $\chi^2$'s. In this respect, we also note that the absolute value of the TOD-level $\chi^2$ is for this particular scan about $-7.5\,\sigma$, which at first sight appears as a major goodness-of-fit failure. However, it is important to recall that a typically scan contains about five million data points, and this statistic is therefore extremely sensitive to any deviation in the noise model. Specifically, the non-normalized but reduced $\chi^2$ for this particular scan is $\chi_{\mathrm{raw}}^2/n_{\mathrm{tod}}=0.993$, which corresponds to an over-estimation of the white noise level of only 0.3\,\%. Furthermore, as discussed in Sect.~\ref{ssec:oldsamplers}, we currently assume a strict $1/f$ noise model for the \WMAP\ noise, while the true \WMAP\ noise is known to exhibit a very slight non-white noise excess at high frequencies \citep{bp17}. Properly modelling such non-white high-frequency noise is therefore an important goal for the next \cosmoglobe\ data release, and this is important in order to prepare for integrating other types of experiments with non-white noise into the framework, such as \Planck\ HFI. However, in absolute terms the impact of this model failure is very limited, and not likely to significantly affect any astrophysical results; it is primarily a limitation for TOD-level goodness-of-fit testing.
+
+Going one step higher in complexity, Fig.~\ref{fig:correlation} shows pairwise correlations between the various noise parameters for all DAs, averaged over all Gibbs samples and scans. It is important to note that a non-zero correlation in this plot does not indicate the that specific noise realization is correlated between DAs, but only that the noise PSD parameters are correlated. This is expected due to the \WMAP\ satellite motion around the Sun, which induces an annual variation in the system temperature. This correlation plot therefore primarily quantifies the sensitivity to this common-mode signal for each radiometer. Most notably, we see that the \Q2 radiometer exhibits particularly strong correlations, and we also note that $\sigma_0$ is generally more susceptible to these variations than $f_{\mathrm{knee}}$ and $\alpha$. 
+
+
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\linewidth]{figures/instpar_CG_K113_v1.pdf}
@@ -973,40 +998,19 @@ For the current analysis, which aims primarily to derive posterior-based \WMAP\ 
 	\label{fig:inst_K113}
 \end{figure}
 
-
-\subsection{Trace plots and correlations}
-\label{sec:traceplots}
-
-%\lipsum[1]
-To illustrate the dependence of the goodness-of-fit on the noise model,
-we inspect the 50th TOD segment, corresponding to MJDs 52285.2--52290.6, as a
-function of Gibbs iteration, in Fig.~\ref{fig:inst_K113_gibbs}. This is one of
-the worst-fitting TOD segments of the entire mission, with a reduced relative
-$\chi^2$ of $-7.5$, equivalent to $\chi^2/n=0.993$. The line plots demonstrate a strong correlation between the noise parameters and the $\chi^2$, while the gain itself is almost completely uncorrelated with the variations in the $\chi^2$. As $\sigma_0$ is not formally sampled in the Gibbs chain, it is weakly dependent on $f_\mathrm{knee}$ and $\alpha$, making it more likely that it is the driver of the correlations in this figure. 
-
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{figures/instpar_CG_K113_samples_v1.pdf}
-	\caption{Subset of \K113 Gibbs samples for both chains, arbitrarily colored red and blue. The parameters correspond to MJDs 52285.2--52290.6.}
-	\label{fig:inst_K113_gibbs}
-\end{figure}
-
-
-%\subsection{Parameter correlations}
-%\label{sec:correlations}
-
-\begin{figure*}[t]
-	\centering
-	\includegraphics[width=\textwidth]{figures/noise_parameter_correlation.pdf}
-	\caption{Noise parameter correlation matrix. We average over all Gibbs samples of the noise parameters $\xi^n=\{\alpha,f_\mathrm{knee},\sigma_0\}$ for each PID. We then find the correlation in time between these averages for the different bands and detector. The results here are for the calibrated white noise level, $\sigma_0[\mathrm{mK}]$. The values for each detector are ordered 13, 14, 23, and 24.}
-	\label{fig:correlation}
-\end{figure*}
-
-
+Next, in Fig.~\ref{fig:inst_K113} we show posterior mean values for each instrumental parameter for the same \K113 diode, in this case plotted as a function of time throughout the entire mission. The panels show, from top to bottom, 1) gain; 2) the difference between the baseline mean and its full-mission average; 3) the baseline slope; 4) the white noise level; 5) the correlated noise knee frequency; 6) the correlated noise slope; and 7) the TOD-level $\chi^2$. The \cosmoglobe\ results are shown as black curves, while the \WMAP\ results are (for the gain and baseline) shown as red curves; dotted red and orange line corresponds to the first-year \WMAP\ and Goddard Space Flight Center (GSFC) laboratory measurements, respectively. For brevity, we have only shown the results for one single diode here. However, a complete survey of all instrumental parameter posterior means for all 40~diodes is provided in Appendix~\ref{sec:survey}, and all individual samples are also available in a digital format as part of the \cosmoglobe\ DR1. 
 
 
 \subsection{Gain and baselines}
 \label{sec:gain}
+
+We now consider the gain and baseline parameters in greater detail, and aim to compare our estimates with the \WMAPnine\ products. Unfortunately, the \WMAPnine\ gain and baseline estimates are not directly available in terms of easily accessible and public data products, but only in terms of the general parametric models. For instance, the \WMAP\ gain model reads \citet{wmapexsupp}
+\begin{equation}
+	\label{eq:wmap_gain}
+	g=\alpha\frac{\overline V-V_\circ-\beta(T_\mathrm{RXB}-290\,\mathrm K)}.
+	{T_\mathrm{FPA}-T_\circ}+(m\Delta t+c),
+\end{equation}
+where $\overline V$ represents the radio frequency bias powers per detector; $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ are the receiver box and focal plane assembly temperatures, which are recorded every 23.04\,s; $\alpha$, $\V_\circ$, $\beta$, $T_\circ$, $m$, and $c$ are all free parameters that are fit to a constant value across the mission for each radiometer. Evaluating this model as a function of $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ requires the housekeeping data for the thermistor that was physically closest to the relevant radiometer's focal plane on the satellite. The free parameters are fully tabulated in the \WMAP\ Explanatory Supplement \citep{wmapexsupp}, but the physical layout of the thermistors in the focalplane is not readily available. We therefore do not attempt to reproduce the gain model given in Eq.~\eqref{eq:wmap_gain}.
 
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10min.pdf}
@@ -1014,36 +1018,20 @@ $\chi^2$ of $-7.5$, equivalent to $\chi^2/n=0.993$. The line plots demonstrate a
 	\label{fig:cal_comp_10min}
 \end{figure}
 
-\begin{figure}
-	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10hr.pdf}
-	\caption{\textit{(top):} Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP. \textit{(Bottom):} Raw correlated noise (gray) and smoothed data with Gaussian kernel (black). This shows more clearly the hourly baseline subtraction from the \WMAP\ treatment.}
-	\label{fig:cal_comp}
-\end{figure}
-
-To compare the calibrated TODs from \WMAP\ versus \cosmoglobe, it is  important to look at the \WMAP\ gain model,
-\begin{equation}
-	\label{eq:wmap_gain}
-	g=\alpha\frac{\overline V-V_\circ-\beta(T_\mathrm{RXB}-290\,\mathrm K)}
-	{T_\mathrm{FPA}-T_\circ}+(m\Delta t+c),
-\end{equation}
-where $\alpha$, $\V_\circ$, $\beta$, $T_\circ$, $m$, and $c$ are fit to a constant value across the mission for each radiometer. $\overline V$ represents the radio frequency bias powers per detector, and $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ are the receiver box and focal plane assembly temperatures, which are recorded every 23.04\,s. 
-Evaluating the model as a function of $T_\mathrm{RXB}$ and $T_\mathrm{FPA}$ requires finding the housekeeping data for the thermistor that was physically closest to the relevant radiometer's focal plane on the satellite. As this requires detailed technical information about the specifications of the satellite's schematics layout that can easily be misunderstood, we do not attempt to reproduce the gain model given in Eq.~\eqref{eq:wmap_gain} in this work.
-Although we are unable to reproduce the exact gain model parametrized by \citet{wmapexsupp}, the $23.04\,\mathrm s$ time dependence of the gain model on housekeeping data is a plausible explanation for the time-dependent noise variation in the different calibrated data solutions.
-
-As reported by \citet{hinshaw2007}, the calibrated data archive has been calibrated using the procedure listed above, with a baseline subtracted each hour and the sidelobe subtracted. Figure~\ref{fig:cal_comp_10min} shows the \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ with the \WMAP\ delivered calibrated signal subtracted. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. The differences of order $50\,\mathrm{\mu K}$ correspond to sky brightness of order $10\,\mathrm{mK}$, equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainty estimated by \citet{bennett2012} based on end-to-end simulations.
-
-On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most prominent feature is a varying signal of amplitude $0.2\,\mathrm{mK}$. This likely due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assigning a linear baseline solution for the entire scan. The variations are commensurate with correlated noise, which for \K113 has ${f_\mathrm{knee}\sim0.5\,\mathrm{mHz}}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. To test this hypothesis, we plot a realization of correlated noise generated by \commander, and find that the signals are very similar, both in amplitude and morphology.
-
-
-We also compare the gain and baseline solutions throughout the course of the mission in Fig.~\ref{fig:inst_K113}. To recover the \WMAPnine\ gain solution, we directly compare the uncalibrated \WMAP\ data with the calibrated \WMAP\ data with a far sidelobe contribution convolved with the delivered \WMAPnine\ DA maps. We find that the calibrated and uncalibrated data can be related by
+Rather, we estimate the gains and baselines by comparing the uncalibrated \WMAP\ data with the calibrated \WMAP\ data, after subtracting a far sidelobe contribution convolved with the delivered \WMAPnine\ DA maps plus the Solar dipole.  We find that the calibrated and uncalibrated data can be related by
 \begin{equation}
 	d^\mathrm{raw}_t=g(d^\mathrm{cal}_t+s^\mathrm{sl}_t)+\sum_{i=0}^3c_i(t-t_0)^i,
 \end{equation}
-where the second term is a cubic polynomial with coefficients $c_i$ referenced to the time at the beginning of the scan $t_0$.
-To calculate $s_t^\mathrm{sl}$, we convolve the \WMAP\ far sidelobes with \WMAPnine\ frequency maps with the Solar dipole from \citet{hinshaw2009} added back in.
-We find that $d^\mathrm{raw}$ is consistent with the expression on the right at the level of $<0.1\,\mathrm{du}$ for all radiometers, suggesting that this estimate of $g$ and the baseline $c_0$ is a good approximation of the \WMAPnine\ calibration solution. An initial estimate using a linear baseline gave an unacceptably poor fit. Given that Eq.~(2) of \citet{jarosik2003a} employed a cubic baseline fit while fitting for transmission imbalance parameters, it is reasonable to assume that the official calibrated archive was created using a similar procedure.
+where the second term is a cubic polynomial with coefficients $c_i$ referenced to the time at the beginning of the scan $t_0$. The red curves in the top two panels of Fig.~\ref{fig:inst_K113} correspond to these estimates. At least visually, the agreement between the \WMAP\ and \cosmoglobe\ gain and baseline models appear reasonable at this level and for this diode.
 
-The morphological characteristics of the \WMAPnine\ and \cosmoglobe\ gain solutions are similar, with a general trend to increase with time. Both solutions also follow a sinusoidal pattern, corresponding to temperature change due to L2's motion around the Sun \citep{wmapexsupp}. However, we do find the  \cosmoglobe\ \K-band gain has slightly more oscillatory features than the \WMAPnine\ solution. In general, the gains are consistent between \cosmoglobe\ and \WMAPnine\ within 1\,\%. For completeness, the full gain comparisons can be found in Fig.~\ref{fig:gain}. 
+A complete comparison between the  \WMAP\ and \cosmoglobe\ gain and baseline models for all diodes is provided in Appendix~\ref{sec:survey}. In particular, Fig.~\ref{fig:baseline} shows the baseline differences as a function of time, and here we see that most diodes differences scatter around a constant value that is close to zero; the precise constant value is of limited importance, since that only corresponds to a difference in the overall monopole of the maps, which for \WMAP\ is determined through post-processing. However, there are a few notable features. First, we see that the two \Q11 diodes exhibit large variations at the very beginning of the mission, with typical values of a few du's, and individual scans shows notable spikes for many diodes. These are all relatively isolated in time, and will therefore have relatively minor impact on the final maps. Far more significant are the \W-band differences, for which one sees both slow drifts and abrupt changes. Furthermore, in many cases they vary notably between diodes within the same DA, and this will obviously translate into differences in the large-scale polarization maps derived from the two pipelines.
+
+Similarly, Fig.~\ref{fig:gain} compares the gain solutions directly, while Fig.~\ref{fig:dgain} shows the fractional differences in units of percent. Overall, we see that the two gain models agree to typically about 0.5\,\% in an absolute sense, and better than typically 0.1\,\% in terms of relative agreement between neighboring scans. By far the most striking feature in this plot is an annual variation that trace the \WMAP\ satellite's motion around the Sun. In general, such an oscillatory gain behaviour is entirely expected, because of known temperature variations in the satellite. However, the difficulty lies in estimating the magnitude of the oscillations, as different radiometers can respond differently to these temperature variations. In this respect, it is useful to recall that the \WMAP\ and \cosmoglobe\ gain estimation algorithms differ at a fundamental level; while the \WMAP\ analysis considers each DA in isolation, and attempts to fit a handful of instrumental parameters, defined by Eq.~\eqref{eq:wmap_gain}, to the orbital dipole seen by that DA alone, the \cosmoglobe\ analysis considers the problem globally, and attempts to fit all gain parameters to the full sky signal (including both the Solar and orbital CMB dipole) simultaneously, without the use of a strong instrumental model prior. Returning to the absolute gains shown in Fig.~\ref{fig:gain}, it is difficult to determine visually which approach better at this level alone, as the two models are quite similar; in some cases, such as \Ka124 and \Q214, the \WMAP\ model oscillates more strongly than the \cosmoglobe\ model, while in others, such as \K113 and \K114, the opposite is true. We also see the impact of the strong instrumental priors in the \WMAP\ solution particularly well in \W-band, where the \cosmoglobe\ gains are far more noisy than the \WMAP\ gains. 
+
+The impact of these differences at the TOD level is illustrated in Fig.~\ref{fig:cal_comp_10min}, which shows the calibrated \cosmoglobe\ timestream $\boldsymbol d/g-\boldsymbol s_\mathrm{sl}-\boldsymbol b$ minus the \WMAP\ calibrated signal in units of microkelvin. The most prominent feature is a $\sim25\,\mathrm{\mu K}$ offset, which is unsurprising, given the different treatment of baselines in our two pipelines. The second obvious difference is a series of spikes associated with Galactic plane crossings. Differences of order $50\,\mathrm{\mu K}$ are seen where the absolute sky brightness is about $10\,\mathrm{mK}$, and this is equivalent to $\sim0.5\,\%$ deviations in the gain solution. This is twice as large as the 0.2\,\% uncertainty estimated in \citet{bennett2012} based on end-to-end simulations.
+
+Another interesting feature in Fig.~\ref{fig:cal_comp_10min} is slow correlated variations at a timescale of $\sim$\,20\,sec timescale. There is nothing in the \cosmoglobe\ instrument model that varies on such short timescales, and this must therefore come from \WMAP. The most likely explanation is the fact that the the \WMAP\ gain model depends directly on housekeeping data that are recorded with a 23.04\,sec sample rate, and these values appear to have been applied without any smoothing, resulting in sharp jumps in the final \WMAP\ gain model. At the same time, it is also important to note that the \cosmoglobe\ gain model does not include any time-varying structure within a single scan, and if any artifacts resulting from this is identified in the current products, it may be worth incorporating housekeeping data in a future  \cosmoglobe\ data release.
+
 
 
 
@@ -1115,6 +1103,14 @@ We find $x_\mathrm{im}$ values that are largely consistent with the values repor
 
 \subsection{Instrumental noise and goodness-of-fit}
 \label{sec:noise}
+
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/K113_TOD_diff_10hr.pdf}
+	\caption{\textit{(top):} Difference between the \cosmoglobe\ $\boldsymbol d_\mathrm{cal}=\boldsymbol d/g-\boldsymbol b - \boldsymbol s_\mathrm{sl}$ and the delivered calibrated TOD from \WMAP. \textit{(Bottom):} Raw correlated noise (gray) and smoothed data with Gaussian kernel (black). This shows more clearly the hourly baseline subtraction from the \WMAP\ treatment.}
+	\label{fig:cal_comp}
+\end{figure}
+
+
 
 \begin{table*}
 \newdimen\tblskip \tblskip=5pt
@@ -1203,6 +1199,10 @@ The white noise level in raw du is not strictly sampled, but is estimated condit
 	\sigma_0[\mathrm V]\propto gT_\mathrm{sys}.
 \end{equation}
 Aside from an overall amplitude shift due to the absolute calibration variation, the shape of the white noise level is stable throughout the Gibbs chain.
+
+On longer timescales, as displayed in Figure~\ref{fig:cal_comp}, the most prominent feature is a varying signal of amplitude $0.2\,\mathrm{mK}$. This likely due to the hourly baseline subtraction mentioned above, which contrasts with the \cosmoglobe\ approach of assigning a linear baseline solution for the entire scan. The variations are commensurate with correlated noise, which for \K113 has ${f_\mathrm{knee}\sim0.5\,\mathrm{mHz}}$, corresponding to a little over half an hour. Therefore, the hourlong baseline subtraction essentially acts as a destriper, removing an estimate of the correlated noise. To test this hypothesis, we plot a realization of correlated noise generated by \commander, and find that the signals are very similar, both in amplitude and morphology.
+
+
 
 The knee frequencies for each channel lie between the reported values by \citet{jarosik2003a} for both the Goddard Space Flight Center (GSFC) laboratory measurements and those from the first year of data collection. Nearly all radiometers have constant $f_\mathrm{knee}$ throughout the mission, with a few notable exceptions. First, all \W-band channels display some amount of temporal variation that does not seem to be associated with any sinusoidal features. Second, all \Q2 channels, \V223, and \V224 all display a similar asymptotic drift in time. We have not found any instrumental effects that share this feature.
 The PSD slope $\alpha$ is around $-1$ for each radiometer, albeit with high scatter for the lower frequencies. As expected, the uncertainty in $\alpha$ decreases as $f_\mathrm{knee}$ increases, since there are more datapoints to fit below $f_\mathrm{knee}$ where the constraining power on $\alpha$ is the strongest.
@@ -1369,6 +1369,50 @@ necessity in future \cosmoglobe\ endeavors, and will be used to improve the
 % such has a negligible effect. 
 
 
+\subsection{Higher-level instrumental uncertainties}
+
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=0.32\textwidth]{figures/K_ncorr_I.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_ncorr_Q.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_ncorr_U.pdf}\\
+	\includegraphics[width=0.32\textwidth]{figures/K_orb_I.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_orb_Q.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_orb_U.pdf}\\
+	\includegraphics[width=0.32\textwidth]{figures/K_leak_I.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_leak_Q.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_leak_U.pdf}\\
+	\includegraphics[width=0.32\textwidth]{figures/K_sl_I.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_sl_Q.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_sl_U.pdf}\\
+	\includegraphics[width=0.32\textwidth]{figures/K_res_I.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_res_Q.pdf}
+	\includegraphics[width=0.32\textwidth]{figures/K_res_U.pdf}\\
+	\caption{TOD corrections for \K-band for a single Gibbs sample, projected into maps. Columns show Stokes $T$, $Q$, and $U$ parameters. Rows show, from top to bottom, 1) correlated noise; 2) the orbital dipole; 3); bandpass mismatch leakage; and 4) sidelobe corrections. The bottom row shows the residual obtained when binning the sky and systematics-subtracted TOD into a sky map. Note that the correlated noise and residual have been smoothed by a $2^\circ$ Gaussian beam.}
+	\label{fig:tod_corrections}
+\end{figure*}
+
+\begin{figure*}
+  \center	
+   \includegraphics[width=0.95\linewidth]{figures/components_power_spectrum_std_masked_WMAP_new_rms.pdf}
+  \caption{Pseudo-spectrum standard deviation for each instrumental
+    systematic correction shown in
+    Fig.~\ref{fig:tod_corrections} (\emph{thin
+      colored lines}). For comparison, thick black lines show spectra
+    for the full coadded frequency map; thick red lines show the
+    standard deviation of the same (i.e., the full systematic
+    uncertainty); gray lines show white noise realizations; and black lines
+    show the power spectra of the maps themselves. Columns show results for \K,
+    \Ka, \Q1, and \W4, respectively, while rows show results for each of
+    the six polarization states ($TT$, $EE$, $BB$, $TE$, $TB$, and
+    $EB$). All spectra have been derived outside the CMB confidence
+    mask presented by \citet{bp13} using the HEALPix \texttt{anafast}
+    utility, correcting only for sky fraction and not for mask mode
+    coupling. }
+  \label{fig:corrmap_stddev}
+\end{figure*}
+
+
 
 
 %\subsection{Goodness-of-fit}
@@ -1480,46 +1524,6 @@ The variation of these TOD corrections is more important than the absolute ampli
         \label{fig:Ksampdiff}
 \end{figure*}
 
-\begin{figure*}[t]
-	\centering
-	\includegraphics[width=0.32\textwidth]{figures/K_ncorr_I.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_ncorr_Q.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_ncorr_U.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/K_orb_I.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_orb_Q.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_orb_U.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/K_leak_I.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_leak_Q.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_leak_U.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/K_sl_I.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_sl_Q.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_sl_U.pdf}\\
-	\includegraphics[width=0.32\textwidth]{figures/K_res_I.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_res_Q.pdf}
-	\includegraphics[width=0.32\textwidth]{figures/K_res_U.pdf}\\
-	\caption{TOD corrections for \K-band for a single Gibbs sample, projected into maps. Columns show Stokes $T$, $Q$, and $U$ parameters. Rows show, from top to bottom, 1) correlated noise; 2) the orbital dipole; 3); bandpass mismatch leakage; and 4) sidelobe corrections. The bottom row shows the residual obtained when binning the sky and systematics-subtracted TOD into a sky map. Note that the correlated noise and residual have been smoothed by a $2^\circ$ Gaussian beam.}
-	\label{fig:tod_corrections}
-\end{figure*}
-
-\begin{figure*}
-  \center	
-   \includegraphics[width=0.95\linewidth]{figures/components_power_spectrum_std_masked_WMAP_new_rms.pdf}
-  \caption{Pseudo-spectrum standard deviation for each instrumental
-    systematic correction shown in
-    Fig.~\ref{fig:tod_corrections} (\emph{thin
-      colored lines}). For comparison, thick black lines show spectra
-    for the full coadded frequency map; thick red lines show the
-    standard deviation of the same (i.e., the full systematic
-    uncertainty); gray lines show white noise realizations; and black lines
-    show the power spectra of the maps themselves. Columns show results for \K,
-    \Ka, \Q1, and \W4, respectively, while rows show results for each of
-    the six polarization states ($TT$, $EE$, $BB$, $TE$, $TB$, and
-    $EB$). All spectra have been derived outside the CMB confidence
-    mask presented by \citet{bp13} using the HEALPix \texttt{anafast}
-    utility, correcting only for sky fraction and not for mask mode
-    coupling. }
-  \label{fig:corrmap_stddev}
-\end{figure*}
 
 %\begin{figure*}[t]
 %	\centering
@@ -2096,14 +2100,14 @@ The quality of the component separation procedure is evaluated through a reduced
 
 
 %\clearpage
-\section{Systematic error corrections and uncertainties}
-\label{sec:systematics}
+%\section{Systematic error corrections and uncertainties}
+%\label{sec:systematics}
 
-\subsection{Sky map corrections}
+%\subsection{Sky map corrections}
 
 
 
-\subsection{Power spectrum residuals}
+%\subsection{Power spectrum residuals}
 
 
 
@@ -2210,6 +2214,7 @@ In practice, both solutions are the result of scientific intuition solving an al
 \appendix
 
 \section{Survey of instrumental parameters}
+\label{sec:survey}
 
 \subsection{Gain, baselines, noise and $\chi^2$}
 
