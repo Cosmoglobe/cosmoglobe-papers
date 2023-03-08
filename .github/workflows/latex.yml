@@ -6,14 +6,14 @@ jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Git repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
             wmap:
               - 'WMAP/01_reanalysis/**'
+
       - name: Compile and upload WMAP pdf
         if: steps.filter.outputs.wmap == 'true'
         uses: xu-cheng/latex-action@v2
@@ -21,7 +21,6 @@ jobs:
           root_file: "WMAP/01_reanalysis/main.tex"
           work_in_root_file_dir: true
           continue_on_error: true
-        - name: Push PDF   
           run: |
             mkdir -p PDFs
             mv WMAP/01_reanalysis/main.pdf PDFs/WMAP_reanalysis.pdf
