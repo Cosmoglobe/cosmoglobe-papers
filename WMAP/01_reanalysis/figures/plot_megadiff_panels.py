@@ -87,6 +87,7 @@ cg.plot(
     xsize=xsize,
     sig=0,
     llabel="K",
+    rlabel="T",
     min=-lim,
     max=lim,
     cbar=False,
@@ -102,6 +103,7 @@ cg.plot(
     xsize=xsize,
     sig=1,
     fwhm=2 * u.deg,
+    rlabel="Q",
     min=-lim,
     max=lim,
     cbar=False,
@@ -111,6 +113,7 @@ plt.close()
 cg.plot(
     m * 1e3,
     #norm="symlog2",
+    rlabel="U",
     width=width,
     xsize=xsize,
     sig=2,
