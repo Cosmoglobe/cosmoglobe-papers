@@ -1669,18 +1669,6 @@ W4 &   15.5  & -6.8 & 52 \cr
 \endPlancktablewide
 \end{table}
 
-Finally, as noted by \citet{jarosik2010} the low-$\ell$ \W-band polarization data were excluded entirely from the cosmological analysis due to excess variance in the $\ell\leq7$ multipoles. To test the \cosmoglobe\ maps' performance at these scales, we take the power spectrum of the full-sky difference maps using the standard \texttt{anafast} routine in Fig.~\ref{fig:cl_halfdiff}. With very few exceptions, the \WMAPnine\ power spectra have much more power at $\ell\leq7$ than the \cosmoglobe\ maps in both the $E$-modes and $B$-modes. Of particular note is the $\ell=3$ $B$-mode, which has consistently been identified as poorly measured in the \WMAP\ scan strategy, and has been reduced in every difference spectrum. Based on these power spectra alone, there does not appear to be a strong justification for exclude the reprocessed \W-band polarization data in future cosmological analyses.
-
-
-
-Based on these calculations, we conclude that the modes that are nearly degenerate by the \WMAP\ scanning strategy, and have represented a major challenge for the official \WMAP\ processing for more than a decade, appear to have been properly regularized by the global \cosmoglobe\ processing. The frequency maps do not show any evidence of either poorly constrained transmission imbalance modes or other large-scale artefacts, and they are more self-consistent than the \WMAPnine\ frequency maps.
-
-
-
-
-\subsection{Efficiency of template-based transmission imbalance uncertainty propagation}
-\label{subsec:imbalance_template}
-
 \begin{figure*}[t]
   \centering
         \includegraphics[width=0.16\linewidth]{figures/diff_K1_Q.pdf}
@@ -1750,6 +1738,28 @@ Based on these calculations, we conclude that the modes that are nearly degenera
 
 
 
+Finally, as noted by \citet{jarosik2010} the low-$\ell$ \W-band polarization data were excluded entirely from the cosmological analysis due to excess variance in the $\ell\leq7$ multipoles. To test the \cosmoglobe\ maps' performance at these scales, we take the power spectrum of the full-sky difference maps using the standard \texttt{anafast} routine in Fig.~\ref{fig:cl_halfdiff}. With very few exceptions, the \WMAPnine\ power spectra have much more power at $\ell\leq7$ than the \cosmoglobe\ maps in both the $E$-modes and $B$-modes. Of particular note is the $\ell=3$ $B$-mode, which has consistently been identified as poorly measured in the \WMAP\ scan strategy, and has been reduced in every difference spectrum. Based on these power spectra alone, there does not appear to be a strong justification for exclude the reprocessed \W-band polarization data in future cosmological analyses.
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.45\textwidth]{figures/ff_I.pdf}
+	\includegraphics[width=0.45\textwidth]{figures/ame_I.pdf}\\
+	\includegraphics[width=0.45\textwidth]{figures/dust_I.pdf}
+	\includegraphics[width=0.45\textwidth]{figures/synch_I.pdf}\\
+	\caption{Foreground intensity maps, evaluated at their respective reference frequencies. (Top left:) Free-free emission at 40\,GHz. (Top right:) Anomalous microwave emission evaluated at 22\,GHz. (Bottom left:) Thermal dust emission at 70\,GHz. (Bottom right:) Synchrotron emission evaluated at 408\,MHz.}\label{fig:intensity_foregrounds}
+\end{figure*}
+
+
+
+Based on these calculations, we conclude that the modes that are nearly degenerate by the \WMAP\ scanning strategy, and have represented a major challenge for the official \WMAP\ processing for more than a decade, appear to have been properly regularized by the global \cosmoglobe\ processing. The frequency maps do not show any evidence of either poorly constrained transmission imbalance modes or other large-scale artefacts, and they are more self-consistent than the \WMAPnine\ frequency maps.
+
+
+
+
+\subsection{Efficiency of template-based transmission imbalance uncertainty propagation}
+\label{subsec:imbalance_template}
+
+
 
 
 Before concluding this section, we revisit the issue of transmission imbalance error propagation in the official \WMAP\ approach. As discussed by \citet{jarosik2007}, and seen in Fig.~\ref{fig:x_im} in this paper, $x_{\mathrm{im}}$ is associated with significant measurement uncertainties, and these uncertainties translate directly into correlated large-scale polarization residuals. To account for these uncertainties, the \WMAP\ pipeline produced a spatial templates by calculating a frequency map for which both $x_{\textrm{im}}$ values were increased by 10\,\% from their nominal values in a given DA, and subtracting this from the baseline map. A second template was generating by increasing one value by 10\,\% and decreasing the other by 10\,\%. The modes corresponding to the resulting spatial templates were then accordingly downweighted through the low-resolution noise covariance matrix using the Woodbury formula.
@@ -1760,14 +1770,6 @@ Specifically, considering the large improvement in half-difference maps seen in 
 
 \begin{figure*}
 	\centering
-	\includegraphics[width=0.45\textwidth]{figures/ff_I.pdf}
-	\includegraphics[width=0.45\textwidth]{figures/ame_I.pdf}\\
-	\includegraphics[width=0.45\textwidth]{figures/dust_I.pdf}
-	\includegraphics[width=0.45\textwidth]{figures/synch_I.pdf}\\
-	\caption{Foreground intensity maps, evaluated at their respective reference frequencies. (Top left:) Free-free emission at 40\,GHz. (Top right:) Anomalous microwave emission evaluated at 22\,GHz. (Bottom left:) Thermal dust emission at 70\,GHz. (Bottom right:) Synchrotron emission evaluated at 408\,MHz.}\label{fig:intensity_foregrounds}
-\end{figure*}
-\begin{figure*}
-	\centering
 	\includegraphics[width=0.45\textwidth]{figures/synch_Q.pdf}
 	\includegraphics[width=0.45\textwidth]{figures/synch_U.pdf}\\
 	\includegraphics[width=0.45\textwidth]{figures/synch_Q_std.pdf}
@@ -1775,11 +1777,36 @@ Specifically, considering the large improvement in half-difference maps seen in 
 	\caption{Polarized synchrotron maps and their standard deviations evaluated at 30\,\GHz.}\label{fig:polarized_foregrounds}
 \end{figure*}
 
+
+
+Figure~\ref{tab:transmission} summarizes the results from these calculations in map domain. Each row correspond to one DA, while the left and right half-sections of the figure correspond to Stokes $Q$ and $U$, respectively. (One common parameter is fitted per template for both Stokes parameters, but they are for convenience visualized separately.) Within each section, the left column shows the raw difference, the middle column shows the sum of the best-fit templates, and the right column shows the residual obtained after subtracting the best-fit templates from the raw difference.
+
+
+Comparing the left and middle columns in each section, we see that -- at least at a visual level -- the \WMAP\ templates do indeed trace the residuals to a high degree for many channels, e.g., \K, \Q1, \V2 etc. For some channels, such as \Ka1 and \Q2, the agreement is less convincing. However, as seen in the right-most column, even for the well-fitting channels the templates are unable to explain all of the difference.
+
+To roughly estimate how much of the full difference may be described by the \WMAP\ templates, we compute the relative decrease in standard devation between the full difference map (left columns) and the template-corrected map (right columns) of the form $\sqrt{\sigma_{\mathrm{raw}}^2 - \sigma_{\mathrm{corr}}^2}/\sigma_{\mathrm{raw}}$; in the case that the template correction happened to account for the full difference, this quantity would be unity, while in the case in which it did not account for anything, it would be 0.
+
+
+The results from this calculation are summarized in the fourth column in Table~\ref{tab:transmission}. Here we see that the two linear templates are able to account for between 6 and 52\,\% of the full large-scale difference between \cosmoglobe\ and \WMAP; the remaining power must either be due to implicit but unmodelled nonlinear couplings between $x_{\mathrm{im}}$ and other parameters (such as the gain) in the \WMAP\ pipeline that are accounted for through the Markov chain sampling in \cosmoglobe; other large-scale systematic effects in \WMAP\ that are unrelated to transmission imbalance; or not-yet-identified systematic uncertainties in \cosmoglobe. Overall, it seems likely that the template-based correction of the low-resolution covariance matrices used in the cosmological \WMAP\ likelihood does not provide a complete description of the full large-scale uncertainties. This could potentially be relevant for the differing estimates of the optical depth of reionization between \WMAPnine\ \citep{hinshaw2012} and \Planck\ \citep{planck2016-l05}, and resolving this point is clearly a high-priority target for a future second \cosmoglobe\ data release.
+
 \begin{figure*}
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/cmb_I_dipole.pdf}
 	\caption{Posterior mean CMB \cosmoglobe\ temperature map, smoothed to an angular resolution of $14'$ FWHM.}
+        \label{fig:cmb_mean}
 \end{figure*}
+
+\begin{figure*}
+	\includegraphics[width=0.33\textwidth]{figures/cmb_I_nodipole.pdf}
+	\includegraphics[width=0.33\textwidth]{figures/cmb_Q.pdf}
+	\includegraphics[width=0.33\textwidth]{figures/cmb_U.pdf}\\
+	\includegraphics[width=0.33\textwidth]{figures/cmb_I_sigma.pdf}
+	\includegraphics[width=0.33\textwidth]{figures/cmb_Q_sigma.pdf}
+	\includegraphics[width=0.33\textwidth]{figures/cmb_U_sigma.pdf}\\
+	\caption{Posterior mean CMB \cosmoglobe\ maps for Stokes $T$, $Q$, and $U$, and their corresponding standard deviation. The polarization maps have been smoothed to an angular resolution of $2^{\circ}$ FWHM.}
+        \label{fig:cmb_posterior}
+\end{figure*}
+
 
 \begin{table*}
 \newdimen\tblskip \tblskip=5pt
@@ -1848,33 +1875,13 @@ Bware & 3361.90\pm*0.40 & 263.959\pm0.019 & 48.260\pm0.008  & \citet{delouis:202
 \par
 \end{table*}
 
-
-Figure~\ref{tab:transmission} summarizes the results from these calculations in map domain. Each row correspond to one DA, while the left and right half-sections of the figure correspond to Stokes $Q$ and $U$, respectively. (One common parameter is fitted per template for both Stokes parameters, but they are for convenience visualized separately.) Within each section, the left column shows the raw difference, the middle column shows the sum of the best-fit templates, and the right column shows the residual obtained after subtracting the best-fit templates from the raw difference.
-
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/dip_amplitude.pdf}
 	\caption{CMB dipole amplitude as a function of sky fraction. The gray band indicates the 68\,\% posterior confidence region.}
 	\label{fig:dip_amp}
 \end{figure}
 
-Comparing the left and middle columns in each section, we see that -- at least at a visual level -- the \WMAP\ templates do indeed trace the residuals to a high degree for many channels, e.g., \K, \Q1, \V2 etc. For some channels, such as \Ka1 and \Q2, the agreement is less convincing. However, as seen in the right-most column, even for the well-fitting channels the templates are unable to explain all of the difference.
 
-To roughly estimate how much of the full difference may be described by the \WMAP\ templates, we compute the relative decrease in standard devation between the full difference map (left columns) and the template-corrected map (right columns) of the form $\sqrt{\sigma_{\mathrm{raw}}^2 - \sigma_{\mathrm{corr}}^2}/\sigma_{\mathrm{raw}}$; in the case that the template correction happened to account for the full difference, this quantity would be unity, while in the case in which it did not account for anything, it would be 0.
-
-
-The results from this calculation are summarized in the fourth column in Table~\ref{tab:transmission}. Here we see that the two linear templates are able to account for between 6 and 52\,\% of the full large-scale difference between \cosmoglobe\ and \WMAP; the remaining power must either be due to implicit but unmodelled nonlinear couplings between $x_{\mathrm{im}}$ and other parameters (such as the gain) in the \WMAP\ pipeline that are accounted for through the Markov chain sampling in \cosmoglobe; other large-scale systematic effects in \WMAP\ that are unrelated to transmission imbalance; or not-yet-identified systematic uncertainties in \cosmoglobe. Overall, it seems likely that the template-based correction of the low-resolution covariance matrices used in the cosmological \WMAP\ likelihood does not provide a complete description of the full large-scale uncertainties. This could potentially be relevant for the differing estimates of the optical depth of reionization between \WMAPnine\ \citep{hinshaw2012} and \Planck\ \citep{planck2016-l05}, and resolving this point is clearly a high-priority target for a future second \cosmoglobe\ data release.
-
-
-\begin{figure*}
-	\includegraphics[width=0.33\textwidth]{figures/cmb_I_nodipole.pdf}
-	\includegraphics[width=0.33\textwidth]{figures/cmb_Q.pdf}
-	\includegraphics[width=0.33\textwidth]{figures/cmb_U.pdf}\\
-	\includegraphics[width=0.33\textwidth]{figures/cmb_I_sigma.pdf}
-	\includegraphics[width=0.33\textwidth]{figures/cmb_Q_sigma.pdf}
-	\includegraphics[width=0.33\textwidth]{figures/cmb_U_sigma.pdf}\\
-	\caption{Posterior mean CMB \cosmoglobe\ maps and their standard deviation.}
-        \label{fig:cmb_posterior}
-\end{figure*}
 
 
 \section{Preliminary astrophysical results}
@@ -1913,30 +1920,27 @@ Finally, for the polarized synchrotron amplitude, shown in Fig.~\ref{fig:polariz
 \subsection{CMB results}
 \label{sec:cmb}
 
-Cosmological parameter estimation is left for future work, in large part because the two chains of length 250 are too short to reliably estimate cosmological parameters in this framework. For comparison, \citet{bp12} demonstrated that at least 4000 Gibbs samples were required before the reionizaiton optical depth $\tau$ value had converged. Similarly, for \bp\ in the temperature case, the Gelman-Rubin statistic is just above $R=1.01$ for $\ell\lesssim600$ then continues to increase, indicating marginally acceptable convergence across all multipoles. Therefore, the results for the CMB presented here serve mainly as consistency checks. Given these caveats, we present preliminary CMB analysis in Sects.~\ref{sec:dipole}--\ref{sec:cls}.
+Next, we consider various CMB results, which obviously represent the most important scientific products from both \WMAP\ and \Planck. In this paper, we focus primarily intensity results, as far fewer Markov chain samples are required to produce robust results for these than large-scale polarization. In addition, cosmological parameter estimation is also left for future work, simply because we find that the angular temperature power spectrum derived in this work is fully consistent with that derived in \BP, and no significant changes are therefore expected. Once a robust low-$\ell$ polarization likelihood has been established, this issue will of course be revisited.
 
+Figure~\ref{fig:cmb_mean} shows the posterior mean CMB intensity map including the dipole, while Fig.~\ref{fig:cmb_posterior} shows the posterior mean and standard deviation for all three Stokes parameters; in this figure, the best-fit CMB Solar dipole has been subtracted from the temperature map. Overall, these maps look visually very similar to those presented by \bp\ \citep{bp13}, and we therefore adopt the same confidence masks and analysis configuration as described there.
 
-
-
+%in large part because the two chains of length 250 are too short to reliably estimate cosmological parameters in this framework. For comparison, \citet{bp12} demonstrated that at least 4000 Gibbs samples were required before the reionizaiton optical depth $\tau$ value had converged. Similarly, for \bp\ in the temperature case, the Gelman-Rubin statistic is just above $R=1.01$ for $\ell\lesssim600$ then continues to increase, indicating marginally acceptable convergence across all multipoles. Therefore, the results for the CMB presented here serve mainly as consistency checks. Given these caveats, we present preliminary CMB analysis in Sects.~\ref{sec:dipole}--\ref{sec:cls}.
 
 
 \subsubsection{Solar dipole}
 \label{sec:dipole}
 
+We start our discussion with the largest angular scales, namely the CMB dipole. As discussed by \citet{thommesen:2019}, estimating the Solar dipole is arguably one of the most difficult parameters to constrain accurately. This is due to the strong degeneracy with the gain model, as well as the effect of mode-coupling when masking the Galactic plane. Calibration misestimation propagates directly into an incorrect CMB dipole, and vice-versa.
 
+Our Solar dipole estimates are summarized in Table~\ref{tab:dipole} and Fig.~\ref{fig:dip_amp}. First, we find that the dipole direction is very consistent with \bp\ \citep{bp11}, and also statistically consistent with most previous analyses within the quoted uncertainties. Strong agreement with \bp\ is of course expected, since the data selection is very similar (the only difference is that \K-band has been added in \cosmoglobe), and the processing pipelines are very similar.
 
-As argued by \citet{thommesen:2019}, estimating the Solar dipole is one of the more difficult parameters to accurately constrain. This is in part due to the effect of mode-coupling when masking the Galactic plane, but also due to the Solar dipole in the calibration step. In essence, the Solar dipole's amplitude couples strongly to the calibration parameters. Misestimation of the calibration can propagate to an incorrect CMB dipole, and vice-versa.
+It is therefore interesting to note that the dipole amplitude is in fact 3.5\muK\ (or $2.5\,\sigma$) higher than in \bp. This is clearly a larger change than one would expect simply by adding one more data set. It is also interesting to note that this new mean value of 3366.2\muK\ is $11\,\mathrm{\mu K}$ higher than the \WMAPnine\ result \citep{hinshaw2009}, and also 4.1\muK\ higher than the \Planck\ HFI 2018 result \citep{planck2016-l02}. On the other hand, it is now consistent with the latest \Planck\ PR4 result, with a difference of only 0.4\muK.
 
-The results of our Solar dipole estimate are displayed in Table~\ref{tab:dipole} and Fig.~\ref{fig:dip_amp}. We find that the dipole direction is consistent with \citet{bp11}'s result, but is $11\,\mathrm{\mu K}$ higher than the result from \citet{hinshaw2009}. Assuming a $3400\,\mathrm{\mu K}$ Solar dipole amplitude, an absolute calibration error of $0.3\,\%$ is sufficient to induce an $11\,\mathrm{\mu K}$ error. In fact, the 0.2\,\% absolute calibration error reported by \citet{bennett2012} can induce a $6.7\,\mathrm{\mu K}$ Solar dipole amplitude error, dominating the error budget for the final reported Solar dipole.
+One plausible explanation for this behaviour is the following: \bp\ used the official \WMAPnine\ frequency maps directly in the analysis, and these data are known to have a lower CMB dipole than \Planck. It is therefore natural to assume that the \BP\ dipole was pulled toward low values by these maps. In the new \cosmoglobe\ analysis, however, the \WMAP\ and \Planck\ data are forced to agree on a common dipole prior during the global calibration process. In particular, this has increased the \WMAP\ dipole, and the previous tension has been released. The net result is that the \WMAP+LFI-dominated \cosmoglobe\ estimate now finally agree with the highly independent \Planck\ HFI-dominated PR4 result. 
 
+%It is also noteworthy that the \bp\ Solar dipole differs from the \cosmoglobe\ Solar dipole with a higher significance even than the \WMAPnine\ result, despite using a nearly identical framework and almost identical datasets. First, we note that the \Planck\ PR4 analysis \citep{npipe} showed a similarly apparently paradoxical discrepancy. On its face, the LFI 2018 and HFI 2018 Solar dipole values would average according to their uncertainties to $\sim3362.3\,\mathrm{\mu K}$. In this analysis, \citet{npipe} identify relative calibration uncertainty between 100 and 143\,GHz as the dominant source of uncertainty.
 
-It is also noteworthy that the \bp\ Solar dipole differs from the \cosmoglobe\ Solar dipole with a higher significance even than the \WMAPnine\ result, despite using a nearly identical framework and almost identical datasets. First, we note that the \Planck\ PR4 analysis \citep{npipe} showed a similarly apparently paradoxical discrepancy. On its face, the LFI 2018 and HFI 2018 Solar dipole values would average according to their uncertainties to $\sim3362.3\,\mathrm{\mu K}$. In this analysis, \citet{npipe} identify relative calibration uncertainty between 100 and 143\,GHz as the dominant source of uncertainty.
-
-In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noise among all low frequency components, while being absolutely calibrated using a prior distribution. Therefore, it is likely that the chosen prior mean directly impacts the final Solar dipole amplitude, as it sets the amplitude of all low frequency components. 
-
-
-
-
+%In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noise among all low frequency components, while being absolutely calibrated using a prior distribution. Therefore, it is likely that the chosen prior mean directly impacts the final Solar dipole amplitude, as it sets the amplitude of all low frequency components. 
 
 \subsubsection{Angular temperature power spectrum}
 \label{sec:cls}
@@ -1953,14 +1957,14 @@ In the \cosmoglobe\ analysis, we find that \K-band has the highest signal-to-noi
 %	\label{fig:cl_tt_lowl}
 %\end{figure}
 
+Next, in Fig.~\ref{fig:cl_tt} we show the angular temperature power spectrum derived from the CMB samples from the main Gibbs chain, obtained using a Gaussianized Blackwell-Rao estimator \citep{chu2005,rudjord:2009} with an identical analysis setup and mask in as \bp\ \citep{bp11}. We compare with the official \WMAP\ \citep{hinshaw2012} and \planck\ \citep{planck2016-l05} power spectra, as well as the \bp\ \citep{bp11} spectrum. For reference, the best-fit \planck\ 2018 \LCDM\ spectrum is also plotted along side them. The middle panel shows the deviation from the \planck\ \LCDM\ solution, in units of $\sigma_\ell$ from each individual pipeline, while the bottom panel shows the fractional difference with respect to the \planck\ \LCDM\ spectrum. 
 
-Figure~\ref{fig:cl_tt} shows the angular temperature power spectrum derived from the CMB samples from the main Gibbs chain, obtained using a Blackwell-Rao estimator \citep{chu2005,bp11}. We compare with the official \WMAP\ \citep{hinshaw2012} and \planck\ \citep{planck2016-l05} power spectra, as well as the \bp\ \citep{bp11} spectrum. For reference, the best-fit \planck\ 2018 \LCDM\ spectrum is plotted along side them. The middle panel shows the deviation from the \planck\ \LCDM\ solution, in units of $\sigma_\ell$ from each individual pipeline, while the bottom panel shows the fractional difference with respect to the \planck\ \LCDM\ spectrum.
+%The spectrum has been computed following the same Gaussianized Blackwell-Rao (GBR) \citep{rudjord:2009} analysis described by \citep{bp11}. We performed a CMB temperature resampling by imposing a prior on the spatial correlations of the CMB, and masking the Galactic plane with the \bp\ temperature mask. The GBR estimator is computed using 500 CMB samples.
 
-The spectrum has been computed following the same Gaussianized Blackwell-Rao (GBR) \citep{rudjord:2009} analysis described by \citep{bp11}. We performed a CMB temperature resampling by imposing a prior on the spatial correlations of the CMB, and masking the Galactic plane with the \bp\ temperature mask. The GBR estimator is computed using 500 CMB samples.
+At $\ell\lesssim500$, each of these datasets are signal-dominated, and all spectra agree very well. At higher multipoles, more samples are needed in order to obtain a robust Blackwell-Rao estimator. %Notable exceptions include specifically the quadrupole, which we will discuss in Sect.~\ref{sec:anomalies}, and $50\lesssim\ell\lesssim100$. In the latter, the \cosmoglobe\ multipoles are consistently $\geq5\,\%$ higher than the \LCDM\ solution.
+Given this good agreement, we do not anticipate any significant difference in terms of $\Lambda$CDM parameters, and we therefore postpone a full cosmological parameter reanalysis to future work. 
 
-At $\ell\lesssim500$, each of these datasets are signal-dominated, and each of the spectra agree at nearly every multipole. Notable exceptions include specifically the quadrupole, which we will discuss in Sect.~\ref{sec:anomalies}, and $50\lesssim\ell\lesssim100$. In the latter, the \cosmoglobe\ multipoles are consistently $\geq5\,\%$ higher than the \LCDM\ solution.
-
-At $\ell\gtrsim500$, the \WMAPnine\ solution becomes noise dominated, and there is much larger variation between the multipoles. While \planck\ and \bp\ mostly agree with the \cosmoglobe\ solution, the convergence properties of the power spectrum are much worse, and would require an order of magnitude more samples to converge \citep{bp11}. We therefore caution against overinterpreting the specific values from the \cosmoglobe\ power spectrum in this regime.
+%At $\ell\gtrsim500$, the \WMAPnine\ solution becomes noise dominated, and there is much larger variation between the multipoles. While \planck\ and \bp\ mostly agree with the \cosmoglobe\ solution, the convergence properties of the power spectrum are much worse, and would require an order of magnitude more samples to converge \citep{bp11}. We therefore caution against overinterpreting the specific values from the \cosmoglobe\ power spectrum in this regime.
 
 
 \subsubsection{Low-$\ell$ anomalies}
