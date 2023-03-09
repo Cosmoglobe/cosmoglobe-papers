@@ -23,13 +23,15 @@ dip = d_x*x + d_y*y + d_z*z
 
 m = hp.read_map(f'{DIR}/CG_cmb_IQU_n1024_v1.fits')
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', min=-3400, max=3400,
-    width=8, xsize=1600, rlabel=r'\langle A_\mathrm{cmb}\rangle')
+    width=8, xsize=1600, rlabel=r'\langle A_\mathrm{cmb}\rangle',
+    llabel='T')
 plt.savefig('cmb_I_dipole.pdf', bbox_inches='tight', dpi=300)
 
 
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', 
     width=4, remove_dip='auto', xsize=3200,
-    rlabel=r'\langle A_\mathrm{cmb}\rangle')
+    rlabel=r'\langle A_\mathrm{cmb}\rangle',
+    llabel='T')
 plt.savefig('cmb_I_nodipole.pdf', bbox_inches='tight', dpi=300)
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', 
     width=4, sig=1, fwhm=np.sqrt(1-(14/60)**2)*u.deg,
