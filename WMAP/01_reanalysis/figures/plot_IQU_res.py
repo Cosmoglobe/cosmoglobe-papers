@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from glob import glob
 
+from setup_matplotlib import *
+
+width = cm2inch(9)
+
+
 DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
 
 width = 2
@@ -85,6 +90,15 @@ for i,m in enumerate(maps):
         sub=(1,3,3))
     plt.tight_layout()
     plt.savefig(f'compsep_res_{bands[i]}_IQU.pdf', bbox_inches='tight')
+    cg.plot(m, sig=0, min=-5, max=5, fwhm=5*u.deg, cbar=False,
+        llabel=bands[i], rlabel='T', width=width)
+    plt.savefig(f'compsep_res_{bands[i]}_I.pdf', bbox_inches='tight', dpi=300)
+    cg.plot(m, sig=1, min=-5, max=5, fwhm=5*u.deg, cbar=False, rlabel='Q',
+        width=width)
+    plt.savefig(f'compsep_res_{bands[i]}_Q.pdf', bbox_inches='tight', dpi=300)
+    cg.plot(m, sig=2, min=-5, max=5, fwhm=5*u.deg, cbar=False, rlabel='U',
+        width=width)
+    plt.savefig(f'compsep_res_{bands[i]}_U.pdf', bbox_inches='tight', dpi=300)
     plt.close('all')
 
 
