@@ -232,7 +232,7 @@ Towards the end of the \Planck\ analysis phase it became clear that the interpla
 
 Rather than simply probing the degeneracy between instrument calibration and component separation, a better solution is to actually break it. The optimal approach to do so is by jointly analyzing complementary datasets, each of which provide key information regarding the full system. This insight led to the \cosmoglobe\footnote{\url{https://cosmoglobe.uio.no}} initiative, which is an Open Source and community-wide effort that aims to derive a single joint model of the radio, microwave, and sub-millimeter sky by combining all available state-of-the-art experiments. An obvious first extension of the LFI-oriented \BP\ project is to analyze the \WMAP\ measurements in the same framework. Indeed, already as part of the \BP\ suite of papers, \citet{bp17} integrated \WMAP\ \Q-band time-ordered data (TOD) into the \commanderthree\ framework, calibrated off of the \BP\ sky model.
 
-In this paper, we present the first end-to-end Bayesian analysis of the full \WMAP\ TOD, processed within the \commander\ framework. As such, this paper also presents the first ever joint analysis of two major CMB experiments (LFI and \WMAP) at the lowest possible level, and it therefore constitutes a major milestone of the \cosmoglobe\ initiative. In the future, many more datasets will be added, gradually providing stronger and stronger constraints on the true astrophysical sky. Each new experiment will then also in turn improve the instrumental calibration of all previous experiments. 
+In this paper, we present the first end-to-end Bayesian analysis of the full \WMAP\ TOD, processed within the \commander\ framework. As such, this paper also presents the first ever joint analysis of two major CMB experiments (LFI and \WMAP) at the lowest possible level, and it therefore constitutes a major milestone of the \cosmoglobe\ initiative. We refer to the current products as \cosmoglobe\ Data Release 1 (CG1), and the scientific results from this are described in a series of four papers. The current paper gives a detailed discussion of data processing methods, instrumental parameters, frequency maps, and preliminary astrophysical results, while updated constraints on anomalous microwave emission and polarized synchrotron emission are presented by \citet{watts2023_ame} and \citet{fuskeland:2023}, respectively. \citet{eskilt:2023} use these new products to provide new constraints on cosmic birefringence. In the future, many more datasets and astrophysical components will be added to this framework, gradually providing stronger and stronger constraints on both the true astrophysical sky and the instrumental calibration of all previous experiments. 
 
 The rest of this paper is organized as follows. In Sect.~\ref{sec:methods}, we provide a brief review of the Bayesian end-to-end statistical framework used in this work, before describing the underlying data and computational expenses in Sect.~\ref{sec:data}. The main results, as defined by as expressed by the global posterior distribution, are described in Sects.~\ref{sec:instrument}--\ref{sec:astrophysics}, summarizing instrumental parameters, frequency sky maps, and astrophysical results, respectively. In Sect.~\ref{sec:issues} we address unresolved issues that should be addressed in future work. We conclude in Sect.~\ref{sec:conclusions}, and lay a path forward for the \cosmoglobe\ project.
 
@@ -2034,21 +2034,28 @@ Finally, Fig.~\ref{fig:lowl} provides an update of the so-called low multipole p
 
 
 
-\subsection{$\chi^2$ and map space residuals}\label{subsub:compsep_chisq}
-
-The quality of the component separation procedure is evaluated through a reduced-$\chi^2$   map, shown in Fig.~\ref{fig:reduced_chisq}, as well as through the map space residuals Fig.~\ref{fig:compsep_residual}. Figure~\ref{fig:reduced_chisq} shows a sum of all three Stokes parameters, and we can see, morphologically, that the poorly fit parts of the sky are driven by structures associated with features in total intensity. The poorly fit pixels are generally constrained to the Galactic plane, mostly at the Galactic center, though we note some poor fits in regions such as the Orion region, $\rho$ Ophiucus, and Large Magellanic Cloud. Future work to find a more complete model of AME will likely help clean up this picture.
-
+\subsection{Goodness-of-fit: Map-level residuals and $\chi^2$ statistics}\label{subsub:compsep_chisq}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\linewidth]{figures/chisq_IQU.pdf}
-	\newline
+	\includegraphics[width=\linewidth]{figures/compsep_res_K_I.pdf}\\
+        \includegraphics[width=\linewidth]{figures/compsep_res_K_Q.pdf}\\
+	\includegraphics[width=\linewidth]{figures/compsep_res_K_U.pdf}\\        
+	\includegraphics[width=\linewidth]{figures/cbar_5uK.pdf}
+	\caption{Frequency map residual (DA map minus sky model) for \K-band. Panels show, from top to bottom, Stokes $T$, $Q$, and $U$, and all maps are smoothed by $5^\circ$ FWHM.}
+	\label{fig:K_compsep_residual}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/chisq_IQU.pdf}\\
 	\includegraphics[width=0.3\textwidth]{figures/cbar_3sigma.pdf}
 	\caption{Reduced-$\chi^2$, using $n_\mathrm{dof}=300$, which comes from fitting to the regions outside of the \K-band processing mask.}\label{fig:reduced_chisq}
 \end{figure}
 
+The quality of the component separation procedure is evaluated through map space residuals (i.e., frequency map minus sky model) and a spatial map of the reduced $\chi^2$. Residual maps for all three \K-band Stokes parameters are shown in Fig.~\ref{fig:K_compsep_residual}, while Fig.~\ref{fig:compsep_residual} in Appendix~\ref{sec:map_survey} shows the same for all DAs. Figure~\ref{fig:reduced_chisq} shows the total reduced normalized $\chi^2$, summed over all frequency channels. Overall, we see that the map-level residuals are generally well below 5\muK, and the morphology at high Galactic latitudes are generally consistent with instrumental noise. However, in intensity the Galactic plane stands out with statistically significant residuals, in particular at the Galactic center and bright regions such as the Orion region, $\rho$ Ophiucus, and the Large Magellanic Cloud. Implementing support for a more complex and realistic foreground model, and therefore necessarily also adding support for additional datasets, is an important goal of the general \cosmoglobe\ framework, and this will hopefully reduce these residuals in the future. In particular, integrating the \Planck\ HFI data, and thereby be able to fit thermal dust emission pixel-by-pixel represents a key milestone in this program. 
 
-
+Inspecting the residual maps for all channels in Fig.~\ref{fig:compsep_residual}, we first of all see that the polarization maps are generally consistent with instrumental noise at all channels. This is even true for the \W-band, although in this case the impact of correlated noise (due to its higher $f_{\mathrm{k}}$ parameter) is clearly evident. In temperature, the situation is less clear, as there are weak large-scale residuals at the $\sim$\,2\muK level present in most channels, but with different morphologies in each case. Clearly, these residuals indicate the presence of some very low-level residual systematics that have not been perfectly modelled in the current processing. Considering the spatial structure of these residuals, it is natural to suspect the small non-idealities in the gain or baseline model; this seems particularly plausible given the pronounced annual temperature variations seen in Figs.~\ref{fig:baseline} and \ref{fig:gain}. Of course, considering that the amplitude of these residuals is indeed very low compared to the overall sky signal, they are not likely have any significant impact on any cosmological or astrophysical residuals, but they should neverless be understood through future work in order to reach the full white-noise potential of the experiment.
 
 
 \subsection{\WMAP-versus-LFI signal-to-noise ratio comparison}
@@ -2058,23 +2065,19 @@ The quality of the component separation procedure is evaluated through a reduced
 \begin{figure}
   \center	
   \includegraphics[width=\linewidth]{figures/fg_s2n_v1.pdf}
-  \caption{Relative signal-to-noise ratios for \WMAP\ and LFI channels and various components. }
+  \caption{Relative signal-to-noise ratios for \WMAP\ and LFI channels and various components, as defined in terms of the ratio between the mixing matrix and the total instrumental uncertainty, $\psi = \M/\sigma$. Values are reported as the ratio between the most sensitive channel (marked by a red dot) and the given channel; points with error bars correspond to mean and standard deviations evaluated over the full sky. Panels with white background indicate intensity results, while panels with gray background indicates polarization results.}
   \label{fig:fg_s2n}
 \end{figure}
 
+We conclude this section with a comparison of the relative signal-to-noise ratios to each astrophysical component between \WMAP\ and \Planck\ LFI. To quantify this, we first define the normalized signal-to-noise ratio for a given channel $\nu$ and pixel $p$ to be the ratio between the mixing matrix and the total noise rms,  $\psi \equiv M_{c}(\nu, p)/\sigma(\nu, p)$, all evaluated at a common angular resolution of $1^{\circ}$ FWHM. The total noise level is estimated by adding the white noise and posterior rms levels, as shown in Figs.~\ref{fig:rms} and \ref{fig:std}, in quadrature. {\color{red} (RIGHT NOW ONLY WHITE NOISE IS ACCOUNTED FOR IN WMAP, WHILE LFI INCLUDES BOTH TERMS. THE PLOT WILL BE REDONE, AND THE DISCUSSION WILL BE UPDATED.)} We then identify the channel with the highest mean value of $\psi$ for a given component, and adopt this as a reference channel. Finally, we compute $r=\psi_{\mathrm{max}}(p)/\psi(p)$ for all pixels,and report the mean and standard deviation over the full sky.
 
+The results from this calculation are summarized in Fig.~\ref{fig:fg_s2n} for all \WMAP\ and LFI channels. The top five panels (with white background) show temperature results, while the bottom three panels (with gray background) show polarization results. In each case, the red dot indicates the reference channel with highest signal-to-noise ratio, which by definition has value equal to one. For a given other channel, $X$, the values in Fig.~\ref{fig:fg_s2n} should be interpreted as ``The reference channel has $r$ times higher signal-to-noise ratio with respect to channel  $c$ than channel $X$.''
 
+Starting from the top panel, we see --- as expected -- that the LFI 70\,GHz channel has the highest signal-to-noise ratio with respect to CMB intensity, with typically 2--3 times higher sensitivity than any other band. However, it is interesting to note both that all \WMAP\ channels have very similar sensitivities between DAs (which indeed was a conscious choice in the original \WMAP\ design), and that these sensitivities are very similar to the LFI 30 and 44\,GHz channels. While LFI does have significantly lower white noise levels than \WMAP, it also has higher correlated noise knee frequencies, and on large angular scales these two effects appear to be roughly equal. It is also worth noting that since $M_{\mathrm{cmb}}=1$ in thermodynamic units, these numbers are a direct estimate of the raw instrumental sensitivity of each channel.
 
-%\clearpage
-%\section{Systematic error corrections and uncertainties}
-%\label{sec:systematics}
+Next, the second panel shows similar results for synchrotron emission in intensity. Since the synchrotron SED scales roughly as $\mathcal{O}(\nu^{-3})$, \K-band is clearly the strongest synchrotron tracer, with an effective signal-to-noise ratio that is 2--3 times higher than \Planck\ 30\,GHz. Indeed, even \Ka-band is almost as sensitive as the 30\,GHz channel after accounting for all instrumental uncertainties. As expected, similar observations are true also for free-free and AME, given that they have similar frequency behaviour as synchrotron. In contrast, the \Planck\ 70\,GHz channel is strongest with respect to thermal dust emission, and it is about a factor of two stronger than \W-band and a factor of three stronger than V-band.
 
-%\subsection{Sky map corrections}
-
-
-
-%\subsection{Power spectrum residuals}
-
+Finally, we see very similar behaviour in polarization: The LFI 70\,GHz channel is strongest for both CMB and thermal dust emission, with about twice higher signal-to-noise ratio than any of the other channels. For polarized synchrotron emission, \K-band is stronger by a factor of about two compared to LFI 30\,GHz.
 
 
 
@@ -2449,7 +2452,7 @@ In this appendix, we provide a frequency map survey for all ten DAs. Figure~\ref
 	\includegraphics[width=0.22\textwidth]{figures/cbar_std.pdf}
 	\includegraphics[width=0.22\textwidth]{figures/cbar_std.pdf}
 	\includegraphics[width=0.22\textwidth]{figures/cbar_rho.pdf}
-	\caption{\cosmoglobe\ posterior standard deviation for each DA and Stokes parameter, evaluated at an angular resolution of $X^{\circ}$ FWHM. The rightmost column shows the correlation coefficient between Stokes $Q$ and $U$.}
+	\caption{\cosmoglobe\ posterior standard deviation for each DA and Stokes parameter, evaluated at an angular resolution of $2^{\circ}$ FWHM. The rightmost column shows the correlation coefficient between Stokes $Q$ and $U$.}
         \label{fig:std}
 \end{figure*}
 \begin{figure*}
