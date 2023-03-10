@@ -103,6 +103,8 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.text(52200,1.25,r"K113", fontsize=10)
 plt.ylabel(r"$g$ [du/mK]");
 ax1.yaxis.labelpad = 10*width/17.
+plt.ylim([0.949, 0.9549])
+plt.yticks([0.95, 0.953], ['$0.950$', '$0.953$'])
 
 ###############
 #   x_im1
@@ -151,8 +153,10 @@ plt.setp( ax4.get_yticklabels(), visible=True)
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.ylim([0.7015, 0.70615]); #plt.text(52200,0.835,r"K113", fontsize=10)
 plt.ylabel(r"$\sigma_{0}$ [du]"); ax1.yaxis.labelpad = 10*width/17.
-plt.ylim([2.65375, 2.65475])
-#plt.yticks([0.67,0.70,0.73], [r"$0.67$", r"$0.70$", r"$0.73$"])
+plt.ylim([2.65347, 2.655])
+plt.ylim(  [2.65347, 2.6545])
+plt.yticks([2.654,   2.6543])
+plt.yticks([2.6537,   2.6542], ['$2.6537$', '$2.6542$'])
 
 
 ###############
@@ -187,7 +191,7 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 #plt.text(52200,-0.6,r"K113", fontsize=10)
 plt.ylabel(r"$\alpha$");
 ax1.yaxis.labelpad = 10*width/17.
-plt.ylim([-1.25, -0.9]);
+plt.ylim([-1.29, -0.9]);
 #plt.yticks([-1.3,-1.0,-0.7], [r"$-1.3$", r"$-1.0$", r"$-0.7$"])
 
 ###############
@@ -205,7 +209,7 @@ plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 plt.ylabel(r"$\chi^2$ [$\sigma$]");
 ax1.yaxis.labelpad = 10*width/17.
 #plt.ylim([-3, -0.5]);
-plt.ylim([-8.1,-6.8])
+plt.ylim([-8.7,-6.8])
 #plt.yticks([-6,-3,0], [r"$-6$", r"$-3$", r"$0$"])
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
