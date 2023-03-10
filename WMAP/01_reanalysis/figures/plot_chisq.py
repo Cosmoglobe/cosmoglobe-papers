@@ -8,7 +8,7 @@ f = '/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203/chisq_c0001_k000100.f
 chisq = hp.read_map(f, field=(0,1,2))
 chisq_IQU = chisq.sum(axis=0)
 chisq_red = (chisq_IQU - 3*n_dof)/(2*3*n_dof)**0.5
-cg.plot(chisq_red, min=-3, max=3, cmap='RdBu_r', cbar=False, width=6)
+cg.plot(chisq_red, min=-3, max=3, cmap='RdBu_r', cbar=False, width=4)
 plt.savefig('chisq_IQU.pdf', bbox_inches='tight')
 
 chisq_red = (chisq - n_dof)/(2*n_dof)**0.5
@@ -24,7 +24,7 @@ plt.savefig('chisq_U.pdf', bbox_inches='tight')
 
 
 cg.standalone_colorbar("RdBu_r", ticks=[-3,0,3], extend='both',
-        unit=r"$\chi^2\ [\sigma]$",width=4)
+        unit=r"$\chi^2\ [\sigma]$",width=3)
 
 plt.savefig('cbar_3sigma.pdf', bbox_inches='tight')
 
