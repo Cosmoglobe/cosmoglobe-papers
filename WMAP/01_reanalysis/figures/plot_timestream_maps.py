@@ -70,11 +70,11 @@ m = hp.read_map(f'{CGDIR}/tod_023-WMAP_K_{comps[4]}_c0001_k000121.fits',
     field=(0,1,2))
 m = hp.smoothing(m, fwhm=2*np.pi/180)
 cg.plot(m, scale=1e3, sig=0, min=-10, max=10, width=width, extend='both',
-    rlabel=r'T_\mathrm{res}^{2^\circ}', unit=r'$\mathrm{\mu K}$')
+    rlabel=r'T_\mathrm{res}^{2^\circ}', unit=r'$\mathrm{\mu K_{CMB}}$')
 plt.savefig('K_res_I.pdf', bbox_inches='tight')
 cg.plot(m, scale=1e3, sig=1, min=-10, max=10, width=width, extend='both',
-    rlabel=r'Q_\mathrm{res}^{2^\circ}', unit=r'$\mathrm{\mu K}$')
+    rlabel=r'Q_\mathrm{res}^{2^\circ}', unit=r'$\mathrm{\mu K_{CMB}}$')
 plt.savefig('K_res_Q.pdf', bbox_inches='tight')
 cg.plot(m, scale=1e3, sig=2, min=-10, max=10, width=width, extend='both',
-    rlabel=r'U_\mathrm{res}^{2^\circ}', unit=r'$\mathrm{\mu K}$')
+    rlabel=r'U_\mathrm{res}^{2^\circ}', unit=r'$\mathrm{\mu K_{CMB}}$')
 plt.savefig('K_res_U.pdf', bbox_inches='tight')
