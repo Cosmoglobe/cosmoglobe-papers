@@ -11,13 +11,13 @@ params = {'backend': 'pdf',
           'ytick.major.pad': 6,
           'xtick.major.pad': 6,
           'ytick.labelsize': 10,
-          'text.usetex': True,
-          'font.family':'sans-serif',
+          'text.usetex': True}
+          #'font.family':'sans-serif',
           # free font similar to Helvetica
-          'font.sans-serif':'FreeSans'}
+          #'font.sans-serif':'FreeSans'}
 
 # use of Sans Serif also in math mode
-rc('text.latex', preamble='\usepackage{sfmath}')
+#rc('text.latex', preamble='\usepackage[varg]{txfonts}')
 
 rcParams.update(params)
 
