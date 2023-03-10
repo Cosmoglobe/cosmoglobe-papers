@@ -35,6 +35,7 @@ cg.plot(
     width=4,
     xsize=1000,
     cbar=True,
+    extend='both',
 )
 plt.savefig("rho_QU_30.pdf", dpi=300, bbox_inches='tight')
 cg.plot(
