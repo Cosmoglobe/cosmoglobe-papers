@@ -15,21 +15,44 @@ mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=colors)
 
 DIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
 
-chain = cg.Chain(f'{DIR}/CG_c0002_v1.h5')
+c1 = cg.Chain(f'{DIR}/CG_c0001_v1.h5')
+c2 = cg.Chain(f'{DIR}/CG_c0002_v1.h5')
 
 width = 8.8
 
 # Load data
-transK = chain.get('tod/023-WMAP_K/x_im')
-transKa = chain.get('tod/030-WMAP_Ka/x_im')
-transQ1 = chain.get('tod/040-WMAP_Q1/x_im')
-transQ2 = chain.get('tod/040-WMAP_Q2/x_im')
-transV1 = chain.get('tod/060-WMAP_V1/x_im')
-transV2 = chain.get('tod/060-WMAP_V2/x_im')
-transW1 = chain.get('tod/090-WMAP_W1/x_im')
-transW2 = chain.get('tod/090-WMAP_W2/x_im')
-transW3 = chain.get('tod/090-WMAP_W3/x_im')
-transW4 = chain.get('tod/090-WMAP_W4/x_im')
+trans_1_K = c1.get('tod/023-WMAP_K/x_im')
+trans_1_Ka = c1.get('tod/030-WMAP_Ka/x_im')
+trans_1_Q1 = c1.get('tod/040-WMAP_Q1/x_im')
+trans_1_Q2 = c1.get('tod/040-WMAP_Q2/x_im')
+trans_1_V1 = c1.get('tod/060-WMAP_V1/x_im')
+trans_1_V2 = c1.get('tod/060-WMAP_V2/x_im')
+trans_1_W1 = c1.get('tod/090-WMAP_W1/x_im')
+trans_1_W2 = c1.get('tod/090-WMAP_W2/x_im')
+trans_1_W3 = c1.get('tod/090-WMAP_W3/x_im')
+trans_1_W4 = c1.get('tod/090-WMAP_W4/x_im')
+
+trans_2_K =  c2.get('tod/023-WMAP_K/x_im')
+trans_2_Ka = c2.get('tod/030-WMAP_Ka/x_im')
+trans_2_Q1 = c2.get('tod/040-WMAP_Q1/x_im')
+trans_2_Q2 = c2.get('tod/040-WMAP_Q2/x_im')
+trans_2_V1 = c2.get('tod/060-WMAP_V1/x_im')
+trans_2_V2 = c2.get('tod/060-WMAP_V2/x_im')
+trans_2_W1 = c2.get('tod/090-WMAP_W1/x_im')
+trans_2_W2 = c2.get('tod/090-WMAP_W2/x_im')
+trans_2_W3 = c2.get('tod/090-WMAP_W3/x_im')
+trans_2_W4 = c2.get('tod/090-WMAP_W4/x_im')
+
+transK = np.concatenate((trans_1_K, trans_2_K))
+transKa = np.concatenate((trans_1_Ka, trans_2_Ka))
+transQ1 = np.concatenate((trans_1_Q1, trans_2_Q1))
+transQ2 = np.concatenate((trans_1_Q2, trans_2_Q2))
+transV1 = np.concatenate((trans_1_V1, trans_2_V1))
+transV2 = np.concatenate((trans_1_V2, trans_2_V2))
+transW1 = np.concatenate((trans_1_W1, trans_2_W1))
+transW2 = np.concatenate((trans_1_W2, trans_2_W2))
+transW3 = np.concatenate((trans_1_W3, trans_2_W3))
+transW4 = np.concatenate((trans_1_W4, trans_2_W4))
 
 
 x = np.arange(0,2)
