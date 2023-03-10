@@ -7,7 +7,6 @@ from glob import glob
 
 from setup_matplotlib import *
 
-width = cm2inch(9)
 
 
 DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
@@ -18,6 +17,7 @@ fontsize = {
     "llabel": 5,
     "rlabel": 5,
 }
+width = cm2inch(9)
 
 fnames = glob(f"{DIR}/tod*WMAP*res*k??????.fits")
 fnames.sort()
@@ -113,5 +113,8 @@ plt.savefig('cbar_3uK.pdf', bbox_inches='tight')
 
 cg.standalone_colorbar("planck", ticks=[-10,0,10], extend='both',
         unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
-
 plt.savefig('cbar_10uK.pdf', bbox_inches='tight')
+
+cg.standalone_colorbar("planck", ticks=[-10,0,10], extend='both',
+        unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=3)
+plt.savefig('cbar_10uK_4in.pdf', bbox_inches='tight')
