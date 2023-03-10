@@ -17,20 +17,25 @@ cg.plot(
     max=0.5,
     llabel="\mathit{Ka}",
     rlabel=r"\rho_{QU}",
-    sub=(2, 1, 1),
     cmap=cmap,
     width=4,
     xsize=1000,
+    cbar=True,
 )
+plt.savefig("rho_QU_Ka.pdf", dpi=300, bbox_inches='tight')
 cg.plot(
     rho_30,
     min=-0.1,
     max=0.1,
     llabel="30",
     rlabel=r"\rho_{QU}",
-    sub=(2, 1, 2),
     cmap=cmap,
     width=4,
     xsize=1000,
+    cbar=True,
 )
-plt.savefig("rho_QU.pdf")
+plt.savefig("rho_QU_30.pdf", dpi=300, bbox_inches='tight')
+
+#cg.standalone_colorbar("RdBu_r", ticks=[-0.1, 0,0.1], extend='both',
+#            width=3, fontsize=18, unit=r'\phantom{$\rho$}')
+#plt.savefig("cbar_rho_01.pdf", dpi=300)
