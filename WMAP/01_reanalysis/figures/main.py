@@ -30,7 +30,7 @@ v = "v0"
 # Plot of all frequency bands
 
 cosmoglobe.plot(
-    f"{DIR}/BP_023-WMAP_K_IQU_n0512_{v}.fits",
+    f"{DIR}/CG_023-WMAP_K_IQU_n0512_{v}.fits",
     width=width,
     xsize=xsize,
     cbar=False,
@@ -41,7 +41,7 @@ cosmoglobe.plot(
     llabel="K",
 )
 cosmoglobe.plot(
-    f"{DIR}/BP_023-WMAP_K_IQU_n0512_{v}.fits",
+    f"{DIR}/CG_023-WMAP_K_IQU_n0512_{v}.fits",
     width=width,
     xsize=xsize,
     cbar=False,
@@ -52,7 +52,7 @@ cosmoglobe.plot(
     fwhm=1 * u.deg,
 )
 cosmoglobe.plot(
-    f"{DIR}/BP_023-WMAP_K_IQU_n0512_{v}.fits",
+    f"{DIR}/CG_023-WMAP_K_IQU_n0512_{v}.fits",
     width=width,
     xsize=xsize,
     cbar=False,
@@ -641,7 +641,7 @@ plt.close()
 # Plot of all diffs
 
 DDIR = f"{DIR}/diffs"
-m = hp.read_map(f"{DDIR}/BP_023-WMAP_K_diff_wmap9_{v}.fits", field=(0, 1, 2))
+m = hp.read_map(f"{DDIR}/CG_023-WMAP_K_diff_wmap9_{v}.fits", field=(0, 1, 2))
 cosmoglobe.plot(
     m * 1e3,
     norm="symlog2",
@@ -679,7 +679,7 @@ cosmoglobe.plot(
     cbar=False,
 )
 
-m = hp.read_map(f"{DDIR}/BP_030_diff_BP10_{v}.fits", field=(0, 1, 2))
+m = hp.read_map(f"{DDIR}/CG_030_diff_BP10_{v}.fits", field=(0, 1, 2))
 cosmoglobe.plot(
     m,
     norm="symlog2",
@@ -717,7 +717,7 @@ cosmoglobe.plot(
     cbar=False,
 )
 
-m = hp.read_map(f"{DDIR}/BP_030-WMAP_Ka_diff_wmap9_{v}.fits", field=(0, 1, 2))
+m = hp.read_map(f"{DDIR}/CG_030-WMAP_Ka_diff_wmap9_{v}.fits", field=(0, 1, 2))
 cosmoglobe.plot(
     m * 1e3,
     norm="symlog2",
@@ -794,7 +794,7 @@ cosmoglobe.plot(
     cbar=False,
 )
 
-m = hp.read_map(f"{DDIR}/BP_044_diff_BP10_{v}.fits", field=(0, 1, 2))
+m = hp.read_map(f"{DDIR}/CG_044_diff_BP10_{v}.fits", field=(0, 1, 2))
 cosmoglobe.plot(
     m,
     norm="symlog2",
@@ -870,7 +870,7 @@ cosmoglobe.plot(
 )
 
 cosmoglobe.plot(
-    f"{DDIR}/BP_070_diff_BP10_{v}.fits",
+    f"{DDIR}/CG_070_diff_BP10_{v}.fits",
     norm="symlog2",
     width=width,
     xsize=xsize,
@@ -882,7 +882,7 @@ cosmoglobe.plot(
     cbar=False,
 )
 cosmoglobe.plot(
-    f"{DDIR}/BP_070_diff_BP10_{v}.fits",
+    f"{DDIR}/CG_070_diff_BP10_{v}.fits",
     norm="symlog2",
     width=width,
     xsize=xsize,
@@ -893,7 +893,7 @@ cosmoglobe.plot(
     cbar=False,
 )
 cosmoglobe.plot(
-    f"{DDIR}/BP_070_diff_BP10_{v}.fits",
+    f"{DDIR}/CG_070_diff_BP10_{v}.fits",
     norm="symlog2",
     width=width,
     xsize=xsize,
