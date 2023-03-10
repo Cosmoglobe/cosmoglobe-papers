@@ -525,8 +525,8 @@ where $t$ and $t+1$ are consecutive time samples, and ${\boldsymbol r\equiv\bold
 
 Once the instrumental parameters have been sampled, \commanderthree\ computes the calibrated TOD for each band,
 \begin{equation}
-	r_{t,j}=\frac{d_{t,j}-n_{t,j}^\mathrm{corr}}{g_{t,j}}-\left(s_{t,j}^\mathrm{orb}
-	+s_{t,j}^\mathrm{fsl}+\delta s_{t,j}^\mathrm{leak}+\vec{s}_{t,j}^\mathrm{inst}\right)
+	r_{t,i}=\frac{d_{t,i}-n_{t,i}^\mathrm{corr}}{g_{t,i}}-\left(s_{t,i}^\mathrm{orb}
+	+s_{t,i}^\mathrm{fsl}+\delta s_{t,i}^\mathrm{leak}+\vec{s}_{t,i}^\mathrm{inst}\right)
 \end{equation}
 where $\s^\mathrm{orb}$ is the orbital dipole \citep{bp07}, $\s^\mathrm{fsl}$ is the far sidelobe timestream \citep{bp08}, $\delta\s^\mathrm{leak}$ is the bandpass leakage \citep{bp09}, and $\s^\mathrm{inst}$ is some instrumental-specific contribution, e.g., the 1\,Hz electronic spike for LFI. With a correlated noise realization removed, one can perform simple binned mapmaking, weighting each pixel by the white noise amplitude.
 
@@ -581,13 +581,13 @@ This equation can be solved using the BiCG-STAB algorithm for a non-symmetric ma
 
 Transmission imbalance, the differential power transmission of the optics and waveguide components, can be parameterized as
 \begin{equation}
-	d_{t,j}=g_{t,j}[(1+x_{\mathrm{im},j})s_{t,j}^\mathrm{tot,A}-(1-x_{\mathrm{im},j})s_{t,j}^\mathrm{tot,B}]+n_t.
+	d_{t,i}=g_{t,i}[(1+x_{\mathrm{im},i})s_{t,i}^\mathrm{tot,A}-(1-x_{\mathrm{im},i})s_{t,i}^\mathrm{tot,B}]+n_t.
 \end{equation}
 This can be decomposed into a differential (d) and common-mode (c) signal such that
 \begin{equation}
-	d_{t,j}=g_{t,j}[s_{t,j}^\mathrm d+x_{\mathrm{im},j}s_{t,j}^\mathrm c]+n_t.
+	d_{t,i}=g_{t,i}[s_{t,i}^\mathrm d+x_{\mathrm{im},i}s_{t,i}^\mathrm c]+n_t.
 \end{equation}
-In this form, the imbalance parameters can be estimated by drawing Gaussian samples from the standard mean and standard deviation over the entire mission. To draw samples for $x_{\mathrm{im},j}$, we construct a sampling routine analogous to the gain estimation of Eq.~\eqref{eq:gain_gauss_samp} and correlated noise estimation of  Eq.~\eqref{eq:ncorr_gauss_samp}, with $\boldsymbol r=\boldsymbol d-\boldsymbol g\boldsymbol s^\mathrm d$,
+In this form, the imbalance parameters can be estimated by drawing Gaussian samples from the standard mean and standard deviation over the entire mission. To draw samples for $x_{\mathrm{im},i}$, we construct a sampling routine analogous to the gain estimation of Eq.~\eqref{eq:gain_gauss_samp} and correlated noise estimation of  Eq.~\eqref{eq:ncorr_gauss_samp}, with $\boldsymbol r=\boldsymbol d-\boldsymbol g\boldsymbol s^\mathrm d$,
 \begin{equation}
 	[(\boldsymbol g\boldsymbol s^\mathrm c)^T\mathsf N^{-1}\boldsymbol g\boldsymbol s^\mathrm c]x_\mathrm{im}
 	=(\boldsymbol g\boldsymbol s^\mathrm c)^T\mathsf N^{-1}\boldsymbol r+(\boldsymbol g\boldsymbol s^\mathrm c)^T\mathsf N^{-1/2}\boldsymbol\eta,
@@ -2041,7 +2041,7 @@ Figure~\ref{fig:planarity} shows similar result for the octopole planarity stati
 
 \begin{figure}
 	\includegraphics[width=\columnwidth]{figures/WMAP_best_q_fit.pdf}
-	\caption{Best-fit amplitude, $q$, of the low multipole power spectrum $C_{\ell} = q C^{\Lambda \mathrm{CDM}}_{\ell}$, $2 \leq \ell \leq \ell_{\mathrm{max}}$ compared to \planck\ 2015 (grey) and BeyondPlanck (blue).}
+	\caption{Best-fit amplitude, $q$, of the low multipole power spectrum $C_{\ell} = q C^{\Lambda \mathrm{CDM}}_{\ell}$, $2 \leq \ell \leq \ell_{\mathrm{max}}$ compared to \planck\ 2015 (grey) and \bp\ (blue).}
         \label{fig:lowl}
 \end{figure}
 
@@ -2088,9 +2088,9 @@ We conclude this section with a comparison of the relative signal-to-noise ratio
 
 The results from this calculation are summarized in Fig.~\ref{fig:fg_s2n} for all \WMAP\ and LFI channels. The top five panels (with white background) show temperature results, while the bottom three panels (with gray background) show polarization results. In each case, the red dot indicates the reference channel with highest signal-to-noise ratio, which by definition has value equal to one. For a given other channel, $X$, the values in Fig.~\ref{fig:fg_s2n} should be interpreted as ``The reference channel has $r$ times higher signal-to-noise ratio with respect to channel  $c$ than channel $X$.''
 
-Starting from the top panel, we see --- as expected -- that the LFI 70\,GHz channel has the highest signal-to-noise ratio with respect to CMB intensity, with typically 2--3 times higher sensitivity than any other band. However, it is interesting to note both that all \WMAP\ channels have very similar sensitivities between DAs (which indeed was a conscious choice in the original \WMAP\ design), and that these sensitivities are very similar to the LFI 30 and 44\,GHz channels. While LFI does have significantly lower white noise levels than \WMAP, it also has higher correlated noise knee frequencies, and on large angular scales these two effects appear to be roughly equal. It is also worth noting that since $M_{\mathrm{cmb}}=1$ in thermodynamic units, these numbers are a direct estimate of the raw instrumental sensitivity of each channel.
+Starting from the top panel, we see -- as expected -- that the LFI 70\,GHz channel has the highest signal-to-noise ratio with respect to CMB intensity, with typically 2--3 times higher sensitivity than any other band. However, it is interesting to note both that all \WMAP\ channels have very similar sensitivities between DAs (which indeed was a conscious choice in the original \WMAP\ design), and that these sensitivities are very similar to the LFI 30 and 44\,GHz channels. While LFI does have significantly lower white noise levels than \WMAP, it also has higher correlated noise knee frequencies, and on large angular scales these two effects appear to be roughly equal. It is also worth noting that since $M_{\mathrm{CMB}}=1$ in thermodynamic units, these numbers are a direct estimate of the raw instrumental sensitivity of each channel.
 
-Next, the second panel shows similar results for synchrotron emission in intensity. Since the synchrotron SED scales roughly as $\mathcal{O}(\nu^{-3})$, \K-band is clearly the strongest synchrotron tracer, with an effective signal-to-noise ratio that is 2--3 times higher than \Planck\ 30\,GHz. Indeed, even \Ka-band is almost as sensitive as the 30\,GHz channel after accounting for all instrumental uncertainties. As expected, similar observations are true also for free-free and AME, given that they have similar frequency behaviour as synchrotron. In contrast, the \Planck\ 70\,GHz channel is strongest with respect to thermal dust emission, and it is about a factor of two stronger than \W-band and a factor of three stronger than V-band.
+Next, the second panel shows similar results for synchrotron emission in intensity. Since the synchrotron SED scales roughly as $\mathcal{O}(\nu^{-3})$, \K-band is clearly the strongest synchrotron tracer, with an effective signal-to-noise ratio that is 2--3 times higher than \Planck\ 30\,GHz. Indeed, even \Ka-band is almost as sensitive as the 30\,GHz channel after accounting for all instrumental uncertainties. As expected, similar observations are true also for free-free and AME, given that they have similar frequency behaviour as synchrotron. In contrast, the \Planck\ 70\,GHz channel is strongest with respect to thermal dust emission, and it is about a factor of two stronger than \W-band and a factor of three stronger than \V-band.
 
 Finally, we see very similar behaviour in polarization: The LFI 70\,GHz channel is strongest for both CMB and thermal dust emission, with about twice higher signal-to-noise ratio than any of the other channels. For polarized synchrotron emission, \K-band is stronger by a factor of about two compared to LFI 30\,GHz.
 
