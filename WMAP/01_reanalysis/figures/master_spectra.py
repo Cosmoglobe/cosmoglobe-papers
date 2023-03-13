@@ -23,6 +23,8 @@ import pymaster as nmt
 # HEALPix resolution parameter used here
 nside = 512
 
+lw = 0.8
+
 # Read mask and apodize it on a scale of ~1deg
 mask = hp.read_map(
     "/mn/stornext/d5/data/duncanwa/WMAP/data/wmap_kq75_TQU_mask_r9.fits"
@@ -128,7 +130,7 @@ for i in range(len(cg_maps)):
     axs3[n].semilogx(ell_eff, Clhat_W / Clhat_C)
     axs3[n].text(0.25, 0.75, r"\textit{" + bands[i] + "}", transform=axs3[n].transAxes)
 
-    axs_large[i].semilogx(ell_eff, Clhat_W / Clhat_C, 'k')
+    axs_large[i].semilogx(ell_eff, Clhat_W / Clhat_C, 'k', linewidth=lw)
     axs_large[i].set_ylim([0.85, 1.15])
     #if i == 5:
     #    n += 3
@@ -212,10 +214,10 @@ for i in range(len(cg_maps)):
 
 
 
-    axes_large[i,0].loglog(ell_eff, Clhat_W[0])
-    axes_large[i,0].loglog(ell_eff, Clhat_C[0])
-    axes_large[i,1].loglog(ell_eff, Clhat_W[3])
-    axes_large[i,1].loglog(ell_eff, Clhat_C[3])
+    axes_large[i,0].loglog(ell_eff, Clhat_W[0], linewidth=lw)
+    axes_large[i,0].loglog(ell_eff, Clhat_C[0], linewidth=lw)
+    axes_large[i,1].loglog(ell_eff, Clhat_W[3], linewidth=lw)
+    axes_large[i,1].loglog(ell_eff, Clhat_C[3], linewidth=lw)
 
 
     #axes_large[i,1].sharey(axes_large[i,2])
