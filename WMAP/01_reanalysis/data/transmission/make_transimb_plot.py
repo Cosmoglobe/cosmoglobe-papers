@@ -162,26 +162,31 @@ plt.ylabel(r"Transmission imbalance, $x_{\mathrm{im}}$");
 plt.xlabel(r"Radiometer"); 
 ax1.yaxis.labelpad = 10*width/17.; ax1.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
 
-ax1.errorbar(x+0., muK, yerr=rmsK, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='red', label='Cosmoglobe')
-ax1.errorbar(x+0.3, wmapKmu, yerr=wmapKrms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='red', label='WMAP')
+a=0.5
+
+
+ax1.errorbar(x+0., muK, yerr=rmsK, fmt='.', ms=3, capsize=1, capthick=1,
+    elinewidth=1, color='red', label=r'\textsc{Cosmoglobe}')
+ax1.errorbar(x+0.3, wmapKmu, yerr=wmapKrms, fmt='.', ms=3, capsize=1,
+    capthick=1, elinewidth=1, alpha=a, color='red', label=r'\textit{WMAP9}')
 ax1.errorbar(x+4., muKa, yerr=rmsKa, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='orange')
-ax1.errorbar(x+4.3, wmapKamu, yerr=wmapKarms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='orange')
+ax1.errorbar(x+4.3, wmapKamu, yerr=wmapKarms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a, color='orange')
 ax1.errorbar(x+8., muQ1, yerr=rmsQ1, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='green')
-ax1.errorbar(x+8.3, wmapQ1mu, yerr=wmapQ1rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='green')
+ax1.errorbar(x+8.3, wmapQ1mu, yerr=wmapQ1rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a, color='green')
 ax1.errorbar(x+10., muQ2, yerr=rmsQ2, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='green')
-ax1.errorbar(x+10.3, wmapQ2mu, yerr=wmapQ2rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3,color='green')
+ax1.errorbar(x+10.3, wmapQ2mu, yerr=wmapQ2rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a,color='green')
 ax1.errorbar(x+14., muV1, yerr=rmsV1, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='blue')
-ax1.errorbar(x+14.3, wmapV1mu, yerr=wmapV1rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='blue')
+ax1.errorbar(x+14.3, wmapV1mu, yerr=wmapV1rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a, color='blue')
 ax1.errorbar(x+16., muV2, yerr=rmsV2, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='blue')
-ax1.errorbar(x+16.3, wmapV2mu, yerr=wmapV2rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='blue')
+ax1.errorbar(x+16.3, wmapV2mu, yerr=wmapV2rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a, color='blue')
 ax1.errorbar(x+20., muW1, yerr=rmsW1, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='purple')
-ax1.errorbar(x+20.3, wmapW1mu, yerr=wmapW1rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='purple')
+ax1.errorbar(x+20.3, wmapW1mu, yerr=wmapW1rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a, color='purple')
 ax1.errorbar(x+22., muW2, yerr=rmsW2, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='purple')
-ax1.errorbar(x+22.3, wmapW2mu, yerr=wmapW2rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='purple')
+ax1.errorbar(x+22.3, wmapW2mu, yerr=wmapW2rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a, color='purple')
 ax1.errorbar(x+24., muW3, yerr=rmsW3, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='purple')
-ax1.errorbar(x+24.3, wmapW3mu, yerr=wmapW3rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3, color='purple')
+ax1.errorbar(x+24.3, wmapW3mu, yerr=wmapW3rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a, color='purple')
 ax1.errorbar(x+26., muW4, yerr=rmsW4, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='purple')
-ax1.errorbar(x+26.3, wmapW4mu, yerr=wmapW4rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=0.3,  color='purple')
+ax1.errorbar(x+26.3, wmapW4mu, yerr=wmapW4rms, fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, alpha=a,  color='purple')
 
 plt.plot([0,28], [0,0], "k", color='black', linewidth=1, linestyle='--')
 
@@ -198,7 +203,12 @@ plt.grid(False, which="major", axis="both")
 #plt.ylim([-1.5, 1.5]);
 #plt.xlim([0, 28]);
 
-plt.xticks([0,1,4,5,8,9,10,11,14,15,16,17,20,21,22,23,24,25,26,27], [r"K11", r"K12", r"Ka11", r"Ka12", r"Q11", r"Q12", r"Q21", r"Q22", r"V11", r"V12", r"V21", r"V22", r"W11", r"W12", r"W21", r"W22", r"W31", r"W32", r"W41", r"W42"])
+plt.xticks([0,1,4,5,8,9,10,11,14,15,16,17,20,21,22,23,24,25,26,27], 
+    [r" K11", r" K12", r"{Ka}11", r"{Ka}12",
+      r" Q11", r" Q12", r" Q21", r" Q22", r" V11", 
+      r" V12", r" V21", r" V22", r" W11",
+      r" W12", r" W21", r" W22", r" W31", 
+      r" W32", r" W41", r" W42"])
 #plt.yticks([-1,-0,1], [r"$-1.0$", r"$0.0$", r"$1.0$"])
 plt.setp( ax1.get_xticklabels(), visible=True)
 
