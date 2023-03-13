@@ -93,7 +93,8 @@ for i in range(40):
     std = np.std(tot_samples, axis=0)
     accept = chain1.get(f'tod/{channel}/accept')[-1, i % 4, :].astype(bool)
     mjd = chain1.get(f'tod/{channel}/MJD')[-1, :]
-    plt.errorbar(mjd[accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1, label = 'CG')
+    plt.errorbar(mjd[accept], mean[i%4, :][accept], yerr=std[i%4][accept],
+        linewidth=0.5, color='black', zorder=1, label = 'CG', rasterized=True)
 
 
     plt.grid(False, which="major", axis="both")

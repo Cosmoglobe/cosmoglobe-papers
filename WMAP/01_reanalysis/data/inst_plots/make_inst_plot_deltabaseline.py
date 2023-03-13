@@ -116,7 +116,8 @@ for i in range(40):
     f1 = interp1d(data[::thin,0], abs(data[::thin,1]) - abs(data[::thin,1]).mean())
     t = np.linspace(curr_wmap_data[accept, 0].min(), curr_wmap_data[accept, 0].max(), 1000)
     #plt.errorbar(t, f0(t)-f1(t), yerr=f0_err(t), linewidth=0.5, color='black', zorder=1)
-    plt.plot(t, f0(t)-f1(t), linewidth=0.5, color='black', zorder=1)
+    plt.plot(t, f0(t)-f1(t), linewidth=0.5, color='black', zorder=1,
+        rasterized=True)
     plt.grid(False, which="major", axis="both")
     if i >= 36:
         plt.setp( currax.get_xticklabels(), visible=True)

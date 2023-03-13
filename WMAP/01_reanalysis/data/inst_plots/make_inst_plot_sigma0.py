@@ -176,9 +176,12 @@ for i in range(40):
     std = np.std(tot_samples, axis=0)
     accept = chain1.get(f'tod/{channel}/accept')[-1, i % 4, :].astype(bool)
     mjd = chain1.get(f'tod/{channel}/MJD')[-1, :]
-    plt.errorbar(mjd[accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1, label = 'CG')
-    plt.plot(mjd_wmap,[wmap[i][0],wmap[i][0]], linewidth=1, color='red', linestyle=':', label='WMAP')
-    plt.plot(mjd_gsfc,[gsfc[i][0],gsfc[i][0]], linewidth=1, color='orange', linestyle=':', label='GSFC')
+    plt.errorbar(mjd[accept], mean[i%4, :][accept], yerr=std[i%4][accept],
+        linewidth=0.5, color='black', zorder=1, label = 'CG', rasterized=True)
+    plt.plot(mjd_wmap,[wmap[i][0],wmap[i][0]], linewidth=1, color='red',
+        linestyle=':', label='WMAP', rasterized=True)
+    plt.plot(mjd_gsfc,[gsfc[i][0],gsfc[i][0]], linewidth=1, color='orange',
+        linestyle=':', label='GSFC', rasterized=True)
 
 
     plt.grid(False, which="major", axis="both")

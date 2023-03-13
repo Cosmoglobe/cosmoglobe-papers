@@ -94,8 +94,8 @@ fig.subplots_adjust(hspace=0,wspace=0)
 
 
 ax1 = plt.subplot2grid((5, 1), (0, 0))
-plt.plot(samps_a,gain_a, linewidth=1, color='C0')
-plt.plot(samps_b,gain_b, linewidth=1, color='C1')
+plt.plot(samps_a,gain_a, linewidth=1, color='C0', rasterized=True)
+plt.plot(samps_b,gain_b, linewidth=1, color='C1', rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
@@ -145,8 +145,8 @@ plt.yticks([0.95, 0.953], ['$0.950$', '$0.953$'])
 ###############
 
 ax4 = plt.subplot2grid((5, 1), (1, 0))
-plt.plot(samps_a,sigma_a, linewidth=1, color='C0', label='CG')
-plt.plot(samps_b,sigma_b, linewidth=1, color='C1', label='CG')
+plt.plot(samps_a,sigma_a, linewidth=1, color='C0', label='CG', rasterized=True)
+plt.plot(samps_b,sigma_b, linewidth=1, color='C1', label='CG', rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax4.get_xticklabels(), visible=False)
 plt.setp( ax4.get_yticklabels(), visible=True)
@@ -164,8 +164,8 @@ plt.yticks([2.6537,   2.6542], ['$2.6537$', '$2.6542$'])
 ###############
 
 ax5 = plt.subplot2grid((5, 1), (2, 0))
-plt.plot(samps_a,fknee_a, linewidth=1, color='C0', label='CG')
-plt.plot(samps_b,fknee_b, linewidth=1, color='C1', label='CG')
+plt.plot(samps_a,fknee_a, linewidth=1, color='C0', label='CG', rasterized=True)
+plt.plot(samps_b,fknee_b, linewidth=1, color='C1', label='CG', rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
 plt.setp( ax5.get_yticklabels(), visible=True)
@@ -182,8 +182,8 @@ plt.yticks([0.75, 1.00], [r"$0.75$", r"$1.00$"])
 ###############
 
 ax6 = plt.subplot2grid((5, 1), (3, 0))
-plt.plot(samps_a,alpha_a, linewidth=1, color='C0', label='CG')
-plt.plot(samps_b,alpha_b, linewidth=1, color='C1', label='CG')
+plt.plot(samps_a,alpha_a, linewidth=1, color='C0', label='CG', rasterized=True)
+plt.plot(samps_b,alpha_b, linewidth=1, color='C1', label='CG', rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
 plt.setp( ax6.get_yticklabels(), visible=True)
@@ -199,8 +199,8 @@ plt.ylim([-1.29, -0.9]);
 ###############
 
 ax7 = plt.subplot2grid((5, 1), (4, 0))
-plt.plot(samps_a,chisq_a, linewidth=1, color='C0', label='CG')
-plt.plot(samps_b,chisq_b, linewidth=1, color='C1', label='CG')
+plt.plot(samps_a,chisq_a, linewidth=1, color='C0', label='CG', rasterized=True)
+plt.plot(samps_b,chisq_b, linewidth=1, color='C1', label='CG', rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax7.get_xticklabels(), visible=True)
 plt.setp( ax7.get_yticklabels(), visible=True)

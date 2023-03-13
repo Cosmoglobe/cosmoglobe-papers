@@ -200,13 +200,13 @@ fig.subplots_adjust(hspace=0,wspace=0)
 xi_n = chain.get(f'tod/023-WMAP_K/xi_n')
 sigma = xi_n[0, 0, 0,pid-1]/gain
 
-axes[0].plot(t[inds], ztod[inds], 'k.', ms=2, alpha=0.5)
-axes[1].plot(t[inds], s_sky[inds], 'k')
-axes[2].plot(t[inds], n_corr[inds]/gain, 'k')
-axes[3].plot(t[inds], s_orb[inds], 'k')
-axes[4].plot(t[inds], sl[inds], 'k')
-axes[5].plot(t[inds], bpcorr[inds], 'k')
-axes[6].plot(t[inds], res[inds]/sigma, 'k.', ms=2, alpha=0.5)
+axes[0].plot(t[inds], ztod[inds], 'k.', ms=2, alpha=0.5, rasterized=True)
+axes[1].plot(t[inds], s_sky[inds], 'k', rasterized=True)
+axes[2].plot(t[inds], n_corr[inds]/gain, 'k', rasterized=True)
+axes[3].plot(t[inds], s_orb[inds], 'k', rasterized=True)
+axes[4].plot(t[inds], sl[inds], 'k', rasterized=True)
+axes[5].plot(t[inds], bpcorr[inds], 'k', rasterized=True)
+axes[6].plot(t[inds], res[inds]/sigma, 'k.', ms=2, alpha=0.5, rasterized=True)
 
 axes[0].set_ylabel(r"$d_\mathrm{raw}\ \mathrm{[du]}$")
 axes[1].set_ylabel(r"$s_\mathrm{sky}\ \mathrm{[mK]}$")
@@ -261,7 +261,7 @@ inds = t < 3600*24
 inds = (t < 120)
 plt.figure(figsize=(width_col, width_col/2))
 plt.plot(t[inds], 1e3*(tod[inds]/gain - sl[inds] -
-    d2[f'{pid:06}/K113/tod'][inds]), '.', ms=0.75, color='k')
+    d2[f'{pid:06}/K113/tod'][inds]), '.', ms=0.75, color='k', rasterized=True)
 plt.xlabel('Time [seconds]')
 #plt.ylabel(r'$d_\mathrm{cal}/g-s_\mathrm{sl}-d_\mathrm{cal}^\mathit{WMAP}$ [mK]')
 plt.ylabel(r'$\Delta d_\mathrm{cal}\ [\mathrm{\mu K}]$')
@@ -292,9 +292,10 @@ inds = t < 3600*24
 fig, axes = plt.subplots(sharex=True, sharey=True, nrows=2, figsize=(width_col, width_col))
 fig.tight_layout()
 fig.subplots_adjust(hspace=0,wspace=0)
-axes[1].plot(t[inds]/3600, n_corr[inds], lw=1, alpha=0.5, color='k')
-axes[1].plot(t[inds]/3600, n_corr_filt[inds], lw=1, color='k')
-axes[0].plot(t[inds]/3600, tod[inds]/gain - sl[inds] -
+axes[1].plot(t[inds]/3600, n_corr[inds], lw=1, alpha=0.5, color='k',
+    rasterized=True)
+axes[1].plot(t[inds]/3600, n_corr_filt[inds], lw=1, color='k', rasterized=True)
+axes[0].plot(t[inds]/3600, tod[inds]/gain - sl[inds] , rasterized=True)
     d2[f'{pid:06}/K113/tod'][inds], lw=1, color='k')
 
 axes[1].set_xlim([0,24])

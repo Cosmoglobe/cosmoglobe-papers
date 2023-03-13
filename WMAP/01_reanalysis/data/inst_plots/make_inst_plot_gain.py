@@ -104,7 +104,8 @@ for i in range(40):
     curr_wmap_data = wmap_data[i//4]
     accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
     plt.errorbar(curr_wmap_data[:, 0][accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1)
-    plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red', zorder=2)
+    plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red',
+        zorder=2, rasterized=True)
     plt.grid(False, which="major", axis="both")
     if i >= 36:
         plt.setp( currax.get_xticklabels(), visible=True)

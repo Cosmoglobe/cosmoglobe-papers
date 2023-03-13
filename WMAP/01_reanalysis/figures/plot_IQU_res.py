@@ -48,7 +48,7 @@ maps = [K, Ka, Q1, Q2, V1, V2, W1, W2, W3, W4]
 
 for i,m in enumerate(maps):
     cg.plot(m, sig=0, min=-10, max=10, fwhm=5*u.deg, cbar=False,
-        llabel=bands[i], rlabel='I', sub=(1,3,1))
+        llabel=bands[i], rlabel='T', sub=(1,3,1))
     cg.plot(m, sig=1, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='Q',
         sub=(1,3,2))
     cg.plot(m, sig=2, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='U',
