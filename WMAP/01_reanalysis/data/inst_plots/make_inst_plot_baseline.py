@@ -203,7 +203,8 @@ data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 print(min(dataK[:,0]), max(dataK[:,1]))
 print(min(data_b[:,0]), max(data_b[:,1]))
 i += 1
@@ -228,12 +229,13 @@ plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 
 ax2 = plt.subplot2grid((10, 4), (0, 1), sharey=ax1)
-plt.plot(dataK[:,0],dataK[:,2], linewidth=1, color='black')
+plt.plot(dataK[:,0],dataK[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
@@ -243,12 +245,13 @@ plt.text(52200,70,r"K114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax3 = plt.subplot2grid((10, 4), (0, 2), sharey=ax1)
-plt.plot(dataK[:,0],dataK[:,3], linewidth=1, color='black')
+plt.plot(dataK[:,0],dataK[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax3.get_xticklabels(), visible=False)
@@ -258,12 +261,14 @@ plt.text(52200,70,r"K123", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax4 = plt.subplot2grid((10, 4), (0, 3), sharey=ax1)
-plt.plot(dataK[:,0],dataK[:,4], linewidth=1, color='black', label='CG')
+plt.plot(dataK[:,0],dataK[:,4], linewidth=1, color='black', label='CG',
+    rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax4.get_xticklabels(), visible=False)
@@ -278,12 +283,13 @@ plt.ylim([-100, 100]);
 #   Ka-band
 ###############
 ax5 = plt.subplot2grid((10, 4), (1, 0))
-plt.plot(dataKa[:,0],dataKa[:,1], linewidth=1, color='black')
+plt.plot(dataKa[:,0],dataKa[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
@@ -299,12 +305,13 @@ plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 #plt.yticks([0.73,0.77], [r"$0.73$", r"$0.77$"])
 
 ax6 = plt.subplot2grid((10, 4), (1, 1), sharey=ax5)
-plt.plot(dataKa[:,0],dataKa[:,2], linewidth=1, color='black')
+plt.plot(dataKa[:,0],dataKa[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
@@ -314,12 +321,13 @@ plt.text(52200,70,r"Ka114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax7 = plt.subplot2grid((10, 4), (1, 2), sharey=ax5)
-plt.plot(dataKa[:,0],dataKa[:,3], linewidth=1, color='black')
+plt.plot(dataKa[:,0],dataKa[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax7.get_xticklabels(), visible=False)
@@ -329,12 +337,13 @@ plt.text(52200,70,r"Ka123", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax8 = plt.subplot2grid((10, 4), (1, 3), sharey=ax5)
-plt.plot(dataKa[:,0],dataKa[:,4], linewidth=1, color='black')
+plt.plot(dataKa[:,0],dataKa[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax8.get_xticklabels(), visible=False)
@@ -348,12 +357,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax9 = plt.subplot2grid((10, 4), (2, 0))
-plt.plot(dataQ1[:,0],dataQ1[:,1], linewidth=1, color='black')
+plt.plot(dataQ1[:,0],dataQ1[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax9.get_xticklabels(), visible=False)
@@ -367,12 +377,13 @@ plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 #plt.yticks([-1.4,-1.0,-0.6], [r"$-1.4$", r"$-1.0$", r"$-0.6$"])
 
 ax10 = plt.subplot2grid((10, 4), (2, 1), sharey=ax9)
-plt.plot(dataQ1[:,0],dataQ1[:,2], linewidth=1, color='black')
+plt.plot(dataQ1[:,0],dataQ1[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax10.get_xticklabels(), visible=False)
@@ -382,12 +393,13 @@ plt.text(52200,70,r"Q114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax11 = plt.subplot2grid((10, 4), (2, 2), sharey=ax9)
-plt.plot(dataQ1[:,0],dataQ1[:,3], linewidth=1, color='black')
+plt.plot(dataQ1[:,0],dataQ1[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax11.get_xticklabels(), visible=False)
@@ -397,12 +409,13 @@ plt.text(52200,70,r"Q123", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax12 = plt.subplot2grid((10, 4), (2, 3), sharey=ax9)
-plt.plot(dataQ1[:,0],dataQ1[:,4], linewidth=1, color='black')
+plt.plot(dataQ1[:,0],dataQ1[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax12.get_xticklabels(), visible=False)
@@ -418,12 +431,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax13 = plt.subplot2grid((10, 4), (3, 0))
-plt.plot(dataQ2[:,0],dataQ2[:,1], linewidth=1, color='black')
+plt.plot(dataQ2[:,0],dataQ2[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax13.get_xticklabels(), visible=False)
@@ -436,12 +450,13 @@ plt.ylim([-100, 100]);
 plt.yticks([-60,0,60], [r"$-180$", r"$0$", r"$180$"])
 
 ax14 = plt.subplot2grid((10, 4), (3, 1), sharey=ax13)
-plt.plot(dataQ2[:,0],dataQ2[:,2], linewidth=1, color='black')
+plt.plot(dataQ2[:,0],dataQ2[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax14.get_xticklabels(), visible=False)
@@ -451,12 +466,13 @@ plt.text(52200,70,r"Q214", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax15 = plt.subplot2grid((10, 4), (3, 2), sharey=ax13)
-plt.plot(dataQ2[:,0],dataQ2[:,3], linewidth=1, color='black')
+plt.plot(dataQ2[:,0],dataQ2[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax15.get_xticklabels(), visible=False)
@@ -466,12 +482,13 @@ plt.text(52200,70,r"Q223", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax16 = plt.subplot2grid((10, 4), (3, 3), sharey=ax13)
-plt.plot(dataQ2[:,0],dataQ2[:,4], linewidth=1, color='black')
+plt.plot(dataQ2[:,0],dataQ2[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], (sgn*data_b[::thin,1] - mu)/3, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax16.get_xticklabels(), visible=False)
@@ -486,12 +503,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax17 = plt.subplot2grid((10, 4), (4, 0))
-plt.plot(dataV1[:,0],dataV1[:,1], linewidth=1, color='black')
+plt.plot(dataV1[:,0],dataV1[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax17.get_xticklabels(), visible=False)
@@ -505,12 +523,13 @@ plt.ylim([-100, 100]);
 plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax18 = plt.subplot2grid((10, 4), (4, 1), sharey=ax17)
-plt.plot(dataV1[:,0],dataV1[:,2], linewidth=1, color='black')
+plt.plot(dataV1[:,0],dataV1[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax18.get_xticklabels(), visible=False)
@@ -520,12 +539,13 @@ plt.text(52200,70,r"V114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax19 = plt.subplot2grid((10, 4), (4, 2), sharey=ax17)
-plt.plot(dataV1[:,0],dataV1[:,3], linewidth=1, color='black')
+plt.plot(dataV1[:,0],dataV1[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax19.get_xticklabels(), visible=False)
@@ -535,12 +555,13 @@ plt.text(52200,70,r"V123", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax20 = plt.subplot2grid((10, 4), (4, 3), sharey=ax17)
-plt.plot(dataV1[:,0],dataV1[:,4], linewidth=1, color='black')
+plt.plot(dataV1[:,0],dataV1[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax20.get_xticklabels(), visible=False)
@@ -555,12 +576,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax21 = plt.subplot2grid((10, 4), (5, 0))
-plt.plot(dataV2[:,0],dataV2[:,1], linewidth=1, color='black')
+plt.plot(dataV2[:,0],dataV2[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax21.get_xticklabels(), visible=False)
@@ -574,12 +596,13 @@ plt.ylim([-100, 100]);
 plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax22 = plt.subplot2grid((10, 4), (5, 1), sharey=ax21)
-plt.plot(dataV2[:,0],dataV2[:,2], linewidth=1, color='black')
+plt.plot(dataV2[:,0],dataV2[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax22.get_xticklabels(), visible=False)
@@ -589,12 +612,13 @@ plt.text(52200,70,r"V214", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax23 = plt.subplot2grid((10, 4), (5, 2), sharey=ax21)
-plt.plot(dataV2[:,0],dataV2[:,3], linewidth=1, color='black')
+plt.plot(dataV2[:,0],dataV2[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax23.get_xticklabels(), visible=False)
@@ -604,12 +628,13 @@ plt.text(52200,70,r"V223", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax24 = plt.subplot2grid((10, 4), (5, 3), sharey=ax21)
-plt.plot(dataV2[:,0],dataV2[:,4], linewidth=1, color='black')
+plt.plot(dataV2[:,0],dataV2[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax24.get_xticklabels(), visible=False)
@@ -625,12 +650,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax25 = plt.subplot2grid((10, 4), (6, 0))
-plt.plot(dataW1[:,0],dataW1[:,1], linewidth=1, color='black')
+plt.plot(dataW1[:,0],dataW1[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax25.get_xticklabels(), visible=False)
@@ -646,12 +672,13 @@ plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 #plt.yticks([5,10,15], [r"$5$", r"$10$", r"$15$"])
 
 ax26 = plt.subplot2grid((10, 4), (6, 1), sharey=ax25)
-plt.plot(dataW1[:,0],dataW1[:,2], linewidth=1, color='black')
+plt.plot(dataW1[:,0],dataW1[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax26.get_xticklabels(), visible=False)
@@ -661,12 +688,13 @@ plt.text(52200,70,r"W114", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax27 = plt.subplot2grid((10, 4), (6, 2), sharey=ax25)
-plt.plot(dataW1[:,0],dataW1[:,3], linewidth=1, color='black')
+plt.plot(dataW1[:,0],dataW1[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax27.get_xticklabels(), visible=False)
@@ -676,12 +704,13 @@ plt.text(52200,70,r"W123", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax28 = plt.subplot2grid((10, 4), (6, 3), sharey=ax25)
-plt.plot(dataW1[:,0],dataW1[:,4], linewidth=1, color='black')
+plt.plot(dataW1[:,0],dataW1[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax28.get_xticklabels(), visible=False)
@@ -696,12 +725,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax29 = plt.subplot2grid((10, 4), (7, 0))
-plt.plot(dataW2[:,0],dataW2[:,1], linewidth=1, color='black')
+plt.plot(dataW2[:,0],dataW2[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax29.get_xticklabels(), visible=False)
@@ -715,12 +745,13 @@ plt.ylim([-100, 100]);
 plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax30 = plt.subplot2grid((10, 4), (7, 1), sharey=ax29)
-plt.plot(dataW2[:,0],dataW2[:,2], linewidth=1, color='black')
+plt.plot(dataW2[:,0],dataW2[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax30.get_xticklabels(), visible=False)
@@ -730,12 +761,13 @@ plt.text(52200,70,r"W214", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax31 = plt.subplot2grid((10, 4), (7, 2), sharey=ax29)
-plt.plot(dataW2[:,0],dataW2[:,3], linewidth=1, color='black')
+plt.plot(dataW2[:,0],dataW2[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax31.get_xticklabels(), visible=False)
@@ -745,12 +777,13 @@ plt.text(52200,70,r"W223", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax32 = plt.subplot2grid((10, 4), (7, 3), sharey=ax29)
-plt.plot(dataW2[:,0],dataW2[:,4], linewidth=1, color='black')
+plt.plot(dataW2[:,0],dataW2[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax32.get_xticklabels(), visible=False)
@@ -765,12 +798,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax33 = plt.subplot2grid((10, 4), (8, 0))
-plt.plot(dataW3[:,0],dataW3[:,1], linewidth=1, color='black')
+plt.plot(dataW3[:,0],dataW3[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax33.get_xticklabels(), visible=False)
@@ -784,12 +818,13 @@ plt.ylim([-100, 100]);
 plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 
 ax34 = plt.subplot2grid((10, 4), (8, 1), sharey=ax33)
-plt.plot(dataW3[:,0],dataW3[:,2], linewidth=1, color='black')
+plt.plot(dataW3[:,0],dataW3[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax34.get_xticklabels(), visible=False)
@@ -799,12 +834,13 @@ plt.text(52200,70,r"W314", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax35 = plt.subplot2grid((10, 4), (8, 2), sharey=ax33)
-plt.plot(dataW3[:,0],dataW3[:,3], linewidth=1, color='black')
+plt.plot(dataW3[:,0],dataW3[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax35.get_xticklabels(), visible=False)
@@ -814,12 +850,13 @@ plt.text(52200,70,r"W323", fontsize=10)
 plt.ylim([-100, 100]);
 
 ax36 = plt.subplot2grid((10, 4), (8, 3), sharey=ax33)
-plt.plot(dataW3[:,0],dataW3[:,4], linewidth=1, color='black')
+plt.plot(dataW3[:,0],dataW3[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax36.get_xticklabels(), visible=False)
@@ -834,12 +871,13 @@ plt.ylim([-100, 100]);
 ###############
 
 ax37 = plt.subplot2grid((10, 4), (9, 0))
-plt.plot(dataW4[:,0],dataW4[:,1], linewidth=1, color='black')
+plt.plot(dataW4[:,0],dataW4[:,1], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax37.get_xticklabels(), visible=True)
@@ -859,12 +897,13 @@ plt.xlabel(r"MJD");
 ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
 
 ax38 = plt.subplot2grid((10, 4), (9, 1), sharey=ax37)
-plt.plot(dataW4[:,0],dataW4[:,2], linewidth=1, color='black')
+plt.plot(dataW4[:,0],dataW4[:,2], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax38.get_xticklabels(), visible=True)
@@ -878,12 +917,13 @@ plt.xlabel(r"MJD");
 ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
 
 ax39 = plt.subplot2grid((10, 4), (9, 2), sharey=ax37)
-plt.plot(dataW4[:,0],dataW4[:,3], linewidth=1, color='black')
+plt.plot(dataW4[:,0],dataW4[:,3], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax39.get_xticklabels(), visible=True)
@@ -897,12 +937,13 @@ plt.xlabel(r"MJD");
 ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
 
 ax40 = plt.subplot2grid((10, 4), (9, 3), sharey=ax37)
-plt.plot(dataW4[:,0],dataW4[:,4], linewidth=1, color='black')
+plt.plot(dataW4[:,0],dataW4[:,4], linewidth=1, color='black', rasterized=True)
 data_b = np.loadtxt(fnames_b[i])
 data_g = np.loadtxt(fnames_g[i])
 sgn = np.sign(data_g[0,1])
 mu = sgn*data_b[::thin,1].mean()
-plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5, color='red')
+plt.plot(data_b[::thin,0], sgn*data_b[::thin,1] - mu, linewidth=0.5,
+    color='red', rasterized=True)
 i += 1
 plt.grid(False, which="major", axis="both")
 plt.setp( ax40.get_xticklabels(), visible=True)

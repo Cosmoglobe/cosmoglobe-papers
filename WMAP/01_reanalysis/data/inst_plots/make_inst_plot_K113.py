@@ -73,9 +73,10 @@ mjd_gsfc = [52130, 55412]
 
 
 ax1 = plt.subplot2grid((7, 1), (0, 0))
-plt.plot(gainK[:,0],gainK[:,1], linewidth=1, color='black')
+plt.plot(gainK[:,0],gainK[:,1], linewidth=1, color='black', rasterized=True)
 data = np.loadtxt('K113_g0.txt')
-plt.plot(data[::73,0], abs(data[::73,1]), linewidth=0.5, color='red')
+plt.plot(data[::73,0], abs(data[::73,1]), linewidth=0.5, color='red',
+    rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax1.get_xticklabels(), visible=False)
 plt.setp( ax1.get_yticklabels(), visible=True)
@@ -89,10 +90,12 @@ ax1.yaxis.labelpad = 10*width/17.
 ###############
 
 ax2 = plt.subplot2grid((7, 1), (1, 0))
-plt.plot(baseK[:,0],baseK[:,1], linewidth=1, color='black', label='CG')
+plt.plot(baseK[:,0],baseK[:,1], linewidth=1, color='black', label='CG',
+    rasterized=True)
 data = np.loadtxt('K113_b0.txt')
 mu = data[::73,1].mean()
-plt.plot(data[::73,0], -(data[::73,1] - mu), linewidth=0.5, color='red')
+plt.plot(data[::73,0], -(data[::73,1] - mu), linewidth=0.5, color='red',
+    rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax2.get_xticklabels(), visible=False)
 plt.setp( ax2.get_yticklabels(), visible=True)
@@ -110,7 +113,8 @@ plt.yticks([-60,0,60], [r"$-60$", r"$0$", r"$60$"])
 ###############
 
 ax3 = plt.subplot2grid((7, 1), (2, 0))
-plt.plot(slopeK[:,0],slopeK[:,1], linewidth=1, color='black', label='CG')
+plt.plot(slopeK[:,0],slopeK[:,1], linewidth=1, color='black', label='CG',
+    rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax3.get_xticklabels(), visible=False)
 plt.setp( ax3.get_yticklabels(), visible=True)
@@ -127,9 +131,12 @@ plt.yticks([-0.5,0,0.5], [r"$-0.5$", r"$0$", r"$0.5$"])
 ###############
 
 ax4 = plt.subplot2grid((7, 1), (3, 0))
-plt.plot(sigmaK[:,0],sigmaK[:,1], linewidth=1, color='black', label='CG')
-plt.plot(mjd_wmap,[wmap[0,0],wmap[0,0]], linewidth=1, color='red', linestyle=':', label='WMAP')
-plt.plot(mjd_gsfc,[gsfc[0,0],gsfc[0,0]], linewidth=1, color='orange', linestyle=':', label='GSFC')
+plt.plot(sigmaK[:,0],sigmaK[:,1], linewidth=1, color='black', label='CG',
+    rasterized=True)
+plt.plot(mjd_wmap,[wmap[0,0],wmap[0,0]], linewidth=1, color='red',
+    linestyle=':', label='WMAP', rasterized=True)
+plt.plot(mjd_gsfc,[gsfc[0,0],gsfc[0,0]], linewidth=1, color='orange',
+    linestyle=':', label='GSFC', rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax4.get_xticklabels(), visible=False)
 plt.setp( ax4.get_yticklabels(), visible=True)
@@ -146,9 +153,12 @@ plt.yticks([0.67,0.70,0.73], [r"$0.67$", r"$0.70$", r"$0.73$"])
 ###############
 
 ax5 = plt.subplot2grid((7, 1), (4, 0))
-plt.plot(fkneeK[:,0],fkneeK[:,1], linewidth=1, color='black', label='CG')
-plt.plot(mjd_wmap,[wmap[0,1],wmap[0,1]], linewidth=1, color='red', linestyle=':', label='WMAP')
-plt.plot(mjd_gsfc,[gsfc[0,1],gsfc[0,1]], linewidth=1, color='orange', linestyle=':', label='GSFC')
+plt.plot(fkneeK[:,0],fkneeK[:,1], linewidth=1, color='black', label='CG',
+    rasterized=True)
+plt.plot(mjd_wmap,[wmap[0,1],wmap[0,1]], linewidth=1, color='red',
+    linestyle=':', label='WMAP', rasterized=True)
+plt.plot(mjd_gsfc,[gsfc[0,1],gsfc[0,1]], linewidth=1, color='orange',
+    linestyle=':', label='GSFC', rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax5.get_xticklabels(), visible=False)
 plt.setp( ax5.get_yticklabels(), visible=True)
@@ -165,7 +175,8 @@ plt.yticks([2,4,6], [r"$2$", r"$4$", r"$6$"])
 ###############
 
 ax6 = plt.subplot2grid((7, 1), (5, 0))
-plt.plot(alphaK[:,0],alphaK[:,1], linewidth=1, color='black', label='CG')
+plt.plot(alphaK[:,0],alphaK[:,1], linewidth=1, color='black', label='CG',
+    rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax6.get_xticklabels(), visible=False)
 plt.setp( ax6.get_yticklabels(), visible=True)
@@ -181,7 +192,8 @@ plt.yticks([-1.3,-1.0,-0.7], [r"$-1.3$", r"$-1.0$", r"$-0.7$"])
 ###############
 
 ax7 = plt.subplot2grid((7, 1), (6, 0))
-plt.plot(chisqK[:,0],chisqK[:,1], linewidth=1, color='black', label='CG')
+plt.plot(chisqK[:,0],chisqK[:,1], linewidth=1, color='black', label='CG',
+    rasterized=True)
 plt.grid(False, which="major", axis="both")
 plt.setp( ax7.get_xticklabels(), visible=True)
 plt.setp( ax7.get_yticklabels(), visible=True)
