@@ -24,7 +24,7 @@ cg.plot(
     xsize=1000,
     cbar=False,
 )
-plt.savefig("rho_QU_Ka.pdf", dpi=300, bbox_inches='tight')
+plt.savefig("rho_QU_Ka.pdf", dpi=100, bbox_inches='tight')
 cg.plot(
     rho_30,
     min=-0.5,
@@ -37,7 +37,7 @@ cg.plot(
     cbar=True,
     extend='both',
 )
-plt.savefig("rho_QU_30.pdf", dpi=300, bbox_inches='tight')
+plt.savefig("rho_QU_30.pdf", dpi=100, bbox_inches='tight')
 cg.plot(
     rho_44,
     min=-0.5,
@@ -49,7 +49,7 @@ cg.plot(
     xsize=1000,
     cbar=True,
 )
-plt.savefig("rho_QU_44.pdf", dpi=300, bbox_inches='tight')
+plt.savefig("rho_QU_44.pdf", dpi=100, bbox_inches='tight')
 
 #cg.standalone_colorbar("RdBu_r", ticks=[-0.1, 0,0.1], extend='both',
 #            width=3, fontsize=18, unit=r'\phantom{$\rho$}')
