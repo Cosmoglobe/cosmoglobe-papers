@@ -47,17 +47,18 @@ plt.locator_params(nbins=5)
 ax1.yaxis.labelpad = 10*width/17.; ax1.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
 ax1.errorbar(cmbT[:,0]+0., cmbT[:,1], yerr=cmbT[:,2], fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='black')
 ax1.errorbar([7], [1], yerr=[0], fmt='.', ms=6, capsize=1, capthick=1, elinewidth=1, color='red', label='Channel with highest S/N')
-ax1.errorbar([1], [8], yerr=[0], fmt='.', ms=6, capsize=1, capthick=1, elinewidth=1, color='red', label='Channel with highest S/N')
+ax1.errorbar([1], [3.2], yerr=[0], fmt='.', ms=6, capsize=1, capthick=1, elinewidth=1, color='red', label='Channel with highest S/N')
 plt.grid(False, which="major", axis="both")
-plt.ylim([0.8, 10]);
+plt.ylim([0.8, 4]);
 ax1.set_yscale("log")
 plt.xlim([0.5, 8.5]);
 plt.xticks([1,2,3,4,5,6,7,8], [r"30", r"44", r"70", r"$K$", r"$Ka$", r"$Q$", r"$V$", r"$W$"])
-plt.yticks([1,10], [r"$1$", r"$10$"])
+plt.yticks([1,2,3], [r"$1$", "2",r"$3$"])
 plt.setp( ax1.get_xticklabels(), visible=True)
-plt.text(8.3,7,r"CMB, $T$", fontsize=8, ha='right')
+plt.text(8.3,3,r"CMB, $T$", fontsize=8, ha='right')
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.text(1.2,7.,r"Channel with highest S/N", fontsize=8, ha='left')
+plt.minorticks_off()
+plt.text(1.2,3.,r"Channel with highest S/N", fontsize=8, ha='left')
 
 
 # synch T
@@ -86,7 +87,7 @@ plt.locator_params(nbins=5)
 #plt.xlabel(r"Radiometer"); 
 ax3.yaxis.labelpad = 10*width/17.; ax3.xaxis.labelpad = 10*width/17. # distance of axis label to tick labels
 ax3.errorbar(ffT[:,0]+0., ffT[:,1], yerr=ffT[:,2], fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='black')
-ax3.errorbar([1], [1], yerr=[0], fmt='.', ms=6, capsize=1, capthick=1, elinewidth=1, color='red')
+ax3.errorbar([2], [1], yerr=[0], fmt='.', ms=6, capsize=1, capthick=1, elinewidth=1, color='red')
 plt.grid(False, which="major", axis="both")
 plt.ylim([0.8, 30]);
 ax3.set_yscale("log")
@@ -145,14 +146,15 @@ ax6.yaxis.labelpad = 10*width/17.; ax6.xaxis.labelpad = 10*width/17. # distance 
 ax6.errorbar(cmbP[:,0]+0., cmbP[:,1], yerr=cmbP[:,2], fmt='.', ms=3, capsize=1, capthick=1, elinewidth=1, color='black')
 ax6.errorbar([7], [1], yerr=[0], fmt='.', ms=6, capsize=1, capthick=1, elinewidth=1, color='red')
 plt.grid(False, which="major", axis="both")
-plt.ylim([0.8, 30]);
+plt.ylim([0.8, 4]);
 ax6.set_yscale("log")
 plt.xlim([0.5, 8.5]);
 plt.xticks([1,2,3,4,5,6,7,8], [r"30", r"44", r"70", r"$K$", r"$Ka$", r"$Q$", r"$V$", r"$W$"])
-plt.yticks([1,10], [r"$1$", r"$10$"])
+plt.yticks([1,2,3], [r"$1$", "2", r"$3$"])
 plt.setp( ax6.get_xticklabels(), visible=True)
 plt.text(8.3,17,r"CMB, $P$", fontsize=8, ha='right')
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+plt.minorticks_off()
 ax6.set_facecolor((0.9,0.9,0.9))
 
 # Synch P
@@ -241,7 +243,7 @@ for ticklabel in ax8.yaxis.get_ticklabels():
 # save to pdf with right bounding box
 #extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 #plt.savefig("test.pdf", bbox_inches=extent, pad_inches=0.02)
-plt.savefig("fg_s2n_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("fg_s2n_v2.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
 #plt.savefig("test.pdf", bbox_inches=[0,1,0,1], pad_inches=0.02)
 
 # Make table
