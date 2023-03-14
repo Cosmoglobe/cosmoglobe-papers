@@ -9,6 +9,8 @@ rng = np.random.default_rng()
 width = 6
 xsize = 1200
 
+dpi = 150
+
 DIR1 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
 DIR2 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203"
 
@@ -180,7 +182,7 @@ for n, b in enumerate(bands):
     set_rlabel(rlabel)
     set_llabel(llabelQU)
     plt.tight_layout()
-    plt.savefig(f"{b}_rms.pdf", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_rms.pdf", bbox_inches="tight", dpi=dpi)
     plt.close("all")
 
     #mu = m1.mean(axis=0)
@@ -308,7 +310,7 @@ for n, b in enumerate(bands):
     set_rlabel(rlabel)
     set_llabel(llabelQU)
     plt.tight_layout()
-    plt.savefig(f"{b}_std.pdf", bbox_inches="tight", dpi=150)
+    plt.savefig(f"{b}_std.pdf", bbox_inches="tight", dpi=dpi)
     plt.close()
 
     rlabel = r"\langle\textit{" + b.split("_")[1] + r"}\rangle"
@@ -428,7 +430,7 @@ for n, b in enumerate(bands):
     cg.plot(diff, sig=1, rlabel=r"\Delta Q", min=-3, max=3, sub=(1, 3, 2), cbar=False)
     cg.plot(diff, sig=2, rlabel=r"\Delta U", min=-3, max=3, sub=(1, 3, 3), cbar=False)
     plt.tight_layout()
-    plt.savefig(f"{b}_sampdiff.pdf", bbox_inches="tight", dpi=150)
+    plt.savefig(f"{b}_sampdiff.pdf", bbox_inches="tight", dpi=dpi)
     plt.close()
 
     d_WMAP = hp.read_map(f"{WDIR}/wmap_iqusmap_r9_9yr_{wbands[n]}_v5.fits",
