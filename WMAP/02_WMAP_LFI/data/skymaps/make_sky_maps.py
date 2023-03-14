@@ -11,7 +11,7 @@ for filename, outfile, coltype, vmin, vmax, dataset, freq, unit, scale, offset, 
     #(directory+"CG_K_n16.fits", "CG_K_n16_Q.pdf", 0, -30, 30., r"K1", r"$Q^{\mathrm{CG}}$", r"$\mathrm{\mu K}$", 1000, 0, 1, [-30,0,30], [r"$-30$", r"0", r"$30$"], 0),        
     #(directory+"CG_K_n16.fits", "CG_K_n16_U.pdf", 0, -30, 30., r"", r"$U^{\mathrm{CG}}$", r"$\mathrm{\mu K}$", 1000, 0, 2, [-30,0,30], [r"$-30$", r"0", r"$30$"], 0),
     #(directory+"wmap_9yr_coadd_K_map.fits", "WMAP_K_n16_Q.pdf", 0, -30, 30., r"", r"$Q^{\mathrm{WMAP}}$", r"$\mathrm{\mu K}$", 1000, 0, 1, [-30,0,30], [r"$-30$", r"0", r"$30$"], 0),        
-    #(directory+"wmap_9yr_coadd_Ka_map.fits", "WMAP_K_n16_U.pdf", 0, -30, 30., r"", r"$U^{\mathrm{WMAP}}$", r"$\mathrm{\mu K}$", 1000, 0, 2, [-30,0,30], [r"$-30$", r"0", r"$30$"], 0),
+    (directory+"wmap_9yr_coadd_K_map.fits", "WMAP_K_n16_U.pdf", 0, -30, 30., r"", r"$U^{\mathrm{WMAP}}$", r"$\mathrm{\mu K}$", 1000, 0, 2, [-30,0,30], [r"$-30$", r"0", r"$30$"], 0),
     #(directory+"diff_K_10deg.fits", "diff_K_n16_10deg_Q.pdf", 0, -3, 3., r"", r"$Q^{\mathrm{CG}}-Q^{\mathrm{WMAP}}$", r"$\mathrm{\mu K}$", 1000, 0, 1, [-3,0,3], [r"$-3$", r"0", r"$3$"], 0),        
     #(directory+"diff_K_10deg.fits", "diff_K_n16_10deg_U.pdf", 0, -3, 3., r"", r"$U^{\mathrm{CG}}-U^{\mathrm{WMAP}}$", r"$\mathrm{\mu K}$", 1000, 0, 2, [-3,0,3], [r"$-3$", r"0", r"$3$"], 0),
     # Ka1
@@ -78,7 +78,7 @@ for filename, outfile, coltype, vmin, vmax, dataset, freq, unit, scale, offset, 
     #(directory+"diff_W4_10deg.fits", "diff_W4_n16_10deg_Q.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 1, [-3,3], [r"$-3$", r"$3$"], 1),        
     #(directory+"diff_W4_10deg.fits", "diff_W4_n16_10deg_U.pdf", 0, -3, 3., r"", r"", r"$\mathrm{\mu K}$", 1000, 0, 2, [-3,3], [r"$-3$", r"$3$"], 1),
     # Likelihood inputs
-    (directory+"wt_r3_9yr.KaQV.map_q", "wt_r3_9yr.KaQV.map_q.pdf", 0, -3000, 3000., r"", r"", r"$\mathrm{\mu K}$", 1, 0, 0, [-3000,3000], [r"$-3000$", r"$3000$"], 1),                                        
+    #(directory+"wt_r3_9yr.KaQV.map_q", "wt_r3_9yr.KaQV.map_q.pdf", 0, -3000, 3000., r"", r"", r"$\mathrm{\mu K}$", 1, 0, 0, [-3000,3000], [r"$-3000$", r"$3000$"], 1),                                        
 ]:
     m = hp.ma(hp.read_map(filename,comp))*scale - offset
     if coltype == 2:
