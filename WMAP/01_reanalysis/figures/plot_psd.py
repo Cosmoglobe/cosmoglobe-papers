@@ -168,17 +168,17 @@ with h5py.File(filename, 'r') as f:
         #  maxbin=maxbin)[ind], label=r'$d - g s_\mathrm{tot}$')
 
         ind = (f > fcut)
-        plt.plot(f[ind],  gaussian_filter1d(psd, 5000)[ind], label=r'$d - g s_\mathrm{tot}$')
+        plt.plot(f[ind]*1e3,  1e-3*gaussian_filter1d(psd, 5000)[ind], label=r'$d - g s_\mathrm{tot}$')
 
-        plt.plot(f[ind], (sigma0**2*(1+(f/fknee)**alpha))[ind]/samprate,  
+        plt.plot(f[ind]*1e3, 1e-3*(sigma0**2*(1+(f/fknee)**alpha))[ind]/samprate,  
             'k--', label='current model (sample)')
-        plt.ylabel('PSD [du${}^2$ Hz${}^{-1}$]')
-        plt.xlabel('Frequency [Hz]')
+        plt.ylabel('PSD [du${}^2$ mHz${}^{-1}$]')
+        plt.xlabel('Frequency [mHz]')
         plt.legend(loc='best')
         ax = plt.gca()
-        ax.set_xticks(np.arange(1,11,2), minor=True)
+        ax.set_xticks(np.arange(1,11,2)*1e3, minor=True)
         ax.set_xticklabels([], minor=True)
-        ax.set_xlim([0.5,samprate/2])
+        ax.set_xlim([1e3*0.5,1e3*samprate/2])
 
         plt.savefig('ps_test_W4_det%i_zoom.pdf' % (detector+1), bbox_inches='tight')
 
