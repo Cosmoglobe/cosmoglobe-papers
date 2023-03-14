@@ -8,6 +8,7 @@ from glob import glob
 from setup_matplotlib import *
 
 
+dpi = 100
 
 DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
 
@@ -92,13 +93,13 @@ for i,m in enumerate(maps):
     plt.savefig(f'compsep_res_{bands[i]}_IQU.pdf', bbox_inches='tight')
     cg.plot(m, sig=0, min=-5, max=5, fwhm=5*u.deg, cbar=False,
         llabel=bands[i], rlabel='T', width=width)
-    plt.savefig(f'compsep_res_{bands[i]}_I.pdf', bbox_inches='tight', dpi=300)
+    plt.savefig(f'compsep_res_{bands[i]}_I.pdf', bbox_inches='tight', dpi=dpi)
     cg.plot(m, sig=1, min=-5, max=5, fwhm=5*u.deg, cbar=False, rlabel='Q',
         width=width)
-    plt.savefig(f'compsep_res_{bands[i]}_Q.pdf', bbox_inches='tight', dpi=300)
+    plt.savefig(f'compsep_res_{bands[i]}_Q.pdf', bbox_inches='tight', dpi=dpi)
     cg.plot(m, sig=2, min=-5, max=5, fwhm=5*u.deg, cbar=False, rlabel='U',
         width=width)
-    plt.savefig(f'compsep_res_{bands[i]}_U.pdf', bbox_inches='tight', dpi=300)
+    plt.savefig(f'compsep_res_{bands[i]}_U.pdf', bbox_inches='tight', dpi=dpi)
     plt.close('all')
 
 
