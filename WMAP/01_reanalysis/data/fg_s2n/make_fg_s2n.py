@@ -243,7 +243,8 @@ for ticklabel in ax8.yaxis.get_ticklabels():
 # save to pdf with right bounding box
 #extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 #plt.savefig("test.pdf", bbox_inches=extent, pad_inches=0.02)
-plt.savefig("fg_s2n_v2.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("fg_s2n_v2.pdf", bbox_inches='tight',
+    bbox_extra_artists=[],pad_inches=0.03, dpi=100)
 #plt.savefig("test.pdf", bbox_inches=[0,1,0,1], pad_inches=0.02)
 
 # Make table
