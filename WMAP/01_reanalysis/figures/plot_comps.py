@@ -20,12 +20,12 @@ x,y,z = hp.pix2vec(nside, np.arange(12*nside**2))
 
 dip = d_x*x + d_y*y + d_z*z
 
-dpi=150
+dpi=200
 m = hp.read_map(f'{DIR}/CG_cmb_IQU_n1024_v1.fits')
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', min=-3400, max=3400,
     width=8, xsize=1600, rlabel=r'\langle A_\mathrm{cmb}\rangle',
     llabel='T')
-plt.savefig('cmb_I_dipole.pdf', bbox_inches='tight', dpi=dpi*2)
+plt.savefig('cmb_I_dipole.pdf', bbox_inches='tight', dpi=300)
 
 
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', 
