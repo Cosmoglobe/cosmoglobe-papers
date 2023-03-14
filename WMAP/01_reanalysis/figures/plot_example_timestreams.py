@@ -295,8 +295,8 @@ fig.subplots_adjust(hspace=0,wspace=0)
 axes[1].plot(t[inds]/3600, n_corr[inds], lw=1, alpha=0.5, color='k',
     rasterized=True)
 axes[1].plot(t[inds]/3600, n_corr_filt[inds], lw=1, color='k', rasterized=True)
-axes[0].plot(t[inds]/3600, tod[inds]/gain - sl[inds] , rasterized=True)
-    d2[f'{pid:06}/K113/tod'][inds], lw=1, color='k')
+axes[0].plot(t[inds]/3600, tod[inds]/gain - sl[inds],
+    d2[f'{pid:06}/K113/tod'][inds], lw=1, color='k', rasterized=True)
 
 axes[1].set_xlim([0,24])
 axes[1].set_xticks(np.arange(0,30,6))
