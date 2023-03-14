@@ -29,7 +29,8 @@ fname_30 = f"{DIR}/CG_030_IQU_n0512_v1.fits"
 d_30 = hp.read_map(fname_30, field=(0, 1, 2)) * 1e-3
 fname_44 = f"{DIR}/CG_044_IQU_n0512_v1.fits"
 d_44 = hp.read_map(fname_44, field=(0, 1, 2)) * 1e-3
-fname_70 = f"{DIR}/CG_070_IQU_n1024_v1.fits"
+#fname_70 = f"{DIR}/CG_070_IQU_n1024_v1.fits"
+fname_70 = "/mn/stornext/d16/cmbco/bp/delivery/v10.00/v2/BP_070_IQU_n1024_v2.fits"
 d_70 = hp.read_map(fname_70, field=(0, 1, 2)) * 1e-3
 d_70 = hp.ud_grade(d_70, 512)
 
