@@ -48,11 +48,11 @@ maps = [K, Ka, Q1, Q2, V1, V2, W1, W2, W3, W4]
 
 
 for i,m in enumerate(maps):
-    cg.plot(m, sig=0, min=-2, max=2, fwhm=5*u.deg, cbar=False,
+    cg.plot(m, sig=0, min=-3, max=3, fwhm=2*u.deg, cbar=False,
         llabel=bands[i], rlabel='T', sub=(1,3,1))
-    cg.plot(m, sig=1, min=-2, max=2, fwhm=5*u.deg, cbar=False, rlabel='Q',
+    cg.plot(m, sig=1, min=-3, max=3, fwhm=2*u.deg, cbar=False, rlabel='Q',
         sub=(1,3,2))
-    cg.plot(m, sig=2, min=-2, max=2, fwhm=5*u.deg, cbar=False, rlabel='U',
+    cg.plot(m, sig=2, min=-3, max=3, fwhm=2*u.deg, cbar=False, rlabel='U',
         sub=(1,3,3))
     plt.tight_layout()
     plt.savefig(f'tod_ncorr_{bands[i]}_IQU.pdf', bbox_inches='tight')
@@ -70,7 +70,7 @@ cg.standalone_colorbar("planck", ticks=[-3,0,3], extend='both',
         unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
 plt.savefig('cbar_3uK.pdf', bbox_inches='tight')
 
-cg.standalone_colorbar("planck", ticks=[-10,0,10], extend='both',
+cg.standalone_colorbar("planck", ticks=[-3,0,3], extend='both',
         unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=6)
 plt.savefig('cbar_10uK.pdf', bbox_inches='tight')
 
@@ -79,6 +79,6 @@ cg.standalone_colorbar("planck", ticks=[-10,0,10], extend='both',
 plt.savefig('cbar_10uK_4in.pdf', bbox_inches='tight')
 
 
-cg.standalone_colorbar("planck", ticks=[-2,0,2], extend='both',
+cg.standalone_colorbar("planck", ticks=[-3,0,3], extend='both',
         unit=r"$\mathrm{\mu K_{CMB}}$", fontsize=18, width=3)
-plt.savefig('cbar_2uK_4in.pdf', bbox_inches='tight')
+plt.savefig('cbar_3uK_4in.pdf', bbox_inches='tight')
