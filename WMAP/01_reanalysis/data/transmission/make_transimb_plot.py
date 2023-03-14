@@ -68,7 +68,7 @@ muW2 = np.mean(transW2, 0)
 muW3 = np.mean(transW3, 0)
 muW4 = np.mean(transW4, 0)
 
-scale = 3.
+scale = 1.
 rmsK  = scale*np.std(transK, 0)
 rmsKa = scale*np.std(transKa, 0)
 rmsQ1 = scale*np.std(transQ1, 0)
@@ -239,7 +239,8 @@ leg.get_frame().set_alpha(0)
 # save to pdf with right bounding box
 #extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 #plt.savefig("test.pdf", bbox_inches=extent, pad_inches=0.02)
-plt.savefig("../../figures/x_im_CG_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("../../figures/x_im_CG_v1.pdf", bbox_inches='tight',
+    bbox_extra_artists=[],pad_inches=0.03, dpi=100)
 #plt.savefig("test.pdf", bbox_inches=[0,1,0,1], pad_inches=0.02)
 
 # Make table
