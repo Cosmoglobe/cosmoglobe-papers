@@ -1,12 +1,13 @@
 # Configure Matplotlib options
 from setup_matplotlib import *
 from matplotlib.ticker import MaxNLocator
-import numpy as N
+import numpy as np
 import scipy.stats
 import healpy as hp
 import plotly.colors as pcol
 import matplotlib as mpl
 import cosmoglobe as cg
+import matplotlib.pyplot as plt
 
 cmap = "Plotly"
 colors = getattr(pcol.qualitative, cmap)
@@ -43,17 +44,16 @@ trans_2_W2 = c2.get('tod/090-WMAP_W2/x_im')
 trans_2_W3 = c2.get('tod/090-WMAP_W3/x_im')
 trans_2_W4 = c2.get('tod/090-WMAP_W4/x_im')
 
-transK = np.concatenate((trans_1_K, trans_2_K))
-transKa = np.concatenate((trans_1_Ka, trans_2_Ka))
-transQ1 = np.concatenate((trans_1_Q1, trans_2_Q1))
-transQ2 = np.concatenate((trans_1_Q2, trans_2_Q2))
-transV1 = np.concatenate((trans_1_V1, trans_2_V1))
-transV2 = np.concatenate((trans_1_V2, trans_2_V2))
-transW1 = np.concatenate((trans_1_W1, trans_2_W1))
-transW2 = np.concatenate((trans_1_W2, trans_2_W2))
-transW3 = np.concatenate((trans_1_W3, trans_2_W3))
-transW4 = np.concatenate((trans_1_W4, trans_2_W4))
-
+transK  = np.unique(np.concatenate((trans_1_K, trans_2_K)), axis=0)
+transKa = np.unique(np.concatenate((trans_1_Ka, trans_2_Ka)), axis=0)
+transQ1 = np.unique(np.concatenate((trans_1_Q1, trans_2_Q1)), axis=0)
+transQ2 = np.unique(np.concatenate((trans_1_Q2, trans_2_Q2)), axis=0)
+transV1 = np.unique(np.concatenate((trans_1_V1, trans_2_V1)), axis=0)
+transV2 = np.unique(np.concatenate((trans_1_V2, trans_2_V2)), axis=0)
+transW1 = np.unique(np.concatenate((trans_1_W1, trans_2_W1)), axis=0)
+transW2 = np.unique(np.concatenate((trans_1_W2, trans_2_W2)), axis=0)
+transW3 = np.unique(np.concatenate((trans_1_W3, trans_2_W3)), axis=0)
+transW4 = np.unique(np.concatenate((trans_1_W4, trans_2_W4)), axis=0)
 
 x = np.arange(0,2)
 
