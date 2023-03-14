@@ -55,7 +55,7 @@ for i,m in enumerate(maps):
     cg.plot(m, sig=2, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='U',
         sub=(1,3,3))
     plt.tight_layout()
-    plt.savefig(f'tod_res_{bands[i]}_IQU.pdf', bbox_inches='tight')
+    plt.savefig(f'tod_res_{bands[i]}_IQU.pdf', bbox_inches='tight', dpi=dpi)
     plt.close('all')
 
 
@@ -90,7 +90,7 @@ for i,m in enumerate(maps):
     cg.plot(m, sig=2, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='U',
         sub=(1,3,3))
     plt.tight_layout()
-    plt.savefig(f'compsep_res_{bands[i]}_IQU.pdf', bbox_inches='tight')
+    plt.savefig(f'compsep_res_{bands[i]}_IQU.pdf', bbox_inches='tight', dpi=dpi)
     cg.plot(m, sig=0, min=-5, max=5, fwhm=5*u.deg, cbar=False,
         llabel=bands[i], rlabel='T', width=width)
     plt.savefig(f'compsep_res_{bands[i]}_I.pdf', bbox_inches='tight', dpi=dpi)
