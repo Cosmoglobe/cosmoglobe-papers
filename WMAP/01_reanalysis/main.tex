@@ -2175,7 +2175,7 @@ Inspecting the residual maps for all channels in Fig.~\ref{fig:compsep_residual}
 We conclude this section with a comparison of the relative signal-to-noise ratios to each astrophysical component between \WMAP\ and \Planck\ LFI. To quantify this, we first define the normalized signal-to-noise ratio for a given channel $\nu$ and pixel $p$ to be the ratio between the mixing matrix and the total noise rms,  $\psi \equiv M_{c}(\nu, p)/\sigma(\nu, p)$, all evaluated at a common angular resolution of $1^{\circ}$ FWHM. The total noise level is estimated by adding the white noise and posterior rms levels, as shown in Figs.~\ref{fig:rms} and \ref{fig:std}, in quadrature. %{\color{red} (RIGHT NOW ONLY WHITE NOISE IS ACCOUNTED FOR IN WMAP, WHILE LFI INCLUDES BOTH TERMS. THE PLOT WILL BE REDONE, AND THE DISCUSSION WILL BE UPDATED.)} 
 We then identify the channel with the highest mean value of $\psi$ for a given component, and adopt this as a reference channel. Finally, we compute $r=\psi_{\mathrm{max}}(p)/\psi(p)$ for all pixels,and report the mean and standard deviation over the full sky.
 
-The results from this calculation are summarized in Fig.~\ref{fig:fg_s2n} for all \WMAP\ and LFI channels. The top five panels (with white background) show temperature results, while the bottom three panels (with gray background) show polarization results. In each case, the red dot indicates the reference channel with highest signal-to-noise ratio, which by definition has value equal to one. For a given other channel, $X$, the values in Fig.~\ref{fig:fg_s2n} should be interpreted as ``The reference channel has $r$ times higher signal-to-noise ratio with respect to channel  $c$ than channel $X$.''
+The results from this calculation are summarized in Fig.~\ref{fig:fg_s2n} for all \WMAP\ and LFI channels. The top five panels (with white background) show temperature results, while the bottom three panels (with gray background) show polarization results. In each case, the red dot indicates the reference channel with highest signal-to-noise ratio, which by definition has value equal to one. For a given other channel, $X$, the values in Fig.~\ref{fig:fg_s2n} should be interpreted as ``The reference channel has $r$ times higher signal-to-noise ratio with respect to component $c$ than channel $X$.''
 
 Starting from the top panel, we see -- as expected -- that the LFI 70\,GHz channel has the highest signal-to-noise ratio with respect to CMB intensity, with typically 2--3 times higher sensitivity than any other band. However, it is interesting to note both that all \WMAP\ channels have very similar sensitivities between DAs (which indeed was a conscious choice in the original \WMAP\ design), and that these sensitivities are very similar to the LFI 30 and 44\,GHz channels. While LFI does have significantly lower white noise levels than \WMAP, it also has higher correlated noise knee frequencies, and on large angular scales these two effects appear to be roughly equal. It is also worth noting that since $M_{\mathrm{CMB}}=1$ in thermodynamic units, these numbers are a direct estimate of the raw instrumental sensitivity of each channel.
 
@@ -2436,13 +2436,12 @@ In this Appendix, we provide for reference purposes a complete survey of the pos
 	\label{fig:chisq}
 \end{figure*}
 
-
 \clearpage
 \section{\WMAP\ frequency map survey}
 \label{sec:map_survey}
 
 \noindent\begin{minipage}{\textwidth}
-In this appendix, we provide a frequency map survey for all ten DAs. Figure~\ref{fig:skymaps} shows the full DA polarization maps as derived both by \cosmoglobe\ and \WMAPnine, as well as their differences. Figures~\ref{fig:rms} and \ref{fig:std} shows \cosmoglobe\ white noise and posterior rms for each DA and Stokes parameter, as well as the cross-correlation between Stokes $Q$ and $U$. Figure~\ref{fig:sampdiff} shows differences between two Gibbs samples, and Fig.~\ref{fig:todres} shows the TOD-level residual, obtained by projecting the TOD residual into a sky map. Finally, Fig.~\ref{fig:compsep_residual} shows the map-level residual, obtained by subtracting the astrophysical sky model from the corresponding DA map.
+In this appendix, we provide a frequency map survey for all ten DAs. Figure~\ref{fig:skymaps} shows the full DA polarization maps as derived both by \cosmoglobe\ and \WMAPnine, as well as their differences. Figures~\ref{fig:rms} and \ref{fig:std} shows \cosmoglobe\ white noise and posterior rms for each DA and Stokes parameter, as well as the cross-correlation between Stokes $Q$ and $U$. Figure~\ref{fig:sampdiff} shows differences between two Gibbs samples, Figs.~\ref{fig:ncorr} and \ref{fig:todres} show the TOD-level correlated noise and residual, respectively, both obtained by projecting the timestreams into sky maps. Finally, Fig.~\ref{fig:compsep_residual} shows the map-level residual, obtained by subtracting the astrophysical sky model from the corresponding DA map.
 \end{minipage}
 
 \noindent\begin{minipage}{\textwidth}
@@ -2588,7 +2587,7 @@ In this appendix, we provide a frequency map survey for all ten DAs. Figure~\ref
 	\includegraphics[width=0.7\textwidth]{figures/tod_ncorr_W4_IQU.pdf}\\
 	\includegraphics[width=0.30\textwidth]{figures/cbar_3uK.pdf}
 	\caption{Binned correlated noise timestreams for each DA, smoothed with a $2^\circ$ FWHM Gaussian beam.}
-        \label{fig:todres}
+        \label{fig:ncorr}
 \end{figure*}
 \begin{figure*}
 	\centering
@@ -2632,51 +2631,3 @@ In this appendix, we provide a frequency map survey for all ten DAs. Figure~\ref
 
 \end{document}
 
-
-\subsubsection{\K-band calibration and AME}
-\label{sec:kband_correlation}
-
-In a preliminary \commanderthree\ run, we discovered an unbounded rise in the
-\K-band absolute calibration, $g_0$, and the dipole in the AME component of the sky. Because the AME is strongest among all bands at \K-band, any increase in the \K-band absolute calibration can easily be accounted for by changing the amplitude of the AME, while leaving goodness of fit tests such as relative-$\chi^2$ and residual maps unaffected.
-
-In order to break this degeneracy, it was necessary to impose a prior either on the AME itself or on the absolute calibration. The AME prior we explored followed the approach of \citet{bp13}, in which the prior mean was the \Planck\ HFI DR4\,857 GHz map scaled by $3\cdot10^{-5}$, and the variance is given in angular scales by a parameter $q$. We found that a prior of $q=10^{-2}\,\mathrm{\mu K}^2$ was necessary to stabilize the gain, resulting in an AME map that was nearly identical to the \Planck\ 857\,GHz band. As this gave a result that was inconsistent with many previous results, we opted instead to sample the absolute calibration instead.
-
-In general, any error in $g_0$ leads to a residual due to the large Solar dipole. In practice, we found that the typical variation of $g_0$ was 0.002, giving a relative error of $\sim0$$.1\,\%$. This variation induces a $\sim6\,\mathrm{\mu K}$ Solar dipole uncertainty, which is easily attributed to AME during component separation. In Figure \ref{fig:g0_ame}, we demonstrate this effect on recovered AME maps using extreme $g_0$ values of 1.175 and 1.9. We find that AME maps consistent with those presented by \citet{bennett2012} and \citet{planck2014-a12} are recovered when $g_0$ is between 1.180 and 1.182. Based on this analysis, we sample $g_0$ from a Gaussian with mean 1.1815 and standard deviation 0.001.
-
-\citet{bennett2012} and \citet{planck2014-a12} find AME peak frequencies 12.0--17.5\,GHz and 17--23\,GHz, respectively, both with low signal-to-noise at high Galactic latitude and with structure along the plane. The Q-U-I JOint Tenerife Experiment (QUIJOTE) has recently released maps of the sky with approximately 70\,\% sky coverage at frequencies 11, 13, 17, and 19\,GHz \citep{QUIJOTE_IV}. QUIJOTE is optimized for characterizing the polarized sky, and constraints from, e.g., \citet{QUIJOTE_VIII}, will be critical for future polarized synchrotron SED characterization and polarized AME limits. While in principle the AME SED can be constrained by a joint \WMAP/LFI/QUIJOTE analysis, we consider this outside of the scope of the paper, which aims to evaluate the effect of jointly analyzing \WMAP\ and \Planck\ LFI at the TOD level.  Future analysis will include the QUIJOTE data, and hopefully break the $g_0$-$a_\mathrm{AME}$ degeneracy.
-
-
-\begin{table}
-\newdimen\tblskip \tblskip=5pt
-\caption{Difference map $\chi^2$ statistics.  }
-\label{tab:chisq}
-\vskip -4mm
-\footnotesize
-\setbox\tablebox=\vbox{
- \newdimen\digitwidth
- \setbox0=\hbox{\rm 0}
- \digitwidth=\wd0
- \catcode`*=\active
- \def*{\kern\digitwidth}
-%
-  \newdimen\dpwidth
-  \setbox0=\hbox{.}
-  \dpwidth=\wd0
-  \catcode`!=\active
-  \def!{\kern\dpwidth}
-%
-  \halign{\hbox to 2.5cm{#\leaderfil}\tabskip 2em&
-    \hfil$#$\hfil \tabskip 2em&
-    \hfil$#$\hfil \tabskip 2em&    
-    \hfil$#$\hfil \tabskip 0em\cr
-\noalign{\doubleline}
-\omit\hfil\sc Difference \hfil& \chi^2_{\mathrm{uncorr}} & \chi^2_{\mathrm{corr}} & \Delta \chi^2\cr
-\noalign{\vskip 3pt\hrule\vskip 5pt}
-$0.32\times$K1 $-$ Ka1  & 4291  & 4287  & **4 \cr
-Q1 $-$ Q2         & 4500  & 4380  & 120 \cr
-V1 $-$ V2         & 4490  & 4429  & *61 \cr
-W1 $-$ W2         & 4328  & 4270  & *68 \cr
-W3 $-$ W4         & 4257  & 4145  & 112 \cr
-\noalign{\vskip 5pt\hrule\vskip 5pt}}}
-\endPlancktablewide
-\end{table}

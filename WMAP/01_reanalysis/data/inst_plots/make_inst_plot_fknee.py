@@ -166,7 +166,8 @@ for i in range(40):
     std = np.std(tot_samples, axis=0)
     accept = chain1.get(f'tod/{channel}/accept')[-1, i % 4, :].astype(bool)
     mjd = chain1.get(f'tod/{channel}/MJD')[-1, :]
-    plt.errorbar(mjd[accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', label = 'CG')
+    plt.errorbar(mjd[accept], mean[i%4, :][accept], yerr=std[i%4][accept],
+        linewidth=0.5, color='black', label = 'CG', rasterized=True)
     plt.plot(mjd_wmap,[wmap[i][1],wmap[i][1]], linewidth=1, color='red',
         linestyle=':', label='WMAP', rasterized=True)
     plt.plot(mjd_gsfc,[gsfc[i][1],gsfc[i][1]], linewidth=1, color='orange',
@@ -209,4 +210,5 @@ for i in range(0, len(axs), 4):
         ticklabel.set_rotation("vertical")
 
 # save to pdf with right bounding box
-plt.savefig("../../figures/instpar_CG_fknee_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("../../figures/instpar_CG_fknee_v1.pdf", bbox_inches='tight',
+    bbox_extra_artists=[],pad_inches=0.03, dpi=100)

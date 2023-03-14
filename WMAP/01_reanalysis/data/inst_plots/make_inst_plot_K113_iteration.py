@@ -241,4 +241,5 @@ for ticklabel in ax7.yaxis.get_ticklabels():
     ticklabel.set_rotation("vertical")
 
 # save to pdf with right bounding box
-plt.savefig('../../figures/instpar_CG_K113_samples_v1.pdf', bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig('../../figures/instpar_CG_K113_samples_v1.pdf', bbox_inches='tight',
+    bbox_extra_artists=[],pad_inches=0.03, dpi=100)

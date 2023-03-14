@@ -103,7 +103,9 @@ for i in range(40):
     std = np.std(tot_samples, axis=0)
     curr_wmap_data = wmap_data[i//4]
     accept = chain1.get(f'tod/{chain_names[i//4]}/accept')[-1, i % 4, :].astype(bool)
-    plt.errorbar(curr_wmap_data[:, 0][accept], mean[i%4, :][accept], yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1)
+    plt.errorbar(curr_wmap_data[:, 0][accept], mean[i%4, :][accept],
+        yerr=std[i%4][accept], linewidth=0.5, color='black', zorder=1,
+        rasterized=True)
     plt.plot(data[::thin,0], abs(data[::thin,1]), linewidth=0.5, color='red',
         zorder=2, rasterized=True)
     plt.grid(False, which="major", axis="both")
@@ -164,7 +166,8 @@ for i in range(40):
     f0_err = interp1d(curr_wmap_data[:,0][accept], std[i%4][accept])
     f1 = interp1d(data[::thin,0], abs(data[::thin,1]))
     t = np.linspace(curr_wmap_data[:, 0][accept].min(), curr_wmap_data[:, 0][accept].max(), 1000)
-    plt.errorbar(t, 100*(f0(t)/f1(t) - 1), yerr=100*f0_err(t)/f1(t), linewidth=0.5, color='black', zorder=1)
+    plt.errorbar(t, 100*(f0(t)/f1(t) - 1), yerr=100*f0_err(t)/f1(t),
+        linewidth=0.5, color='black', zorder=1, rasterized=True)
     plt.grid(False, which="major", axis="both")
     if i >= 36:
         plt.setp( currax.get_xticklabels(), visible=True)
@@ -192,4 +195,5 @@ for i in range(0, len(axs), 4):
     for ticklabel in axs[i].yaxis.get_ticklabels():
         ticklabel.set_rotation("vertical")
 
-plt.savefig("../../figures/instpar_CG_dgain_v1.pdf", bbox_inches='tight', bbox_extra_artists=[],pad_inches=0.03)
+plt.savefig("../../figures/instpar_CG_dgain_v1.pdf", bbox_inches='tight',
+    bbox_extra_artists=[],pad_inches=0.03, dpi=100)
