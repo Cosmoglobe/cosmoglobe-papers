@@ -327,7 +327,7 @@ for n, b in enumerate(bands):
         extend="both",
     )
     plt.tight_layout()
-    plt.savefig(f"{b}_map_I.pdf", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_map_I.pdf", bbox_inches="tight", dpi=dpi)
     plt.close('all')
     cg.plot(
         mu_s,
@@ -341,7 +341,7 @@ for n, b in enumerate(bands):
         cbar=False,
     )
     plt.tight_layout()
-    plt.savefig(f"{b}_map_Q.pdf", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_map_Q.pdf", bbox_inches="tight", dpi=dpi)
     plt.close('all')
     cg.plot(
         mu_s,
@@ -356,7 +356,7 @@ for n, b in enumerate(bands):
         unit=r"\mathrm{\mu K}",
     )
     plt.tight_layout()
-    plt.savefig(f"{b}_map_U.pdf", bbox_inches="tight", dpi=300)
+    plt.savefig(f"{b}_map_U.pdf", bbox_inches="tight", dpi=dpi)
     plt.close('all')
 
     if ("023-WMAP_K" in b) or ("030-WMAP_Ka" in b):
@@ -372,7 +372,7 @@ for n, b in enumerate(bands):
             xsize=xsize,
             extend="both",
         )
-        plt.savefig(f"{b}_mu_I.pdf", bbox_inches="tight", dpi=300)
+        plt.savefig(f"{b}_mu_I.pdf", bbox_inches="tight", dpi=dpi)
         plt.close('all')
         cg.plot(
             mu_s,
@@ -385,7 +385,7 @@ for n, b in enumerate(bands):
             llabel="Q",
             cbar=False,
         )
-        plt.savefig(f"{b}_mu_Q.pdf", bbox_inches="tight", dpi=300)
+        plt.savefig(f"{b}_mu_Q.pdf", bbox_inches="tight", dpi=dpi)
         plt.close('all')
         cg.plot(
             mu_s,
@@ -399,7 +399,7 @@ for n, b in enumerate(bands):
             extend="both",
             unit=r"\mathrm{\mu K}",
         )
-        plt.savefig(f"{b}_mu_U.pdf", bbox_inches="tight", dpi=300)
+        plt.savefig(f"{b}_mu_U.pdf", bbox_inches="tight", dpi=dpi)
         plt.close('all')
         plt.close("all")
     elif "040-WMAP_Q" in b:
@@ -469,7 +469,7 @@ cg.plot(
     xsize=xsize,
     extend="both",
 )
-plt.savefig(f"Q_mu_I.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"Q_mu_I.pdf", bbox_inches="tight", dpi=dpi)
 plt.close('all')
 cg.plot(
     Q_s,
@@ -482,7 +482,7 @@ cg.plot(
     llabel="Q",
     cbar=False,
 )
-plt.savefig(f"Q_mu_Q.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"Q_mu_Q.pdf", bbox_inches="tight", dpi=dpi)
 plt.close('all')
 cg.plot(
     Q_s,
@@ -496,7 +496,7 @@ cg.plot(
     extend="both",
     unit=r"\mathrm{\mu K}",
 )
-plt.savefig(f"Q_mu_U.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"Q_mu_U.pdf", bbox_inches="tight", dpi=dpi)
 plt.close("all")
 
 
@@ -513,7 +513,7 @@ cg.plot(
     xsize=xsize,
     extend="both",
 )
-plt.savefig(f"V_mu_I.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"V_mu_I.pdf", bbox_inches="tight", dpi=dpi)
 plt.close('all')
 cg.plot(
     V_s,
@@ -526,7 +526,7 @@ cg.plot(
     llabel="Q",
     cbar=False,
 )
-plt.savefig(f"V_mu_Q.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"V_mu_Q.pdf", bbox_inches="tight", dpi=dpi)
 plt.close('all')
 cg.plot(
     V_s,
@@ -540,7 +540,7 @@ cg.plot(
     extend="both",
     unit=r"\mathrm{\mu K}",
 )
-plt.savefig(f"V_mu_U.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"V_mu_U.pdf", bbox_inches="tight", dpi=dpi)
 plt.close("all")
 
 rlabel = r"\langle \textit{W}\rangle"
@@ -556,7 +556,7 @@ cg.plot(
     xsize=xsize,
     extend="both",
 )
-plt.savefig(f"W_mu_I.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"W_mu_I.pdf", bbox_inches="tight", dpi=dpi)
 plt.close('all')
 cg.plot(
     W_s,
@@ -569,7 +569,7 @@ cg.plot(
     llabel="Q",
     cbar=False,
 )
-plt.savefig(f"W_mu_Q.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"W_mu_Q.pdf", bbox_inches="tight", dpi=dpi)
 plt.close('all')
 cg.plot(
     W_s,
@@ -583,7 +583,7 @@ cg.plot(
     extend="both",
     unit=r"\mathrm{\mu K}",
 )
-plt.savefig(f"W_mu_U.pdf", bbox_inches="tight", dpi=300)
+plt.savefig(f"W_mu_U.pdf", bbox_inches="tight", dpi=dpi)
 plt.close('all')
 
 
