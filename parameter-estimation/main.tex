@@ -367,21 +367,21 @@ $\Tilde{Y}_{\ell m} = \Delta_{\ell m}P_{\ell m}(\cos(\theta)))$, where ${\Delta_
 \end{align}
 This integral can be solved numerically by gridding $x$, and the spherical harmonics where the phase factor is removed can be calculated in Python using a library like ...
 
-Since the masks used for this work are $\sin(b)\geq 0.2$, we require much fewer grid points for $x$ if we use the following identity for $\ell+\ell' = $ even:
+Since the azimutally symmetric Galactic mask used for this work is $\sin(b) = 0.1$, we require much fewer grid points for $x$ if we use the following identity for $\ell+\ell' = $ even:
 \begin{align}
 &\delta_{mm'} \int_{\sin(b)}^{1} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)) = \\
 \frac{1}{4\pi}\delta_{\ell \ell'}\delta_{m m'} - &\delta_{mm'} \int_{0}^{\sin(b)} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)),
 \end{align}
-which comes from the orthonormality condition for spherical harmonics. We now only need to grid $x$ in the interval $0\leq x \leq \sin(b) \leq 0.2$ for this work.
+which comes from the orthonormality condition for spherical harmonics. We now only need to grid $x$ in the interval $0\leq x \leq \sin(b) = 0.1$ for this work.
 
-Since our expression for $N^{-1}_{\ell m, \ell' m'}$ has a $\delta_{m m'}$, we can create an $\ell_{\textrm{max}}$ number of matrices, one for each $\ell_{\mathrm{max}}\geq m \geq 0$. And then solve the map-making equation for each matrix equation $m$.
+Since $N^{-1}_{\ell m, \ell' m'} \propto \delta_{m m'}$, we can create $\ell_{\textrm{max}}+1$ number of matrices, one for each $0 \leq m \leq \ell_{\mathrm{max}}$. And then solve the map-making equation for each matrix equation $m$.
 
 To show how this works in matrix multiplication notation, imagine multiplying the matrix $\textbf{N}^{-1} = N^{-1}_{\ell m, \ell' m'}$ with the vector $\textbf{b} = b_{\ell m}$
 \begin{align}
 \textbf{N}^{-1} \cdot \textbf{b} &= \sum_{\ell' m'}\left(N^{-1}\right)_{\ell m, \ell' m'}b_{\ell' m'} = \sum_{\ell'}\left(N^{-1}\right)_{\ell m, \ell' m}b_{\ell' m}\\
 &= \sum_{\ell' }\left(N^{-1}\right)^{(m)}_{\ell, \ell'}b^{(m)}_{\ell'}.
 \end{align}
-So to solve the map-making equation, we get a matrix equation for each $\ell_{\mathrm{max}}\geq m \geq 0$. This gives us $\ell_{\textrm{max}}$ number of matrix equations where the dimensions of the matrices are maximal $\ell_{\textrm{max}} \times \ell_{\textrm{max}}$. This is numerically much quicker than inverting the full $(\ell_{\textrm{max}})^2 \times (\ell_{\textrm{max}})^2$ matrix once.
+To solve the map-making equation, we get a matrix equation for each $0 \leq m \leq \ell_{\mathrm{max}}$. This gives us $\ell_{\textrm{max}}+1$ number of matrix equations where the dimensions of the matrices are maximal $\ell_{\textrm{max}} \times \ell_{\textrm{max}}$. This is numerically much quicker than inverting the full $(\ell_{\textrm{max}})^2 \times (\ell_{\textrm{max}})^2$ matrix once.
 
 
 \end{document}
