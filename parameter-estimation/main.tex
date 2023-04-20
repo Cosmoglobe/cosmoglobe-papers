@@ -382,7 +382,13 @@ Although we are sampling the same simulated CMB map without a mask in Commander 
 
 \subsection{Realistic mask and noise}
 
-We then turn to a more realistic case: We make a realization of a 70\,GHz noise map and a realistic Galactic and point source mask of $f_{\mathrm{sky}}=0.85$. Our Python implementation can not sample this case as it does neither support anisotropic noise nor a realistic mask.
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/realistic_chain.pdf}
+	\caption{\label{fig:traceplot}Traceplot of the cosmological parameters for the $70\,$GHz case. The dashed line gives the input value of the CMB simulation.}
+\end{figure}
+
+We then turn to a more realistic case: We make a realization of a 70\,GHz noise map and a realistic Galactic and point source mask of $f_{\mathrm{sky}}=0.85$. Our Python implementation can not sample this case as it neither supports anisotropic noise nor a realistic mask. Hence, we can only rely on the CG iterator of Commander3.
 
 \begin{figure}
 	\centering
@@ -390,7 +396,9 @@ We then turn to a more realistic case: We make a realization of a 70\,GHz noise 
 	\caption{\label{fig:sigma_ell}The power spectra for a random sample for the 70\,GHz case compared to the theoretical CAMB power spectra.}
 \end{figure}
 
-We visualize the power spectra of a randomly picked sample in Fig.~\ref{fig:sigma_ell} for the different sky components, $s_{\ell} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$, compared to the outputted theoretical $C_\ell$ from CAMB. At lower multipoles there is a high signal-to-noise (except for $BB$) and the mean field map $\hat{s}_{\ell m}$ dominates. But as we go to higher multipoles, noise starts dominating and all power comes from the fluctuation field $\hat{f}_{\ell m}$.
+Before showing the results of the run, it is constructive to visualize the power spectra of a randomly picked sky signal sample from Commander3 in Fig.~\ref{fig:sigma_ell} for the different sky components, $s_{\ell} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$, compared to the theoretical $C_\ell$ used to create the simulation. At lower multipoles there is a high signal-to-noise (except for $BB$) and the mean field map $\hat{s}_{\ell m}$ dominates. But as we go to higher multipoles, noise starts dominating and all power comes from the fluctuation field $\hat{f}_{\ell m}$.
+
+In Fig.~\ref{fig:traceplot} we show the traceplots of the cosmological parameters from this run. We did not include this chain into the autocorrelation Fig.~\ref{fig:autocorrelation} as we have few samples for it converge, but it is clear by eye that the correlation length is $\mathcal{O}(100)$.
 
 \begin{figure}
 	\centering
@@ -398,9 +406,9 @@ We visualize the power spectra of a randomly picked sample in Fig.~\ref{fig:sigm
 	\caption{\label{fig:runtime}CPU-hours per accepted sample. This is compared to the 812 CPU-hours }
 \end{figure}
 
-The main obstacle we face for future cosmological parameter estimation on actual data is to shorten the CPU-hour per sample. We show the current CPU-hour per accepted joint sample in Fig.~\ref{fig:run_time} for the different configuration. These cases are compared to the 812 CPU-hours it takes to generate one Cosmoglobe DR1 Gibbs sample from TOD in red. This shows that more works need to be done to lower the computational time to generate a joint sample, as we want to include the methods into the Cosmoglobe framework on actual data.
+We are limit by a lack of independent samples due to the large correlation length and a very high cost computational cost of one sample. We show the current CPU-hour per accepted joint sample in Fig.~\ref{fig:runtime} for the different configuration. These cases are compared to the 812 CPU-hours it takes to generate one Cosmoglobe DR1 Gibbs sample from TOD in red. This shows that more works need to be done to lower the computational time to generate a joint sample, as we want to include the methods into the Cosmoglobe framework on actual data.
 
-Hence, work is needed to lower the computational cost of generating one sample. The computational time is dominated by solving Eq.~\eqref{eq:mapmakingeq} by the method of Conjugant Gradient (CG). For the realistic case, we currently require 5000 CG iterations. Lowering this number can be done by better preconditioning and blablabla \textcolor{red}{This part is for HK}
+Hence, work is needed to lower the computational cost of generating one sample as there is no way to shorten the correlation length of the algortihm. The computational time is dominated by solving Eq.~\eqref{eq:mapmakingeq} by the method of Conjugant Gradient (CG). For the realistic case, we currently require 5000 CG iterations. Lowering this number can be done by better preconditioning and Hamiltonian sampling and blablabla \textcolor{red}{This part is for HK}
 
 \section{Conclusions}
 \label{sec:conclusions}
