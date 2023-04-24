@@ -162,7 +162,7 @@
 \titlerunning{CMB parameter estimation}
 
 \abstract{
-  We implement support for likelihood-free cosmological parameter estimation in \commanderthree, an integrated Bayesian analysis framework for cosmic microwave background (CMB) observations developed by the \BP\ and \cosmoglobe\ projects, and we assess the computational costs of this method. This method was originally proposed by Racine et al.\ (2016), who implemented a proof-of-concept Python code applicable to ideal observations with uniform white noise and full-sky coverage; with the new \commanderthree\ implementation presented in this paper, this method is now finally applicable to realistic data with full end-to-end error propagation. We validate the results with two external codes. The first is a uniform noise and full-sky likelihood likelihood coupled to Cobaya, and we find excellent agreement in this ideal case. The second code is a special-purpose Python implementation of the Racine et al.\ method for uniform noise and an azimuthally symmetric Galactic mask, for which the fundamental mapmaking equations may be solved analytically. We find good agreement also in this case, up to the precision allowed by the finite number of available samples. However, we also find that the computational cost of producing one single CMB sample with acceptable accuracy using the current implementation is high: For a case similar to the \Planck\ LFI 70\,GHz channel (with $\ell_{\mathrm{max}}=1300$, $N_\mathrm{side}=512$, and an accepted sky fraction of $f_{\mathrm{sky}}=0.85$), we require more than 5000 Conjugate Gradient iterations to reach sufficient accuracy, for a total computational cost of 2848\,CPU-hrs. At the same time, the typical Markov chain correlation length is $\sim$$\,100$ samples, and producing two indendent samples therefore costs $\sim$$\,30 000$\,CPU-hrs. For comparison, producing one single end-to-end sample for all \Planck\ LFI and \WMAP\ channels costs 812\,CPU-hrs, including calibration, mapmaking and component separation. Thus, for this method to be practical, future work should aim to reduce the cost per sample by at least one order of magnitude, which should be entirely feasible through the use of better multi-grid preconditioners and/or derivative-based hybrid sampling schemes.
+  We implement support for likelihood-free cosmological parameter estimation in \commanderthree, an integrated Bayesian analysis framework for cosmic microwave background (CMB) observations developed by the \BP\ and \cosmoglobe\ projects, and we assess the computational costs of this method. This method was originally proposed by Racine et al.\ (2016), who implemented a proof-of-concept Python code applicable to ideal observations with uniform white noise and full-sky coverage; with the new \commanderthree\ implementation presented in this paper, this method is now finally applicable to realistic data with full end-to-end error propagation. We validate the results with two external codes. The first is a uniform noise and full-sky likelihood coupled to Cobaya, and we find excellent agreement in this ideal case. The second code is a special-purpose Python implementation of the Racine et al.\ method for uniform noise and an azimuthally symmetric Galactic mask, for which the fundamental mapmaking equations may be solved analytically. We find good agreement also in this case, up to the precision allowed by the finite number of available samples. However, we also find that the computational cost of producing one single CMB sample with acceptable accuracy using the current implementation is high: For a case similar to the \Planck\ LFI 70\,GHz channel (with $\ell_{\mathrm{max}}=1300$, $N_\mathrm{side}=512$, and an accepted sky fraction of $f_{\mathrm{sky}}=0.85$), we require more than 5000 Conjugate Gradient iterations to reach sufficient accuracy, for a total computational cost of 2848\,CPU-hrs. At the same time, the typical Markov chain correlation length is $\sim$$\,100$ samples, and producing two indendent samples therefore costs $\sim$$\,30\,000$\,CPU-hrs. For comparison, producing one single end-to-end sample for all \Planck\ LFI and \WMAP\ channels costs 812\,CPU-hrs, including calibration, mapmaking and component separation. Thus, for this method to be practical, future work should aim to reduce the cost per sample by at least one order of magnitude, which should be entirely feasible through the use of better multi-grid preconditioners and/or derivative-based hybrid sampling schemes.
 }
 
 \keywords{ISM: general -- Cosmology: observations, polarization,
@@ -183,35 +183,39 @@
 
   High-precision cosmic microwave background (CMB) measurements provide today the strongest constraints on a wide range of key cosmological parameters. Traditionally, these constraints are derived by first compressing the information contained in the high-dimensional raw time-ordered data into pixelized sky maps and angular power spectra, and this compressed dataset is typically summarized in terms of a low-dimensional likelihood from which cosmological parameters are derived through Markov Chain Monte Carlo sampling. However, as the signal-to-noise ratio of the raw data continue to increase, the importance of systematic uncertainties grows, and these are often non-trivial to describe through a low-dimensional likelihood. To meet this challenge, the \BP\ and \cosmoglobe\ projects have implemented the world's first end-to-end Bayesian CMB framework \citep{bp01, watts2023_dr1}.
 
-  These projects produced a Gibbs chain of CMB sampled maps, but did not sample the cosmological parameter from them.  Instead, \citet{bp12} sampled cosmological parameters from the outputted CMB maps and blablabla.
+  These projects produced a Gibbs chain of CMB sampled maps, but did include an integrated cosmological parameter sampling.  Instead, \citet{bp12} sampled cosmological parameters from the outputted CMB maps using a method called resampling and blablablba \textcolor{red}{HK: Can you fill in the rest here?}.
 
-  This work aims to partially close the loop of the end-to-end Bayesian analysis of the CMB by incorporating a cosmological parameter sampling step into \commanderthree , the softwares used for \cosmoglobe\ and \BP.
-
-  
+  This work aims to partially close the loop of the end-to-end Bayesian analysis of the CMB by incorporating a cosmological parameter sampling step into \commanderthree, the framework used for \cosmoglobe\ and \BP. The Gibbs chain can be schematically be written as  
   \begin{alignat}{10}
-    \label{eq:samp_inst}\boldsymbol s^\mathrm{inst} &\,\leftarrow                                 P(\boldsymbol s^\mathrm{inst}&\,             \mid \data, &\,\phantom{\boldsymbol s^{\mathrm{inst}},} &\,\g, &\,\boldsymbol x_{\mathrm{im}}, &\,\ncorr, &\,\boldsymbol\xi_n,      &\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \label{eq:gain_samp_dist}\g &\,\leftarrow          P(\g&\,               \mid \data, &\,\boldsymbol s^{\mathrm{inst}}, &\,\phantom{\g,} &\,\boldsymbol x_{\mathrm{im}}, &\,\ncorr, &\,\boldsymbol\xi_n,      &\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \label{eq:xim} \boldsymbol x_{\mathrm{im}} &\,\leftarrow        P(\boldsymbol x_{\mathrm{im}}&\, \mid \data, &\,\boldsymbol s^{\mathrm{inst}}, &\,\g, &\,\phantom{\boldsymbol x_{\mathrm{im}},} &\,\ncorr, &\,\boldsymbol\xi_n,      &\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,        \mid \data, &\,\boldsymbol s^{\mathrm{inst}}, &\,\g, &\,\boldsymbol x_{\mathrm{im}}, &\,\phantom{\ncorr,} &\,\boldsymbol\xi_n,      &\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \label{eq:xi_samp_dist} \boldsymbol\xi_n &\,\leftarrow        P(\boldsymbol\xi_n&\,            \mid \data, &\,\boldsymbol s^{\mathrm{inst}}, &\,\g, &\,\boldsymbol x_{\mathrm{im}}, &\,\ncorr, &\,\phantom{\boldsymbol\xi_n,}      &\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \label{eq:beta_samp}\boldsymbol\beta &\,\leftarrow                     P(\boldsymbol\beta)\\
-    \boldsymbol a &\,\leftarrow                                   P(\boldsymbol a&\,            \mid \data, &\,\boldsymbol s^{\mathrm{inst}}, &\,\g, &\,\boldsymbol x_{\mathrm{im}}, &\,\ncorr, &\,\boldsymbol\xi_n,      &\,\boldsymbol\beta, &\,\phantom{\boldsymbol a,} &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \boldsymbol\theta, \boldsymbol{s} &\,\leftarrow                             P(\boldsymbol\theta, \boldsymbol{s}&\,         \mid \data, &\,\boldsymbol s^{\mathrm{inst}}, &\,\g, &\,\boldsymbol x_{\mathrm{im}}, &\,\ncorr, &\,\boldsymbol\xi_n,      &\,\boldsymbol\beta, &\,\boldsymbol a,&\,\phantom{,}&\,\phantom{\boldsymbol\theta})\label{eq:param_samp},
+    \label{eq:gain_samp_dist}\g &\,\leftarrow          P(\g&\,               \mid \data, &\,\phantom{\g,} &\,\ncorr,&\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
+    \label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,        \mid \data, &\,\g, &\,\phantom{\ncorr,}  &\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
+    \label{eq:beta_samp}\boldsymbol\beta &\,\leftarrow                     P(\boldsymbol\beta &\, \mid \data, &\,\g, &\,\ncorr, &\,\phantom{\boldsymbol\beta}, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s))\\
+    \boldsymbol a &\,\leftarrow                                   P(\boldsymbol a&\,            \mid \data, &\,\g, &\,\ncorr, &\,\boldsymbol\beta, &\,\phantom{\boldsymbol a,} &\,\boldsymbol \theta, &\, \boldsymbol s)\\
+    \boldsymbol\theta, \boldsymbol{s} &\,\leftarrow                             P(\boldsymbol\theta, \boldsymbol{s}&\,         \mid \data, &\,\g, &\,\ncorr, &\,\boldsymbol\beta, &\,\boldsymbol a,&\,\phantom{,}&\,\phantom{\boldsymbol\theta})\label{eq:param_samp},
     \end{alignat}
+where $g$ and $\ncorr$ are gain and correlated noise, respectively. While $\beta$ and $a$ are the spectral index and amplitude of the various sky components. We have slightly simplified the full set of sampled parameters, see \cite{watts2023_dr1} for the entire list of sampled instrumental and astrophysical parameters. Including the last line, Eq.~\eqref{eq:param_samp}, into \commander3 is the focus of this work. Here, $\boldsymbol \theta$ is the set of cosmological parameters and $\boldsymbol s$ is the CMB sky map.
+
+Optimal cosmological parameter sampling of the CMB has been reserached since \COBE \citep{smoot1995}. As we have only access to one realization of the microwave sky, a cosmologist often turns to Bayesian, as opposed to frequentist, techniques to infer the underlying covariance matrix of the CMB fluctuations. The cosmological parameters could in the early days of CMB analysis be extracted from the data by evaluating the exact likelihood. However, as the number of pixels for new CMB experiments increased with time, evaluating the likelihood proved too computationally expensive in the face of realistic noise and Galactic masks.
+
+Gibbs sampling was introduced to the CMB field by \citet{jewell2004}, who used it for sampling the variance of the sky signal, $C_{\ell}$, rather than instrumental and foreground systematics of \cosmoglobe\ and \BP. This method has been applied succesfully to \COBE\citep{wandelt2004}, \WMAP\citep{Eriksen:2007jw} and \Planck\citep{planck2014-a13}\textcolor{red}{HK:Did 2018 do it too?} to estimate the CMB power spectrum.
+
+However, the combination of long correlation length and non-trivial computational cost for each sample made the algorithm prohibited slow for high resolution sky maps, especially in low signal-to-noise regimes. This forced \Planck\ to not go beyond $\ell > ???$. \textcolor{red}{HK: Planck did this. How high ell? 100? Why not higher? Long correlation length or slow computation of $s_lm$? What was the main limitation?}
+
+The problem was identified and studied by \cite{Eriksen:2004ss} and solutions were proposed by \cite{jewell:2009} and further optimized in \citet{racine:2016}. This work will incorporate the method of the latter into \commanderthree. In Sect. \ref{sec:methods} we will present the method of \citet{racine:2016} and explain how it is superior of Gibbs sampling for cosmological parameter estimation. In Sect. \ref{sec:results}, we verify our implementation in \commander3\ by comparing it to Cobaya with uniform noise for fullsky and a special-purpose Python script that can solve the map making equation for uniform noise and constant latitude Galactic mask which makes the mapmaking equation computationally tractable to evaluate. We also comment on the prohibitive computational cost of the method as implemented now and what can be done to improve the performance. In Sect. \ref{sec:conclusions} we make out conclusions.
 
 \section{Joint sampling of cosmological parameters and sky signal}
 \label{sec:methods}
 
-In this section, we will introduce the algorithm proposed in \citet{racine:2016} to jointly sample the cosmological parameters of the CMB and its sky signal without using any likelihood approximations.
+In this section, we will introduce the mathematical notation and algorithm proposed in \citet{racine:2016} to jointly sample the cosmological parameters of the CMB and its sky signal without using any likelihood approximations.
 
-We define the data model as
+We define the data model in this work as
 \begin{equation}
     \label{eq:data_model}
     d_{\ell m} = A_{\ell} s_{\ell m} + n_{\ell m},
 \end{equation}
-in spherical harmonics space where $d_{\ell m}$ is the observed data, $A_\ell$ is the diagonal beam and pixel window functions. $s_{\ell m}$ is the Gaussian CMB signal and $n_{\ell m}$ is the Gaussian instrumental noise. Eq.~\eqref{eq:data_model} is equivalent in pixel space where $d_p = \sum_{\ell m} d_{\ell m} Y_{\ell m}$ with $p$ denoting the pixel and $Y_{\ell m}$ the spherical harmonics.
+in spherical harmonics space where $d_{\ell m}$ is the observed data, $A_\ell$ is the diagonal beam and pixel window functions. $s_{\ell m}$ is the Gaussian CMB signal and $n_{\ell m}$ is the Gaussian instrumental noise. Eq.~\eqref{eq:data_model} is equivalent in pixel space where ${d_p = \sum_{\ell m} d_{\ell m} Y_{\ell m}(p)}$ with $p$ denoting the pixel and $Y_{\ell m}(p)$ the spherical harmonics at the pixel coordinate.
 
-The covariance matrices are given as $\langle s_{\ell m}s_{\ell' m'}^* \rangle = C_{\ell} \delta_{\ell \ell'}\delta_{mm'}$ and $\langle n_{\ell m}n_{\ell' m'}^* \rangle = N_{\ell m, \ell' m'}$. With isotropic noise and no mask, $N_{\ell m, \ell' m'} $ becomes diagonal, i.e. $N_{\ell m, \ell' m'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$. But for a realistic setup with anisotropic instrumental noise and partial sky coverage, it will be non-diagonal and can be dense.
+In spherical harmonics space, we take the covariance matrices to be Gaussian and isotropic, giving $\langle s_{\ell m}s_{\ell' m'}^* \rangle = C_{\ell} \delta_{\ell \ell'}\delta_{mm'}$ and $\langle n_{\ell m}n_{\ell' m'}^* \rangle = N_{\ell m, \ell' m'}$. With uniform noise and no mask, $N_{\ell m, \ell' m'} $ becomes diagonal, i.e. $N_{\ell m, \ell' m'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$. But for a realistic setup with non-uniform noise and partial sky coverage, it will be non-diagonal and can be dense.
 
 \subsection{Exact likelihood}
 \label{sec:exact-likelihood}
@@ -222,21 +226,33 @@ In principle, we could evaluate the exact marginal likelihood of the cosmologica
 \end{equation}
 This, however, becomes intractible for modern CMB experiments as the computational expense grows as $\mathcal{O}(N_p^3)$, where $N_p$ is the number of pixels.
 
-In the unrealistic case of isotropic noise and no applied mask, this is likelihood can be simplified and becomes computionally tractable. Using the notation that the observed beam-convolved map with noise of the CMB is $\hat{C}^{\mathrm{o}}_{\ell} = \frac{1}{2\ell+1}\sum_m d_{\ell m}d^*_{\ell m}$, and assuming isotropic white noise $N_{\ell m, \ell'm'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$, it is straightforward to show that this likelihood simplifies to
+In the unrealistic case of uniform noise and no applied mask, this is likelihood can be simplified and becomes computionally tractable. Using the notation that the observed beam-convolved map with noise of the CMB is $\hat{C}^{\mathrm{o}}_{\ell} = \frac{1}{2\ell+1}\sum_m d_{\ell m}d^*_{\ell m}$, and assuming isotropic white noise $N_{\ell m, \ell'm'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$, it is straightforward to show that this likelihood simplifies to
 \begin{align}
     \nonumber
-    \log P(\theta | \textbf{d}) = \sum_{\ell} &-\frac{2\ell+1}{2} \frac{\hat{C}^{\mathrm{o}}_{\ell}}{A_\ell^2 C^{\Lambda \mathrm{CDM}}_{\ell}(\theta) + N_\ell}\\
-    & -\frac{2\ell+1}{2} \ln \left(A_\ell^2 C^{\Lambda \mathrm{CDM}}_{\ell}(\theta) + N_\ell \right),
+    \log P(\theta | \textbf{d}) = \sum_{\ell} -\frac{2\ell+1}{2} &\bigg[\frac{\hat{C}^{\mathrm{o}}_{\ell}}{A_\ell^2 C^{\Lambda \mathrm{CDM}}_{\ell}(\theta) + N_\ell}\\
+    -\ln &\left(\frac{\hat{C}^{\mathrm{o}}_{\ell}}{A_\ell^2 C^{\Lambda \mathrm{CDM}}_{\ell}(\theta) + N_\ell} \right) \bigg],
 \end{align}
-where we have removed constant terms. Including polarization as well, this generalizes to
-\begin{equation}
-    \log P(\theta | \textbf{d}) = ...
-\end{equation}
-This will later be used as the likelihood to verify our implementation of the algorithm presented in \cite{racine:2016} with the help of Cobaya \cite{cite-cobaya}.
+where we have removed constant terms. Including polarization as well, this generalizes to \citep{Hamimeche:2008ai}
+\begin{align}
+    \nonumber
+    \log P(\theta | \textbf{d}) = \sum_\ell -\frac{2\ell+1}{2} \bigg[&\mathrm{Tr}\left(\hat{\boldsymbol C}^{\mathrm{o}}_{\ell}  \left(\textbf{A}^T \textbf{C}^{\Lambda\mathrm{CDM}}_{\ell} \textbf{A} + \textbf{N}\right)^{-1}\right)\\
+    - &\ln \det \left(\hat{\boldsymbol C}^\mathrm{o}_{\ell}  \left(\textbf{A}^T \textbf{C}^{\Lambda\mathrm{CDM}}_{\ell} \textbf{A} + \textbf{N}\right)^{-1}\right)\bigg].
+\end{align}
+Here, we have removed the explicit dependence of $\theta$ in the theoretical $\Lambda$CDM power spectra, $\textbf{C}^{\Lambda\mathrm{CDM}}_{\ell} = \textbf{C}^{\Lambda\mathrm{CDM}}_{\ell}(\theta)$. We also use
+\begin{align}
+    \hat{\boldsymbol C}^{\mathrm{o}}_{\ell} &= \frac{1}{2\ell+1}\sum_m \boldsymbol{d}_{\ell m}^T \boldsymbol{d}^*_{\ell m},\\
+    \textbf{C}^{\Lambda\mathrm{CDM}}_{\ell} &= \begin{bmatrix}
+        C^{TT}_\ell & C^{TE}_\ell & C^{TB}_\ell\\
+        C^{TE}_\ell & C^{EE}_\ell & C^{EB}_\ell\\
+        C^{TB}_\ell & C^{EB}_\ell & C^{BB}_\ell,
+    \end{bmatrix}
+\end{align}
+where we define the vectors of spherical harmonics coefficients, ${\boldsymbol{d}_{\ell m}^T = [a^T_{\ell m}, a^E_{\ell m}, a^B_{\ell m}]}$. We will use Cobaya \citep{Torrado:2020dgo} to evaluate this likelihood in the case of uniform noise on fullsky data to verify our \commander3\ implementation.
 
 \subsection{Gibbs sampling}
+\label{sec:gibbs}
 
-However, a more realistic set-up includes anisotropic noise and a Galactic mask, hence we need to approach the problem differently. Using Bayes theorem, the joint posterior density $P(\theta, \textbf{s} | d)$ can be written as
+However, a more realistic set-up includes non-uniform noise and a Galactic mask, and the exact likelihood becomes computationally too expensive. Using Bayes theorem, the joint posterior density $P(\theta, \textbf{s} | d)$ can be written as
 \begin{align}
     \nonumber
     P(\theta, \textbf{s} | \textbf{d}) &= \frac{P(\theta, \textbf{s}, d)}{P(\textbf{d})} = P(\textbf{d} | \textbf{s})P(\textbf{s}| \theta)\frac{P(\theta)}{P(\textbf{d})}\\
@@ -246,7 +262,7 @@ However, a more realistic set-up includes anisotropic noise and a Galactic mask,
 \end{align}
 From this joint posterior distribution, we can retrieve $P(\theta | \mathbf{d})$ by marginalizing over $\mathbf{s}$.
 
-In the spirit of the Gibbs sampling framework of Cosmoglobe, one might think that the best approach is to Gibbs sample both the sky signal $\mathbf{s}$ and cosmological parameters $\theta$
+In the spirit of the Gibbs sampling framework of \cosmoglobe, one might think that the best approach is to Gibbs sample both the sky signal $\mathbf{s}$ and cosmological parameters $\theta$
 \begin{align}
     s_{\ell m}^{i+1} &\leftarrow P(s_{\ell m} | \theta^{i}, d_{\ell m}),\\
     \label{eq:theta-gibbs}
@@ -266,7 +282,7 @@ This is a multivariate Gaussian distribution with mean $\hat{\textbf{s}}$ and a 
     \label{eq:mapmakingeq}
     \left[\mathbf{S}^{-1} + \mathbf{A}^t \mathbf{N}^{-1}\mathbf{A} \right]\mathbf{s} = \mathbf{A} \mathbf{N}^{-1} \mathbf{d} + \mathbf{S}^{-\frac{1}{2}}\mathbf{w}_0 +\mathbf{A N}^{-\frac{1}{2}}\mathbf{w}_1,
 \end{equation}
-where $\mathbf{w}_0$ and $\mathbf{w}_1$ are vectors where each element is a random number drawn from $\mathcal{N}(0, 1)$. In spherical harmonics space, these two vectors must be complex\footnote{Except for $m=0$ where $w_0$ and $w_1$ are real.} with amplitude from $\mathcal{N}(0, 1)$. And the signal covariance matrix is $\mathbf{S} = \mathbf{S}(\theta^i) = C_{\ell}\left(\theta^i\right)\delta_{\ell \ell'}\delta_{mm'}$.
+where $\mathbf{w}_0$ and $\mathbf{w}_1$ are randomly drawn Gaussian maps with unit variance and zero mean. The signal covariance matrix is $\mathbf{S} = \mathbf{S}(\theta^i) = C_{\ell}\left(\theta^i\right)\delta_{\ell \ell'}\delta_{mm'}$.
 
 We decompose the sky map into the mean field map given in Eq.~\eqref{eq:mean-field-map} and the fluctuation map $\hat{\textbf{f}}$,
 \begin{equation}
@@ -275,28 +291,25 @@ We decompose the sky map into the mean field map given in Eq.~\eqref{eq:mean-fie
 \end{equation}
 so that $\mathbf{s} = \hat{\mathbf{s}} + \hat{\mathbf{f}}$.
 
-If we only analyze temperature fluctuations in a setup with isotropic noise and no mask, this can be solved exactly:
+If we only analyze temperature fluctuations in a setup with uniform noise on fullsky data, this can be solved exactly:
 \begin{align}
     \hat{s}_{\ell m} &= d_{\ell m}\frac{A_{\ell}C_{\ell}}{N_\ell + A_{\ell}^2C_{\ell}},\\
     \hat{f}_{\ell m} &= w_{0\ell m}\frac{N_{\ell}\sqrt{C_{\ell}}}{N_\ell + A_{\ell}^2C_{\ell}}+w_{1\ell m}\frac{\sqrt{N_{\ell}}A_{\ell}C_\ell}{N_\ell + A_{\ell}^2C_{\ell}}.
 \end{align}
-In a more realistic scenario with anisotropic noise and masking, Eq.~\eqref{eq:mapmakingeq} becomes a computationally hard equation to solve. In Commander3 it is solved by the method of Conjugant Gradient which is the most time consuming part of the sampling process.
+In a more realistic scenario with non-uniform noise and masking, Eq.~\eqref{eq:mapmakingeq} becomes a computationally hard equation to solve. In \commanderthree, it is solved by the method of Conjugant Gradient which is the most time consuming part of the sampling process. In Appendix A, we show how this equation can be simplified for a constant latitude mask with isotropic noise. We made a Python script that does this calculation to verify our algorithm implementation in \commanderthree.
 
-In Appendix A, we show how this equation can be simplified for a constant latitude mask with isotropic noise. We will use this method to verify our algorithm implementation in Commander later.
-
-The second step of the Gibbs sampling in Eq.~\eqref{eq:theta-gibbs} can be sampled by an inverse Wishart ditribution, but as we will not be using this step further in this work, we will refer readers to Ref.~\cite{}.
+The second step of the Gibbs sampling in Eq.~\eqref{eq:theta-gibbs} can be sampled by an inverse Wishart ditribution, but as we will not be using this step further in this work, we will refer readers to Ref.~\cite{???}.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{figures/parameter-estimation.jpg}
-    \label{fig:illustration}
-	\caption{Illustration of consequetive samples of the Gibbs sampler and the method of \cite{racine:2016}. The Gibbs sampler perform poorly in the low signal-to-noise regime as it requires a much larger number of samples to explore the posterior distribution as compared to the high signal-to-noise region. The joint sampler in the lower panels performs well in both regimes as it allows the next sample to move diagonally in parameter space as we sample $\theta$, yielding $C_\ell(\theta)$ in the figure.}
+	\caption{\label{fig:illustration}Illustration of consequetive samples of the Gibbs sampler and the method of \cite{racine:2016}. The Gibbs sampler perform poorly in the low signal-to-noise regime as it requires a much larger number of samples to explore the posterior distribution as compared to the high signal-to-noise region. The joint sampler in the lower panels performs well in both regimes as it allows the next sample to move diagonally in parameter space as we sample $\theta$, yielding $C_\ell(\theta)$ in the figure.}
 \end{figure}
 
-The Gibbs sampling method works well in high signal-to-noise regions, but performs poorly in the opposite limit. This can be understood by Eq.~\eqref{eq:fluc-map} when we have high instrumental noise, $\mathbf{N} \rightarrow \infty$, then we get no information of $s_{\ell m}$ from the data $d_{\ell m}$, and the sky map becomes only a realization of $C_{\ell}$, i.e. $s_{\ell m} \rightarrow \hat{f}_{\ell m} = \sqrt{C_{\ell}} w_{0\ell m}$. Since we have no information of the mean field map $\hat{s}_{\ell m} \rightarrow 0$, we also do not know $C_\ell$. Hence, we get a strong degeneracy between the $C_\ell$ and $s_{\ell m}$. Gibbs sampling is well-known of performing poorly for strongly correlated variables as you can not move diagonally in parameter space from one end of the joint posterior distribution to the other. This problem is shown in the top panel of Fig.~\ref{fig:illustration}.
+The Gibbs sampling method works well in high signal-to-noise regions, but performs poorly in the opposite limit. This can be understood by Eq.~\eqref{eq:fluc-map} when we have high instrumental noise, $\mathbf{N} \rightarrow \infty$, then we have no information of $s_{\ell m}$ from the data $d_{\ell m}$, and the sky map becomes only a realization of the variance $C_{\ell}$, i.e. $s_{\ell m} \rightarrow \hat{f}_{\ell m} = \sqrt{C_{\ell}} w_{0\ell m}$. Since we have no information of the mean field map $\hat{s}_{\ell m} \rightarrow 0$, we also do not know $C_\ell$. Hence, we get a strong degeneracy between the $C_\ell$ and $s_{\ell m}$. Gibbs sampling is well-known of performing poorly for strongly correlated parameters as you can not move diagonally in parameter space from one end of the joint posterior distribution to the other. This problem is shown in the top panel of Fig.~\ref{fig:illustration}, which shows the difference in the correlation length of Gibbs sampling between high and low signal-to-noise limits.
 
 \subsection{Joint sampling}
-
+\label{sec:joint-sampling}
 A solution to the poor correlation length of the Gibbs sampling in low signal-to-noise regions was proposed by \cite{jewell:2009} further developed in \cite{racine:2016}. The authors suggested a Metropolis-Hasting sampler with a general proposal rule for $\theta$ and a rescaling of the fluctutation term of the sky signal. This allows the sampler to move diagonally in parameter space and more efficiently explore the full joint posterior distribution, as depicted in Fig.~\ref{fig:illustration}.
 
 More precisely, one would perform
@@ -305,33 +318,21 @@ More precisely, one would perform
  &\leftarrow w(\theta |\theta^i)\\
     s_{\ell m}^{i+1} &\leftarrow P(s_{\ell m} | \theta^{i+1}, d_{\ell m}),
 \end{align}
-for each Gibbs iteration, where the arrow denotes drawing a sample from the distribution on the right-hand side. $w(\theta |\theta^i)$ is the proposal distribution of the cosmological parameters. We use a multivariate Gaussian,
+for each Gibbs iteration, where the arrow denotes drawing a sample from the distribution on the right-hand side. $w(\theta |\theta^i)$ is the proposal distribution of the cosmological parameters. We use a multivariate Gaussian function,
 \begin{equation}
 w(\theta |\theta^i) = e^{-\frac12 \left(\theta - \theta^i \right)^T C_{\theta}^{-1}\left(\theta - \theta^i \right)}.
 \end{equation}
 For optimal chain convergence, the proposal variance $C_{\theta}$ should resemble the posterior distribution. The proposal variance we use is created from the samples of an earlier chain created with a diagonal proposal matrix.
 
-They key altercation is that scale the fluctuation map of the last accepted sample.
+They key altercation is to rescale the fluctuation map of the last accepted sample,
 \begin{equation}
-    \hat{f}_{\ell m}^{\textrm{scaled},\, i+1} = \left(\textbf{C}^{i+1}_{\ell}\right)^{1/2}\left(\textbf{C}^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i},
+    \hat{f}_{\ell m}^{\textrm{scaled},\, i+1} = \left(\textbf{C}^{\Lambda\mathrm{CDM},\,i+1}_{\ell}\right)^{1/2}\left(\textbf{C}^{\Lambda\mathrm{CDM},\,i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i},
 \end{equation}
-so that the map of sample $i+1$ becomes
+so that the map of sample $i+1$ is
 \begin{equation}
-    s^{i+1}_{\ell m} = \hat{s}_{\ell m}^{i+1} + \left(\textbf{C}^{i+1}_{\ell}\right)^{1/2}\left(\textbf{C}^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
+    s_{\ell m}^{i+1} = \hat{s}_{\ell m}^{i+1} + \left(\textbf{C}^{\Lambda\mathrm{CDM},\,i+1}_{\ell}\right)^{1/2}\left(\textbf{C}^{\Lambda\mathrm{CDM},\,i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
 \end{equation}
-Here,
-\begin{equation}
-\textbf{C}_{\ell} = \begin{bmatrix}
-C^{TT}_\ell & C^{TE}_\ell & 0\\
-C^{TE}_\ell & C^{EE}_\ell & 0\\
-0 & 0 & C^{BB}_\ell
-\end{bmatrix},
-\end{equation}
-Here, we have set the parity-odd power spectra to zero, i.e. $C^{EB}_\ell =C^{TB}_\ell = 0$ as predicted by \LCDM.
-
-Hence, instead of solving Eq.~\eqref{eq:fluc-map} for a new fluctuation map for sample $i+1$, we scale the fluctuation map of the previous sample. If sample $i+1$ is accepted, then we calculate $f^{i+1}$ from Eq.~\eqref{eq:fluc-map} which will be used to find the scaled fluctuation map of the enxt sample, $\hat{f}_{\ell m}^{\textrm{scaled},\, i+2}$.
-
-The acceptance rate for this proposal was calculated in \cite{racine:2016} to be
+In low signal-to-noise regions, this rescaling allows diagonal moves in $s_{\ell m} - C_\ell$ space of Fig.~\ref{fig:illustration}. The acceptance rate for this proposal was calculated in \cite{racine:2016} to be
 \begin{equation}
     \label{eq:acceptance-rate}
     A = \mathrm{min}\left[1, \frac{\pi(\theta^{i+1})}{\pi(\theta^i)} \frac{w(\theta^{i} |\theta^{i+1})}{w(\theta^{i+1} |\theta^i) }\frac{P(\theta^{i+1})}{P(\theta^i)} \right].
@@ -344,7 +345,7 @@ Here, $P(\theta)$ is the prior on $\theta$ and
 \end{align}
 where we have omitted the $\theta^i$ dependence of $\hat{s}^i$, $\hat{f}^i$ and $S^i$. Our proposal matrix for the cosmological parameters is symmetric, $w(\theta^{i} |\theta^{i+1}) = w(\theta^{i+1} |\theta^{i})$, and hence we can remove them from Eq.~\eqref{eq:acceptance-rate}.
 
-Again, the acceptance rate will use the scaled fluctuation term, $f_{\ell m}^{\textrm{scaled}, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Sample $i$ however, will use the fluctuation solution to Eq.~\eqref{eq:mapmakingeq}.
+Note, the acceptance rate will use the scaled fluctuation term, $f_{\ell m}^{\textrm{scaled}, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Hence, we only need to calculate $f_{\ell m}^{i+1}$ from this equation if the sample is accepted. This allows us to save roughly half the computational time of discarded samples as compared to accepted samples.
 
 The algorithm can be broken down into these steps:
 \begin{itemize}
@@ -367,13 +368,13 @@ In this work, we sample the 6 $\Lambda$CDM parameters, i.e. $\theta=(\Omega_{\te
 \section{Results}
 \label{sec:results}
 
-We implement the algorithm into the Commander framework as a part of the full Gibbs sampling process alongside sampling of instrumental and astrophysical parameter in future work.
+We implement the algorithm into the \commanderthree\ framework with the aim of being a part of the full Gibbs sampling chain alongside sampling of instrumental and astrophysical parameter in future work.
 
-To verify the implementation, we also created a Python script that samples cosmological parameters on a CMB simulation with isotropic noise and a constant latitude mask. We show how we calculate an analytic expression for $N^{-1}_{\ell m, \ell' m'}$ in Appendix A, and how that simplifies matrix equations such as the map making equation and acceptance rate. Appendix B shows hot to use the public Python code.
+To verify the implementation, we also created a special-prupose Python script that samples cosmological parameters on a CMB simulation with uniform noise and a constant latitude mask. We show how we calculate an analytic expression for $N^{-1}_{\ell m, \ell' m'}$ in Appendix A, and how that simplifies matrix equations such as the map making equation and acceptance rate. This Python script has been made publically available\footnote{\url{https://github.com/LilleJohs/}}. We also use Cobaya \citep{Torrado:2020dgo} to verify uniform noise on full sky data.
 
-We created 2 sets of CMB simulations: One with isotropic noise and one with anisotropic noise using a realization of a randomly picked RMS noise map of the 70\,GHz from the official BeyondPlanck chain. Both simulations are created using $N_{\textrm{side}}=512$ and the public PR4 70\,GHz beams.
+We create two sets of CMB simulations: One with uniform noise and one with non-uniform noise using a realization of a randomly picked RMS noise map of the 70\,GHz from the official BeyondPlanck chain. Both simulations are created using $N_{\textrm{side}}=512$ and the public Planck Data Release 4 70\,GHz beams \citep{npipe}.
 
-First, we run the isotropic noise simulation without a mask in Cobaya, Python and Commander to make sure the three implementations agree with each other. This case can be solved exactly using the likelihood presented in Section \ref{sec:exact-likelihood} due to $\mathbf{N}$ being diagonal and we use Cobaya\cite{cobaya} for this case. Fig.~\ref{fig:nomask} shows the posterior distribution of the cosmological parameters from 50 000 samples each of Commander, Python and Cobaya, and we find excellent agreement between the three implementations.
+First, we run the uniform noise simulation without a mask in Cobaya, Python and \commanderthree\ to make sure the three implementations agree with each other. This case can be solved exactly using the likelihood presented in Section \ref{sec:exact-likelihood} which we do using Cobaya \citep{Torrado:2020dgo}, while the Python script implements the method of \citet{racine:2016}. Fig.~\ref{fig:nomask} shows the posterior distribution of the cosmological parameters from 50 000 samples each of \commanderthree, Python and Cobaya, and we find excellent agreement between the three implementations.
 
 \begin{figure}
 	\centering
@@ -381,11 +382,11 @@ First, we run the isotropic noise simulation without a mask in Cobaya, Python an
 	\caption{\label{fig:mask10}Cosmological parameter estimation on same simulation as in Fig.~\ref{fig:nomask} but a constant latitude mask is applied so that the sky fraction is 90\%.}
 \end{figure}
 
-We then proceed by adding a constant latitude mask of latitude $\arcsin(0.1) \sim 5.7^\circ$ as this gives the sky coverage $f_{\mathrm{sky}} = 0.90$. $\textbf{N}$ is no longer diagonal and the brute-force method of Section \ref{sec:exact-likelihood} will be computationally intractable. On the other hand, it is doable for the Python implementation by the computational simplification of Appendix A.
+We then proceed by adding a constant latitude mask of latitude $\arcsin(0.1) \sim 5.7^\circ$ as this gives the sky coverage $f_{\mathrm{sky}} = 0.90$. $\textbf{N}$ is no longer diagonal and the brute-force method of Section \ref{sec:exact-likelihood} will be computationally intractable. 
 
-Though the Python implementation can handle it exactly, it is computationally demanding with a single accepted sample taking \textcolor{red}{???} CPU-hours. Note, that an accepted sample takes longer to calculate than a discarded sample as we only calculate the fluctuation map $f^i_{\ell m}$ if sample $i$ is accepted.
+We use the Python implementation for this case, but we note that it is computationally demanding with a single accepted sample taking 853 CPU-hours. Note, that an accepted sample takes longer to calculate than a discarded sample as we only calculate the fluctuation map $f^i_{\ell m}$ if sample $i$ is accepted.
 
-We show the posterior distribution of $\sim 2000$ Python samples and $\sim 9000$ Commander samples in Fig.~\ref{fig:mask10}. Although we have a lack of independent samples due to the long correlation length and computational cost, we find an agreement between the two implementations.
+We show the posterior distribution of $\sim 5000$ Python samples and $\sim 9000$ \commanderthree\ samples in Fig.~\ref{fig:mask10}. Although we have a lack of independent samples due to the long correlation length and computational cost, we find good an agreement between the two implementations.
 
 \begin{figure}
 	\centering
@@ -393,9 +394,9 @@ We show the posterior distribution of $\sim 2000$ Python samples and $\sim 9000$
 	\caption{\label{fig:autocorrelation}Auto correlations of some cosmological parameters.}
 \end{figure}
 
-We calculate the autocorrelation function for three cosmological parameters for three chains in Fig.~\ref{fig:autocorrelation}. We show the brute-force likelihood method in Cobaya which has a correlation length $\lesssim 10$. Cosmological parameter sampling using the likelihood-free estimator in Commander for the same case is also shown and exhibits a correlation length 5 times higher than the brute-force likelihood.
+We calculate the autocorrelation function for three cosmological parameters for three chains in Fig.~\ref{fig:autocorrelation}. We show the brute-force likelihood method in Cobaya which has a correlation length $\lesssim 10$. Cosmological parameter sampling using the likelihood-free estimator in \commanderthree\ for the same case is also shown and exhibits a correlation length 5 times higher than the brute-force likelihood.
 
-Although we are sampling the same simulated CMB map without a mask in Commander and Cobaya, we expect a higher correlation length as the algorithm of \citet{raccine2016} also samples the sky signal $s_{\ell m}$. We also show in addition the case with a $10\%$ mask, which increases the correlation length as compared to full-sky.
+Although we are sampling the same simulated CMB map without a mask in \commanderthree\ and Cobaya, we expect a higher correlation length as the algorithm of \citet{raccine2016} also samples the sky signal $s_{\ell m}$. We also show in addition the case with a $10\%$ mask, which increases the correlation length as compared to full-sky.
 
 \subsection{Realistic mask and noise}
 
@@ -405,7 +406,7 @@ Although we are sampling the same simulated CMB map without a mask in Commander 
 	\caption{\label{fig:traceplot}Traceplot of the cosmological parameters for the $70\,$GHz case. The dashed lines show the input value of the CMB simulation.}
 \end{figure}
 
-We then turn to a more realistic case: We make a realization of a 70\,GHz noise map and a realistic Galactic and point source mask of $f_{\mathrm{sky}}=0.85$. Our Python implementation can not sample this case as it neither supports anisotropic noise nor a realistic mask. Hence, we can only rely on the CG iterator of Commander3.
+We then turn to a more realistic case: We make a realization of a 70\,GHz noise map and a realistic Galactic and point source mask of $f_{\mathrm{sky}}=0.85$. Our Python implementation can not sample this case as it neither supports anisotropic noise nor a realistic mask. Hence, we can only rely on the CG iterator of \commanderthree3.
 
 \begin{figure}
 	\centering
@@ -418,9 +419,9 @@ We then turn to a more realistic case: We make a realization of a 70\,GHz noise 
 	\caption{\label{fig:sigma_ell}The power spectra for the initial sky map sample of the 70\,GHz case shown in Fig.~\ref{fig:sky_map}. This is compared to the theoretical CAMB power spectra.}
 \end{figure}
 
-Before showing the results of the run, it is constructive to visualize the sky map from a sample, and we show the temperature fluctuations from the initial sample in Fig.~\ref{fig:sky_map}. The top panel shows the mean field map $\hat{s}_{\ell m}$, which retrieves information about the sky from away from the masked regions. Notice that there is still information to be gained in the mask region for large scales.
+Before showing the results of the run, it is constructive to visualize the decomposed sky signal, and we show the temperature fluctuations from the initial sample in Fig.~\ref{fig:sky_map}. The top panel shows the mean field map $\hat{s}_{\ell m}$. As the mask hides everything in the Galactic plane, we only have knowledge of large scale fluctuations inside the masked regions from the information outside of the mask.
 
-However, we lack information in the masked regions on smaller scales, yielding a strong signal in the stocastic fluctuation map $\hat{f}_{\ell m}$. At even smaller scales, noise dominates and the uncertainty from noise is shown at very high multipoles in $\hat{f}_{\ell m}$. Putting both maps together gives us the sky map of this sample, $s_{\ell m} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$.
+However, we lack knowledge in the masked regions on smaller scales, yielding a strong signal in the stocastic fluctuation map $\hat{f}_{\ell m}$. At even smaller scales outside of the masked regions, noise dominates and the uncertainty from noise is shown at very high multipoles in $\hat{f}_{\ell m}$. Putting both maps together gives us the sky map of this sample, $s_{\ell m} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$.
 
 We show the temperature and polarization power spectra of this sky map in Fig.~\ref{fig:sigma_ell}. At lower multipoles there is a high signal-to-noise (except for $BB$) and the mean field map $\hat{s}_{\ell m}$ dominates. But as we go to higher multipoles, noise starts dominating and all power comes from the fluctuation field $\hat{f}_{\ell m}$.
 
@@ -441,7 +442,7 @@ Lowering this number can be done by better preconditioning and Hamiltonian sampl
 \section{Conclusions}
 \label{sec:conclusions}
 
-We have shown that the algorithm presented in \cite{racine:2016} works well in the Commander framework for anisotropic noise and mask.
+We have shown that the algorithm presented in \cite{racine:2016} works well in the \commanderthree framework for anisotropic noise and mask.
 
 \bibliographystyle{../common/aa}
 
@@ -516,9 +517,6 @@ Since $N^{-1}_{\ell m, \ell' m'} \propto \delta_{m m'}$, we get simplified matri
 &= \sum_{\ell' }\left(N^{-1}\right)^{(m)}_{\ell, \ell'}b^{(m)}_{\ell'}.
 \end{align}
 To solve the map-making equation, we get a matrix equation for each $0 \leq m \leq \ell_{\mathrm{max}}$. This gives us $\ell_{\textrm{max}}+1$ number of matrix equations where the dimensions of the matrices are maximally $\ell_{\textrm{max}} \times \ell_{\textrm{max}}$. This is numerically much quicker than inverting the full $(\ell_{\textrm{max}})^2 \times (\ell_{\textrm{max}})^2$ matrix once.
-
-\section{How to use the public Python code}
-\label{sec:appendixB}
 
 
 \end{document}
