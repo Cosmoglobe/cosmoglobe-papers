@@ -206,16 +206,16 @@ The problem was identified and studied by \cite{Eriksen:2004ss} and solutions we
 \section{Joint sampling of cosmological parameters and sky signal}
 \label{sec:methods}
 
-In this section, we will introduce the mathematical notation and algorithm proposed in \citet{racine:2016} to jointly sample the cosmological parameters of the CMB and its sky signal without using any likelihood approximations.
+In this section, we introduce the mathematical notation and algorithm proposed in \citet{racine:2016} to jointly sample the cosmological parameters of the CMB and its sky signal without using any likelihood approximations.
 
 We define the data model in this work as
 \begin{equation}
     \label{eq:data_model}
     d_{\ell m} = A_{\ell} s_{\ell m} + n_{\ell m},
 \end{equation}
-in spherical harmonics space where $d_{\ell m}$ is the observed data, $A_\ell$ is the diagonal beam and pixel window functions. $s_{\ell m}$ is the Gaussian CMB signal and $n_{\ell m}$ is the Gaussian instrumental noise. Eq.~\eqref{eq:data_model} is equivalent in pixel space where ${d_p = \sum_{\ell m} d_{\ell m} Y_{\ell m}(p)}$ with $p$ denoting the pixel and $Y_{\ell m}(p)$ the spherical harmonics at the pixel coordinate.
+in spherical harmonics space where $d_{\ell m}$ is the observed data, $A_\ell$ is the diagonal beam and pixel window functions, while $s_{\ell m}$ is the Gaussian CMB signal and $n_{\ell m}$ is the Gaussian instrumental noise. Eq.~\eqref{eq:data_model} is equivalent in pixel space where ${d_p = \sum_{\ell m} d_{\ell m} Y_{\ell m}(p)}$ with $p$ denoting the pixel and $Y_{\ell m}(p)$ the spherical harmonics at the pixel coordinate.
 
-In spherical harmonics space, we take the covariance matrices to be Gaussian and isotropic, giving $\langle s_{\ell m}s_{\ell' m'}^* \rangle = C_{\ell} \delta_{\ell \ell'}\delta_{mm'}$ and $\langle n_{\ell m}n_{\ell' m'}^* \rangle = N_{\ell m, \ell' m'}$. With uniform noise and no mask, $N_{\ell m, \ell' m'} $ becomes diagonal, i.e. $N_{\ell m, \ell' m'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$. But for a realistic setup with non-uniform noise and partial sky coverage, it will be non-diagonal and can be dense.
+In spherical harmonics space, we take the covariance matrices to be Gaussian and isotropic, giving $\langle s_{\ell m}s_{\ell' m'}^* \rangle = C_{\ell} \delta_{\ell \ell'}\delta_{mm'}$ and $\langle n_{\ell m}n_{\ell' m'}^* \rangle = N_{\ell m, \ell' m'}$. With uniform noise and no mask, $N_{\ell m, \ell' m'} $ becomes diagonal, i.e., $N_{\ell m, \ell' m'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$. But for a realistic setup with non-uniform noise and partial sky coverage, it will be non-diagonal and can be dense.
 
 \subsection{Exact likelihood}
 \label{sec:exact-likelihood}
@@ -345,7 +345,7 @@ Here, $P(\theta)$ is the prior on $\theta$ and
 \end{align}
 where we have omitted the $\theta^i$ dependence of $\hat{s}^i$, $\hat{f}^i$ and $S^i$. Our proposal matrix for the cosmological parameters is symmetric, $w(\theta^{i} |\theta^{i+1}) = w(\theta^{i+1} |\theta^{i})$, and hence we can remove them from Eq.~\eqref{eq:acceptance-rate}.
 
-Note, the acceptance rate will use the scaled fluctuation term, $f_{\ell m}^{\textrm{scaled}, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Hence, we only need to calculate $f_{\ell m}^{i+1}$ from this equation if the sample is accepted. This allows us to save roughly half the computational time of discarded samples as compared to accepted samples.
+We note that the acceptance rate will use the scaled fluctuation term, $f_{\ell m}^{\textrm{scaled}, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Hence, we only need to calculate $f_{\ell m}^{i+1}$ from this equation if the sample is accepted. This allows us to save roughly half the computational time of discarded samples as compared to accepted samples.
 
 The algorithm can be broken down into these steps:
 \begin{itemize}
@@ -396,7 +396,7 @@ We show the posterior distribution of $\sim 5000$ Python samples and $\sim 9000$
 
 We calculate the autocorrelation function for three cosmological parameters for three chains in Fig.~\ref{fig:autocorrelation}. We show the brute-force likelihood method in Cobaya which has a correlation length $\lesssim 10$. Cosmological parameter sampling using the likelihood-free estimator in \commanderthree\ for the same case is also shown and exhibits a correlation length 5 times higher than the brute-force likelihood.
 
-Although we are sampling the same simulated CMB map without a mask in \commanderthree\ and Cobaya, we expect a higher correlation length as the algorithm of \citet{raccine2016} also samples the sky signal $s_{\ell m}$. We also show in addition the case with a $10\%$ mask, which increases the correlation length as compared to full-sky.
+also samplesAlthough we are sampling the same simulated CMB map without a mask in \commanderthree\ and Cobaya, we expect a higher correlation length as the algorithm of \citet{raccine:2016}  the sky signal $s_{\ell m}$. We also show in addition the case with a $10\%$ mask, which increases the correlation length as compared to full-sky.
 
 \subsection{Realistic mask and noise}
 
