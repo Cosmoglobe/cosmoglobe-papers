@@ -273,12 +273,12 @@ where we have defined the deterministic mean field map
 \label{eq:mean-field-map}
 \boldsymbol{\hat{s}} \equiv \left[\boldsymbol{S}^{-1} + \boldsymbol{A}^t \boldsymbol{N}^{-1}\boldsymbol{A} \right]^{-1} \boldsymbol{A} \boldsymbol{N}^{-1} \boldsymbol{d}.
 \end{equation}
-This is a multivariate Gaussian distribution with mean $\boldsymbol{\hat{s}}$ and a covariance matrix $\left[\boldsymbol{S}^{-1} + \boldsymbol{A}^t \boldsymbol{N}^{-1}\boldsymbol{A} \right]^{-1}$ which can be sampled from solving the equation
+This is a multivariate Gaussian distribution with mean $\boldsymbol{\hat{s}}$ and a covariance matrix $\left[\boldsymbol{S}^{-1} + \boldsymbol{A}^t \boldsymbol{N}^{-1}\boldsymbol{A} \right]^{-1}$ which can be sampled from solving the constrained realization equation:
 \begin{equation}
     \label{eq:mapmakingeq}
     \left[\boldsymbol{S}^{-1} + \boldsymbol{A}^t \boldsymbol{N}^{-1}\boldsymbol{A} \right]\boldsymbol{s} = \boldsymbol{A} \boldsymbol{N}^{-1} \boldsymbol{d} + \boldsymbol{S}^{-\frac{1}{2}}\boldsymbol{w}_0 +\boldsymbol{A N}^{-\frac{1}{2}}\boldsymbol{w}_1,
 \end{equation}
-where $\boldsymbol{w}_0$ and $\boldsymbol{w}_1$ are randomly drawn Gaussian maps with unit variance and zero mean. The signal covariance matrix is $\boldsymbol{S} = \boldsymbol{S}(\theta^i) = C_{\ell}\left(\theta^i\right)\delta_{\ell \ell'}\delta_{mm'}$.
+where $\boldsymbol{w}_0$ and $\boldsymbol{w}_1$ are randomly drawn Gaussian maps with unit variance and zero mean.
 
 We decompose the sky map into the mean field map given in Eq.~\eqref{eq:mean-field-map} and the fluctuation map $\boldsymbol{\hat{f}}$,
 \begin{equation}
@@ -286,13 +286,29 @@ We decompose the sky map into the mean field map given in Eq.~\eqref{eq:mean-fie
 \boldsymbol{\hat{f}} \equiv \left[\boldsymbol{S}^{-1} + \boldsymbol{A}^t \boldsymbol{N}^{-1}\boldsymbol{A} \right]^{-1} \left(\boldsymbol{S}^{-\frac{1}{2}}\boldsymbol{w}_0 +\boldsymbol{A N}^{-\frac{1}{2}}\boldsymbol{w}_1 \right)
 \end{equation}
 so that $\boldsymbol{s} = \boldsymbol{\hat{s}} + \boldsymbol{\hat{f}}$.
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/s_hat_f_hat.pdf}
+	\caption{\label{fig:sky_map}A constrained realization of a simulated CMB with a Galactic and point-source mask is decomposed into the mean field map $\hat{s}_{\ell m}$ and the fluctuation map $\hat{f}_{\ell m}$. The bottom panels shows the full sky map of the sample, $s_{\ell m} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$.}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/sigma_ell.pdf}
+	\caption{\label{fig:sigma_ell}The power spectra for the sky maps in Fig.~\ref{fig:sky_map}. This is compared to the $\Lambda$CDM power spectra used to generate the data.}
+\end{figure}
 
-Analyzing only the temperature fluctuations in a setup with uniform noise on fullsky data, this can be solved exactly in spherical harmonics space:
+In a setup with uniform noise on fullsky temperature data, this can be solved exactly in spherical harmonics space:
 \begin{align}
+    \label{eq:hat_s_approx}
     \hat{s}_{\ell m} &= d_{\ell m}\frac{A_{\ell}C_{\ell}}{N_\ell + A_{\ell}^2C_{\ell}},\\
+    \label{eq:hat_f_approx}
     \hat{f}_{\ell m} &= w_{0\ell m}\frac{N_{\ell}\sqrt{C_{\ell}}}{N_\ell + A_{\ell}^2C_{\ell}}+w_{1\ell m}\frac{\sqrt{N_{\ell}}A_{\ell}C_\ell}{N_\ell + A_{\ell}^2C_{\ell}}.
 \end{align}
 In a more realistic scenario with non-uniform noise and masking, Eq.~\eqref{eq:mapmakingeq} becomes a computationally hard equation to solve. In \commanderthree, it is solved by the method of Conjugant Gradient which is the most time consuming part of the sampling process. In Appendix A, we show how this equation can be simplified for a constant latitude mask with isotropic noise. We made a Python script that does this calculation to verify our algorithm implementation in \commanderthree.
+
+We visualize a constrained realization generated in \commanderthree\ in Fig.~\ref{fig:sky_map}. Here, we use a realistic Galactic plane and point-source mask and non-uniform noise. This configuration corresponds to the realistic setup we will discuss later in Sec.~\ref{sec:results}. Equations \eqref{eq:hat_s_approx} and \eqref{eq:hat_f_approx} are not valid due to $\boldsymbol{N}$ being non-diagonal in spherical harmonics space, and we need to solve the dense matrix equations in Eqs.~\ref{eq:mean-field-map} and \ref{eq:fluc-map}. The top panel shows the mean field map $\hat{s}_{\ell m}$. As the mask hides everything in the Galactic plane, we only have knowledge of large scale fluctuations inside the masked regions from the information outside of the mask. However, we lack knowledge of smaller scales in the masked regions, yielding a strong signal in the stocastic fluctuation map $\hat{f}_{\ell m}$. At even smaller scales outside of the masked regions, noise dominates and the uncertainty from noise is shown at very high multipoles in $\hat{f}_{\ell m}$. Putting both maps together gives us the sky map of this sample, $s_{\ell m} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$.
+
+We show the temperature and polarization power spectra of this sky map in Fig.~\ref{fig:sigma_ell}. At lower multipoles there is a high signal-to-noise (except for $BB$) and the mean field map $\hat{s}_{\ell m}$ dominates. But as we go to higher multipoles, noise starts dominating and all power comes from the fluctuation field $\hat{f}_{\ell m}$.
 
 The second step of the Gibbs sampling in Eq.~\eqref{eq:theta-gibbs} can be sampled by an inverse Wishart ditribution, but we will not be using this step further in this work.
 
@@ -333,7 +349,7 @@ In low signal-to-noise regions, this rescaling allows diagonal moves in $s_{\ell
     \label{eq:acceptance-rate}
     A = \mathrm{min}\left[1, \frac{\pi(\boldsymbol{\theta}^{i+1})}{\pi(\boldsymbol{\theta}^i)} \frac{w(\boldsymbol{\theta}^{i} |\boldsymbol{\theta}^{i+1})}{w(\boldsymbol{\theta}^{i+1} |\boldsymbol{\theta}^i) }\frac{P(\boldsymbol{\theta}^{i+1})}{P(\boldsymbol{\theta}^i)} \right].
 \end{equation}
-Here, $P(\theta)$ is the prior on $\boldsymbol{\theta}$ and
+Here, $P(\boldsymbol{\theta})$ is the prior on $\boldsymbol{\theta}$ and
 \begin{align}
     \nonumber
     \pi(\boldsymbol{\theta}^{i}) = \mathrm{exp}\bigg[&-\frac12 \left(\boldsymbol{d}-\boldsymbol{A}\boldsymbol{\hat{s}}^i\right)^T \boldsymbol{N}^{-1}\left(\boldsymbol{d}-\boldsymbol{A}\boldsymbol{\hat{s}}^i\right)\\
@@ -403,23 +419,6 @@ Although we are sampling the same simulated CMB map without a mask in \commander
 \end{figure}
 
 We then turn to a more realistic case: We make a realization of a 70\,GHz noise map and a realistic Galactic and point source mask of $f_{\mathrm{sky}}=0.85$. Our Python implementation can not sample this case as it neither supports anisotropic noise nor a realistic mask. Hence, we can only rely on the CG iterator of \commanderthree3.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figures/s_hat_f_hat.pdf}
-	\caption{\label{fig:sky_map}The sky signal decomposed into the mean field map $\hat{s}_{\ell m}$ and the fluctuation map $\hat{f}_{\ell m}$ of the initial sample. The bottom panels shows the full sky map of the sample, $s_{\ell m} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$.}
-\end{figure}
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figures/sigma_ell.pdf}
-	\caption{\label{fig:sigma_ell}The power spectra for the initial sky map sample of the 70\,GHz case shown in Fig.~\ref{fig:sky_map}. This is compared to the theoretical CAMB power spectra.}
-\end{figure}
-
-Before showing the results of the run, it is constructive to visualize the decomposed sky signal, and we show the temperature fluctuations from the initial sample in Fig.~\ref{fig:sky_map}. The top panel shows the mean field map $\hat{s}_{\ell m}$. As the mask hides everything in the Galactic plane, we only have knowledge of large scale fluctuations inside the masked regions from the information outside of the mask.
-
-However, we lack knowledge in the masked regions on smaller scales, yielding a strong signal in the stocastic fluctuation map $\hat{f}_{\ell m}$. At even smaller scales outside of the masked regions, noise dominates and the uncertainty from noise is shown at very high multipoles in $\hat{f}_{\ell m}$. Putting both maps together gives us the sky map of this sample, $s_{\ell m} = \hat{s}_{\ell m} + \hat{f}_{\ell m}$.
-
-We show the temperature and polarization power spectra of this sky map in Fig.~\ref{fig:sigma_ell}. At lower multipoles there is a high signal-to-noise (except for $BB$) and the mean field map $\hat{s}_{\ell m}$ dominates. But as we go to higher multipoles, noise starts dominating and all power comes from the fluctuation field $\hat{f}_{\ell m}$.
 
 In Fig.~\ref{fig:traceplot} we show the traceplots of the cosmological parameters from this run. We did not include this chain into the autocorrelation Fig.~\ref{fig:autocorrelation} as we have few samples for it converge, but it is clear by eye that the correlation length is $\mathcal{O}(100)$.
 
