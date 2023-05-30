@@ -155,14 +155,14 @@
 
 \begin{document}
 
-\title{\bfseries{\Cosmoglobe: A first Commander implementation of likelihood-free\\ cosmological parameter estimation with CMB data}}
+\title{\bfseries{\Cosmoglobe: On the computational expense of likelihood-free\\ CMB cosmological parameter estimation}}
 \input{authors.tex}
 %\authorrunning{From BeyondPlanck to Cosmoglobe}
 \authorrunning{Eskilt et al.}
 \titlerunning{CMB parameter estimation}
 
 \abstract{
-  We implement support for likelihood-free cosmological parameter estimation in \commanderthree, an integrated Bayesian analysis framework for cosmic microwave background (CMB) observations developed by the \BP\ and \cosmoglobe\ projects, and we assess the computational costs of this method. This method was originally proposed by Racine et al.\ (2016), who implemented a proof-of-concept Python code applicable to ideal observations with uniform white noise and full-sky coverage; with the new \commanderthree\ implementation presented in this paper, this method is now finally applicable to realistic data with full end-to-end error propagation. We validate the results with two external codes. The first is a uniform noise and full-sky likelihood coupled to Cobaya, and we find excellent agreement in this ideal case. The second code is a special-purpose Python implementation of the Racine et al.\ method for uniform noise and an azimuthally symmetric Galactic mask, for which the fundamental mapmaking equations may be solved analytically. We find good agreement also in this case, up to the precision allowed by the finite number of available samples. However, we also find that the computational cost of producing one single CMB sample with acceptable accuracy using the current implementation is high: For a case similar to the \Planck\ LFI 70\,GHz channel (with $\ell_{\mathrm{max}}=1300$, $N_\mathrm{side}=512$, and an accepted sky fraction of $f_{\mathrm{sky}}=0.85$), we require more than 5000 Conjugate Gradient iterations to reach sufficient accuracy, for a total computational cost of 2848\,CPU-hrs. At the same time, the typical Markov chain correlation length is $\sim$$\,100$ samples, and producing two indendent samples therefore costs $\sim$$\,30\,000$\,CPU-hrs. For comparison, producing one single end-to-end sample for all \Planck\ LFI and \WMAP\ channels costs 812\,CPU-hrs, including calibration, mapmaking and component separation. Thus, for this method to be practical, future work should aim to reduce the cost per sample by at least one order of magnitude, which should be entirely feasible through the use of better multi-grid preconditioners and/or derivative-based hybrid sampling schemes.
+  We implement the likelihood-free cosmological parameter estimation algorithm proposed by Racine et al.\ (2016) in \commander, a well-established Gibbs sampler for end-to-end CMB analysis, and assess the computational costs of this method. To validate this implementation, we compare its outputs with two ideal cases with known exact analytical likelihoods, namely uniform white noise and either full-sky coverage or an azimuthally symmetric Galactic mask. We find good agreement in both cases, up to the precision supported by the number of available samples. However, we also find that the computational cost of producing one single \commander\ sample with acceptable accuracy is currently prohibitive: For a case with a maximum multipole of $\ell_{\mathrm{max}}=1300$, an accepted sky fraction of $f_{\mathrm{sky}}=0.85$, and noise-levels similar to Planck LFI 70\,GHz, more than 5000 Conjugate Gradient iterations are required to reach sufficient accuracy, for a total computational cost of almost 3000\,CPU-hrs. At the same time, the typical Markov chain correlation length is $\mathcal{O}(100)$ samples. and producing two indendent samples therefore costs $\sim$$\,300\,000$\,CPU-hrs. For comparison, producing one single end-to-end sample for all \Planck\ LFI and \WMAP\ channels costs 812\,CPU-hrs within the recently developed \cosmoglobe\ framework, including calibration, mapmaking and component separation. Thus, for this method to be practical, future work must aim to reduce the cost per sample by at least two orders of magnitude, for instance through multi-grid preconditioners and/or derivative-based Markov chain sampling schemes.
 }
 
 \keywords{ISM: general -- Cosmology: observations, polarization,
@@ -441,7 +441,7 @@ We have shown that the algorithm presented in \cite{racine:2016} works well in t
 
 \bibliographystyle{../common/aa}
 
-\bibliography{../common/Planck_bib, ../common/CG_bibliography}
+\bibliography{../common/Planck_bib,../common/CG_bibliography}
 
 \appendix
 
