@@ -63,8 +63,9 @@
 
 \renewcommand{\d}[0]{\vec{d}}
 \renewcommand{\t}[0]{\vec{t}}
-\newcommand{\A}[0]{\mathrm{A}}
-\newcommand{\B}[0]{\mathrm{B}}
+\newcommand{\A}[0]{\tens{A}}
+\newcommand{\B}[0]{\tens{B}}
+\renewcommand{\G}[0]{\tens{G}}
 \newcommand{\Y}[0]{\tens{Y}}
 \newcommand{\n}[0]{\vec{n}}
 \newcommand{\red}[0]{\color{red}}
@@ -172,7 +173,7 @@
 \maketitle
 
 %\hypersetup{linkcolor=black}
-\tableofcontents
+%\tableofcontents
 %\hypersetup{linkcolor=red} 
 
 
@@ -191,31 +192,57 @@ At a strictly principled level, a global approach is obviously preferable, simpl
 
 While \commanderthree\ arguably represents the most advanced integrated CMB analysis pipeline in the literature, one key component is still missing before one can claim to perform true end-to-end CMB analysis, and that is in fact cosmological parameter estimation; right now, the highest-level outputs from \commanderthree\ is a set of angular power spectrum samples \citep{bp11}, from which cosmological parameters may be derived using traditional methods \citep{bp12}, much like in a traditional compartmentalized pipeline. The main goal of the current paper is to implement that missing step, to quantify its overall computational cost, and to identify potential bottlenecks.
 
-The numerical challenges involved in implementing likelihood-free cosmological parameter estimation in Gibbs sampling was originally explored and partially resolved by \citet{jewell2009}. In short, the fundamental difficulty lies in the fact that a strict Gibbs sampler only allows parameter moves in directions that are orthogonal, and this leads to a long Markov chain correlation length in the low signal-to-noise regime, where the CMB sky signal and the theoretical model are nearly perfectly degenerate. To circumvent this problem, \citet{racine:2016} therefore proposed a joint sampling step for both the sky signal and theory model that allow these to move relatively quickly throughout the full parameter space. However, they only demonstrated the method with a proof-of-concept and stand-alone Python implementation using an ideal case. In the current paper, we implement the same method in \commanderthree, and apply it to simulations with realistic noise and sky coverages. From a formal point-of-view, this work therefore completes the end-to-end aspect of the \commanderthree\ code. 
+The numerical challenges involved in implementing likelihood-free cosmological parameter estimation in Gibbs sampling was originally explored and partially resolved by \citet{jewell:2009}. In short, the fundamental difficulty lies in the fact that a strict Gibbs sampler only allows parameter moves in directions that are orthogonal, and this leads to a long Markov chain correlation length in the low signal-to-noise regime, where the CMB sky signal and the theoretical model are nearly perfectly degenerate. To circumvent this problem, \citet{racine:2016} therefore proposed a joint sampling step for both the sky signal and theory model that allow these to move relatively quickly throughout the full parameter space. However, they only demonstrated the method with a proof-of-concept and stand-alone Python implementation using an ideal case. In the current paper, we implement the same method in \commanderthree, and apply it to simulations with realistic noise and sky coverages. From a formal point-of-view, this work therefore completes the end-to-end aspect of the \commanderthree\ code. 
 
 The rest of the paper is organized as follows. In Sect.~\ref{sec:methods} we provide a brief review of both the \cosmoglobe\ Gibbs sampler method in general and the specific cosmological parameter sampler described by \citet{racine:2016}. In Sect.~\ref{sec:results}, we validate our implementation by comparing it to two special cases, namely Cobaya coupled to a uniform and fullsky case and a specical-purpose Python Gibbs sampler for a case with uniform noise but a constant latitude Galactic mask. In the same section, we also characterize the computational costs of the new sampling step for various data configurations. Finally, we summarize and conclude in Sect.~\ref{sec:conclusions}.
 
-\section{Joint sampling of cosmological parameters and sky signal}
+\section{Algorithms}
 \label{sec:methods}
 
-In this section, we introduce the mathematical notation and algorithm proposed in \citet{racine:2016} to jointly sample the cosmological parameters of the CMB and its sky signal without using any likelihood approximations. This work aims to partially close the loop of the end-to-end Bayesian analysis of the CMB by incorporating a cosmological parameter sampling step into \commanderthree, the framework used for \cosmoglobe\ and \BP. The Gibbs chain can be schematically be written as  
-  \begin{alignat}{10}
-    \label{eq:gain_samp_dist}\g &\,\leftarrow          P(\g&\,               \mid \data, &\,\phantom{\g,} &\,\ncorr,&\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,        \mid \data, &\,\g, &\,\phantom{\ncorr,}  &\,\boldsymbol\beta, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \label{eq:beta_samp}\boldsymbol\beta &\,\leftarrow                     P(\boldsymbol\beta &\, \mid \data, &\,\g, &\,\ncorr, &\,\phantom{\boldsymbol\beta}, &\,\boldsymbol a, &\,\boldsymbol \theta, &\, \boldsymbol s))\\
-    \boldsymbol a &\,\leftarrow                                   P(\boldsymbol a&\,            \mid \data, &\,\g, &\,\ncorr, &\,\boldsymbol\beta, &\,\phantom{\boldsymbol a,} &\,\boldsymbol \theta, &\, \boldsymbol s)\\
-    \boldsymbol\theta, \boldsymbol{s} &\,\leftarrow                             P(\boldsymbol\theta, \boldsymbol{s}&\,         \mid \data, &\,\g, &\,\ncorr, &\,\boldsymbol\beta, &\,\boldsymbol a,&\,\phantom{,}&\,\phantom{\boldsymbol\theta})\label{eq:param_samp},
-    \end{alignat}
-where $g$ and $\ncorr$ are gain and correlated noise, respectively. While $\beta$ and $a$ are the spectral index and amplitude of the various sky components. We have slightly simplified the full set of sampled parameters, see \cite{watts2023_dr1} for the entire list of sampled instrumental and astrophysical parameters. Including the last line, Eq.~\eqref{eq:param_samp}, into \commander3 is the focus of this work. Here, $\boldsymbol \theta$ is the set of cosmological parameters and $\boldsymbol s$ is the CMB sky map.
+We start by briefly reviewing the Bayesian framework for global end-to-end analysis as described by \citet{bp01,watts2023_dr1} and the cosmological parameter estimation algorithm proposed by \citet{racine:2016}, and discuss how these may be combined in \commanderthree\ \citep{bp03}.
 
-We define the data model in this work as
+\subsection{Bayesian end-to-end CMB analysis}
+
+The main algorithmic goal of the \cosmoglobe\ framework is to derive a numerical representation of the full posterior distribution $P(\omega|\d)$, where $\omega$ is the set of all free parameters and $\d$ represents all available data. In this notation, $\omega$ simultaneously accounts for instrumental, astrophysical and cosmological parameters, and are typically explicitly defined by writing down a signal model, for instance taking the form
 \begin{equation}
     \label{eq:data_model}
-    \boldsymbol{d} = \boldsymbol{A} \boldsymbol{s} + \boldsymbol{n},
+    \d = \A \a + \n,
 \end{equation}
-which can be interpreted in both pixel and spherical harmonics space. Here, $\boldsymbol{d}$ is the data vector, $\boldsymbol{A}$ is the beam functions, $\boldsymbol{s}$ is the CMB signal and $\boldsymbol{n}$ is the Gaussian white noise. The covariance for the CMB signal is $\langle \boldsymbol{s}^T \boldsymbol{s}\rangle = \boldsymbol{S}(\boldsymbol{\theta})$ which is a function of the set of cosmological parameters, and $\langle \boldsymbol{n}^T \boldsymbol{n}\rangle = \boldsymbol{N}$ is the noise covariance matrix. The assumption of a statistically isotropic Universe gives a diagonal CMB covariance in spherical harmonics space, $\langle s_{\ell m} s^*_{\ell' m'}\rangle = C_{\ell m}(\boldsymbol{\theta}) \delta_{\ell\ell'}\delta_{mm'}$. We take $\boldsymbol{N}$ in this work to be diagonal in pixel space, meaning that two different pixels have uncorrelated noise. If we use full-sky data with uniform noise, then the noise covariance matrix becomes diagonal in spherical harmonics space too, $N_{\ell m \ell' m'} = N_\ell \delta_{\ell \ell'}\delta_{mm'}$. But for a realistic setup with non-uniform noise and partial sky coverage, it will be non-diagonal and can be dense in $(\ell, m)$-space.
+where $\d$ is the data vector; $A$ represents some set of linear operations; $\a$ denotes some set of amplitude parameters; and $\n$ is instrumental noise. In practice, one typically assumes that the noise is Gaussian distributed with a covariance matrix $\N$, and the likelihood may therefore be written as
+\begin{equation}
+  \mathcal{L}(\omega) = P(\d|\omega) \propto e^{-\frac{1}{2}\left(\d-\s(\omega)\right)^t\N^{-1}\left(\d-\s(\omega)\right)}.
+\end{equation}
+The full posterior distribution reads $P(\omega|\d) \propto \mathcal{L}(\omega)P(\omega)$, where $P(\omega)$ represents some set of user-defined priors.
 
-\subsection{Exact likelihood}
+As a concrete example, \cosmoglobe\ Data Release 1 \citep{watts2023_dr1} adopted the following data model to describe \Planck\ LFI and \WMAP,
+\begin{equation}
+	\label{eq:model}
+	\d =\G\P\B\M\boldsymbol \a+ \s^\mathrm{orb}
+	+\s^\mathrm{fsl} + \s^\mathrm{inst}+ \n^\mathrm{corr}+\n^\mathrm w,
+\end{equation}
+where $\mathsf G$ is a time-dependent gain factor; $\mathsf P$ is a pointing matrix;
+$\B$ denotes instrumental beam convolution; $\mathsf M$ is a mixing matrix that describes the amplitude of a given sky component at a given frequency; $\a$ describes the amplitude of each component at each point in the sky; $\s^\mathrm{orb}$ is the orbital CMB dipole; $\s^\mathrm{fsl}$ is a far sidelobe contribution; $\s^\mathrm{inst}$ is an instrument-specific correction term; and $\n^\mathrm{corr}$ denotes correlated noise. This expression directly connects important instrumental effects (e.g., gains, beams and correlated noise) with the astrophysical sky (e.g., $\M$ and $\a$), and provides a well-defined model for the data at the lowest level; this model is what enables global modelling.
+
+For our purposes, the most important sky signal component is the CMB anisotropy field, $\s_{\mathrm{CMB}}$. The covariance of this component reads $\S = \langle \s_{\mathrm{CMB}}^T \s_{\mathrm{CMB}}\rangle$. Under the assumption of a statistically isotropic universe, this matrix is diagonal in harmonic space, $\langle s_{\ell m} s^*_{\ell' m'}\rangle = C_{\ell m}(\theta) \delta_{\ell\ell'}\delta_{mm'}$, where $s(\hat{n}) = \sum_{\ell,m} s_{\ell m} Y_{\ell m}(\hat{n})$ is the usual spherical harmonics expansion and $C_{\ell}$ is called the angular power spectrum. This power spectrum depends directly on a small set of cosmological parameters, $\theta$, and may for most universe models be computed efficiently by Boltzmann solvers such as CAMB or CLASS.
+
+With this notation, the goal is now to compute $P(\omega|\d)$, where $\omega = \{\G, \n_{\mathrm{corr}}, \M, \a, \theta, \ldots\}$. Unfortunately, directly evaluating or sampling from this distribution is unfeasible. In practice, we therefore resort to Markov Chain Monte Carlo sampling in general, and Gibbs sampling in particular, which is a well-established method for sampling from complicated multivariate distribution by iterating over all conditional distributions. For the data model described above, this process may be described schematically in the form of a Gibbs chain, 
+  \begin{alignat}{9}
+    \label{eq:gain_samp_dist}\G &\,\leftarrow          P(\G&\,               \mid \data, &\,\phantom{\G,} &\,\ncorr,&\,\M, &\,\a, &\,\theta)\\
+    \label{eq:ncorr_samp_dist} \ncorr &\,\leftarrow    P(\ncorr&\,        \mid \data, &\,\G, &\,\phantom{\ncorr,}  &\,\M, &\,\a, &\,\theta)\\
+    \label{eq:beta_samp}\M &\,\leftarrow                     P(\M &\, \mid \data, &\,\G, &\,\ncorr, &\,\phantom{\M}, &\,\a, &\,\theta)\\
+    \a &\,\leftarrow                                   P(\a&\,            \mid \data, &\,\G, &\,\ncorr, &\,\M, &\,\phantom{\a,} &\,\theta)\\
+    \theta &\,\leftarrow                             P(\theta &\,         \mid \data, &\,\G, &\,\ncorr, &\,\M, &\,\a,&\,\phantom{\theta})\label{eq:param_samp},\\\vspace*{-4mm}
+     &&\vdots                             & & & & & & \nonumber
+    \end{alignat}
+  where $\leftarrow$ indicates replacing the parameter on the left-hand side with a random sample from the distribution on the right-hand side.
+
+As described by \citet{bp01,watts2023_dr1}, this process has now been implemented in \commanderthree\ by the \BP\ and \Cosmoglobe collaborations, and demonstrated to work very well in practice with \Planck\ LFI and \WMAP. However, in the last step of the existing code, the last step only supports power spectrum estimation, i.e., $\theta = C_{\ell}$; the goal of the current paper is to replace that step with actual cosmological parameter estimation, in which $\theta$ takes on the usual form of the dark matter density $\Omega_\mathrm{c}$, the Hubble constant $H_0$, the spectral index of scalar perturbation $n_\mathrm{s}$ etc.
+
+\subsection{Joint sampling of CMB sky signal and cosmological parameters}
+
+The challenge of sampling cosmological parameters efficiently within an end-to-end Gibbs sampling framework has been addressed in the literature for almost two decades, starting with \citet{jewell2004} and \citet{wandelt2004}. As pointed out by \citet{eriksen:2004}, a major difficulty regarding this method is a very long correlation length in the low signal-to-noise regime, i.e., at high multipoles. Intuitively, the origin of this problem lies in the fundamental Gibbs sampling algorithm itself, namely that it only allows for parameter variations parallel or orthogonal to the coordinate axes of each parameter in question, and not diagonal moves. For highly degenerate distributions, this makes it very expensive to move from tail of the distribution to the other. Another way to visualize this is simply by noting that the Markov chain step size in a pure Gibbs sampling is given by CMB cosmic variance alone, while the full posterior distribution width is defined by both signal and noise; the Gibbs sampler therefore moves quickly in the high signal-to-noise regime, but slowly in the low signal-to-noise regime. A solution to this problem was proposed by \citet{jewell:2009}, who introduced a joint CMB sky signal and spectral parameter move. This idea was further refined by \citet{racine:2016}, who noted that faster convergence could be obtained by only rescaling the low signal-to-noise multipoles. In this section, we give a brief summary of these ideas, and refer the interested reader to the original papers for full details.
+
+\subsubsection{Exact likelihood}
 \label{sec:exact-likelihood}
 
 In principle, we could evaluate the exact marginal likelihood of the cosmological parameters given the data, 
@@ -247,7 +274,7 @@ Here, we have removed the explicit dependence of $\theta$ in the theoretical $\L
 \end{align}
 where we define the vectors of spherical harmonics coefficients, ${\boldsymbol{d}_{\ell m}^T = [d^T_{\ell m}, d^E_{\ell m}, d^B_{\ell m}]}$. We will use Cobaya \citep{Torrado:2020dgo} to evaluate this likelihood in the case of uniform noise on fullsky data to verify our \commander3\ implementation.
 
-\subsection{Gibbs sampling}
+\subsubsection{Gibbs sampling}
 \label{sec:gibbs}
 
 However, a more realistic set-up includes non-uniform noise and a Galactic mask, and the exact likelihood becomes computationally too expensive. Using Bayes theorem, the joint posterior density $P(\boldsymbol{\theta}, \boldsymbol{s} | \boldsymbol{d})$ can be written as
@@ -322,7 +349,7 @@ The second step of the Gibbs sampling in Eq.~\eqref{eq:theta-gibbs} can be sampl
 
 The Gibbs sampling method works well in high signal-to-noise regions, but performs poorly in the opposite limit. This can be understood by Eq.~\eqref{eq:fluc-map} when we have high instrumental noise, $\boldsymbol{N} \rightarrow \infty$, then we have no information of $s_{\ell m}$ from the data $d_{\ell m}$, and the sky map becomes only a realization of the variance $C_{\ell}$, i.e. $s_{\ell m} \rightarrow \hat{f}_{\ell m} = \sqrt{C_{\ell}} w_{0\ell m}$. Since we have no information of the mean field map $\hat{s}_{\ell m} \rightarrow 0$, we also do not know $C_\ell$. Hence, we get a strong degeneracy between the $C_\ell$ and $s_{\ell m}$. Gibbs sampling is well-known of performing poorly for strongly correlated parameters as you can not move diagonally in parameter space from one end of the joint posterior distribution to the other. This problem is shown in the top panel of Fig.~\ref{fig:illustration}, which shows the difference in the correlation length of Gibbs sampling between high and low signal-to-noise limits.
 
-\subsection{Joint sampling}
+\subsubsection{Joint sampling}
 \label{sec:joint-sampling}
 A solution to the poor correlation length of the Gibbs sampling in low signal-to-noise regions was proposed by \cite{jewell:2009} further developed in \cite{racine:2016}. The authors suggested a Metropolis-Hasting sampler with a general proposal rule for $\theta$ and a rescaling of the fluctutation term of the sky signal. This allows the sampler to move diagonally in parameter space and more efficiently explore the full joint posterior distribution, as depicted in Fig.~\ref{fig:illustration}.
 
