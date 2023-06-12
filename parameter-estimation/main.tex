@@ -377,59 +377,56 @@ The intuition behind this joint move is illustrated in Fig.~\ref{fig:illustratio
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{figures/dist_posterior_no_mask.pdf}
-	\caption{\label{fig:nomask}Parameter estimation on a CMB realization with isotropic noise. We use $N_{\mathrm{side}}=512$ and the beam convolve using the beam window functions of 70\,GHz band of Planck. No mask is applied.}
+	\caption{\label{fig:nomask}Comparison of cosmological parameter posterior distributions derived with \commanderthree\ (blue), Python (red), and Cobaya (gray) for a simulation with uniform noise and full-sky coverage. The true input cosmological parameter values are indicated by vertical and horizontal dashed lines.}
 \end{figure}
 
 
 \section{Results}
 \label{sec:results}
 
-The main goal of this paper is to implement the joint sampling algorithm into \commanderthree\ and characterize its performance both in terms of accuracy and performance on simulated data. In this paper, we focus on the standard six-parameter $\Lambda$CDM model, and choose $\theta=(\Omega_{\textrm{b}}h^2, \Omega_{\textrm{CDM}}h^2, H_0, \tau, A_s, n_s)$ as our base parameters, where $\Omega_\mathrm{b}$ and $\Omega_\mathrm{CDM}$ are the current density of baryonic and cold dark matter; $H_0$ is the Hubble parameter (and $h$ is the normalized Hubble constant, $h=\frac{H_0}{100\,\mathrm{km s}^{-1} \mathrm{MPc}^{-1}}$); $\tau$ is the optical depth at reionization; and $A_s$ and $n_s$ are the amplitude and tilt of the scalar primordial power spectrum. We use \texttt{CAMB}\footnote{\url{https://github.com/cmbant/CAMB}} to evaluate all $\Lambda$CDM power spectra, $\C_{\ell}(\theta)$ \citep{Lewis:1999bs}.
+The main goal of this paper is to implement the joint sampling algorithm into \commanderthree\ and characterize its performance both in terms of accuracy and performance on simulated data. All \commander\ code used in the following is available as Open Source software in a GitHub repository\footnote{https://github.com/Cosmoglobe/Commander}. For the purposes of the current paper, we focus on a standard six-parameter $\Lambda$CDM model, and choose $\theta=(\Omega_{\textrm{b}}h^2, \Omega_{\textrm{CDM}}h^2, H_0, \tau, A_s, n_s)$ as our base parameters, where $\Omega_\mathrm{b}$ and $\Omega_\mathrm{CDM}$ are the current density of baryonic and cold dark matter; $H_0$ is the Hubble parameter (and $h$ is the normalized Hubble constant, $h=\frac{H_0}{100\,\mathrm{km s}^{-1} \mathrm{MPc}^{-1}}$); $\tau$ is the optical depth at reionization; and $A_s$ and $n_s$ are the amplitude and tilt of the scalar primordial power spectrum. We use \texttt{CAMB}\footnote{\url{https://github.com/cmbant/CAMB}} to evaluate all $\Lambda$CDM power spectra, $\C_{\ell}(\theta)$ \citep{Lewis:1999bs}. 
 
-\subsection{Validation}
+In the following, we will consider three different simulations, corresponding to different complexity and realism. The absolute noise level of all three cases are selected to match that of the \Planck\ LFI 70\,GHz channel, noting that a natural early target for this algorithm is a reanalysis of \cosmoglobe\ DR1. For the two first cases, the noise level is isotropic with a value matching the full-sky 70\,GHz mean, while it for the third case is given by one realization of the actual non-isotropic \BP\ 70\,GHz noise rms distribution.
 
+The second difference between the three cases is their sky coverages. The first case considers full-sky data, for which the analytical posterior distribution solution is readily available through Eq.~\eqref{eq:exact_harm}. The second case implements a constant-latitude Galactic mask for which an analytical expression is also available, albeit more complicated than for the full sky; see Appendix~A for details. The third case uses the actual \cosmoglobe\ DR1 confidence mask, for which no analytical expression is available. 
 
-We implement the algorithm into the \commanderthree\ framework with the aim of being a part of the full Gibbs sampling chain alongside sampling of instrumental and astrophysical parameter in future work.
+To validate the main \commanderthree\ results, we have developed a special-purpose Python program\footnote{Publicly available at \url{https://github.com/LilleJohs/.}} that implements the same joint sampling algorithm described above for the two first cases, and this serves essentially as a basic bug-check with respect to the Fortran implementation. In addition, we have also implemented a uniform, full-sky likelihood module for Cobaya \citep{Torrado:2020dgo}, an industry-standard cosmological parameter Metropolis sampler, and this serves as an end-to-end check on the entire code, including integration with CAMB.
 
-To verify the implementation, we also created a special-prupose Python script that samples cosmological parameters on a CMB simulation with uniform noise and a constant latitude mask. We show how we calculate an analytic expression for $N^{-1}_{\ell m \ell' m'}$ in Appendix A, and how that simplifies matrix equations such as the map making equation and acceptance rate. This Python script has been made publically available\footnote{\url{https://github.com/LilleJohs/}}. We also use Cobaya \citep{Torrado:2020dgo} to verify uniform noise on full sky data.
-
-We create two sets of CMB simulations: One with uniform noise and one with non-uniform noise using a realization of a randomly picked RMS noise map of the 70\,GHz from the official BeyondPlanck chain. Both simulations are created using $N_{\textrm{side}}=512$ and the public Planck Data Release 4 70\,GHz beams \citep{npipe}.
-
-First, we run the uniform noise simulation without a mask in Cobaya, Python and \commanderthree\ to make sure the three implementations agree with each other. This case can be solved exactly using the likelihood presented in Section \ref{sec:exact-likelihood} which we do using Cobaya \citep{Torrado:2020dgo}, while the Python script implements the method of \citet{racine:2016}. Fig.~\ref{fig:nomask} shows the posterior distribution of the cosmological parameters from 50 000 samples each of \commanderthree, Python and Cobaya, and we find excellent agreement between the three implementations.
+\subsection{Accuracy validation}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{figures/dist_posterior_10_mask.pdf}
-	\caption{\label{fig:mask10}Cosmological parameter estimation on same simulation as in Fig.~\ref{fig:nomask} but a constant latitude mask is applied so that the sky fraction is 90\%.}
+	\caption{\label{fig:mask10}Comparison of marginal cosmological parameter posterior distributions derived with \commanderthree\ and Python for a simulation with uniform noise and a 10\,\% constant latitude mask. The total number of independent samples produced by the two codes are $\mathcal{O}(10^2)$, accounting for the Markov chain correlation length of the algorithm, and the Monte Carlo uncertainty due to a finite number of samples is therefore significant.}
 \end{figure}
-
-We then proceed by adding a constant latitude mask of latitude $\arcsin(0.1) \sim 5.7^\circ$ as this gives the sky coverage $f_{\mathrm{sky}} = 0.90$. $\boldsymbol{N}$ is no longer diagonal and the brute-force method of Section \ref{sec:exact-likelihood} will be computationally intractable. 
-
-We use the Python implementation for this case, but we note that it is computationally demanding with a single accepted sample taking 853 CPU-hours. Note, that an accepted sample takes longer to calculate than a discarded sample as we only calculate the fluctuation map $f^i_{\ell m}$ if sample $i$ is accepted.
-
-We show the posterior distribution of $\sim 5000$ Python samples and $\sim 9000$ \commanderthree\ samples in Fig.~\ref{fig:mask10}. Although we have a lack of independent samples due to the long correlation length and computational cost, we find good an agreement between the two implementations.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figures/auto_correlation.pdf}
-	\caption{\label{fig:autocorrelation}Auto correlations of some cosmological parameters.}
-\end{figure}
-
-We calculate the autocorrelation function for three cosmological parameters for three chains in Fig.~\ref{fig:autocorrelation}. We show the brute-force likelihood method in Cobaya which has a correlation length $\lesssim 10$. Cosmological parameter sampling using the likelihood-free estimator in \commanderthree\ for the same case is also shown and exhibits a correlation length 5 times higher than the brute-force likelihood.
-
-Although we are sampling the same simulated CMB map without a mask in \commanderthree\ and Cobaya, we expect a higher correlation length as the algorithm of \citet{racine:2016}  the sky signal $s_{\ell m}$. We also show in addition the case with a $10\%$ mask, which increases the correlation length as compared to full-sky.
-
-\subsection{Realistic mask and noise}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{figures/realistic_chain.pdf}
-	\caption{\label{fig:traceplot}Traceplot of the cosmological parameters for the $70\,$GHz case. The dashed lines show the input value of the CMB simulation.}
+	\caption{\label{fig:traceplot}Trace plot of the cosmological parameters for a semi-realistic case based on the \Planck\ LFI $70\,$GHz noise level and a realistic Galactic mask. The dashed horizontal lines show the true input values.}
 \end{figure}
 
-We then turn to a more realistic case: We make a realization of a 70\,GHz noise map and a realistic Galactic and point source mask of $f_{\mathrm{sky}}=0.85$. Our Python implementation can not sample this case as it neither supports anisotropic noise nor a realistic mask. Hence, we can only rely on the CG iterator of \commanderthree3.
 
-In Fig.~\ref{fig:traceplot} we show the traceplots of the cosmological parameters from this run. We did not include this chain into the autocorrelation Fig.~\ref{fig:autocorrelation} as we have few samples for it converge, but it is clear by eye that the correlation length is $\mathcal{O}(100)$.
+The first main goal of this paper is to demonstrate that the new \commanderthree\ implementation of the Racine et al.\ algorithm performs as expected with respect to accuracy. Thus, we start our discussion by considering the uniform and full-sky case discussed above. For each of the three available codes---\commanderthree, Python, and Cobaya---we produce 50\,000 samples, and show the full posterior distributions in Fig.~\ref{fig:nomask}. The agreement between all three codes are excellent, and the overall variations are at most $\sim$\,0.1$\,\sigma$; this level of agreement is consistent with the number of samples and the corresponding Markov chain correlation lengths. 
+
+Second, Fig.~\ref{fig:mask10} shows a similar comparison between the \commanderthree\ and Python implementation. The sky mask is in this case defined by $|b|<5.7^{\circ}$, which removes 10\,\% of the sky. Also in this case do we find good agreement between the two implementations, and the true input values (marked by vertical dashed lines) all fall well within the full posterior distributions. However, we do note that the introduction of a sky mask significantly increases the overall run time of the algorithm, since one now has to solve for the mean field map repeatedly at each step with Conjugate Gradients, rather than by brute-force matrix inversions. In total, we only produce $\sim$\,5000 and 9000 samples for each of the two codes for this exercise, at a total cost of $\mathcal{O}(10^5)$ CPU-hrs.
+
+Finally, in Fig.~\ref{fig:traceplot} we show trace plots for each cosmological parameter for the realistic configuration as produced with \commanderthree, noting that none of the other codes are technically able to produce similar estimates. In this case, the computational cost is even higher, and we only produce a total of 1600 samples. Still, by comparing these traces with the true input values (marked as dashed horizontal lines), we do see that the resulting samples agree well with the expected values, both in terms of means and uncertainties. 
+
+\subsection{Markov chain correlation length and computational costs}
+\label{sec:resources}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/auto_correlation.pdf}
+	\caption{\label{fig:autocorrelation}Markov chain auto-correlation functions for Cobaya (solid lines) and \commanderthree\ for a set of typical cosmological parameters. Dashed and dot-dashed lines show \commanderthree\ results for the full-sky case and the 10\,\% mask case, respectively. The horizontal gray dashed line indicates an autocorrelation of 0.1, which we use to define the overall correlation length.   }
+\end{figure}
+
+The second main goal of this paper is to quantify the computational costs involved in this algorithm, and identify potential bottlenecks that may be optimized through future work. The effective cost per independent Markov chain sample may be written as the product of the raw sampling cost per sample and the overall Markov chain correlation length. The latter of these may be quantified in terms of the auto-correlation function,
+\begin{equation}
+  \zeta_\theta(\Delta) \equiv \left<\frac{(\theta_i - \mu)}{\sigma}\frac{(\theta_{i+\Delta} - \mu)}{\sigma}\right>,
+\end{equation}
+where $\mu$ and $\sigma$ are the posterior mean and standard deviation computed from the Markov chain for $\theta$. We define the overall correlation length to be the first value of $\Delta$ for which $\zeta < 0.1$. This function is plotted for both Cobaya and \commanderthree\ in Fig.~\ref{fig:autocorrelation}; for the latter, dashed lines shows full-sky results and dot-dashed lines show results for a 10\,\% mask. Overall, we see that the \commanderthree\ correlation length is 50--60 for the full-sky case, increasing to 50--100 for the masked case. For comparison, Cobaya typically has a correlation of about 10.
 
 \begin{figure}
 	\centering
@@ -437,16 +434,21 @@ In Fig.~\ref{fig:traceplot} we show the traceplots of the cosmological parameter
 	\caption{\label{fig:runtime}CPU-hours per accepted sample. This is compared to the 812 CPU-hours to generate one single end-to-end sample of \planck\ LFI and \wmap\ channels in red.}
 \end{figure}
 
-We are limit by a lack of independent samples due to the large correlation length and a very high cost computational cost of one sample. We show the current CPU-hour per accepted joint sample in Fig.~\ref{fig:runtime} for the different configuration. These cases are compared to the 812 CPU-hours it takes to generate one Cosmoglobe DR1 Gibbs sample from TOD in red. This shows that more works need to be done to lower the computational time to generate a joint sample, as we want to include the methods into the Cosmoglobe framework on actual data.
+The basic computational cost per sample for \commanderthree\ is plotted as black points in Fig.~\ref{fig:runtime}. Here we see that the overall cost increases rapidly with decreasing sky coverage, starting at 0.2\,CPU-hrs for a full-sky sample to about 10,CPU-hrs for a 20,\,\% constant latitude mask and uniform noise. Likewise, allowing for a spatially varying noise distribution also increases the runtime, and for the realistic LFI 70\,GHz scanning pattern and 15\,\% mask, the cost is 60\,CPU-hrs/sample. Taking into account that the overall correlation length is $\sim$\,100, the effective cost is therefore about 6000\,CPU-hrs per independent sample; the gray dots in Fig.~\ref{fig:runtime} indicates this total cost for each configuration.
 
-The computational time is dominated by solving Eq.~\eqref{eq:mapmakingeq} by the method of Conjugant Gradient (CG). For the 70\,GHz case, we currently require 5000 CG iterations to generate one sample of the CMB which takes 46 CPU-hours. With a correlation length of $\sim 100$ samples, we then find 4600 CPU-hours to generate an individual sample of the cosmological parameters. Hence, work is needed to lower the computational cost of solving Eq.~\eqref{eq:mapmakingeq} as we do not see a way to shorten the correlation length of the algortihm.
+In order to interpret the implications of these costs, it is useful to compare with the overall cost of the full end-to-end processing pipeline within which this algorithm is designed to operate, and the most relevant comparison point is therefore the cost of the \cosmoglobe\ DR1 processing, which is 812\,CPU-hrs for the combination of \Planck\ LFI and \WMAP, marked as a red dot in Fig.~\ref{fig:runtime}. In its current state, we find that the new cosmological parameter step alone is thus about seven times more expensive than the full end-to-end processing. 
 
-Lowering this number can be done by better preconditioning and Hamiltonian sampling and blablabla \textcolor{red}{This part is for HK}
-
-\section{Conclusions}
+\section{Summary and discussion}
 \label{sec:conclusions}
 
-We have shown that the algorithm presented in \cite{racine:2016} works well in the \commanderthree framework for anisotropic noise and mask.
+This paper had two main goals. The first goal was simply to implement the cosmological parameter sampling algorithm proposed by \citet{racine:2016} into the state-of-the-art \commanderthree\ CMB Gibbs sampler, and demonstrate that this new step works in a production environment. Based on a head-to-head comparison with both Cobaya and a stand-alone Python implementation demonstrates the fidelity of the method, we conclude that this goal has been successfully accomplished, and as such this work finally adds true ``end-to-end'' processing abilities to \commanderthree. 
+
+The second goal was to measure the computational performance of the method, assess whether it is already suitable for large-scale production, and identify potential bottlenecks that should be optimized through future work. In this case, we find that the overall cost per independent Gibbs sample for a dataset similar to \cosmoglobe\ DR1 is about 6000\,CPU-hrs, which is a factor of seven higher than the total cost of all other steps in the end-to-end algorithm, including low-level calibration, mapmaking and component separation. Therefore, although the code is technically operational at the current time, we also conclude that it is still too expensive to be useful in a full-scale production environment. As a real-world comparison point, we note that the total processing wall-time for the \BP\ analysis was three months, and adding this new step would increase that to 24 months; while technically possible, this is clearly highly uncomfortable.
+
+At the same time, this analysis has also revealed the underlying origin of these high expenses, and those can be divided into two parts. First, the overall cost per dependent Gibbs sample is dominated by the expense for solving for the mean field and fluctuation maps by Conjugate Gradients. In this respect, we note that the current implementation uses a standard diagonal preconditioner to solve these equations, as described by \citet{eriksen:2004}. However, after more than two decades of development, far more efficient preconditioners have been explored and described in the literature, including multi-resolution or multi-grid methods \citep[e.g.,][]{seljebotn:2013,seljebotn:2019}. Implementing one of these can potentially reduce the basic cost per sample by one or two orders of magnitude. The second issue is a long correlation length. In this respect, we note that the current algorithm is based on a very basic random-walk Metropolis sampler, which generally performs poorly for highly correlated parameters; in the cases considered here, the correlation between amplitude of scalar perturbations and the optical depth of reionization is a typical example of such a correlation. This suggests that the correlation length can be greatly reduced in several ways, for instance either by adding new data sets (such as weak gravitational lensing constraints) or by implementing a more sophisticated sampling algorithm that uses derivative information, such as a Hamiltonian sampler. Overall, we consider it very likely that future work will be able to reduce the total cost by one or two orders of magnitude, as needed for production, and we hope that the current results may provide inspiration and motivation for experts in the field to join the effort.
+
+Finally, before concluding this paper, we also note that a key application of the Bayesian end-to-end anaysis framework as pioneered by \BP\ and \cosmoglobe\ is the analysis of next-generation CMB $B$-mode experiments, for instance LiteBIRD. In this case, it is worth noting that the polarization-based signal-to-noise ratio of the tensor-to-scalar ratio, $r$, is much lower than \Planck\ and \WMAP's temperature signal-to-noise ratio to the $\Lambda$CDM parameters, and both the CG cost and Markov chain correlation length are likely to much shorter than for the case considered in this paper. As such, it is conceivable that already the current method performs adequately for LiteBIRD, and this will be explored through future work.
+
 
 \bibliographystyle{../common/aa}
 
