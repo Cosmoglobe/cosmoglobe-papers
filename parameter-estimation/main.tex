@@ -66,6 +66,7 @@
 \newcommand{\A}[0]{\tens{A}}
 \newcommand{\B}[0]{\tens{B}}
 \renewcommand{\G}[0]{\tens{G}}
+\renewcommand{\C}[0]{\tens{C}}
 \newcommand{\Y}[0]{\tens{Y}}
 \newcommand{\n}[0]{\vec{n}}
 \newcommand{\red}[0]{\color{red}}
@@ -326,69 +327,52 @@ As summarized in Appendix~A, these equations can also be solved exactly for a co
 
 To build intuition, these maps are illustrated for one random sample with semi-realistic instrument characteristics in Fig.~\ref{fig:sky_map}. The top panel shows the mean field map (or ``Wiener filter map''); this map summarizes all significant information in $\r$, and each mode is weighted according to its own specific signal-to-noise ratio taking into account both instrumental noise and masking. As a result, all small scales in the Galactic plane are suppressed, and only the largest scales are retained, which are constrained by the high-latitude observations in conjuction with the assumptions of both Gaussianity and statistical isotropy. The second panel shows the fluctuation map, which essentially serves to replace the lost power in $\hat{\a}$ with a completely random fluctuation. The sum of the two terms, shown in the bottom panel, represents one possible full-sky realization that is consistent with both the data and the assumed cosmological parameters, $\theta$. If we were to produce a second such constrained realization, it would look amlmost identical at high Galactic latitudes, where the data are highly constraining, while the Galactic plane would exhibit different structure on small and intermediate scales.
 
-A corresponding comparison of angular power spectra are shown in Fig.~\ref{fig:sigma_ell}. The relative signal-to-noise ratio of each multipole moment may in this figure be seen as the ratio between the intermediate and dark colored lines. In temperature, this value is higher than unity up to $\ell\lesssim700$, while for $EE$ polarization it is less than unity everywhere except at the very lowest multipoles. A closely related way to interpret this figure is that the intermediate curve shows the total information content of the data. Thus, for the $BB$ spectrum there is no visually relevant information present at all, and the entire constrained realization is entirely defined by the fluctuation map, which in terms of given by the assumed cosmological model, $\theta$. This is explains why the standard Gibbs sampler works well in the high signal-to-noise regime, but poorly in the low signal-to-noise limit: When we have high instrumental noise, $\boldsymbol{N} \rightarrow \infty$, then we have no information of $s_{\ell m}$ from the data $d_{\ell m}$, and the total sky sample onnly becomes only a realization of the assumed variance, $C_{\ell}$, i.e. $a_{\ell m} \rightarrow \hat{f}_{\ell m} = \sqrt{C_{\ell}} w_{0\ell m}$. However, since we have no information of the mean field map $\hat{s}_{\ell m} \rightarrow 0$, we also do not know $C_\ell$. Hence, we get a strong degeneracy between the $C_\ell$ and $s_{\ell m}$. Gibbs sampling is well-known to perform poorly for strongly correlated parameters, as one cannot move diagonally through the parameter space from one end of the joint posterior distribution to the other. This insight is the main motivation for the joint sampling algorithm proposed by \citet{jewell:2009} and \citet{racine:2016}, summarized in the next section. 
+A corresponding comparison of angular power spectra are shown in Fig.~\ref{fig:sigma_ell}. The relative signal-to-noise ratio of each multipole moment may in this figure be seen as the ratio between the intermediate and dark colored lines. In temperature, this value is higher than unity up to $\ell\lesssim700$, while for $EE$ polarization it is less than unity everywhere except at the very lowest multipoles. A closely related way to interpret this figure is that the intermediate curve shows the total information content of the data. Thus, for the $BB$ spectrum there is no visually relevant information present at all, and the entire constrained realization is entirely defined by the fluctuation map, which in terms of given by the assumed cosmological model, $\theta$. This is explains why the standard Gibbs sampler works well in the high signal-to-noise regime, but poorly in the low signal-to-noise limit: When we have high instrumental noise, $\boldsymbol{N} \rightarrow \infty$, then we have no information of $s_{\ell m}$ from the data $d_{\ell m}$, and the total sky sample onnly becomes only a realization of the assumed variance, $C_{\ell}$, i.e. $a_{\ell m} \rightarrow \hat{f}_{\ell m} = \sqrt{C_{\ell}} w_{0\ell m}$. However, since we have no information of the mean field map $\hat{s}_{\ell m} \rightarrow 0$, we also do not know $C_\ell$. Hence, we get a strong degeneracy between the $C_\ell$ and $s_{\ell m}$. Gibbs sampling is well-known to perform poorly for strongly correlated parameters, as one cannot move diagonally through the parameter space from one end of the joint posterior distribution to the other. 
 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{figures/parameter-estimation.jpg}
-	\caption{\label{fig:illustration}Illustration of consequetive samples of the Gibbs sampler and the method of \cite{racine:2016}. The Gibbs sampler perform poorly in the low signal-to-noise regime as it requires a much larger number of samples to explore the posterior distribution as compared to the high signal-to-noise region. The joint sampler in the lower panels performs well in both regimes as it allows the next sample to move diagonally in parameter space as we sample $\theta$, yielding $C_\ell(\theta)$ in the figure.}
+	\caption{\label{fig:illustration}Schematic comparison of the standard Gibbs sampler (top row) and the joint sampler of \citet{racine:2016} (bottom row). Left and right columns show high and low signal-to-noise regimes, respectively. The Gibbs sampler perform poorly in the low signal-to-noise regime as it requires a large number of samples to explore the posterior distribution. The joint sampler in the lower panels performs well in both regimes as it allows the next sample to move diagonally in the $\{\a, \theta\}$ parameter space.}
 \end{figure}
 
 
 \subsubsection{Joint sky signal and cosmological parameter sampling}
 \label{sec:joint-sampling}
 
-
-The authors suggested a Metropolis-Hasting sampler with a general proposal rule for $\theta$ and a rescaling of the fluctutation term of the sky signal. This allows the sampler to move diagonally in parameter space and more efficiently explore the full joint posterior distribution, as depicted in Fig.~\ref{fig:illustration}.
-
-This problem is shown in the top panel of Fig.~\ref{fig:illustration}, which shows the difference in the correlation length of Gibbs sampling between high and low signal-to-noise limits.
-
-A solution to the poor correlation length of the Gibbs sampling in low signal-to-noise regions was proposed by \cite{jewell:2009} further developed in \cite{racine:2016}. The authors suggested a Metropolis-Hasting sampler with a general proposal rule for $\theta$ and a rescaling of the fluctutation term of the sky signal. This allows the sampler to move diagonally in parameter space and more efficiently explore the full joint posterior distribution, as depicted in Fig.~\ref{fig:illustration}.
-
-More precisely, one would perform
-\begin{align}
-    \boldsymbol{\theta}^{i+1} 
- &\leftarrow w(\boldsymbol{\theta} |\boldsymbol{\theta}^i)\\
- \boldsymbol{s}^{i+1} &\leftarrow P(\boldsymbol{s} | \boldsymbol{\theta}^{i+1}, \boldsymbol{d}),
-\end{align}
-for each Gibbs iteration, where the arrow denotes drawing a sample from the distribution on the right-hand side. $w(\theta |\theta^i)$ is the proposal distribution of the cosmological parameters. We use a multivariate Gaussian function,
+The joint sampler proposed by \citet{jewell:2009} and \citet{racine:2016} is designed to establish an efficient sampling algorithm for the degeneracy between $\a$ and $\theta$ in the low signal-to-noise regime. Mathematically, this algorithm is a standard Metropolis-Hastings sampler with a Gaussian transition rule for $\theta$,
 \begin{equation}
-w(\boldsymbol{\theta} |\boldsymbol{\theta}^i) = e^{-\frac12 \left(\boldsymbol{\theta} - \boldsymbol{\theta}^i \right)^T \boldsymbol{C}_{\boldsymbol{\theta}}^{-1}\left(\boldsymbol{\theta} - \boldsymbol{\theta}^i \right)}.
+w(\theta |\theta^i) = e^{-\frac12 \left(\theta - \theta^i \right)^T \C_{\theta}^{-1}\left(\theta - \theta^i \right)},
 \end{equation}
-For optimal chain convergence, the proposal variance $\boldsymbol{C}_{\boldsymbol{\theta}}$ should resemble the posterior distribution. The proposal variance we use is created from the samples of an earlier chain created with a diagonal proposal matrix.
-
-They key altercation is to rescale the fluctuation map of the last accepted sample,
+where $\C_{\theta}$ is a user-specified (and pre-tuned) proposal covariance matrix, followed by a deterministic rescaling of the fluctuation map in the signal amplitude map,
 \begin{equation}
-    \hat{f}_{\ell m}^{\textrm{scaled},\, i+1} = \left(\boldsymbol{C}^{i+1}_{\ell}\right)^{1/2}\left(\boldsymbol{C}^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i},
+    a_{\ell m}^{i+1} = \hat{a}_{\ell m}^{i+1} + \left(\C^{i+1}_{\ell}\right)^{1/2}\left(\C^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
 \end{equation}
-so that the map of sample $i+1$ is
-\begin{equation}
-    s_{\ell m}^{i+1} = \hat{s}_{\ell m}^{i+1} + \left(\boldsymbol{C}^{i+1}_{\ell}\right)^{1/2}\left(\boldsymbol{C}^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
-\end{equation}
-In low signal-to-noise regions, this rescaling allows diagonal moves in $s_{\ell m} - C_\ell$ space of Fig.~\ref{fig:illustration}. The acceptance rate for this proposal was calculated in \cite{racine:2016} to be
+As shown by \citet{racine:2016}, the acceptance rate for this joint move is
 \begin{equation}
     \label{eq:acceptance-rate}
-    A = \mathrm{min}\left[1, \frac{\pi(\boldsymbol{\theta}^{i+1})}{\pi(\boldsymbol{\theta}^i)} \frac{w(\boldsymbol{\theta}^{i} |\boldsymbol{\theta}^{i+1})}{w(\boldsymbol{\theta}^{i+1} |\boldsymbol{\theta}^i) }\frac{P(\boldsymbol{\theta}^{i+1})}{P(\boldsymbol{\theta}^i)} \right].
+    A = \mathrm{min}\left[1, \frac{\pi(\theta^{i+1})}{\pi(\theta^i)} \frac{P(\theta^{i+1})}{P(\theta^i)} \right],
 \end{equation}
-Here, $P(\boldsymbol{\theta})$ is the prior on $\boldsymbol{\theta}$ and
+where $P(\theta)$ is the prior on $\theta$ and
 \begin{align}
     \nonumber
-    \pi(\boldsymbol{\theta}^{i}) = \mathrm{exp}\bigg[&-\frac12 \left(\boldsymbol{d}-\boldsymbol{A}\boldsymbol{\hat{s}}^i\right)^T \boldsymbol{N}^{-1}\left(\boldsymbol{d}-\boldsymbol{A}\boldsymbol{\hat{s}}^i\right)\\
-    &-\frac12\boldsymbol{\hat{s}}^{i,T} \boldsymbol{S}^{i, -1}\boldsymbol{\hat{s}}^i -\frac12 \boldsymbol{\hat{f}}^{i, T}\boldsymbol{A}^T\boldsymbol{N}^{-1} \boldsymbol{A}\boldsymbol{\hat{f}}^i\bigg],
+    \pi(\theta^{i}) = \mathrm{exp}\bigg[&-\frac12 \left(\r-\B\hat{\a}^i\right)^T \N^{-1}\left(\r-\B\hat{\a}^i\right)\\
+    &-\frac12\a^{i,T} \S^{i, -1}\hat{\a}^i -\frac12 \hat{\f}^{i, T}\B^T\N^{-1} \B\hat{\f}^i\bigg],
 \end{align}
-where we have omitted the $\theta^i$ dependence of $\hat{s}^i$, $\hat{f}^i$ and $S^i$. Our proposal matrix for the cosmological parameters is symmetric, $w(\boldsymbol{\theta}^{i} |\boldsymbol{\theta}^{i+1}) = w(\boldsymbol{\theta}^{i+1} |\boldsymbol{\theta}^{i})$, and hence we can remove them from Eq.~\eqref{eq:acceptance-rate}.
+where we for brevity have omitted the $\theta^i$ dependence of $\hat{\s}^i$, $\hat{\f}^i$ and $\S^i$. 
 
-We note that the acceptance rate will use the scaled fluctuation term, $f_{\ell m}^{\textrm{scaled}, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Hence, we only need to calculate $f_{\ell m}^{i+1}$ from this equation if the sample is accepted. This allows us to save roughly half the computational time of discarded samples as compared to accepted samples.
+We note that the acceptance rate uses the scaled fluctuation term, $f_{\ell m}^{\textrm{scaled}, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Hence, we only need to calculate $f_{\ell m}^{i+1}$ from this equation if the sample is accepted. This allows us to save roughly half the computational time of discarded samples as compared to accepted samples.
 
-The algorithm can be broken down into these steps:
+The full algorithm can now be summarized in terms of the following steps:
 \begin{enumerate}
-    \item Start with an initial value $\boldsymbol{\theta}^0$. From that, calculate the power spectra $\boldsymbol{S}^0$, the mean-field map $\boldsymbol{\hat{s}}^0$ and the fluctuation map $\boldsymbol{\hat{f}}^0$ from the cosmological parameters.
-    \item Pick a new cosmological parameter sample, $\boldsymbol{\theta}^{i+1}$. Calculate $\boldsymbol{S}^{i+1}$, $\boldsymbol{\hat{s}}^{i+1}$ and the \textit{scaled} fluctuation term $f_{\ell m}^{\textrm{scaled}, i+1}$.
-    \item Calculate the acceptance term of Eq.~\ref{eq:acceptance-rate}, and accept/reject according to the regular Metropolis-Hasting rule.
-    \item If the sample is accepted, then calculate $f_{\ell m}^{i+1}$. This term will in the next iteration become $f_{\ell m}^{i}$ which will appear in the acceptance probability and the equation for $f_{\ell m}^{\textrm{scaled}, i+1}$. The fluctuation map is not necessary to calculate if the sample is discarded.
-    \item Iterate 2-4.
+    \item We start with an initial guess of the cosmological parameters, $\theta^0$. From that, we calculate $\S^0$ with CAMB; the mean field map, $\hat{\a}^0$ from Eq.~\ref{eq:mean-field-map}; and the fluctuation map, $\hat{\f}^0$, from Eq.~\eqref{eq:fluc-map}.
+    \item We then draw a new cosmological parameter sample from $w(\theta|\theta^i)$, and re-evaluate $\S^{i+1}$, $\hat{\a}^{i+1}$, and the scaled fluctuation term $\f_{\ell m}^{\textrm{scaled}, i+1}$.
+    \item We calculate the acceptance term of Eq.~\eqref{eq:acceptance-rate}, and accept or reject according to the regular Metropolis-Hasting rule.
+    \item If the sample is accepted, then we calculate $\f^{i+1}$. This term will in the next iteration become $f^{i}$ which will appear in the acceptance probability and the equation for $f^{\textrm{scaled}, i+1}$. 
+    \item Iterate 2--4.
 \end{enumerate}
+
+The intuition behind this joint move is illustrated in Fig.~\ref{fig:illustration}. The top panel shows the standard Gibbs sampling algorithm, in which only parameter moves parallel to the axes are allowed. This works well in the high signal-to-noise regime (left column), where the joint distribution is close to symmetric. In the low signal-to-noise regime, however, the distribution is strongly tilted, because of the tight coupling between $\f$ and $\theta$ discussed at the end of Sect.~\ref{sec:gibbs}, and many orthogonal moves are required in order to move from one tail of the distribution to the other. With the joint algorithm, however, steps are non-orthogonal, with a slope defined exactly by the local signal-to-noise ratio of the mode in question. The net result is a much faster exploration of the full distribution.
 
 \begin{figure}
 	\centering
@@ -396,11 +380,14 @@ The algorithm can be broken down into these steps:
 	\caption{\label{fig:nomask}Parameter estimation on a CMB realization with isotropic noise. We use $N_{\mathrm{side}}=512$ and the beam convolve using the beam window functions of 70\,GHz band of Planck. No mask is applied.}
 \end{figure}
 
-In this work, we sample the 6 $\Lambda$CDM parameters, i.e. $\boldsymbol{\theta}=(\Omega_{\textrm{b}}h^2, \Omega_{\textrm{CDM}}h^2, H_0, \tau, A_s, n_s)$. Here, $\Omega_\mathrm{b}$ and $\Omega_\mathrm{CDM}$ are the current density of baryonic and cold dark matter, respectively. $H_0$ si the Hubble constant today, while $h$ is the normalized Hubble constant, $h=\frac{H_0}{100\,\mathrm{km s}^{-1} \mathrm{MPc}^{-1}}$. $\tau$ is the optical depth at reionization, $A_s$ is the amplitude and $n_s$ is the tilt of the scalar primordial power spectrum. We use \texttt{CAMB}\footnote{\url{https://github.com/cmbant/CAMB}} to generate the $\Lambda$CDM power spectra $\boldsymbol{C}_{\ell}(\boldsymbol{\theta})$ \citep{Lewis:1999bs}.
-
 
 \section{Results}
 \label{sec:results}
+
+The main goal of this paper is to implement the joint sampling algorithm into \commanderthree\ and characterize its performance both in terms of accuracy and performance on simulated data. In this paper, we focus on the standard six-parameter $\Lambda$CDM model, and choose $\theta=(\Omega_{\textrm{b}}h^2, \Omega_{\textrm{CDM}}h^2, H_0, \tau, A_s, n_s)$ as our base parameters, where $\Omega_\mathrm{b}$ and $\Omega_\mathrm{CDM}$ are the current density of baryonic and cold dark matter; $H_0$ is the Hubble parameter (and $h$ is the normalized Hubble constant, $h=\frac{H_0}{100\,\mathrm{km s}^{-1} \mathrm{MPc}^{-1}}$); $\tau$ is the optical depth at reionization; and $A_s$ and $n_s$ are the amplitude and tilt of the scalar primordial power spectrum. We use \texttt{CAMB}\footnote{\url{https://github.com/cmbant/CAMB}} to evaluate all $\Lambda$CDM power spectra, $\C_{\ell}(\theta)$ \citep{Lewis:1999bs}.
+
+\subsection{Validation}
+
 
 We implement the algorithm into the \commanderthree\ framework with the aim of being a part of the full Gibbs sampling chain alongside sampling of instrumental and astrophysical parameter in future work.
 
