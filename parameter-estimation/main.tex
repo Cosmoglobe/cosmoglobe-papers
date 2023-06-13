@@ -344,6 +344,11 @@ where $\C_{\theta}$ is a user-specified (and pre-tuned) proposal covariance matr
 \begin{equation}
     a_{\ell m}^{i+1} = \hat{a}_{\ell m}^{i+1} + \left(\C^{i+1}_{\ell}\right)^{1/2}\left(\C^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
 \end{equation}
+Therefore, we define the re-scaled fluctuation map,
+\begin{equation}
+  f_{\ell m}^{\textrm{scaled},\, i+1} = \left(\C^{i+1}_{\ell}\right)^{1/2}\left(\C^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
+\end{equation}
+
 As shown by \citet{racine:2016}, the acceptance rate for this joint move is
 \begin{equation}
     \label{eq:acceptance-rate}
@@ -362,9 +367,9 @@ We note that the acceptance rate uses the scaled fluctuation term, $f_{\ell m}^{
 The full algorithm can now be summarized in terms of the following steps:
 \begin{enumerate}
     \item We start with an initial guess of the cosmological parameters, $\theta^0$. From that, we calculate $\S^0$ with CAMB; the mean field map, $\hat{\a}^0$ from Eq.~\ref{eq:mean-field-map}; and the fluctuation map, $\hat{\f}^0$, from Eq.~\eqref{eq:fluc-map}.
-    \item We then draw a new cosmological parameter sample from $w(\theta|\theta^i)$, and re-evaluate $\S^{i+1}$, $\hat{\a}^{i+1}$, and the scaled fluctuation term $\f_{\ell m}^{\textrm{scaled},\, i+1}$.
+    \item We then draw a new cosmological parameter sample from $w(\theta|\theta^i)$, and re-evaluate $\S^{i+1}$, $\hat{\a}^{i+1}$, and the scaled fluctuation term $f_{\ell m}^{\textrm{scaled},\, i+1}$.
     \item We calculate the acceptance term of Eq.~\eqref{eq:acceptance-rate}, and accept or reject according to the regular Metropolis-Hasting rule.
-    \item If the sample is accepted, then we calculate $\f^{i+1}$. This term will in the next iteration become $f^{i}$ which will appear in the acceptance probability and the equation for $f^{\textrm{scaled},\, i+1}$. 
+    \item If the sample is accepted, then we calculate $\f^{i+1}$. This term will in the next iteration become $f^{i}$ which will appear in the acceptance probability and the equation for $\f^{\textrm{scaled},\, i+1}$. 
     \item Iterate 2--4.
 \end{enumerate}
 
