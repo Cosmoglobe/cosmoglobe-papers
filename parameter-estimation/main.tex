@@ -367,9 +367,9 @@ We note that the acceptance rate uses the scaled fluctuation term, $f_{\ell m}^{
 The full algorithm can now be summarized in terms of the following steps:
 \begin{enumerate}
     \item We start with an initial guess of the cosmological parameters, $\theta^0$. From that, we calculate $\S^0$ with CAMB; the mean field map, $\hat{\a}^0$ from Eq.~\ref{eq:mean-field-map}; and the fluctuation map, $\hat{\f}^0$, from Eq.~\eqref{eq:fluc-map}.
-    \item We then draw a new cosmological parameter sample from $w(\theta|\theta^i)$, and re-evaluate $\S^{i+1}$, $\hat{\a}^{i+1}$, and the scaled fluctuation term $f_{\ell m}^{\textrm{scaled},\, i+1}$.
+    \item We then draw a new cosmological parameter sample from $w(\theta|\theta^i)$, and re-evaluate $\S^{i+1}$, $\hat{\a}^{i+1}$, and the scaled fluctuation term $\f^{\textrm{scaled},\, i+1}$.
     \item We calculate the acceptance term of Eq.~\eqref{eq:acceptance-rate}, and accept or reject according to the regular Metropolis-Hasting rule.
-    \item If the sample is accepted, then we calculate $\f^{i+1}$. This term will in the next iteration become $f^{i}$ which will appear in the acceptance probability and the equation for $\f^{\textrm{scaled},\, i+1}$. 
+    \item If the sample is accepted, then we calculate $\f^{i+1}$. This term will in the next iteration become $\f^{i}$ which will appear in the acceptance probability and the equation for $\f^{\textrm{scaled},\, i+1}$. 
     \item Iterate 2--4.
 \end{enumerate}
 
@@ -389,7 +389,7 @@ The main goal of this paper is to implement the joint sampling algorithm into \c
 
 In the following, we will consider three different simulations, corresponding to different complexity and realism. The absolute noise level of all three cases are selected to match that of the \Planck\ LFI 70\,GHz channel, noting that a natural early target for this algorithm is a reanalysis of \cosmoglobe\ DR1. For the two first cases, the noise level is isotropic with a value matching the full-sky 70\,GHz mean, while it for the third case is given by one realization of the actual non-isotropic \BP\ 70\,GHz noise rms distribution.
 
-The second difference between the three cases is their sky coverages. The first case considers full-sky data, for which the analytical posterior distribution solution is readily available through Eq.~\eqref{eq:exact_harm}. The second case implements a constant-latitude Galactic mask for which an analytical expression is also available, albeit more complicated than for the full sky; see Appendix~A for details. The third case uses the actual \cosmoglobe\ DR1 confidence mask, for which no analytical expression is available. 
+The second difference between the three cases is their sky coverages. The first case considers full-sky data, for which the analytical posterior distribution solution is readily available through Eq.~\eqref{eq:exact_harm}. The second case implements a constant-latitude Galactic mask for which an analytical expression is also available, albeit more complicated than for the full sky; see Appendix~A for details. The third case uses a realistic Galactic and point-source mask, for which no analytical expression is available. 
 
 To validate the main \commanderthree\ results, we have developed a special-purpose Python program\footnote{Publicly available at \url{https://github.com/LilleJohs/.}} that implements the same joint sampling algorithm described above for the two first cases, and this serves essentially as a basic bug-check with respect to the Fortran implementation. In addition, we have also implemented a uniform, full-sky likelihood module for Cobaya \citep{Torrado:2020dgo}, an industry-standard cosmological parameter Metropolis sampler, and this serves as an end-to-end check on the entire code, including integration with CAMB.
 
@@ -465,7 +465,7 @@ The goal of this appendix is to show how we can calculate $N_{\ell m \ell' m'}^{
 $$
 \left(N^{-1} \right)_{pp'} = \frac{N_{\mathrm{pix}}}{\sigma^2} \delta_{pp'} H(|\theta(p) -\pi/2|-b).
 $$
-where $H$ is the Heavyside function, meaning that we mask every pixel $p$ where $|\theta(p) -\pi/2| < b$ for some latitude $b$ in radians. For a masked pixel, $\left(N^{-1} \right)_{pp}=0$ which means that $N_{pp} = \infty$ for that pixel, as we want.
+where $H$ is the Heavyside function, meaning that we mask every pixel $p$ where $|\theta(p) -\pi/2| < b$ for some latitude $b$ in radians. For a masked pixel $\left(N^{-1} \right)_{pp}=0$ meaning that the noise at that pixel is infinite, $N_{pp} = \infty$.
 
 Using that
 $$
@@ -479,9 +479,9 @@ where $Y_{\ell m}\left(p\right) = Y_{\ell m}\left(\hat{n}(p)\right)$ and $\hat{n
 &= \frac{N_{\mathrm{pix}}}{\sigma^2}\sum_{p p'} Y^{*}_{\ell m}(p)Y_{\ell' m'}(p') \delta_{pp'} H(|\theta -\pi/2|-b)\\
 \nonumber
 &= \frac{N_{\mathrm{pix}}}{\sigma^2}\sum_{p } Y^{*}_{\ell m}(p)Y_{\ell' m'}(p) H(|\theta -\pi/2|-b)\\
-&= \frac{N_{\mathrm{pix}}}{\sigma^2}\sum_p \Tilde{Y}_{\ell m}\Tilde{Y}_{\ell' m'} e^{-i(m-m')\phi} H(|\theta -\pi/2|-b).
+&= \frac{N_{\mathrm{pix}}}{\sigma^2}\sum_p \Tilde{P}_{\ell m}\Tilde{P}_{\ell' m'} e^{-i(m-m')\phi} H(|\theta -\pi/2|-b).
 \end{align}
-Here, we used that $Y_{\ell m}(p) = \tilde{Y}_{\ell m} e^{im\phi}$ where it is implied that $\tilde{Y}_{\ell m}=\tilde{Y}_{\ell m}(\theta)$, and $\theta$ and $\phi$ are functions of $p$.
+Here, we have defined $\Tilde{P}_{\ell m}=\Tilde{P}_{\ell m}(\theta)$ so that $Y_{\ell m}(p) = \Tilde{P}_{\ell m}(\theta) e^{im\phi}$ and the spherical coordinates $\theta$ and $\phi$ are functions of the pixel $p$. $\Tilde{P}_{\ell m}(\theta)$ is the Legendre polynomial $P_{\ell m}(\cos(\theta)))$ multiplied by a constant, so that $\Tilde{P}_{\ell m} = \Delta_{\ell m}P_{\ell m}(\cos(\theta)))$, where ${\Delta_{\ell m}=(-1)^m \sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell - m)!}{(\ell+m)!}}}$.
 
 We now take the limit where there is a large amount of pixels with equal surface area each. In this limit, we change the sum into an integration where we account for the number of pixels per area element
 \begin{equation}
@@ -490,31 +490,30 @@ We now take the limit where there is a large amount of pixels with equal surface
 This gives us in spherical coordinates
 \begin{align}
 \nonumber
-\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{4\pi \sigma^2}\int_{0}^{2\pi} d\phi \int_{0}^{\pi} d\theta \sin(\theta)\tilde{Y}_{\ell m}  \tilde{Y}_{\ell' m'}  e^{-i(m-m')\phi}
+\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{4\pi \sigma^2}\int_{0}^{2\pi} d\phi \int_{0}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}  e^{-i(m-m')\phi}
 \\
 \nonumber
 &\cdot H(|\theta -\pi/2|-b)\\
 \nonumber
-&= \frac{N_{\mathrm{pix}}^2}{2\sigma^2} \delta_{mm'}\int_{0}^{\pi} d\theta \sin(\theta)\tilde{Y}_{\ell m}  \tilde{Y}_{\ell' m'} H(|\theta -\pi/2|-b)\\
+&= \frac{N_{\mathrm{pix}}^2}{2\sigma^2} \delta_{mm'}\int_{0}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'} H(|\theta -\pi/2|-b)\\
 \nonumber
 &= \frac{N_{\mathrm{pix}}^2}{2\sigma^2} \delta_{mm'}\\
-&\cdot \left(\int_{0}^{\pi/2-b} d\theta \sin(\theta) \tilde{Y}_{\ell m}  \tilde{Y}_{\ell' m'}+\int_{\pi/2+b}^{\pi} d\theta \sin(\theta)\tilde{Y}_{\ell m}  \tilde{Y}_{\ell' m'}\right).
+&\cdot \left(\int_{0}^{\pi/2-b} d\theta \sin(\theta) \Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}+\int_{\pi/2+b}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}\right).
 \end{align}
-Writing the above equation in terms of Legendre polynomials $P_{\ell m}(\cos(\theta)))$, we have
-$\Tilde{Y}_{\ell m} = \Delta_{\ell m}P_{\ell m}(\cos(\theta)))$, where ${\Delta_{\ell m}=(-1)^m \sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell - m)!}{(\ell+m)!}}}$.
+Writing the above equation in terms of 
  Writing $x=\cos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or anti-symmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and anti-symmetric when $\ell+m$ = odd. Since $m=m'$, we note that the two integrals cancel each other if $\ell+\ell' =$ odd. We, therefore, only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, for $\ell + \ell'=$ even, we get
 \begin{align}
 \nonumber
-\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{0}^{\pi/2-b} d\theta \sin(\theta)\Tilde{Y}_{\ell m}(\theta)\Tilde{Y}_{\ell' m'}(\theta)\\
+\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{0}^{\pi/2-b} d\theta \sin(\theta)\Tilde{P}_{\ell m}(\theta)\Tilde{P}_{\ell' m'}(\theta)\\
 \label{eq:finished_n_inv}
-&=\frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{\sin(b)}^{1} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)).
+&=\frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{\sin(b)}^{1} dx \, \Tilde{P}_{\ell m}(\arccos(x)) \Tilde{P}_{\ell' m}(\arccos(x)).
 \end{align}
-This integral can be solved numerically by gridding $x$, and the spherical harmonics where the phase factor is removed can be calculated in Python using a library like ...
+This integral can be solved numerically by gridding $x$, and $\Tilde{P}_{\ell m}$ can be calculated in Python using the library \textit{SHTools} \citep{https://doi.org/10.1029/2018GC007529}.
 
 The azimuthally symmetric Galactic mask used for this work has a sky coverage of $f_{\mathrm{sky}} = 0.90$, giving $\sin(b) = 0.1$. Therefore, we require much fewer grid points for $x$ if we use the following identity for $\ell+\ell' = $ even:
 \begin{align}
-&\delta_{mm'} \int_{\sin(b)}^{1} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)) = \\
-\frac{1}{4\pi}\delta_{\ell \ell'}\delta_{m m'} - &\delta_{mm'} \int_{0}^{\sin(b)} dx \, \Tilde{Y}_{\ell m}(\arccos(x)) \Tilde{Y}_{\ell' m}(\arccos(x)),
+&\delta_{mm'} \int_{\sin(b)}^{1} dx \, \Tilde{P}_{\ell m}(\arccos(x)) \Tilde{P}_{\ell' m}(\arccos(x)) = \\
+\frac{1}{4\pi}\delta_{\ell \ell'}\delta_{m m'} - &\delta_{mm'} \int_{0}^{\sin(b)} dx \, \Tilde{P}_{\ell m}(\arccos(x)) \Tilde{P}_{\ell' m}(\arccos(x)),
 \end{align}
 which comes from the orthonormality condition for spherical harmonics. We now only need to grid $x$ in the interval $0\leq x \leq \sin(b) = 0.1$, as opposed to the interval $0.9 \leq x \leq 1$.
 
