@@ -164,7 +164,7 @@
 \titlerunning{CMB parameter estimation}
 
 \abstract{
-  We implement support for likelihood-free cosmological parameter estimation algorithm as proposed by Racine et al.\ (2016) in \commander, and quantify its computational efficiency and cost. For a semi-realistic simulation similar to \Planck\ LFI 70\,GHz, we find that the computational cost of producing one single sample is about 60\,CPU-hrs and that the typical Markov chain correlation length is $\sim$\,100 samples. The net effective cost per independent sample is $\sim$\,6000\,CPU-hrs, which in an end-to-end pipeline is to be compared with the sum of all lower-level processing costs, which is 812\,CPU-hrs for \Planck\ LFI and \WMAP in \cosmoglobe\ Data Release 1. Thus, although technically possible to run already in its current state, future work should aim to reduce the effective cost per independent sample by at least one order of magnitude to avoid excessive runtimes, for instance through multi-grid preconditioners and/or derivative-based Markov chain sampling schemes. Thus, this work demonstrates the computational feasibility of true Bayesian cosmological parameter estimation with end-to-end error propagation for high-precision CMB experiments without likelihood approximations, but it also highlights the need for additional optimizations before it is ready for full production-level analysis. 
+  We implement support for likelihood-free cosmological parameter estimation algorithm as proposed by Racine et al.\ (2016) in \commander, and quantify its computational efficiency and cost. For a semi-realistic simulation similar to \Planck\ LFI 70\,GHz, we find that the computational cost of producing one single sample is about 60\,CPU-hrs and that the typical Markov chain correlation length is $\sim$\,100 samples. The net effective cost per independent sample is $\sim$\,6000\,CPU-hrs, which in an end-to-end pipeline is to be compared with the sum of all lower-level processing costs, which is 812\,CPU-hrs for \Planck\ LFI and \WMAP\ in \cosmoglobe\ Data Release 1. Thus, although technically possible to run already in its current state, future work should aim to reduce the effective cost per independent sample by at least one order of magnitude to avoid excessive runtimes, for instance through multi-grid preconditioners and/or derivative-based Markov chain sampling schemes. Thus, this work demonstrates the computational feasibility of true Bayesian cosmological parameter estimation with end-to-end error propagation for high-precision CMB experiments without likelihood approximations, but it also highlights the need for additional optimizations before it is ready for full production-level analysis. 
 }
 
 \keywords{ISM: general -- Cosmology: observations, polarization,
@@ -279,7 +279,7 @@ While it is difficult to evaluate Eq.~\eqref{eq:exact_posterior} directly, it is
     \nonumber
     P(\theta, \a | \r) &= \frac{P(\theta, \a, \r)}{P(\r)} = P(\r | \a)P(\a| \theta)\frac{P(\theta)}{P(\r)}\\
     \label{eq:joint-posterior}
-    &= \frac{e^{-\frac12 \left(\r-\B\a \right)^T \N^{-1}\left(\r-\B\a \right)}}{\sqrt{\left|\N\right|}}
+    &\propto \frac{e^{-\frac12 \left(\r-\B\a \right)^T \N^{-1}\left(\r-\B\a \right)}}{\sqrt{\left|\N\right|}}
     \frac{e^{-\frac12 \a^T \S^{-1}\a}}{\sqrt{\left|\S\right|}}\frac{P(\theta)}{P(\d)},
 \end{align}
 and drawing samples from this distribution can be achieved through Gibbs sampling,
@@ -291,7 +291,7 @@ and drawing samples from this distribution can be achieved through Gibbs samplin
 \end{align}
 With these joint samples in hand, a numerical representation of $P(\theta | \r)$ can be obtained simply by marginalizing over $\a$, which is equivalent to simply making histograms of the $\theta$ samples.
 
-For this algorithm to work, we need to be able to sample from each of the two conditional distributions in Eqs.~\eqref{eq:a-gibbs} and \eqref{eq:theta-gibbs}. Starting with the cosmological parameter distribution in Eq.~\ref{eq:theta-gibbs}, we note that the relevant distribution is in fact identical to that shown in Eq.~\ref{eq:exact_harm}, and this can be coupled to a standard Boltzmann solver and Metropolis-Hastings sampler, similar to CAMB and CosmoMC. We will return to this step in the next section.
+For this algorithm to work, we need to be able to sample from each of the two conditional distributions in Eqs.~\eqref{eq:a-gibbs} and \eqref{eq:theta-gibbs}. Starting with the cosmological parameter distribution in Eq.~\ref{eq:theta-gibbs}, we note that $P(\theta | \a^{i+1}, \r) = P(\theta | \a^{i+1})$ which is equivalent to the distribution in Eq.~\ref{eq:exact_harm} for $b_\ell=1$ and $N_\ell=0$. This can be coupled to a standard Boltzmann solver and Metropolis-Hastings sampler, similar to CAMB and CosmoMC. We will return to this step in the next section.
 
 Next, for the amplitude distribution in Eq.~\eqref{eq:a-gibbs} one can show by ``completing the square'' of $\a$ in Eq.~\eqref{eq:joint-posterior} that 
 \begin{equation}
@@ -321,7 +321,7 @@ such that $\a = \hat{\a} + \hat{\f}$. For a data configuration with uniform nois
     \label{eq:hat_f_approx}
     \hat{f}_{\ell m} &= w_{0\ell m}\frac{N_{\ell}\sqrt{C_{\ell}}}{N_\ell + b_{\ell}^2C_{\ell}}+w_{1\ell m}\frac{\sqrt{N_{\ell}}b_{\ell}C_\ell}{N_\ell + b_{\ell}^2C_{\ell}}.
 \end{align}
-As summarized in Appendix~A, these equations can also be solved exactly for a constant latitude mask with isotropic noise, and we have made available a Python script that performs these calculations in order to validate the main \commanderthree\ code discussed below.
+As summarized in Appendix~A, we can find a closed-form expression for $N_{\ell m\ell'm'}^{-1}$ for a constant latitude mask with isotropic noise which greatly simplifies solving Eq.~\eqref{eq:mapmakingeq}, and we have made available a Python script that performs these calculations in order to validate the main \commanderthree\ code discussed below.
 
 To build intuition, these maps are illustrated for one random sample with semi-realistic instrument characteristics in Fig.~\ref{fig:sky_map}. The top panel shows the mean field map (or ``Wiener filter map''); this map summarizes all significant information in $\r$, and each mode is weighted according to its own specific signal-to-noise ratio taking into account both instrumental noise and masking. As a result, all small scales in the Galactic plane are suppressed, and only the largest scales are retained, which are constrained by the high-latitude observations in conjunction with the assumptions of both Gaussianity and statistical isotropy. The second panel shows the fluctuation map, which essentially serves to replace the lost power in $\hat{\a}$ with a completely random fluctuation. The sum of the two terms, shown in the bottom panel, represents one possible full-sky realization that is consistent with both the data and the assumed cosmological parameters, $\theta$. If we were to produce a second such constrained realization, it would look almost identical at high Galactic latitudes, where the data are highly constraining, while the Galactic plane would exhibit different structure on small and intermediate scales.
 
@@ -346,7 +346,7 @@ where $\C_{\theta}$ is a user-specified (and pre-tuned) proposal covariance matr
 \end{equation}
 Therefore, we define the re-scaled fluctuation map,
 \begin{equation}
-  f_{\ell m}^{\textrm{scaled},\, i+1} = \left(\C^{i+1}_{\ell}\right)^{1/2}\left(\C^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
+  \hat{f}_{\ell m}^{\textrm{scaled},\, i+1} = \left(\C^{i+1}_{\ell}\right)^{1/2}\left(\C^{i}_{\ell}\right)^{-1/2} \hat{f}_{\ell m}^{i}.
 \end{equation}
 
 As shown by \citet{racine:2016}, the acceptance rate for this joint move is
@@ -362,18 +362,18 @@ where $P(\theta)$ is the prior on $\theta$ and
 \end{align}
 where we for brevity have omitted the $\theta^i$ dependence of $\hat{\a}^i$, $\hat{\f}^i$ and $\S^i$. 
 
-We note that the acceptance rate uses the scaled fluctuation term, $f_{\ell m}^{\textrm{scaled},\, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Hence, we only need to calculate $f_{\ell m}^{i+1}$ from this equation if the sample is accepted. This allows us to save roughly half the computational time of discarded samples as compared to accepted samples.
+We note that the acceptance rate uses the scaled fluctuation term, $\hat{f}_{\ell m}^{\textrm{scaled},\, i+1}$, for sample $i+1$ instead of the calculated fluctuation term in Eq.~\eqref{eq:mapmakingeq}. Hence, we only need to calculate $f_{\ell m}^{i+1}$ from this equation if the sample is accepted. This allows us to save roughly half the computational time of discarded samples as compared to accepted samples.
 
 The full algorithm can now be summarized in terms of the following steps:
 \begin{enumerate}
     \item We start with an initial guess of the cosmological parameters, $\theta^0$. From that, we calculate $\S^0$ with CAMB; the mean field map, $\hat{\a}^0$ from Eq.~\ref{eq:mean-field-map}; and the fluctuation map, $\hat{\f}^0$, from Eq.~\eqref{eq:fluc-map}.
-    \item We then draw a new cosmological parameter sample from $w(\theta|\theta^i)$, and re-evaluate $\S^{i+1}$, $\hat{\a}^{i+1}$, and the scaled fluctuation term $\f^{\textrm{scaled},\, i+1}$.
+    \item We then draw a new cosmological parameter sample from $w(\theta|\theta^i)$, and re-evaluate $\S^{i+1}$, $\hat{\a}^{i+1}$, and the scaled fluctuation term $\hat{\f}^{\textrm{scaled},\, i+1}$.
     \item We calculate the acceptance term of Eq.~\eqref{eq:acceptance-rate}, and accept or reject according to the regular Metropolis-Hasting rule.
-    \item If the sample is accepted, then we calculate $\f^{i+1}$. This term will in the next iteration become $\f^{i}$ which will appear in the acceptance probability and the equation for $\f^{\textrm{scaled},\, i+1}$. 
+    \item If the sample is accepted, then we calculate $\hat{\f}^{i+1}$. This term will in the next iteration become $\hat{\f}^{i}$ which will appear in the acceptance probability and the equation for $\hat{\f}^{\textrm{scaled},\, i+1}$. 
     \item Iterate 2--4.
 \end{enumerate}
 
-The intuition behind this joint move is illustrated in Fig.~\ref{fig:illustration}. The top panel shows the standard Gibbs sampling algorithm, in which only parameter moves parallel to the axes are allowed. This works well in the high signal-to-noise regime (left column), where the joint distribution is close to symmetric. In the low signal-to-noise regime, however, the distribution is strongly tilted, because of the tight coupling between $\f$ and $\theta$ discussed at the end of Sect.~\ref{sec:gibbs}, and many orthogonal moves are required in order to move from one tail of the distribution to the other. With the joint algorithm, however, steps are non-orthogonal, with a slope defined exactly by the local signal-to-noise ratio of the mode in question. The net result is a much faster exploration of the full distribution.
+The intuition behind this joint move is illustrated in Fig.~\ref{fig:illustration}. The top panel shows the standard Gibbs sampling algorithm, in which only parameter moves parallel to the axes are allowed. This works well in the high signal-to-noise regime (left column), where the joint distribution is close to symmetric. In the low signal-to-noise regime, however, the distribution is strongly tilted, because of the tight coupling between $\hat{\f}$ and $\theta$ discussed at the end of Sect.~\ref{sec:gibbs}, and many orthogonal moves are required in order to move from one tail of the distribution to the other. With the joint algorithm, however, steps are non-orthogonal, with a slope defined exactly by the local signal-to-noise ratio of the mode in question. The net result is a much faster exploration of the full distribution.
 
 \begin{figure}
 	\centering
@@ -387,7 +387,7 @@ The intuition behind this joint move is illustrated in Fig.~\ref{fig:illustratio
 
 The main goal of this paper is to implement the joint sampling algorithm into \commanderthree\ and characterize its performance both in terms of accuracy and performance on simulated data. All \commander\ code used in the following is available as Open Source software in a GitHub repository\footnote{https://github.com/Cosmoglobe/Commander}. For the purposes of the current paper, we focus on a standard six-parameter $\Lambda$CDM model, and choose $\theta=(\Omega_{\textrm{b}}h^2, \Omega_{\textrm{CDM}}h^2, H_0, \tau, A_s, n_s)$ as our base parameters, where $\Omega_\mathrm{b}$ and $\Omega_\mathrm{CDM}$ are the current density of baryonic and cold dark matter; $H_0$ is the Hubble parameter (and $h$ is the normalized Hubble constant, $h=\frac{H_0}{100\,\mathrm{km s}^{-1} \mathrm{MPc}^{-1}}$); $\tau$ is the optical depth at reionization; and $A_s$ and $n_s$ are the amplitude and tilt of the scalar primordial power spectrum. We use \texttt{CAMB}\footnote{\url{https://github.com/cmbant/CAMB}} to evaluate all $\Lambda$CDM power spectra, $\C_{\ell}(\theta)$ \citep{Lewis:1999bs}.
 
-In the following, we will consider three different simulations, corresponding to different complexity and realism. The absolute noise level of all three cases are selected to match that of the \Planck\ LFI 70\,GHz channel, noting that a natural early target for this algorithm is a reanalysis of \cosmoglobe\ DR1. For the two first cases, the noise level is isotropic with a value matching twice the full-sky 70\,GHz mean, while it for the third case is given by one realization of the actual non-isotropic \BP\ 70\,GHz noise rms distribution.
+In the following, we will consider three different simulations, corresponding to different complexity and realism. A natural early target for this algorithm is a reanalysis of \cosmoglobe\ DR1, hence all three cases are similar to the \Planck\ LFI channels. We use the \planck\ data release 4 70\,GHz beam transfer functions \citep{planck2020-LVII}, and for the two first cases, the noise level is isotropic with a value matching twice the full-sky 70\,GHz mean, while it for the third case is given by one realization of the actual non-isotropic \BP\ 70\,GHz noise rms distribution.
 
 The second difference between the three cases is their sky coverages. The first case considers full-sky data, for which the analytical posterior distribution solution is readily available through Eq.~\eqref{eq:exact_harm}. The second case implements a constant-latitude Galactic mask for which an analytical expression is also available, albeit more complicated than for the full sky; see Appendix~A for details. The third case uses a realistic Galactic and point-source mask, for which no analytical expression is available. 
 
@@ -410,7 +410,7 @@ To validate the main \commanderthree\ results, we have developed a special-purpo
 
 The first main goal of this paper is to demonstrate that the new \commanderthree\ implementation of the Racine et al.\ algorithm performs as expected with respect to accuracy. Thus, we start our discussion by considering the uniform and full-sky case discussed above. For each of the three available codes---\commanderthree, Python, and Cobaya---we produce 50\,000 samples, and show the full posterior distributions in Fig.~\ref{fig:nomask}. The agreement between all three codes is excellent, and the overall variations are within $\sim$\,0.1$\,\sigma$.
 
-Second, Fig.~\ref{fig:mask10} shows a similar comparison between the \commanderthree\ and Python implementation. The sky mask is in this case defined by $|b|<5.7^{\circ}$, which removes 10\,\% of the sky. Also in this case do we find good agreement between the two implementations, and the true input values (marked by vertical dashed lines) all fall well within the full posterior distributions. However, we do note that the introduction of a sky mask significantly increases the overall run time of the algorithm, since one now has to solve for the mean field map repeatedly at each step with Conjugate Gradients, rather than by brute-force matrix inversions. In total, we only produce $\sim$\,11000 and 17000 samples for each of the two codes for this exercise, at a total cost of $\mathcal{O}(10^5)$ CPU-hrs.
+Second, Fig.~\ref{fig:mask10} shows a similar comparison between the \commanderthree\ and Python implementation. The sky mask is in this case defined by $|b|<5.7^{\circ}$ where $b$ is the latitude, removing 10\,\% of the sky. Also in this case do we find good agreement between the two implementations, and the true input values (marked by vertical dashed lines) all fall well within the full posterior distributions. However, we do note that the introduction of a sky mask significantly increases the overall run time of the algorithm, since one now has to solve for the mean field map repeatedly at each step with Conjugate Gradients, rather than by brute-force matrix inversions. In total, we only produce $\sim$\,11000 and 17000 samples for each of the two codes for this exercise, at a total cost of $\mathcal{O}(10^5)$ CPU-hrs.
 
 Finally, in Fig.~\ref{fig:traceplot} we show trace plots for each cosmological parameter for the realistic configuration as produced with \commanderthree, noting that none of the other codes are technically able to produce similar estimates. In this case, the computational cost is even higher, and we only produce a total of 1600 samples. Still, by comparing these traces with the true input values (marked as dashed horizontal lines), we do see that the resulting samples agree well with the expected values, both in terms of means and uncertainties. 
 
@@ -461,17 +461,17 @@ Finally, before concluding this paper, we also note that a key application of th
 \label{sec:appendixA}
 
 
-The goal of this appendix is to show how we can calculate $N_{\ell m \ell' m'}^{-1}$ analytically for a constant latitude mask and uniform noise, and how this expression makes the map making equation computationally fast to solve. The noise can be written as this in pixel space:
+The goal of this appendix is to show how we can calculate $N_{\ell m \ell' m'}^{-1}$ analytically for a constant latitude mask and uniform noise. This expression makes the map making equation in Eq.~\eqref{eq:mapmakingeq} computationally faster to solve as we derive our expression to be $N_{\ell m \ell' m'}^{-1} \propto \delta_{mm'}$. These results are generally known, but we re-derive them here.
+
+The inverse of the noise covariance matrix can be written in pixel space as,
 $$
 \left(N^{-1} \right)_{pp'} = \frac{N_{\mathrm{pix}}}{\sigma^2} \delta_{pp'} H(|\theta(p) -\pi/2|-b).
 $$
-where $H$ is the Heavyside function, meaning that we mask every pixel $p$ where $|\theta(p) -\pi/2| < b$ for some latitude $b$ in radians. For a masked pixel $\left(N^{-1} \right)_{pp}=0$ meaning that the noise at that pixel is infinite, $N_{pp} = \infty$.
-
-Using that
+where $H$ is the Heavyside function, meaning that we mask every pixel $p$ where $|\theta(p) -\pi/2| < b$ for some latitude $b$ in radians. $\sigma$ is the isotropic noise per pixel and $N_{\mathrm{pix}}$ is the number of pixels. For a masked pixel $\left(N^{-1} \right)_{pp}=0$ meaning that the noise at that pixel is infinite, $N_{pp} = \infty$. We have the relation that
 $$
 \left(N^{-1}\right)_{pp'} = \sum_{\ell m}\sum_{\ell' m'} \left(N^{-1}\right)_{\ell m \ell'm'} Y_{\ell m}\left(p\right)Y^*_{\ell' m'}\left(p'\right),
 $$
-where $Y_{\ell m}\left(p\right) = Y_{\ell m}\left(\hat{n}(p)\right)$ and $\hat{n}(p)$ are the spherical coordinates for pixel $p$, we can transform to spherical harmonics space,
+where $Y_{\ell m}\left(p\right) = Y_{\ell m}\left(\hat{n}(p)\right)$ and $\hat{n}(p)$ are the spherical coordinates for pixel $p$. Using the orthogonality of the spherical harmonics functions, we can transform to spherical harmonics space
 \begin{align}
 \nonumber
 \left(N^{-1}\right)_{\ell m \ell' m'} &= \sum_{p p'}\left(N^{-1}\right)_{pp'}Y^{*}_{\ell m}(p)Y_{\ell' m'}(p')\\
@@ -483,7 +483,7 @@ where $Y_{\ell m}\left(p\right) = Y_{\ell m}\left(\hat{n}(p)\right)$ and $\hat{n
 \end{align}
 Here, we have defined $\Tilde{P}_{\ell m}=\Tilde{P}_{\ell m}(\theta)$ so that $Y_{\ell m}(p) = \Tilde{P}_{\ell m}(\theta) e^{im\phi}$ and the spherical coordinates $\theta$ and $\phi$ are functions of the pixel $p$. $\Tilde{P}_{\ell m}(\theta)$ is the Legendre polynomial $P_{\ell m}(\cos(\theta)))$ multiplied by a constant, so that $\Tilde{P}_{\ell m} = \Delta_{\ell m}P_{\ell m}(\cos(\theta)))$, where ${\Delta_{\ell m}=(-1)^m \sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell - m)!}{(\ell+m)!}}}$.
 
-We now take the limit where there is a large amount of pixels with equal surface area each. In this limit, we change the sum into an integration where we account for the number of pixels per area element
+We now switch from discrete pixels to continuous space, meaning that we change the sum into an integration where we account for the number of pixels per area element
 \begin{equation}
 \sum_p \rightarrow \frac{N_{\mathrm{pix}}}{4\pi}\int d\Omega  = \frac{N_{\mathrm{pix}}}{4\pi}\int_{0}^{2\pi} d\phi \int_{0}^{\pi} d\theta \sin(\theta).
 \end{equation}
@@ -498,10 +498,10 @@ This gives us in spherical coordinates
 &= \frac{N_{\mathrm{pix}}^2}{2\sigma^2} \delta_{mm'}\int_{0}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'} H(|\theta -\pi/2|-b)\\
 \nonumber
 &= \frac{N_{\mathrm{pix}}^2}{2\sigma^2} \delta_{mm'}\\
+\label{eq:N_lml'm'_step}
 &\cdot \left(\int_{0}^{\pi/2-b} d\theta \sin(\theta) \Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}+\int_{\pi/2+b}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}\right).
 \end{align}
-Writing the above equation in terms of 
- Writing $x=\cos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or anti-symmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and anti-symmetric when $\ell+m$ = odd. Since $m=m'$, we note that the two integrals cancel each other if $\ell+\ell' =$ odd. We, therefore, only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, for $\ell + \ell'=$ even, we get
+Writing $x=\cos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or anti-symmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and anti-symmetric when $\ell+m$ = odd. Since $m=m'$, we note that the two integrals in Eq.~\eqref{eq:N_lml'm'_step} cancel each other if $\ell+\ell' =$ odd. We, therefore, only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, for $\ell + \ell'=$ even, we get
 \begin{align}
 \nonumber
 \left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{0}^{\pi/2-b} d\theta \sin(\theta)\Tilde{P}_{\ell m}(\theta)\Tilde{P}_{\ell' m'}(\theta)\\
@@ -522,7 +522,7 @@ Since $\N^{-1}_{\ell m \ell' m'} \propto \delta_{m m'}$, we get simplified matri
 \N^{-1} \cdot \vec{b} &= \sum_{\ell' m'}\left(\N^{-1}\right)_{\ell m \ell' m'}b_{\ell' m'} = \sum_{\ell'}\left(N^{-1}\right)_{\ell m \ell' m}b_{\ell' m}\\
 &= \sum_{\ell' }\left(\N^{-1}\right)^{(m)}_{\ell, \ell'}b^{(m)}_{\ell'}.
 \end{align}
-To solve the map-making equation, we get a matrix equation for each $0 \leq m \leq \ell_{\mathrm{max}}$. This gives us $\ell_{\textrm{max}}+1$ number of matrix equations where the dimensions of the matrices are maximally $\ell_{\textrm{max}} \times \ell_{\textrm{max}}$. This is numerically much quicker than inverting the full $(\ell_{\textrm{max}})^2 \times (\ell_{\textrm{max}})^2$ matrix once.
+To solve the map-making equation in Eq.~\eqref{eq:mapmakingeq}, we get a matrix equation for each $0 \leq m \leq \ell_{\mathrm{max}}$. This gives us $\ell_{\textrm{max}}+1$ number of matrix equations where the dimensions of the matrices are maximally $(\ell_{\textrm{max}}+1) \times (\ell_{\textrm{max}}+1)$. This is numerically much quicker to invert rather than the full matrix equation once.
 
 
 \end{document}
