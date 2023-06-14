@@ -463,11 +463,11 @@ Finally, before concluding this paper, we also note that a key application of th
 
 The goal of this appendix is to show how we can calculate $N_{\ell m \ell' m'}^{-1}$ analytically for a constant latitude mask and uniform noise. This expression makes the map making equation in Eq.~\eqref{eq:mapmakingeq} computationally faster to solve as we derive our expression to be $N_{\ell m \ell' m'}^{-1} \propto \delta_{mm'}$. These results are generally known, but we re-derive them here.
 
-The inverse of the noise covariance matrix can be written in pixel space as,
+For uniform instrumental noise with no mask, the pixel covariance matrix is $N_{pp'} = \sigma^2 \delta_{pp'}$ where $\sigma$ is the white noise uncertainty per pixel. Including the constant latitude mask, the inverse of the noise covariance matrix can be written in pixel space as,
 $$
-\left(N^{-1} \right)_{pp'} = \frac{N_{\mathrm{pix}}}{\sigma^2} \delta_{pp'} H(|\theta(p) -\pi/2|-b).
+\left(N^{-1} \right)_{pp'} = \frac{1}{\sigma^2} \delta_{pp'} H(|\theta(p) -\pi/2|-b).
 $$
-where $H$ is the Heavyside function, meaning that we mask every pixel $p$ where $|\theta(p) -\pi/2| < b$ for some latitude $b$ in radians. $\sigma$ is the isotropic noise per pixel and $N_{\mathrm{pix}}$ is the number of pixels. For a masked pixel $\left(N^{-1} \right)_{pp}=0$ meaning that the noise at that pixel is infinite, $N_{pp} = \infty$. We have the relation that
+where $H$ is the Heavyside function, meaning that we mask every pixel $p$ where $|\theta(p) -\pi/2| < b$ for some latitude $b$ in radians. For a masked pixel $\left(N^{-1} \right)_{pp}=0$ meaning that the noise at that pixel is infinite, $N_{pp} = \infty$. We have the relation that
 $$
 \left(N^{-1}\right)_{pp'} = \sum_{\ell m}\sum_{\ell' m'} \left(N^{-1}\right)_{\ell m \ell'm'} Y_{\ell m}\left(p\right)Y^*_{\ell' m'}\left(p'\right),
 $$
@@ -476,46 +476,46 @@ where $Y_{\ell m}\left(p\right) = Y_{\ell m}\left(\hat{n}(p)\right)$ and $\hat{n
 \nonumber
 \left(N^{-1}\right)_{\ell m \ell' m'} &= \sum_{p p'}\left(N^{-1}\right)_{pp'}Y^{*}_{\ell m}(p)Y_{\ell' m'}(p')\\
 \nonumber
-&= \frac{N_{\mathrm{pix}}}{\sigma^2}\sum_{p p'} Y^{*}_{\ell m}(p)Y_{\ell' m'}(p') \delta_{pp'} H(|\theta -\pi/2|-b)\\
+&= \frac{1}{\sigma^2}\sum_{p p'} Y^{*}_{\ell m}(p)Y_{\ell' m'}(p') \delta_{pp'} H(|\theta -\pi/2|-b)\\
 \nonumber
-&= \frac{N_{\mathrm{pix}}}{\sigma^2}\sum_{p } Y^{*}_{\ell m}(p)Y_{\ell' m'}(p) H(|\theta -\pi/2|-b)\\
-&= \frac{N_{\mathrm{pix}}}{\sigma^2}\sum_p \Tilde{P}_{\ell m}\Tilde{P}_{\ell' m'} e^{-i(m-m')\phi} H(|\theta -\pi/2|-b).
+&= \frac{1}{\sigma^2}\sum_{p } Y^{*}_{\ell m}(p)Y_{\ell' m'}(p) H(|\theta -\pi/2|-b)\\
+&= \frac{1}{\sigma^2}\sum_p \Tilde{P}_{\ell m}\Tilde{P}_{\ell' m'} e^{-i(m-m')\phi} H(|\theta -\pi/2|-b).
 \end{align}
 Here, we have defined $\Tilde{P}_{\ell m}=\Tilde{P}_{\ell m}(\theta)$ so that $Y_{\ell m}(p) = \Tilde{P}_{\ell m}(\theta) e^{im\phi}$ and the spherical coordinates $\theta$ and $\phi$ are functions of the pixel $p$. $\Tilde{P}_{\ell m}(\theta)$ is the Legendre polynomial $P_{\ell m}(\cos(\theta)))$ multiplied by a constant, so that $\Tilde{P}_{\ell m} = \Delta_{\ell m}P_{\ell m}(\cos(\theta)))$, where ${\Delta_{\ell m}=(-1)^m \sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell - m)!}{(\ell+m)!}}}$.
 
-We now switch from discrete pixels to continuous space, meaning that we change the sum into an integration where we account for the number of pixels per area element
+We now switch from discrete pixels to continuous space, meaning that we change the sum into an integration where we account for the number of pixels, $N_{\mathrm{pix}}$, per area element
 \begin{equation}
 \sum_p \rightarrow \frac{N_{\mathrm{pix}}}{4\pi}\int d\Omega  = \frac{N_{\mathrm{pix}}}{4\pi}\int_{0}^{2\pi} d\phi \int_{0}^{\pi} d\theta \sin(\theta).
 \end{equation}
 This gives us in spherical coordinates
 \begin{align}
 \nonumber
-\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{4\pi \sigma^2}\int_{0}^{2\pi} d\phi \int_{0}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}  e^{-i(m-m')\phi}
+\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}}{4\pi \sigma^2}\int_{0}^{2\pi} d\phi \int_{0}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}  e^{-i(m-m')\phi}
 \\
 \nonumber
 &\cdot H(|\theta -\pi/2|-b)\\
 \nonumber
-&= \frac{N_{\mathrm{pix}}^2}{2\sigma^2} \delta_{mm'}\int_{0}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'} H(|\theta -\pi/2|-b)\\
+&= \frac{N_{\mathrm{pix}}}{2\sigma^2} \delta_{mm'}\int_{0}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'} H(|\theta -\pi/2|-b)\\
 \nonumber
-&= \frac{N_{\mathrm{pix}}^2}{2\sigma^2} \delta_{mm'}\\
+&= \frac{N_{\mathrm{pix}}}{2\sigma^2} \delta_{mm'}\\
 \label{eq:N_lml'm'_step}
 &\cdot \left(\int_{0}^{\pi/2-b} d\theta \sin(\theta) \Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}+\int_{\pi/2+b}^{\pi} d\theta \sin(\theta)\Tilde{P}_{\ell m}  \Tilde{P}_{\ell' m'}\right).
 \end{align}
 Writing $x=\cos(\theta)$, we know that Legendre polynomials $P_{\ell m}(x)$ are either symmetric or anti-symmetric in $x\rightarrow-x$. $P_{\ell m}(x)$ is symmetric in $x \rightarrow -x$ when $\ell+m$ = even and anti-symmetric when $\ell+m$ = odd. Since $m=m'$, we note that the two integrals in Eq.~\eqref{eq:N_lml'm'_step} cancel each other if $\ell+\ell' =$ odd. We, therefore, only get non-zero elements when $\ell + \ell' =$ even, for which the two integrals are equal. Hence, for $\ell + \ell'=$ even, we get
 \begin{align}
 \nonumber
-\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{0}^{\pi/2-b} d\theta \sin(\theta)\Tilde{P}_{\ell m}(\theta)\Tilde{P}_{\ell' m'}(\theta)\\
+\left(N^{-1}\right)_{\ell m \ell' m'} &= \frac{N_{\mathrm{pix}}}{\sigma^2} \delta_{mm'}\int_{0}^{\pi/2-b} d\theta \sin(\theta)\Tilde{P}_{\ell m}(\theta)\Tilde{P}_{\ell' m'}(\theta)\\
 \label{eq:finished_n_inv}
-&=\frac{N_{\mathrm{pix}}^2}{\sigma^2} \delta_{mm'}\int_{\sin(b)}^{1} dx \, \Tilde{P}_{\ell m}(\arccos(x)) \Tilde{P}_{\ell' m}(\arccos(x)).
+&=\frac{N_{\mathrm{pix}}}{\sigma^2} \delta_{mm'}\int_{\sin(b)}^{1} dx \, \Tilde{P}_{\ell m}(\arccos(x)) \Tilde{P}_{\ell' m}(\arccos(x)).
 \end{align}
-This integral can be solved numerically by gridding $x$, and $\Tilde{P}_{\ell m}$ can be calculated in Python using the library \textit{pyshtools} \citep{https://doi.org/10.1029/2018GC007529}.
+In the full-sky case, $b=0$, we find $\left(N^{-1}\right)_{\ell m \ell' m'} = \delta_{\ell \ell'}\delta_{mm'}\frac{N_{\mathrm{pix}}}{4\pi \sigma^2}$ which is equivalent to a diagonal noise power spectrum ${N_{\ell} = \frac{4\pi\sigma^2}{N_{\mathrm{pix}}}}$.
 
-The azimuthally symmetric Galactic mask used for this work has a sky coverage of $f_{\mathrm{sky}} = 0.90$, giving $\sin(b) = 0.1$. Therefore, we require much fewer grid points for $x$ if we use the following identity for $\ell+\ell' = $ even:
+This integral can be solved numerically by gridding $x$, and $\Tilde{P}_{\ell m}$ can be calculated in Python using the library \textit{pyshtools} \citep{https://doi.org/10.1029/2018GC007529}. The azimuthally symmetric Galactic mask used for this work has a sky coverage of $f_{\mathrm{sky}} = 0.90$, giving $\sin(b) = 0.1$. Therefore, we require much fewer grid points for $x$ if we use the following identity for $\ell+\ell' = $ even:
 \begin{align}
 &\delta_{mm'} \int_{\sin(b)}^{1} dx \, \Tilde{P}_{\ell m}(\arccos(x)) \Tilde{P}_{\ell' m}(\arccos(x)) = \\
 \frac{1}{4\pi}\delta_{\ell \ell'}\delta_{m m'} - &\delta_{mm'} \int_{0}^{\sin(b)} dx \, \Tilde{P}_{\ell m}(\arccos(x)) \Tilde{P}_{\ell' m}(\arccos(x)),
 \end{align}
-which comes from the orthonormality condition for spherical harmonics. We now only need to grid $x$ in the interval $0\leq x \leq \sin(b) = 0.1$, as opposed to the interval $0.9 \leq x \leq 1$.
+which comes from the orthonormality condition for spherical harmonics. We now only need to grid $x$ in the interval $0\leq x \leq \sin(b) = 0.1$, as opposed to the interval $0.1 \leq x \leq 1$.
 
 Since $\N^{-1}_{\ell m \ell' m'} \propto \delta_{m m'}$, we get simplified matrix expressions. Imagine multiplying the matrix $\N^{-1} = N^{-1}_{\ell m \ell' m'}$ with the vector $\vec{b} = b_{\ell m}$
 \begin{align}
