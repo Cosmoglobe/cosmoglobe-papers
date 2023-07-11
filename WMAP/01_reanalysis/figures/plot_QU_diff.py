@@ -68,23 +68,33 @@ deltaQ = hp.ud_grade(hp.smoothing(Q1 - Q2, fwhm=fwhm) * 1e3, 256)
 deltaV = hp.ud_grade(hp.smoothing(V1 - V2, fwhm=fwhm) * 1e3, 256)
 deltaW = hp.ud_grade(hp.smoothing(((W1 - W2) - (W3 - W4)) / 4, fwhm=fwhm) * 1e3, 256)
 
-Clhat0 = hp.anafast(K30)
-Clhat1 = hp.anafast(Ka30)
-Clhat2 = hp.anafast(deltaQ)
-Clhat3 = hp.anafast(deltaV)
-Clhat4 = hp.anafast(deltaW)
-Clhat5 = hp.anafast(Q44)
-Clhat6 = hp.anafast(V70)
-Clhat7 = hp.anafast(W100)
+try:
+    Clhat0 = np.loadtxt('../data/powspec_intdiff/Clhat_K30_CG.txt')
+    Clhat1 = np.loadtxt('../data/powspec_intdiff/Clhat_30Ka_CG.txt')
+    Clhat2 = np.loadtxt('../data/powspec_intdiff/Clhat_dQ_CG.txt')
+    Clhat3 = np.loadtxt('../data/powspec_intdiff/Clhat_dV_CG.txt')
+    Clhat4 = np.loadtxt('../data/powspec_intdiff/Clhat_dW_CG.txt')
+    Clhat5 = np.loadtxt('../data/powspec_intdiff/Clhat_44Q_CG.txt')
+    Clhat6 = np.loadtxt('../data/powspec_intdiff/Clhat_70V_CG.txt')
+    Clhat7 = np.loadtxt('../data/powspec_intdiff/Clhat_70W_CG.txt')
+except IOError:
+    Clhat0 = hp.anafast(K30_wmap)
+    Clhat1 = hp.anafast(Ka30_wmap)
+    Clhat2 = hp.anafast(deltaQ_wmap)
+    Clhat3 = hp.anafast(deltaV_wmap)
+    Clhat4 = hp.anafast(deltaW_wmap)
+    Clhat5 = hp.anafast(Q44_wmap)
+    Clhat6 = hp.anafast(V70_wmap)
+    Clhat7 = hp.anafast(W100_wmap)
 
-np.savetxt('../data/powspec_intdiff/Clhat_K30_CG.txt', Clhat0)
-np.savetxt('../data/powspec_intdiff/Clhat_30Ka_CG.txt', Clhat1)
-np.savetxt('../data/powspec_intdiff/Clhat_dQ_CG.txt', Clhat2)
-np.savetxt('../data/powspec_intdiff/Clhat_dV_CG.txt', Clhat3)
-np.savetxt('../data/powspec_intdiff/Clhat_dW_CG.txt', Clhat4)
-np.savetxt('../data/powspec_intdiff/Clhat_44Q_CG.txt', Clhat5)
-np.savetxt('../data/powspec_intdiff/Clhat_70V_CG.txt', Clhat6)
-np.savetxt('../data/powspec_intdiff/Clhat_70W_CG.txt', Clhat7)
+    np.savetxt('../data/powspec_intdiff/Clhat_K30_CG.txt', Clhat0)
+    np.savetxt('../data/powspec_intdiff/Clhat_30Ka_CG.txt', Clhat1)
+    np.savetxt('../data/powspec_intdiff/Clhat_dQ_CG.txt', Clhat2)
+    np.savetxt('../data/powspec_intdiff/Clhat_dV_CG.txt', Clhat3)
+    np.savetxt('../data/powspec_intdiff/Clhat_dW_CG.txt', Clhat4)
+    np.savetxt('../data/powspec_intdiff/Clhat_44Q_CG.txt', Clhat5)
+    np.savetxt('../data/powspec_intdiff/Clhat_70V_CG.txt', Clhat6)
+    np.savetxt('../data/powspec_intdiff/Clhat_70W_CG.txt', Clhat7)
 
 plt.show()
 
@@ -105,6 +115,20 @@ cg.plot(
     fontsize=fontsize,
 )
 plt.savefig("K30_deltaQ.pdf", bbox_inches="tight", dpi=300)
+
+cg.plot(
+    K30,
+    sig=1,
+    llabel=r"30-\mathit{K}",
+    rlabel="Q, \mathrm{CG}",
+    cbar=False,
+    min=-10,
+    max=10,
+    xsize=xsize,
+    width=width,
+    fontsize=fontsize,
+)
+plt.savefig("K30_deltaQ.png", bbox_inches="tight", dpi=300)
 
 cg.plot(
     K30,
@@ -393,23 +417,34 @@ deltaQ_wmap = hp.ud_grade(hp.smoothing(Q1_wmap - Q2_wmap, fwhm=fwhm) * 1e3, 256)
 deltaV_wmap = hp.ud_grade(hp.smoothing(V1_wmap - V2_wmap, fwhm=fwhm) * 1e3, 256)
 deltaW_wmap = hp.ud_grade(hp.smoothing(((W1_wmap - W2_wmap) - (W3_wmap - W4_wmap)) / 4, fwhm=fwhm) * 1e3, 256)
 
-Clhat0 = hp.anafast(K30_wmap)
-Clhat1 = hp.anafast(Ka30_wmap)
-Clhat2 = hp.anafast(deltaQ_wmap)
-Clhat3 = hp.anafast(deltaV_wmap)
-Clhat4 = hp.anafast(deltaW_wmap)
-Clhat5 = hp.anafast(Q44_wmap)
-Clhat6 = hp.anafast(V70_wmap)
-Clhat7 = hp.anafast(W100_wmap)
 
-np.savetxt('../data/powspec_intdiff/Clhat_K30_WM.txt', Clhat0)
-np.savetxt('../data/powspec_intdiff/Clhat_30Ka_WM.txt', Clhat1)
-np.savetxt('../data/powspec_intdiff/Clhat_dQ_WM.txt', Clhat2)
-np.savetxt('../data/powspec_intdiff/Clhat_dV_WM.txt', Clhat3)
-np.savetxt('../data/powspec_intdiff/Clhat_dW_WM.txt', Clhat4)
-np.savetxt('../data/powspec_intdiff/Clhat_44Q_WM.txt', Clhat5)
-np.savetxt('../data/powspec_intdiff/Clhat_70V_WM.txt', Clhat6)
-np.savetxt('../data/powspec_intdiff/Clhat_70W_WM.txt', Clhat7)
+try:
+    Clhat0 = np.loadtxt('../data/powspec_intdiff/Clhat_K30_WM.txt')
+    Clhat1 = np.loadtxt('../data/powspec_intdiff/Clhat_30Ka_WM.txt')
+    Clhat2 = np.loadtxt('../data/powspec_intdiff/Clhat_dQ_WM.txt')
+    Clhat3 = np.loadtxt('../data/powspec_intdiff/Clhat_dV_WM.txt')
+    Clhat4 = np.loadtxt('../data/powspec_intdiff/Clhat_dW_WM.txt')
+    Clhat5 = np.loadtxt('../data/powspec_intdiff/Clhat_44Q_WM.txt')
+    Clhat6 = np.loadtxt('../data/powspec_intdiff/Clhat_70V_WM.txt')
+    Clhat7 = np.loadtxt('../data/powspec_intdiff/Clhat_70W_WM.txt')
+except IOError:
+    Clhat0 = hp.anafast(K30_wmap)
+    Clhat1 = hp.anafast(Ka30_wmap)
+    Clhat2 = hp.anafast(deltaQ_wmap)
+    Clhat3 = hp.anafast(deltaV_wmap)
+    Clhat4 = hp.anafast(deltaW_wmap)
+    Clhat5 = hp.anafast(Q44_wmap)
+    Clhat6 = hp.anafast(V70_wmap)
+    Clhat7 = hp.anafast(W100_wmap)
+
+    np.savetxt('../data/powspec_intdiff/Clhat_K30_WM.txt', Clhat0)
+    np.savetxt('../data/powspec_intdiff/Clhat_30Ka_WM.txt', Clhat1)
+    np.savetxt('../data/powspec_intdiff/Clhat_dQ_WM.txt', Clhat2)
+    np.savetxt('../data/powspec_intdiff/Clhat_dV_WM.txt', Clhat3)
+    np.savetxt('../data/powspec_intdiff/Clhat_dW_WM.txt', Clhat4)
+    np.savetxt('../data/powspec_intdiff/Clhat_44Q_WM.txt', Clhat5)
+    np.savetxt('../data/powspec_intdiff/Clhat_70V_WM.txt', Clhat6)
+    np.savetxt('../data/powspec_intdiff/Clhat_70W_WM.txt', Clhat7)
 
 
 cg.plot(
@@ -425,6 +460,20 @@ cg.plot(
     fontsize=fontsize,
 )
 plt.savefig("K30_W_deltaQ.pdf", bbox_inches="tight", dpi=300)
+
+cg.plot(
+    K30_wmap,
+    sig=1,
+    llabel=r"30-\mathit{K}",
+    rlabel="Q, \mathrm{WMAP}",
+    cbar=False,
+    min=-10,
+    max=10,
+    xsize=xsize,
+    width=width,
+    fontsize=fontsize,
+)
+plt.savefig("K30_W_deltaQ.png", bbox_inches="tight", dpi=300)
 
 cg.plot(
     K30_wmap,
