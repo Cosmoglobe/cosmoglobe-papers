@@ -152,7 +152,7 @@ plt.xlim([0.5, 8.5]);
 plt.xticks([1,2,3,4,5,6,7,8], [r"30", r"44", r"70", r"$K$", r"$Ka$", r"$Q$", r"$V$", r"$W$"])
 plt.yticks([1,2,3], [r"$1$", "2", r"$3$"])
 plt.setp( ax6.get_xticklabels(), visible=True)
-plt.text(8.3,17,r"CMB, $P$", fontsize=8, ha='right')
+plt.text(8.3,0.9,r"CMB, $P$", fontsize=8, ha='right')
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 plt.minorticks_off()
 ax6.set_facecolor((0.9,0.9,0.9))
@@ -243,7 +243,7 @@ for ticklabel in ax8.yaxis.get_ticklabels():
 # save to pdf with right bounding box
 #extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 #plt.savefig("test.pdf", bbox_inches=extent, pad_inches=0.02)
-plt.savefig("fg_s2n_v2.pdf", bbox_inches='tight',
+plt.savefig("../../figures/fg_s2n_v2.pdf", bbox_inches='tight',
     bbox_extra_artists=[],pad_inches=0.03, dpi=100)
 #plt.savefig("test.pdf", bbox_inches=[0,1,0,1], pad_inches=0.02)
 
