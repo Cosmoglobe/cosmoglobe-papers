@@ -180,6 +180,15 @@
 %\hypersetup{linkcolor=red} 
 
 
+Just because I am really tired and confused, let's write some extra stuff down here. What are we doing in this paper?
+
+First, we show that the synchrotron map is the most sensitive map to date. If one wishes to use a map of synchrotron, they shouldn't use \K-band or 30\,GHz alone, but the combination of the \cosmoglobe\ DR1 maps that we present here. Compared to the frequency maps and the \bp\ release, the noise level is much better. In addition, the results in power spectrum space are coherent, and power spectra of the half-mission splits give E/B ratios consistent with previous analyses.
+
+Second, with these improved maps, we can look at the spatial variation of the polarized synchrotron spectral index, using a model-independent TT plot approach. Here, we find (1) better agreement between the \cosmoglobe\ \K\ and 30\,GHz bands than in \WMAPnine\ and \Planck\ PR4, and (2) more consistent spectral indices between \K\ and \Ka\ and \K\ and 30\,GHz.
+
+Finally, we have run an independent pixel-based analysis including all data, using \commanderone,  and find high signal-to-noise spectral index maps. With this, we're able to look at residuals and figure out what is weird that is going on, including this \Ka-band haze that only exists in Stokes $Q$, and also find there is a strong correlation with the Fermi bubbles.
+
+In short, these maps are good, and you guys should use them.
 
 
 \section{Introduction}
@@ -190,7 +199,7 @@ Understanding the polarization of the cosmic microwave background (CMB) is a pri
 In the past decade, uncertainty on cosmological constraints has been limited not only by instrumental sensitivity, but by incomplete knowledge of the sky itself. These analysis difficulties have been mitigated by analyzing maps from different experiments, e.g., \citet{pb2015}, or designing of experiments with broad frequency coverage, such as \WMAP\ \citep{bennett2012} and \Planck\ \citep{planck2016-l01}. A major impediment to joint analyses is the difficulty of combining data with different survey strategies and incompletely characterized systematics. In order to maximize scientific throughput, one must either design an experiment that can characterize every relevant observable on its own, or jointly analyze different datasets in the same joint framework.
 
 The \bp\ project achieved this joint analysis by combining external data, i.e., the Haslam 408\,MHz map \citep{haslam1982}, \WMAP\ \Ka--\V\ bands, \Planck\ 353\,GHz in polarization, and \Planck\ 857\,GHz in intensity, while analyzing the \Planck\ 30, 44, and 70 GHz TOD \citep{bp01}.
-The \Planck\ LFI experiment showed that raw detector sensitivity was not enough to obtain high-fidelity sky maps; \citet{planck2016-l02} found that the detector gain solution depended on the assumed polarization and intensity of the sky. To break this circular dependency, the \bp\ framework solved for the intrinsic sky signal and instrumental parameters iteratively, providing an accurate model of the entire system with full error propagation. By leveraging external data, \bp\ was able to create \Planck\ LFI of cosmological quality, while generating a robust model of the foreground sky.
+The \Planck\ LFI experiment showed that raw detector sensitivity was not enough to obtain high-fidelity sky maps; \citet{planck2016-l02} found that the detector gain solution depended on the assumed polarization and intensity of the sky. To break this circular dependency, the \bp\ framework solved for the intrinsic sky signal and instrumental parameters iteratively, providing an accurate model of the entire system with full error propagation. By leveraging external data, \bp\ was able to create \Planck\ LFI maps of cosmological quality, while generating a robust model of the foreground sky.
 
 In \cosmoglobe\ DR1 \citep{watts2023_dr1}, this end-to-end framework was extended, performing a joint analysis of the same data as \bp\ while adding the full \WMAP\ time-ordered data. This analysis not only improved the quality of the \WMAP\ maps themselves, but provided the most robust full-sky model of low frequency polarized emission available to date.
 
@@ -234,17 +243,21 @@ The analysis in this paper makes use of \cosmoglobe\ end products produced by th
 
 \section{Polarized synchrotron amplitude}
 
-%\begin{figure*}
-%	\centering
-%	\includegraphics[width=0.45\textwidth]{figures/polint_PR4.pdf}
-%	\includegraphics[width=0.45\textwidth]{figures/polint_WMAP9.pdf}
-%	\includegraphics[width=0.45\textwidth]{figures/polint_BP.pdf}
-%	\includegraphics[width=0.45\textwidth]{figures/polint_CG.pdf}
-%	\caption{
-%		Improvement of synchrotron polarization amplitude $P=\sqrt{Q^2+U^2}$.
-%		}
-%       \label{fig:synch_polint}
-%\end{figure*}
+
+
+\textit{Summary: an estimate of the synchrotron amplitude is necessary in order to perform template subtraction. The most robust estimate of any quantity comes from the combination of datasets that are generated from a statistical model that is consistent. For full-sky measurements, this would naively consist of combining high signal-to-noise polarized synchrotron measurements, like WMAP K-band, Ka-band, and Planck 30 GHz. Unfortunately, these datasets have been inconsistent in the official analyses. In my recent reanalysis, the maps are now consistent with each other at a level subdominant to known systematic effects, so we are able to optimally combine these data. Here are the maps that come from this and their noise properties, and also how much higher the sensitivity is compared to these previous results.
+}
+
+
+Synchrotron map facts.
+
+\begin{enumerate}
+	\item $N_\mathrm{side}=1024$, $\theta_\mathrm{FWHM}=40\arcm$.
+	\item Evaluated at 30\,GHz
+	\item Each sample evaluated at $40\arcm$, smoothed with an addition $1^\circ$ during the post-processing
+	\item Evaluated using a prior that downweights with a Gaussian prior scales below 30\arcm.
+\end{enumerate} 
+
 
 \begin{figure*}
 	\centering
@@ -263,11 +276,16 @@ The analysis in this paper makes use of \cosmoglobe\ end products produced by th
 
 \cosmoglobe\ DR1 produced a sky model and instrumental parameters for each Gibbs sample, allowing for complete characterization of the dependence of low-level instrumental parameters on the sky model. The sky model includes all relevant components in \WMAP\ and LFI's frequency range, specifically the CMB, synchrotron, thermal dust, free-free emission, anomalous microwave emission, and radio point sources, the first three of which are known to be polarized. 
 
+When using external data for polarized foreground cleaning, the choices for high signal-to-noise full sky constraints are either \WMAP\ \K-band, \Planck\ LFI 30\,GHz, or models derived from combinations of these data, as in, e.g., \cosmoglobe. From the perspective of pure statistical uncertainty, a combination of multiple independent datasets would yield component maps that are more sensitive than each individual component. However, unmodeled systematic uncertainties in the underlying datasets, left untreated, can induce map effects that can leak into astrophysics and cosmological constraints.
+As shown in \citet{watts2023_dr1}, a single sky model that all datasets are calibrated against improves the low-level instrumental processing, and allowing for degeneracies, such as poorly-measured modes in \WMAP\ and differential gain uncertainty in LFI, to be broken. Within the \cosmoglobe\ DR1 framework, the polarization maps from \WMAP\ and \Planck\ LFI are consistent with each other at the $10\,\mathrm{\mu K}$ level, consistent with the instrumental white noise of the datasets.
+
+The \cosmoglobe\ DR1 frequency maps are free from previously reported systematics, and are consistent between different frequencies and instruments. Therefore, a coherent model of polarized synchrotron emission can be made by combining these two different datasets.
+The polarized spectral amplitude determined from \cosmoglobe\ fully utilizes the \Planck\ and \WMAP\ joint reprocessed data, as shown in as shown in Fig.~\ref{fig:synch_polint}. 
+We plot the total polarized amplitude $P=\sqrt{Q^2+U^2}$ for ease of comparison, although it creates a visible noise bias in the low signal-to-noise regions. Much of the constraining power in the polarized synchrotron amplitude comes from 
+
 While the \cosmoglobe\ pipeline produces samples of polarized synchrotron emission, the spatial variation of the spectral index is poorly determined within the Gibbs chain. To mitigate the poor MCMC convergence of the spectral indices, the \cosmoglobe\ DR1 sampled the spectral index from a prior distribution, $\beta_s\sim\mathcal N(-3.15, 0.05^2)$. Improvements within the \commanderthree\ framework will require more high signal-to-noise data and algorithmic improvements within the codebase.
 
 
-The polarized spectral amplitude determined from \cosmoglobe\ fully utilizes the \Planck\ and \WMAP\ joint reprocessed data, as shown in as shown in Fig.~\ref{fig:synch_polint}. 
-We plot the total polarized amplitude $P=\sqrt{Q^2+U^2}$ for ease of comparison, although it creates a visible noise bias in the low signal-to-noise regions. 
 
 The \WMAP\ \K-band data and LFI 30\,GHz data, as the highest signal-to-noise full-sky polarized maps of Galactic synchrotron emission, are the main contributors to our knowledge of the polarized amplitude. The slightly higher angular resoolution 30\,GHz map has lower sensitivity than the \K-band data, but by combining the multi-resolution maps we are able to produce a clean map of the synchrotron emission evaluated at 30\,GHz with a FWHM of $1^\circ$.
 
@@ -290,6 +308,40 @@ The \WMAP\ \K-band data and LFI 30\,GHz data, as the highest signal-to-noise ful
 
 The synchrotron amplitude maps from end-to-end processing, \bp\ and \cosmoglobe, contain slightly different datasets, but sample the instrumental properties and sky properties jointly. Of these maps, \bp\ has lower resolution and higher noise, in large part because \cosmoglobe\ is able to use the reprocessed \WMAP\ \K-band map.
 The \cosmoglobe\ synchrotron map has a mean posterior rms of $2.4\,\mathrm{\mu K}$, a marked improvement over the \bp\ map, as shown in Fig.~\ref{fig:rms_ratios}. The rms map itself contains high signal-to-noise regions corresponding to the \WMAP\ circles about the ecliptic poles as well as the \Planck\ rings and multiple ecliptic polar crossings. The main clear astrophysical variation comes in the forms of a thin region about the Galactic plane and several low-latitude point sources. Much of the improvement can be seen more clearly when taking the ratio of the posterior rms's, as in the bottom panel of Fig.~\ref{fig:rms_ratios}. As expected, the regions with the lowest ratios correspond to the deep \WMAP\ observations and the Galactic plane, which benefit from the high signal-to-noise of the \K-band data. Regions with nearly identical rms include regions with the highest \Planck\ depth, i.e., the ecliptic poles, and regions less deeply observed by \WMAP, corresponding to planet crossings and artifacts from the processing mask. Notably, stripes corresponding the \Planck\ scan strategy also show improvement respect to \bp. This is due to the interaction between the sky model and LFI's instrumental parameters -- with the high signal-to-noise \K-band data, the sky model becomes more stable, and LFI's relative gain solution becomes better determined.
+
+\subsection{Quantifying uncertainty}
+
+(Consider this Duncan's notes, because there are some details that are a bit fuzzy.)
+
+The \WMAP\ and \Planck\ rms maps are evaluated at pixelizations $N_\mathrm{side}=512$. If we simply downgrade maps, then the original noise per pixel scales as the area of the pixel, or $N_\mathrm{side,old}/N_\mathrm{side,new}$. For example, \K-band has an average rms of $91\,\mathrm{\mu K}$ at $N_\mathrm{side}=512$, while the same map at $N_\mathrm{side}=16$ has a white noise level of $\sim3\,\mathrm{\mu K}$, 32 times smaller.
+
+When we smooth a map, we are doing something quite similar to downgrading, except now we are correlating pixels as well, so the noise amplitude will decrease proportional to the area that the Gaussian is averaging over. The correlations make this a bit trickier to get effective rms maps that are truly diagonal, but we'll stick with it for now.
+
+The systematics are a bit different, since they don't actually average down with noise level, so for example, if you downgraded to $N_\mathrm{side}=8$, the poorly measured modes and the gain imbalance modes would not decrease. These are also a bit hard to see, so we smooth the maps an additional $2^\circ$.
+
+
+For simple template fitting, with
+\[
+	d_\nu = A\left(\frac{\nu}{\nu_0}\right)^\beta+n_\nu=AT_\nu+n_\nu,
+\]
+we have the simple result
+\[
+	\hat A=\frac{\sum_\nu T_\nu d_\nu/\sigma_\nu^2}{\sum_\nu T_\nu^2/\sigma_\nu^2},\qquad
+	\mathrm{var}(\hat A)=\frac1{\sum_\nu T_\nu^2/\sigma_\nu^2},
+\]
+so we would expect maps of the standard deviation of the synchrotron amplitude to look like inverse-weighted combinations of the data. This does seem to be the case, except we notice that the synchrotron map is evaluated at $N_\mathrm{side}=1024$ with a resolution of $40\arcm$, so the noise should actually be higher. Why isn't it?
+
+I think partly because a prior is imposed
+\[
+	\hat D_s(\ell)=200\,\e^{-\ell(\ell+1)\sigma^2(30\arcm)}\mathrm{\mu K^2},
+\]
+which basically kills off everything smaller than $30\arcm$, approximately $N_\mathrm{side}=128$. Perhaps this is the resolution we should limit ourselves to, since these are the only scales that really contribute?
+
+I think that is fair, since it's also roughly where the white noise starts to dominate, $\ell=100$.
+
+As stated in \citet{bp14} (Svalheim), we use scale-dependent priors in component separation so that the prior will play a negligible role in signal-dominated regions, but play a stronger role in noise-dominated regions.
+
+
 
 
 \section{Polarized synchrotron spectral indices}
