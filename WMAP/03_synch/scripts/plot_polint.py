@@ -76,9 +76,9 @@ cg.plot(np.hypot(synch_BP[3], synch_BP[4]), min=0, max=10, cmap='binary_r',
 cg.plot(np.hypot(synch_CG[1], synch_CG[2]), min=0, max=50, comp='synch', sig=0,
     llabel=r'\textsc{Cosmoglobe}', rlabel='P', unit=r'\mathrm{\mu K}')
 plt.savefig('../figures/polint_CG.pdf', bbox_inches='tight')
-cg.plot(np.hypot(synch_CG[3], synch_CG[4]), min=0, max=5, cmap='binary_r',
-    llabel=r'\textsc{Cosmoglobe}', rlabel='\sigma_P', unit=r'\mathrm{\mu K}')
-plt.savefig('../figures/polint_CG_sigma.pdf', bbox_inches='tight')
+#cg.plot(np.hypot(synch_CG[3], synch_CG[4]), min=0, max=5, cmap='binary_r',
+#    llabel=r'\textsc{Cosmoglobe}', rlabel='\sigma_P', unit=r'\mathrm{\mu K}')
+#plt.savefig('../figures/polint_CG_sigma.pdf', bbox_inches='tight')
 
 cg.plot(np.hypot(synch_CG[3], synch_CG[4])/np.hypot(synch_BP[3], synch_BP[4]),
     cmap='bone_r',
