@@ -49,10 +49,10 @@ plt.savefig('../figures/30GHz_polint.pdf', bbox_inches='tight')
 
 
 sigmaQU_K = hp.read_map('CG_023_72_n0128.fits', field=(1,2))
-sigmaP_K = np.hypot(sigmaQU_K[0], sigmaQU_K[1])*1e3*0.47
+sigmaP_K = np.hypot(sigmaQU_K[0], sigmaQU_K[1])*1e3*(23/30)**3.1
 
 sigmaQU_30 = hp.read_map('CG_030_72_n0128.fits', field=(1,2))
-sigmaP_30 = np.hypot(sigmaQU_30[0], sigmaQU_30[1])
+sigmaP_30 = np.hypot(sigmaQU_30[0], sigmaQU_30[1])*(28/30)**3.1
 
 cg.plot(sigmaP_K, min=0, max=7.5, cmap='binary_r', unit=r'\mathrm{\mu K}',
     rlabel=r'\sigma_P', llabel=r'K\ \mathrm{(synch. scaled)}', cbar=False)
@@ -73,10 +73,13 @@ P_synch = np.hypot(synch_CG[1], synch_CG[2])
 sigmaP_synch = np.hypot(synch_CG[3], synch_CG[4])
 cg.plot(P_synch/sigmaP_synch, min=0, max=10, cmap='bone')
 
-
-cg.plot(np.hypot(synch_CG[3], synch_CG[4]), min=0, max=7.5, cmap='binary_r',
+sigmaP_synch = np.hypot(synch_CG[3], synch_CG[4])
+cg.plot(sigmaP_synch, min=0, max=7.5, cmap='binary_r',
     llabel=r'\textsc{Cosmoglobe}', rlabel='\sigma_P', unit=r'\mathrm{\mu K}')
 plt.savefig('../figures/polint_CG_sigma.pdf', bbox_inches='tight')
 
+print(sigmaP_K.mean())
+print(sigmaP_30.mean())
+print(sigmaP_synch.mean())
 
 plt.show()
