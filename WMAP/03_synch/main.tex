@@ -309,6 +309,10 @@ The \WMAP\ \K-band data and LFI 30\,GHz data, as the highest signal-to-noise ful
 The synchrotron amplitude maps from end-to-end processing, \bp\ and \cosmoglobe, contain slightly different datasets, but sample the instrumental properties and sky properties jointly. Of these maps, \bp\ has lower resolution and higher noise, in large part because \cosmoglobe\ is able to use the reprocessed \WMAP\ \K-band map.
 The \cosmoglobe\ synchrotron map has a mean posterior rms of $2.4\,\mathrm{\mu K}$, a marked improvement over the \bp\ map, as shown in Fig.~\ref{fig:rms_ratios}. The rms map itself contains high signal-to-noise regions corresponding to the \WMAP\ circles about the ecliptic poles as well as the \Planck\ rings and multiple ecliptic polar crossings. The main clear astrophysical variation comes in the forms of a thin region about the Galactic plane and several low-latitude point sources. Much of the improvement can be seen more clearly when taking the ratio of the posterior rms's, as in the bottom panel of Fig.~\ref{fig:rms_ratios}. As expected, the regions with the lowest ratios correspond to the deep \WMAP\ observations and the Galactic plane, which benefit from the high signal-to-noise of the \K-band data. Regions with nearly identical rms include regions with the highest \Planck\ depth, i.e., the ecliptic poles, and regions less deeply observed by \WMAP, corresponding to planet crossings and artifacts from the processing mask. Notably, stripes corresponding the \Planck\ scan strategy also show improvement respect to \bp. This is due to the interaction between the sky model and LFI's instrumental parameters -- with the high signal-to-noise \K-band data, the sky model becomes more stable, and LFI's relative gain solution becomes better determined.
 
+
+
+
+
 \subsection{Quantifying uncertainty}
 
 (Consider this Duncan's notes, because there are some details that are a bit fuzzy.)
@@ -339,12 +343,35 @@ which basically kills off everything smaller than $30\arcm$, approximately $N_\m
 
 I think that is fair, since it's also roughly where the white noise starts to dominate, $\ell=100$.
 
-As stated in \citet{bp14} (Svalheim), we use scale-dependent priors in component separation so that the prior will play a negligible role in signal-dominated regions, but play a stronger role in noise-dominated regions.
+As stated in \citet{bp14}, we use scale-dependent priors in component separation so that the prior will play a negligible role in signal-dominated regions, but play a stronger role in noise-dominated regions.
 
 
+\subsection{Power spectra}
+
+We needed to run a special \commanderthree\ chain, splitting the TODs into half mission, with all odd-numbered scans being processed in chain ``HM1'', and all even-numbered scans in ``HM2'', and produced 200 samples each. We provide these data at \url{cosmoglobe.uio.no}.
+
+We perform cross-spectra to avoid an additive noise bias.
+
+We use \texttt{NaMaster} using the original chain. To quantify the uncertainty, we take the cross spectrum for each pair of Gibbs samples from the adjacent chain, and report the 68\,\% confidence intervals on this posterior. We find good agreement with the EE/BB ratio reported in \Planck\ 2018 using their half-mission results. For the \Planck\ data, we use standard deviation of the single-$\ell$ spectrum values within each bin, while we add the systematic quadrature from the \cosmoglobe\ chain in quadrature. Compare with, e.g., \citet{planck2014-a12}'s Figure 44.
+
+\begin{figure}
+        \centering
+	\includegraphics[width=\linewidth]{figures/cls_synch_ratio.pdf}
+        \caption{
+		Half-mission splits of synchrotron for \Planck\ PR3 (black) and \cosmoglobe\ DR1 (black).
+        }
+        \label{fig:regions}
+
+\end{figure}
+
+\subsection{Comparison with independent datasets}
+
+First, the residual maps at \K, 30\,GHz. Then compare the evaluated sky model with \WMAPnine's \K-band map, PR3, and PR4.
 
 
 \section{Polarized synchrotron spectral indices}
+
+As pointed out in \citet{wehus:2013}, elliptical beams can induce a polarization angle-dependent spectral index for point sources, which can often be identified by performing analysis as a function of polarization angle. As both \WMAP\ and \Planck\ have asymmetric beam responses, this effect exists in the data, so spectral index estimation will be contaminated by this. Performing the TT analysis as a function of polarizatoin angle, as discussed in Sec.~\ref{sec:tt_plot}, shows the magntiude of this effect in the \cosmoglobe, \WMAPnine, and PR4 data.
 
 \subsection{TT-plot method}
 \label{sec:tt_plot}
