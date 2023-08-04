@@ -2,7 +2,7 @@
 import healpy as hp
 from setup_matplotlib import *
 from matplotlib.ticker import MaxNLocator
-import numpy as N
+import numpy as np
 import sys
 
 import pymaster as nmt
@@ -62,8 +62,8 @@ def bin_spec(ell, Cl, l_ini=None, l_end=None):
   bins = []
   binv = []
   for i in range(len(l_ini)):
-    bins.append(ell[(ell > l_ini[i]) & (ell <= l_end[i])])
-    binv.append(Cl[(ell > l_ini[i]) & (ell <= l_end[i])])
+    bins.append(ell[(ell >= l_ini[i]) & (ell < l_end[i])])
+    binv.append(Cl[(ell >= l_ini[i]) & (ell < l_end[i])])
 
   Cl_avg = np.array([Cli.mean() for Cli in binv])
   Cl_std = np.array([Cli.std()/len(Cli)**0.5 for Cli in binv])
@@ -86,6 +86,16 @@ def nmt_xspec(fname1, fname2, label=''):
   np.save(f'ee{label}_spec.npy', EE)
   np.save(f'bb{label}_spec.npy', BB)
   return EE, BB
+def xpol_xspec(fname1, fname2, label=''):
+  synch_cg1 = hp.ud_grade(hp.read_map(fname1,
+      field=(0,1,2)), nside)
+  synch_cg2 = hp.ud_grade(hp.read_map(fname2,
+      field=(0,1,2)), nside)
+
+  pcl, cl = xp.get_spectra(synch_cg1, synch_cg2, Dl=False)
+  return cl[1], cl[2]
+
+
 nside = 1024
 
 # Read mask and apodize it on a scale of ~1deg
@@ -93,6 +103,11 @@ mask = hp.read_map(
         "COM_Mask_CMB-common-Mask-Pol_2048_R3.00.fits"
         )
 mask = hp.ud_grade(mask, nside)
+
+msk_apo = nmt.mask_apodization(mask, 1.0, apotype='C1')
+hp.mollview(msk_apo)
+hp.mollview(mask)
+mask = msk_apo
 fsky = sum(mask)/len(mask)
 
 ee_spectra = np.loadtxt('ee_spectra.txt')
@@ -159,7 +174,7 @@ for i in range(len(l_ini)):
     sigma_in_bin = sigma[(ells >= l_ini[i]) & (ells <= l_end[i])]
     sigma_bin[i] = sum(sigma_in_bin**-2)**-0.5
 
-ell_eff = (l_end + l_ini)*0.5
+ell_eff = (l_end + l_ini - 1) / 2
 Z = ell_eff*(ell_eff+1)/(2*np.pi)
 
 def a2t(nu, T_cmb = 2.7255):
@@ -233,9 +248,9 @@ ax.set_yscale('log')
 
 
 
-b = nmt.NmtBin.from_nside_linear(nside, 1)
-ell_eff = b.get_effective_ells()
-Z = ell_eff*(ell_eff+1)/(2*np.pi)
+#b = nmt.NmtBin.from_nside_linear(nside, 1)
+#ell_eff = b.get_effective_ells()
+#Z = ell_eff*(ell_eff+1)/(2*np.pi)
 
 ellb, Cl_avg, Cl_std = bin_spec(ell_eff, EE, l_ini=l_ini, l_end=l_end)
 Zb = ellb*(ellb+1)/(2*np.pi)
@@ -291,6 +306,7 @@ BB_18 = np.loadtxt('bb_spectra_unbinned_2018.txt')[0]
 inds = (ellb < l_fit_max)
 
 ellb, Cl_avg, Cl_std = bin_spec(ell_eff, EE_18, l_ini=l_ini, l_end=l_end)
+print(ellb)
 plt.errorbar(ellb[inds]*1.1, Zb[inds]*Cl_avg[inds], Zb[inds]*Cl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1,
@@ -314,6 +330,13 @@ l_pivot     = 80
 fit = A_BB * (cls_cmb_r0[:,0]/l_pivot)**alpha_BB
 plt.plot(cls_cmb_r0[:,0], fit, color='k', linestyle=':', label='B-modes',
     linewidth=1)
+
+
+l, Cl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_EE_LR78.txt').T
+print(l)
+plt.errorbar(l, Cl, sigmal, fmt='o', color='r')
+l, Cl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_BB_LR78.txt').T
+plt.errorbar(l, Cl, sigmal, fmt='o', color='r')
 
 # legend
 leg = plt.legend(frameon=True, loc=3, fontsize=8)
