@@ -13,23 +13,25 @@ from corner import corner
 
 import emcee
 
+l_fit_min = 2
 l_fit_max = 140
 l_plot_max = 140
+l_plot_min = 2
 
 # Using the same arguments as in Planck X 2015, taking power spectrum within
 # bins.
 
 
-def get_limits(ellb, Cl_avg, Cl_std, inds):
+def get_limits(ellb, Dl_avg, Dl_std, inds):
     res = minimize(chisq, np.array([-1, 1]), 
-        args=(ellb[inds], Cl_avg[inds], Cl_std[inds]))
+        args=(ellb[inds], Dl_avg[inds], Dl_std[inds]))
     alpha_synch, A_synch = res.x
     
     nwalkers = 32
     ndim = 2
     p0 = np.random.rand(nwalkers, ndim) + res.x
     sampler = emcee.EnsembleSampler(nwalkers, ndim, log_prob, args=[ellb[inds],
-      Cl_avg[inds], Cl_std[inds]])
+      Dl_avg[inds], Dl_std[inds]])
     state = sampler.run_mcmc(p0, 100)
     sampler.reset()
 
@@ -44,32 +46,28 @@ def get_limits(ellb, Cl_avg, Cl_std, inds):
       print(f'param {i} = {np.round(med,3)} + {np.round(up,3)} - {np.round(lo,3)}')
     return meds, flat_samples[:,1]
 
-def chisq(x, ell=0, Cl=0, sigmal=0, l_pivot=80):
-  Dl = ell*(ell+1)/(2*np.pi)*Cl
-  sigmaDl = ell*(ell+1)/(2*np.pi)*sigmal
+def chisq(x, ell=0, Dl=0, sigmal=0, l_pivot=80):
   alpha, A = x
   model = A*(ell/l_pivot)**alpha
-  return (((Dl - model)/sigmaDl)**2).sum()
+  return (((Dl - model)/sigmal)**2).sum()
 
-def log_prob(x, ell=0, Cl=0, sigmal=0, l_pivot=80):
-  Dl = ell*(ell+1)/(2*np.pi)*Cl
-  sigmaDl = ell*(ell+1)/(2*np.pi)*sigmal
+def log_prob(x, ell=0, Dl=0, sigmal=0, l_pivot=80):
   alpha, A = x
   model = A*(ell/l_pivot)**alpha
-  return -(((Dl - model)/sigmaDl)**2).sum()
+  return -(((Dl - model)/sigmal)**2).sum()
 
-def bin_spec(ell, Cl, l_ini=None, l_end=None):
+def bin_spec(ell, Dl, l_ini=None, l_end=None):
   bins = []
   binv = []
   for i in range(len(l_ini)):
     bins.append(ell[(ell >= l_ini[i]) & (ell < l_end[i])])
-    binv.append(Cl[(ell >= l_ini[i]) & (ell < l_end[i])])
+    binv.append(Dl[(ell >= l_ini[i]) & (ell < l_end[i])])
 
-  Cl_avg = np.array([Cli.mean() for Cli in binv])
-  Cl_std = np.array([Cli.std()/len(Cli)**0.5 for Cli in binv])
+  Dl_avg = np.array([Dli.mean() for Dli in binv])
+  Dl_std = np.array([Dli.std()/len(Dli)**0.5 for Dli in binv])
   #ellb   = np.array([elli.prod()**(1/len(elli)) for elli in bins])
   ellb   = np.array([elli.mean() for elli in bins])
-  return ellb, Cl_avg, Cl_std
+  return ellb, Dl_avg, Dl_std
 
 def nmt_xspec(fname1, fname2, label=''):
   synch_cg11 = hp.ud_grade(hp.read_map(fname1,
@@ -248,22 +246,22 @@ ax.set_yscale('log')
 
 
 
-#b = nmt.NmtBin.from_nside_linear(nside, 1)
-#ell_eff = b.get_effective_ells()
-#Z = ell_eff*(ell_eff+1)/(2*np.pi)
+b = nmt.NmtBin.from_nside_linear(nside, 1)
+ell_eff = b.get_effective_ells()
+Z = ell_eff*(ell_eff+1)/(2*np.pi)
 
-ellb, Cl_avg, Cl_std = bin_spec(ell_eff, EE, l_ini=l_ini, l_end=l_end)
+ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*EE, l_ini=l_ini, l_end=l_end)
 Zb = ellb*(ellb+1)/(2*np.pi)
-inds = (ellb < l_fit_max)
-(alpha_synch, A_synch), E_arr = get_limits(ellb, Cl_avg, Cl_std, inds)
+inds = (ellb <= l_fit_max) & (ellb >= l_fit_min)
+(alpha_synch, A_synch), E_arr = get_limits(ellb, Dl_avg, Dl_std, inds)
 
-inds = (ellb < l_plot_max)
+inds = (ellb <= l_plot_max) & (ellb >= l_plot_min)
 
-plt.errorbar(ellb[inds], Zb[inds]*Cl_avg[inds], Zb[inds]*Cl_std[inds],
+plt.errorbar(ellb[inds], Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1, label=r'Cosmoglobe',
     color='C0')
-ellb, Cl_avg, Cl_std = bin_spec(ell_eff, EE_K, l_ini=l_ini, l_end=l_end)
+ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*EE_K, l_ini=l_ini, l_end=l_end)
 #plt.errorbar(ellb[inds]*0.9, Zb[inds]*Cl_avg[inds], Zb[inds]*Cl_std[inds],
 #    linestyle='',
 #    marker='o', ms=2, elinewidth=0.7, capsize=1,
@@ -277,21 +275,22 @@ ellb, Cl_avg, Cl_std = bin_spec(ell_eff, EE_K, l_ini=l_ini, l_end=l_end)
 #    color='C2')
 
 
-ellb, Cl_avg, Cl_std = bin_spec(ell_eff, BB, l_ini=l_ini, l_end=l_end)
-plt.errorbar(ellb[inds], Zb[inds]*Cl_avg[inds], Zb[inds]*Cl_std[inds],
+ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*BB, l_ini=l_ini, l_end=l_end)
+plt.errorbar(ellb[inds], Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1, 
     color='C0', markerfacecolor='w')
 
-inds = (ellb < l_fit_max)
+inds = (ellb <= l_fit_max) & (ellb >= l_fit_min)
 
-(alpha_synch_BB, A_synch_BB), B_arr = get_limits(ellb, Cl_avg, Cl_std, inds)
+(alpha_synch_BB, A_synch_BB), B_arr = get_limits(ellb, Dl_avg, Dl_std, inds)
 
 lo, med, hi = np.percentile(B_arr/E_arr, [16, 50, 84])
+print('Cosmoglobe results')
 print(med, hi-med, med-lo)
 
 plt.plot(cls_cmb_r0[:,0], cls_cmb_r0[:,3], label=r"Best-fit $\Lambda$CDM",
-    color='black', linewidth=0.5, linestyle='--')
+    color='black', linewidth=0.5, linestyle='-')
 
 l_pivot     = 80
 fit = A_synch * (cls_cmb_r0[:,0]/l_pivot)**alpha_synch
@@ -303,24 +302,28 @@ plt.plot(cls_cmb_r0[:,0], fit, color='C0', linestyle=':', linewidth=1)
 
 EE_18 = np.loadtxt('ee_spectra_unbinned_2018.txt')[0]
 BB_18 = np.loadtxt('bb_spectra_unbinned_2018.txt')[0]
-inds = (ellb < l_fit_max)
 
-ellb, Cl_avg, Cl_std = bin_spec(ell_eff, EE_18, l_ini=l_ini, l_end=l_end)
+ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*EE_18, l_ini=l_ini, l_end=l_end)
 print(ellb)
-plt.errorbar(ellb[inds]*1.1, Zb[inds]*Cl_avg[inds], Zb[inds]*Cl_std[inds],
+inds = (ellb <= l_plot_max) & (ellb >= l_plot_min)
+plt.errorbar(ellb[inds]*1.1, Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1,
     color='k', label=r'PR3')
-(alpha_EE, A_EE), E_arr = get_limits(ellb, Cl_avg, Cl_std, inds)
+(alpha_EE, A_EE), E_arr = get_limits(ellb, Dl_avg, Dl_std, inds)
 
-ellb, Cl_avg, Cl_std = bin_spec(ell_eff, BB_18, l_ini=l_ini, l_end=l_end)
-plt.errorbar(ellb[inds]*1.1, Zb[inds]*Cl_avg[inds], Zb[inds]*Cl_std[inds],
+ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*BB_18, l_ini=l_ini, l_end=l_end)
+
+plt.errorbar(ellb[inds]*1.1, Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1,
     color='k', markerfacecolor='w')
-(alpha_BB, A_BB), B_arr = get_limits(ellb, Cl_avg, Cl_std, inds)
+
+inds = (ellb <= l_fit_max) & (ellb >= l_fit_min)
+(alpha_BB, A_BB), B_arr = get_limits(ellb, Dl_avg, Dl_std, inds)
 
 lo, med, hi = np.percentile(B_arr/E_arr, [16, 50, 84])
+print('PR3 results')
 print(med, hi-med, med-lo)
 
 fit = A_EE * (cls_cmb_r0[:,0]/l_pivot)**alpha_EE
@@ -332,11 +335,11 @@ plt.plot(cls_cmb_r0[:,0], fit, color='k', linestyle=':', label='B-modes',
     linewidth=1)
 
 
-l, Cl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_EE_LR78.txt').T
-print(l)
-plt.errorbar(l, Cl, sigmal, fmt='o', color='r')
-l, Cl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_BB_LR78.txt').T
-plt.errorbar(l, Cl, sigmal, fmt='o', color='r')
+#l, Dl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_EE_LR78.txt').T
+#print(l)
+#plt.errorbar(l, Dl, sigmal, fmt='.', color='r')
+#l, Dl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_BB_LR78.txt').T
+#plt.errorbar(l, Dl, sigmal, fmt='.', color='r')
 
 # legend
 leg = plt.legend(frameon=True, loc=3, fontsize=8)
@@ -350,7 +353,7 @@ ax.yaxis.labelpad = 10*width/17.; ax.xaxis.labelpad = 10*width/17. # distance of
 plt.grid(False, which="major", axis="both")
 
 # axes limits
-plt.xlim(1.8, 800); plt.ylim(0.1, 100)
+plt.xlim(1.8, 800); plt.ylim(ymin=0.1)
 
 plt.xticks([3,10,30, 100, 300], [3, 10, r"$30$", r"$100$", r"$300$"])
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
