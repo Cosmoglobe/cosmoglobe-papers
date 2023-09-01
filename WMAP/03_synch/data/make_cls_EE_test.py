@@ -35,7 +35,7 @@ def get_limits(ellb, Dl_avg, Dl_std, inds):
     state = sampler.run_mcmc(p0, 100)
     sampler.reset()
 
-    sampler.run_mcmc(state, 10000)
+    sampler.run_mcmc(state, 100000)
     flat_samples = sampler.get_chain(discard=100, thin=15, flat=True)
     meds = []
     for i in range(ndim):
@@ -335,11 +335,14 @@ plt.plot(cls_cmb_r0[:,0], fit, color='k', linestyle=':', label='B-modes',
     linewidth=1)
 
 
-#l, Dl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_EE_LR78.txt').T
-#print(l)
-#plt.errorbar(l, Dl, sigmal, fmt='.', color='r')
-#l, Dl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_BB_LR78.txt').T
-#plt.errorbar(l, Dl, sigmal, fmt='.', color='r')
+'''
+l, Dl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_EE_LR78.txt').T
+inds = (l < 140)
+plt.errorbar(l[inds], Dl[inds], sigmal[inds], fmt='.', color='r')
+l, Dl, sigmal = np.loadtxt('cl_commander_synchrotron_spectra_BB_LR78.txt').T
+plt.errorbar(l[inds], Dl[inds], sigmal[inds], fmt='.', color='r',
+        markerfacecolor='w')
+'''
 
 # legend
 leg = plt.legend(frameon=True, loc=3, fontsize=8)

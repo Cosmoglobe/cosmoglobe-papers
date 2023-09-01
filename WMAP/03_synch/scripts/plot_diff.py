@@ -34,7 +34,7 @@ synch_CG = hp.smoothing(synch_CG, fwhm=np.sqrt(fwhm**2-72**2)*np.pi/180/60)
 synch_CG = hp.ud_grade(synch_CG, 512)
 
 model = cg.sky_model_from_chain(f'{DIR_CG}/CG_c0001_v1.h5', nside=512,
-        components=['synch'])
+        components=['synch', 'dust'])
 
 
 CG_K = hp.read_map(f'{DIR_CG}/CG_023-WMAP_K_IQU_n0512_v1.fits',
@@ -65,6 +65,10 @@ PR4_44 = hp.read_map(f'{PR4}/LFI_SkyMap_044-BPassCorrected-field-IQU_1024_R4.00_
 CG_30 = hp.read_map(f'{DIR_CG}/CG_030_IQU_n0512_v1.fits', field=(0,1,2))
 CG_44 = hp.read_map(f'{DIR_CG}/CG_044_IQU_n0512_v1.fits', field=(0,1,2))
 
+DIR_BP = '/mn/stornext/d16/cmbco/bp/delivery/v10.00/v2'
+BP_30 = hp.read_map(f'{DIR_BP}/BP_030_IQU_n0512_v2.fits', field=(0,1,2))
+BP_44 = hp.read_map(f'{DIR_BP}/BP_044_IQU_n0512_v2.fits', field=(0,1,2))
+
 alm = hp.map2alm(CG_K, lmax=lmax)
 CG_K = hp.alm2map(np.array([
     hp.almxfl(almi, bl_G/bls[0][:lmax+1]) for almi in alm]), 512)
@@ -77,6 +81,15 @@ CG_30 = hp.alm2map(np.array([
 alm = hp.map2alm(CG_44, lmax=lmax)
 CG_44 = hp.alm2map(np.array([
     hp.almxfl(alm[i], bl_G/bls[3][i][:lmax+1]) for i in range(3)]), 512)
+
+
+alm = hp.map2alm(BP_30, lmax=lmax)
+BP_30 = hp.alm2map(np.array([
+    hp.almxfl(alm[i], bl_G/bls[2][i][:lmax+1]) for i in range(3)]), 512)
+alm = hp.map2alm(BP_44, lmax=lmax)
+BP_44 = hp.alm2map(np.array([
+    hp.almxfl(alm[i], bl_G/bls[3][i][:lmax+1]) for i in range(3)]), 512)
+
 
 
 alm = hp.map2alm(PR3_30, lmax=lmax)
@@ -165,3 +178,34 @@ cg.plot(PR4_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 19),
     llabel=r'\mathrm{PR4}\ 44')
 cg.plot(PR4_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 20))
 plt.savefig('../figures/CG_DR1_residuals.pdf', bbox_inches='tight')
+plt.close('all')
+
+
+cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,
+    llabel=r'\mathrm{CG}\ 30')
+cg.plot(CG_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False)
+cg.plot(CG_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,
+    llabel=r'\mathrm{CG}\ 44')
+cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False)
+
+
+model = cg.sky_model_from_chain(f'{DIR_BP}/BP_c0001_v2.h5', nside=512,
+        components=['synch', 'dust'])
+
+data = h5py.File(f'{data_dir}/LFI_instrument_v8.h5')
+nu = data['030/bandpassx'] * u.GHz
+weights = data['030/bandpass'] * u.Unit("K_RJ")
+BP_model_30 = model(nu, weights, fwhm=fwhm*u.arcmin, output_unit='uK_RJ').value
+
+nu = data['044/bandpassx'] * u.GHz
+weights = data['044/bandpass'] * u.Unit("K_RJ")
+BP_model_44 = model(nu, weights, fwhm=fwhm*u.arcmin, output_unit='uK_RJ').value
+
+cg.plot(BP_30 - BP_model_30, sig=1, min=-5, max=5, cbar=False,
+    llabel=r'\mathrm{BP}\ 30')
+cg.plot(BP_30 - BP_model_30, sig=2, min=-5, max=5, cbar=False)
+cg.plot(BP_44 - BP_model_44, sig=1, min=-5, max=5, cbar=False,
+    llabel=r'\mathrm{BP}\ 44')
+cg.plot(BP_44 - BP_model_44, sig=2, min=-5, max=5, cbar=False)
+
+plt.show()
