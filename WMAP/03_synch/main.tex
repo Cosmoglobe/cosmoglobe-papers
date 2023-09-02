@@ -210,6 +210,20 @@ For the power spectra, compare with, e.g., Figure 33 of \citet{planck2016-l04}. 
 \section{Data products}
 \label{sec:data}
 
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.45\textwidth]{figures/Kband_polint.pdf}
+	\includegraphics[width=0.45\textwidth]{figures/Kband_sigmaP.pdf}\\
+	\includegraphics[width=0.45\textwidth]{figures/30GHz_polint.pdf}
+	\includegraphics[width=0.45\textwidth]{figures/30GHz_sigmaP.pdf}\\
+	\includegraphics[width=0.45\textwidth]{figures/polint_CG.pdf}
+	\includegraphics[width=0.45\textwidth]{figures/polint_CG_sigma.pdf}
+	\caption{
+		Polarized intensity of \textit{(top):} \WMAP\ \K-band, \textit{(middle):} \Planck\ 30\,GHz, and \textit{(bottom):} synchrotron amplitude from \cosmoglobe\ Gibbs chain, all evaluated at 30\,GHz with a resolution of $72\arcm$. The right column shows the rms noise for the frequency maps and the posterior standard deviation of the synchrotron amplitude.
+		}
+       \label{fig:synch_polint}
+\end{figure*}
+
 In this paper, we investigate the spatial variation of the polarized synchrotron spectral index, with an emphasis on the comparison between  legacy maps against the \cosmoglobe\ results. The data products used are the \WMAP\ and \Planck\ LFI maps, with most of the statistical weight coming from 23--33\,GHz. These frequencies are low enough that we can treat them as synchrotron tracers and hence ignore thermal dust and CMB, but not so low as we need to take into account effects like Faraday rotation \citep{fuskeland:2019}. The legacy data products and the data products from the \cosmoglobe\ \WMAP\ reanalysis \citep{watts2023_dr1}, are described in the two following sections.
 
 
@@ -250,19 +264,6 @@ The analysis in this paper makes use of \cosmoglobe\ end products produced by th
 %\end{enumerate} 
 
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.45\textwidth]{figures/Kband_polint.pdf}
-	\includegraphics[width=0.45\textwidth]{figures/Kband_sigmaP.pdf}\\
-	\includegraphics[width=0.45\textwidth]{figures/30GHz_polint.pdf}
-	\includegraphics[width=0.45\textwidth]{figures/30GHz_sigmaP.pdf}\\
-	\includegraphics[width=0.45\textwidth]{figures/polint_CG.pdf}
-	\includegraphics[width=0.45\textwidth]{figures/polint_CG_sigma.pdf}
-	\caption{
-		Polarized intensity of \textit{(top):} \WMAP\ \K-band, \textit{(middle):} \Planck\ 30\,GHz, and \textit{(bottom):} synchrotron amplitude from \cosmoglobe\ Gibbs chain, all evaluated at 30\,GHz with a resolution of $72\arcm$. The right column shows the rms noise for the frequency maps and the posterior standard deviation of the synchrotron amplitude.
-		}
-       \label{fig:synch_polint}
-\end{figure*}
 
 
 \cosmoglobe\ DR1 produced a sky model and instrumental parameters for each Gibbs sample, allowing for complete characterization of the dependence of low-level instrumental parameters on the sky model. The sky model includes all relevant components in \WMAP\ and LFI's frequency range, specifically the CMB, synchrotron, thermal dust, free-free emission, anomalous microwave emission, and radio point sources, the first three of which are known to be polarized. 
@@ -389,9 +390,12 @@ We needed to run a special \commanderthree\ chain, splitting the TODs into half 
 %We perform cross-spectra to avoid an additive noise bias.
 
 We perform the power spectrum using \texttt{NaMaster} \citep{namaster} using the \Planck\ 2018\ common polarization mask with $f_\mathrm{sky}=0.78$ and using $1^\circ$ apodization.
-To quantify the uncertainty, we take the cross spectrum for each pair of Gibbs samples from the adjacent chain, and report the 68\,\% confidence intervals on this posterior. 
+To quantify the uncertainty, we take the cross spectrum for each pair of Gibbs samples from the adjacent chain, and report the 68\,\% confidence intervals on this posterior. The power spectra displayed in Fig.~\ref{fig:spectra}, and the standard deviation is computed using the within-bin variance of each bin, with the posterior standard deviation of the Gibbs chain added in quadrature for the \cosmoglobe\ spectra.
+Other than the very lowest and very highest multipole bins, there is good per-multipole agreement between both the PR3 and \cosmoglobe\ DR1 spectra.
 
-%We find good agreement with the EE/BB ratio reported in \Planck\ 2018 using their half-mission results. For the \Planck\ data, we use standard deviation of the single-$\ell$ spectrum values within each bin, while we add the systematic quadrature from the \cosmoglobe\ chain in quadrature. Compare with, e.g., \citet{planck2014-a12}'s Figure 44.
+
+Following \citet{planck2016-l04}, we perform power law fits to the power spectra of the form $\mathcal D_\ell^\mathrm{EE/BB}=A_s^{\mathrm{EE/BB}}(\ell/80)^\alpha$, using multipoles $\ell\in[2,140]$. The 68\,\% confidence intervals for each quantity, including the $A_s^\mathrm{BB}/A_s^\mathrm{EE}$ ratio, are reported in Table~\ref{tab:synch_powspec}. The primary differences between the fits to the two datasets are $\sim2\sigma$ discrepancies in the $A_s^\mathrm{BB}$ and $\alpha_s^\mathrm{EE}$ fits, while all others are consistent within $\simeq0.5\sigma$. The primary drivers of these differences are lower $\mathcal D_\ell^\mathrm{BB}$ and higher $\mathcal D_\ell^\mathrm{EE}$ in the lowest bins.
+These fit parameters yield a $\lesssim2\sigma$ lower $A_s^\mathrm{BB}/A_s^\mathrm{EE}$ value of $0.40$. While this is higher than the published value of 0.34 using the same binning and mask of \citet{planck2016-l04}, we obtained a higher value of 0.46 using very similar processing. Despite the discrepancies between the processing in this paper and \citet{planck2016-l04}, it is clear that the \cosmoglobe\ DR1 ratio is lower than that of \Planck\ PR3 when processed in our framework.
 
 \begin{figure}
         \centering
@@ -399,8 +403,7 @@ To quantify the uncertainty, we take the cross spectrum for each pair of Gibbs s
         \caption{
 		Half-mission splits of synchrotron for \Planck\ PR3 (black) and \cosmoglobe\ DR1 (black). Filled circles correspond to $E$-modes, while empty circles correspond to $B$-modes.
         }
-        \label{fig:regions}
-
+        \label{fig:spectra}
 \end{figure}
 
 
@@ -445,11 +448,19 @@ To quantify the uncertainty, we take the cross spectrum for each pair of Gibbs s
 
 \label{sec:specvar}
 
-As pointed out in \citet{wehus:2013}, elliptical beams can induce a polarization angle-dependent spectral index for point sources, which can often be identified by performing analysis as a function of polarization angle. As both \WMAP\ and \Planck\ have asymmetric beam responses, this effect exists in the data, so spectral index estimation will be contaminated by this. Performing the TT analysis as a function of polarizatoin angle, as discussed in Sec.~\ref{sec:tt_plot}, shows the magntiude of this effect in the \cosmoglobe, \WMAPnine, and PR4 data.
+The determination of polarized synchrotron spectral index variation across the sky has been studied in detail over the past decade using several different data combinations. Although the small-scale details vary, nearly every analysis has $\beta_\mathrm s\simeq=2.8$ in the Galactic plane and $\beta_\mathrm s\sim-3.3$ in high Galactic latitudes \citep{fuskeland2014,krachmalnicoff2018,fuskeland:2019,weiland:2022}, with the exception of QUIJOTE \citep{QUIJOTE_IV,QUIJOTE_VIII}, who find a much flatter spectral index along the Galactic plane.
 
-\subsection{TT-plot method}
+However, true spatial variations beyond the high-latitude and low-latitude regions have been difficult to determine. Both \citet{fuskeland2014} and \citet{weiland:2022} report oscillations with Galactic longitude close to the Galactic plane, but high-latitude regions variations are more difficult to determine, and tend to depend on the specific dataset chosen and the analysis method chosen. For example, \citet{deBelsunce:2022} find high-latitude spectral indices varying from $-5$ to $-1$ using 30\,GHz and 70\,GHz.
+
+A fundamental challenge in spectral index estimation is due to the fact that every difference between two channels can be associated with a spectral index variation if not accounted for fully. Therefore, it is necessary to not only make sure that results are robust towards data selection, but also to ensure that differences between results are not due to instrumental effects.
+
+In order to test for and mitigate these effects, we perform two approaches, a T-T plot analysis in Ref.~\ref{sec:tt_plot} and a Gibbs sampling analysis using \commanderone\ in Sect.~\ref{sec:comm1}. Sect.~\ref{sec:tt_plot} focuses on pairs of channels to better isolate potential unmodeled systematic effects, while Sect.~\ref{sec:comm1} uses all \WMAP\ and LFI channels plus \Planck\ 353\,GHz to maximize the joint statistical weight of all available data.
+
+\subsection{T-T plot method}
 \label{sec:tt_plot}
 
+As pointed out in \citet{wehus:2013}, unmodeled instrumental effects, including polarization angle mismatch between detectors and  elliptical beams,  can induce a polarization angle-dependent spectral index that is especially prominent in point sources.
+These effects can often be identified by performing analysis as a function of polarization angle. As both \WMAP\ and \Planck\ have asymmetric beam responses, this effect has long been noticed in the data, contaminating spectral index estimates. Performing a ``temperature-temperature'' (T-T) analysis as a function of polarizatoin angle, as discussed in Sec.~\ref{sec:tt_plot}, shows the magnitude of this effect in the \cosmoglobe, \WMAPnine, and PR4 data.
 
 
 \begin{figure}
@@ -582,7 +593,8 @@ We will also use Table 6, Figure (33)
 of Planck 2018 results IV Diffuse component separation
 
 
-\subsection{Maximium likelihood estimation}
+\subsection{Parametric component estimation}
+\label{sec:comm1}
 
 
 \section{Discussion and conclusion}
