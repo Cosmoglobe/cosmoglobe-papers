@@ -275,7 +275,7 @@ The \cosmoglobe\ DR1 frequency maps are free from previously reported systematic
 The polarized spectral amplitude determined from \cosmoglobe\ fully utilizes the \Planck\ and \WMAP\ joint reprocessed data, as shown in as shown in Fig.~\ref{fig:synch_polint}. 
 We plot the total polarized amplitude $P=\sqrt{Q^2+U^2}$ for ease of comparison, although it creates a visible noise bias in the low signal-to-noise regions. Much of the constraining power in the polarized synchrotron amplitude comes from 
 
-While the \cosmoglobe\ pipeline produces samples of polarized synchrotron emission, the spatial variation of the spectral index is poorly determined within the Gibbs chain. To mitigate the poor MCMC convergence of the spectral indices, the \cosmoglobe\ DR1 sampled the spectral index from a prior distribution, $\beta_s\sim\mathcal N(-3.15, 0.05^2)$. Improvements within the \commanderthree\ framework will require more high signal-to-noise data and algorithmic improvements within the codebase.
+While the \cosmoglobe\ pipeline produces samples of polarized synchrotron emission, the spatial variation of the spectral index is poorly determined within the Gibbs chain. To mitigate the poor MCMC convergence of the spectral indices, the \cosmoglobe\ DR1 sampled the spectral index from a prior distribution, $\beta_s\sim\mathcal N(-3.15, 0.05)$. Improvements within the \commanderthree\ framework will require more high signal-to-noise data and algorithmic improvements within the codebase.
 
 
 
@@ -520,6 +520,111 @@ The synchrotron spectral index computed using T-T plot with the \Cosmoglobe\ 23\
         \label{fig:cos30_xyplot}
 \end{figure}
 
+
+
+
+%\begin{figure*}
+%	\centering
+%	\includegraphics[width=0.40\linewidth]{figures/res_K_spdust.png}
+%        \includegraphics[width=0.40\linewidth]{figures/res_K_exp.png}\\
+%        \includegraphics[width=0.40\linewidth]{figures/res_030_spdust.png}
+%        \includegraphics[width=0.40\linewidth]{figures/res_030_exp.png}\\
+%        \includegraphics[width=0.40\linewidth]{figures/res_Ka_spdust.png}
+%        \includegraphics[width=0.40\linewidth]{figures/res_Ka_exp.png}\\
+%        \includegraphics[width=0.40\linewidth]{figures/res_Q1_spdust.png}
+%        \includegraphics[width=0.40\linewidth]{figures/res_Q1_exp.png}\\
+%        \includegraphics[width=0.40\linewidth]{figures/res_044_spdust.png}
+%        \includegraphics[width=0.40\linewidth]{figures/res_044_exp.png}\\
+%        \includegraphics[width=0.40\linewidth]{figures/res_V1_spdust.png}
+%        \includegraphics[width=0.40\linewidth]{figures/res_V1_exp.png}\\        
+%	\caption{Residuals}
+%        \label{fig:residuals}
+%\end{figure*}
+
+
+
+We will also use Table 6, Figure (33)
+of Planck 2018 results IV Diffuse component separation
+
+
+\subsection{Parametric component estimation}
+\label{sec:comm1}
+
+Here we use the original \commanderone\ codebase\footnote{\url{https://github.com/Cosmoglobe/Commander1}} to perform pixel-based component separation on maps smoothed to a common resolution of $5^\circ$ and at $N_\mathrm{side}=64$. 
+For this analysis, we perform 100 pixel-based \commanderone\ analysis on each of the 500 \cosmoglobe\ DR1 Gibbs samples. This allows us to decompose the pure statistical error assuming white noise alone for each of the 100 \commanderone\ samples, while changes between each main DR1 sample show the effects of low-level instrumental processing, commonly called ``systematic'' uncertainty. In these analyses, we use the same polarized bands as in the main CG DR1 analysis, namely \WMAP, \Planck\ LFI, and \Planck\ 353\,GHz. We use a prior $\beta_\mathrm s\sim\mathcal (-3.1, 0.1^2)$ on synchrotron, and use a fixed dust temperature and spectral index of $T_\mathrm d=21\,\mathrm K$ and $\beta_\mathrm d=1.55$.
+
+We use the same data model as in \cosmoglobe\ DR1, but allow for spatially varying $\beta_\mathrm s$ in two different forms.
+First, perform a fit with $\beta_\mathrm s$ varying according to the pixels as in the T-T analysis.
+We find that for such large regions, there is very little effect due to the prior, and in particular find a maximum shift of 0.3 between a prior of $\mathcal N(-3.5,0.1)$ and $\mathcal N(-2.7, 0.1)$. We add this difference in quadrature to the uncertainty due to 
+We also compare the reported $\beta_\mathrm s$ maps from QUIJOTE \citep{QUIJOTE_VIII} and CLASS \citep{eimer2023}. We choose these maps because they are to this date the best publicly available available synchrotron spectral index maps available that are not affected by Faraday rotation off the Galactic plane, as in S-PASS \citep{krachmalnicoff2018,fuskeland:2019}. The delivered $\beta_\mathrm s$ maps are pixelized at $N_\mathrm{side}=64$ and 32, respectively, with associated uncertainty maps taking into account the expected instrumental noise levels. We take an inverse-weighted average of the respective maps and report the weighted standard error within each region, displayed in Fig.~\ref{fig:beta_comp}. 
+
+In general, the uncertainties in the \commanderone\ analysis are smaller than each of the other analyses, each for slightly different reasons. First, the T-T analyses will inherently have less constraining power than a full likelihood analysis, as this approach only uses two frequency channels via a linear regression, so the uncertainty is determined by the noise level in each frequency channel and the inherent variation within a given sky region. Beyond that, the T-T plot in this paper marginalizes over dependence on the polarization angle $\alpha$, and by design accentuates systematic effects, predominantly beam ellipticity. Finally, the QUIJOTE analysis is most similar in data choice (MFI 11/13\,GHz, \WMAPnine\ \K/\Ka, \Planck\ PR4) and methodology \citep[\texttt{B-SeCRET};][]{b-secret}, but still yields higher uncertainty than the \commanderone\ spectral index region analysis. This is most likely due to different spatial resolution and modeling choices; the \commanderone\ analysis presented here is performed at $5^\circ$ resolution versus the $2^\circ$ resolution per-pixel analysis in \citet{QUIJOTE_VIII}. In addition, \citet{QUIJOTE_VIII} sampled for $\beta_\mathrm d$ and $T_\mathrm D$ with priors $\mathcal N(1.55,0.1)$ and $\mathcal N(21,3)$ while using a relatively wide prior on $\beta_\mathrm s$ of $\mathcal N(-3.1, 0.3)$.
+
+At high Galactic latitudes (regions 1--12), there is good agreement between each of the treatments, and all values are consistent with a single constant value. The notable exception is the TT \K/30 and \K/\Ka\ datapoints. As these are low signal-to-noise regions, small effects due to polarization angle rotation become even more apparent. In the North and South polar spur (regions 13 and 14) there is excellent agreement between all of the pipelines, while along  the Galactic plane (regions 15--24), there are mild discrepancies between the methodologies, in particular a less distinct amount of periodic structure as a function of Galactic latitude.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{figures/compare_betas.pdf}
+	\caption{Spectral index from the \commanderone, T-T plots with \K/\Ka\ and \K/30, the QUIJOTE estimates, and the CLASS estimates}
+	\label{fig:beta_comp}
+\end{figure}
+
+
+To more finely probe the spatial variation of $\beta_\mathrm s$, we perform a second \commanderone\ analysis with identical data and model choices, except the $\beta_\mathrm s$ are allowed to vary with a prior of $\mathcal N(-3.1,0.1)$ and spatially vary along an $N_\mathrm{side}=16$ grid. We found that this was the lowest resolution grid in which the spectral index was not prior dominated across all high-latitude regions. In Fig.~\ref{fig:beta_16}, we display the mean of all of the Gibbs samples, along with the standard deviation evaluated per each CG1 Gibbs sample, $\sigma_{\beta_\mathrm s}^\mathrm{stat}$, and the standard deviation over all CG1 samples and \commanderone\ samples, $\sigma_{\beta_\mathrm s}^\mathrm{sys+stat}$. Put concretely, $\sigma_{\beta_\mathrm s}^\mathrm{stat}$ is the standard deviation when the input maps themselves are static, and $\sigma_{\beta_\mathrm s}^{sys+stat}$ includes variations in the frequency maps themselves, corresponding to underlying instrumental effects, including gain, noise characterization, and baseline estimation. The uncertainty due to white noise alone  traces the high signal-to-noise regions of the polarized synchrotron, especially the prominent loops and spurs and the Fan region. At high Galactic latitudes, the standard deviation is 0.1, indicating that the posterior uncertainty is limited by the prior.
+
+In contrast, the uncertainty across the entire Gibbs chain does not merely trace high signal-to-noise regions, and in fact there are variations that exceed the prior surrounding the Galactic center. These variations are are primarily due to gain uncertainty. It therefore makes sense that gain variations in \K, \Ka, and 30\,GHz around the brightest region of the sky would induce a large uncertainty. Despite the relative increase in noise level when including instrumental effects, the brightest Galactic loops, the Cygnus region, and Tau A regions are well constrained by the data.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{figures/beta_n0016_mu.pdf}\\
+	\includegraphics[width=\columnwidth]{figures/beta_n0016_sd_samp.pdf}\\
+	\includegraphics[width=\columnwidth]{figures/beta_n0016_sd_tot.pdf}
+	\caption{
+		\commanderone\ $\beta_\mathrm s$ constraints. \textit{(Top):} Mean spectral index over all samples, \textit{(middle):} standard deviation over a single CG DR1 sample, and \textit{(bottom):} standard deviation over all \commanderone\ and CG DR1 samples. Note the different dynamic ranges in the middle and bottom figures.}
+	\label{fig:beta_16}
+\end{figure}
+
+
+As a final quality check, we display the residuals with respect to the \commanderone\ sky model in Figs.\ref{fig:res_Q}--\ref{fig:res_U}. In all bands but \K, 30\,GHz, and \Ka, there are no visible artifacts due to instrumental uncertainty, with each map showing fluctuations consistent with the estimated white noise level calculated in the DR1 processing.  In addition, many of the residuals visible in Fig.~\ref{fig:cg_residuals} have been reduced, demonstrating that polarized synchrotron spectral index variation provides meaningful improvements to the sky model fit.
+
+The most salient remaining residuals are in \K, 30\,GHz, and \Ka. \K-band and 30\,GHz are anticorrelated surrounding Galactic center, indicating  tension between these two high signal-to-noise datasets. This could either by due to genuine mismodelling of the sky, or be due to incompletely modelled instrumental parameters. In particular, the signature is reminiscent of bandpass leakage corrections, which are shown, e.g., in Fig.~9 of \citet{bp09}.
+
+A more persistent residual is found in the the Stokes $Q$ \Ka-band map. This fog has appeared in several different analyses, e.g., Fig.~4 of \citet{bp14} and Fig.~8 of \citet{weiland:2022}, but was not as clear without full removal the poorly measured modes in the final map. The lack of this feature in the corresponding Stokes $U$ map suggests that the effect is not a true Galactic effect, and is in some way due to instrumental processing, or unmodeled systematics. As of writing, we have not identified any instrumental effect that, when projected on the sky, induces this excess.
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=\linewidth]{figures/comm1_res_Q.pdf}
+	\caption{Stokes $Q$ residual maps. The color scale is $\pm5\,\mathrm{\mu K}$ for all bands except \W, which are displayed with limits of $\pm10\,\mathrm{\mu K}$.}
+	\label{fig:res_Q}
+\end{figure*}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=\linewidth]{figures/comm1_res_U.pdf}
+	\caption{Stokes $U$ residual maps. The color scale is $\pm5\,\mathrm{\mu K}$ for all bands except \W, which are displayed with limits of $\pm10\,\mathrm{\mu K}$.}
+	\label{fig:res_U}
+\end{figure*}
+
+
+
+
+\section{Discussion and conclusion}
+\label{sec:conclusion}
+
+
+
+
+
+
+%\input{BP_wmap_acknowledgments.tex}
+
+\bibliographystyle{../../common/aa}
+
+\bibliography{../../common/Planck_bib,../../common/CG_bibliography}
+
+\appendix
+
 \begin{figure*}
         \centering
         %\includegraphics[width=\linewidth]{figures/ut_big_multiscatterplot.eps}
@@ -567,49 +672,5 @@ The synchrotron spectral index computed using T-T plot with the \Cosmoglobe\ 23\
 	\caption{The synchrotron spectral index as a function of rotation angle, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band (black) compared to the spectral index using the original 9-yr \WMAP\ data (red) for all regions. The horizontal lines indicates the corresponding inverse variance weighted values of the spectral indiex.}
         \label{fig:beta_bigalpha}
 \end{figure*}
-
-
-%\begin{figure*}
-%	\centering
-%	\includegraphics[width=0.40\linewidth]{figures/res_K_spdust.png}
-%        \includegraphics[width=0.40\linewidth]{figures/res_K_exp.png}\\
-%        \includegraphics[width=0.40\linewidth]{figures/res_030_spdust.png}
-%        \includegraphics[width=0.40\linewidth]{figures/res_030_exp.png}\\
-%        \includegraphics[width=0.40\linewidth]{figures/res_Ka_spdust.png}
-%        \includegraphics[width=0.40\linewidth]{figures/res_Ka_exp.png}\\
-%        \includegraphics[width=0.40\linewidth]{figures/res_Q1_spdust.png}
-%        \includegraphics[width=0.40\linewidth]{figures/res_Q1_exp.png}\\
-%        \includegraphics[width=0.40\linewidth]{figures/res_044_spdust.png}
-%        \includegraphics[width=0.40\linewidth]{figures/res_044_exp.png}\\
-%        \includegraphics[width=0.40\linewidth]{figures/res_V1_spdust.png}
-%        \includegraphics[width=0.40\linewidth]{figures/res_V1_exp.png}\\        
-%	\caption{Residuals}
-%        \label{fig:residuals}
-%\end{figure*}
-
-
-
-We will also use Table 6, Figure (33)
-of Planck 2018 results IV Diffuse component separation
-
-
-\subsection{Parametric component estimation}
-\label{sec:comm1}
-
-
-\section{Discussion and conclusion}
-\label{sec:conclusion}
-
-
-
-
-
-
-%\input{BP_wmap_acknowledgments.tex}
-
-\bibliographystyle{../../common/aa}
-
-\bibliography{../../common/Planck_bib,../../common/CG_bibliography}
-
 
 \end{document}
