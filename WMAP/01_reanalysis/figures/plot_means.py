@@ -603,7 +603,7 @@ cg.standalone_colorbar("binary_r", ticks=[35, 50, 70, 85], extend='both',
 plt.savefig('cbar_rms_P.pdf', dpi=300)
 plt.close('all')
 cg.standalone_colorbar("RdBu_r", ticks=[-0.5, 0,0.5], extend='both',
-            width=4, fontsize=18, unit=r'$\phantom{\rho}$')
+            width=4, fontsize=18, unit=r'$\rho$')
 plt.savefig('cbar_rho.pdf', dpi=300)
 plt.close('all')
 
