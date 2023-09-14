@@ -426,9 +426,12 @@ for n, b in enumerate(bands):
         remove_mono="true",
         sub=(1, 3, 1),
         cbar=False,
+        width=6,
     )
-    cg.plot(diff, sig=1, rlabel=r"\Delta Q", min=-3, max=3, sub=(1, 3, 2), cbar=False)
-    cg.plot(diff, sig=2, rlabel=r"\Delta U", min=-3, max=3, sub=(1, 3, 3), cbar=False)
+    cg.plot(diff, sig=1, rlabel=r"\Delta Q", min=-3, max=3, sub=(1, 3, 2),
+            cbar=False, width=6,)
+    cg.plot(diff, sig=2, rlabel=r"\Delta U", min=-3, max=3, sub=(1, 3, 3),
+            cbar=False, width=6,)
     plt.tight_layout()
     plt.savefig(f"{b}_sampdiff.pdf", bbox_inches="tight", dpi=dpi)
     plt.close()
@@ -600,7 +603,7 @@ cg.standalone_colorbar("binary_r", ticks=[35, 50, 70, 85], extend='both',
 plt.savefig('cbar_rms_P.pdf', dpi=300)
 plt.close('all')
 cg.standalone_colorbar("RdBu_r", ticks=[-0.5, 0,0.5], extend='both',
-            width=4, fontsize=18, unit=r'\phantom{$\rho$}')
+            width=4, fontsize=18, unit=r'$\phantom{\rho}$')
 plt.savefig('cbar_rho.pdf', dpi=300)
 plt.close('all')
 

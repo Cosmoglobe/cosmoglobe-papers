@@ -12,13 +12,14 @@ dpi = 100
 
 DIR = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
 
-width = 2
+width = 2/3
 xsize = 1200
 fontsize = {
-    "llabel": 5,
-    "rlabel": 5,
+    "llabel": 8,
+    "rlabel": 8,
 }
 width = cm2inch(9)
+width = 6
 
 fnames = glob(f"{DIR}/tod*WMAP*res*k??????.fits")
 fnames.sort()
@@ -49,11 +50,12 @@ maps = [K, Ka, Q1, Q2, V1, V2, W1, W2, W3, W4]
 
 for i,m in enumerate(maps):
     cg.plot(m, sig=0, min=-10, max=10, fwhm=5*u.deg, cbar=False,
-        llabel=bands[i], rlabel='T', sub=(1,3,1))
+        llabel=bands[i], rlabel='T', sub=(1,3,1), width=width,
+        fontsize=fontsize)
     cg.plot(m, sig=1, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='Q',
-        sub=(1,3,2))
+        sub=(1,3,2), width=width, fontsize=fontsize)
     cg.plot(m, sig=2, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='U',
-        sub=(1,3,3))
+        sub=(1,3,3), width=width, fontsize=fontsize)
     plt.tight_layout()
     plt.savefig(f'tod_res_{bands[i]}_IQU.pdf', bbox_inches='tight', dpi=dpi)
     plt.close('all')
@@ -84,21 +86,22 @@ maps = [K, Ka, Q1, Q2, V1, V2, W1, W2, W3, W4]
 
 for i,m in enumerate(maps):
     cg.plot(m, sig=0, min=-10, max=10, fwhm=5*u.deg, cbar=False,
-        llabel=bands[i], rlabel='T', sub=(1,3,1))
+        llabel=bands[i], rlabel='T', sub=(1,3,1), width=width,
+        fontsize=fontsize)
     cg.plot(m, sig=1, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='Q',
-        sub=(1,3,2))
+        sub=(1,3,2), width=width, fontsize=fontsize)
     cg.plot(m, sig=2, min=-10, max=10, fwhm=5*u.deg, cbar=False, rlabel='U',
-        sub=(1,3,3))
+        sub=(1,3,3), width=width, fontsize=fontsize)
     plt.tight_layout()
     plt.savefig(f'compsep_res_{bands[i]}_IQU.pdf', bbox_inches='tight', dpi=dpi)
     cg.plot(m, sig=0, min=-5, max=5, fwhm=5*u.deg, cbar=False,
-        llabel=bands[i], rlabel='T', width=width)
+        llabel=bands[i], rlabel='T', width=2)
     plt.savefig(f'compsep_res_{bands[i]}_I.pdf', bbox_inches='tight', dpi=dpi)
     cg.plot(m, sig=1, min=-5, max=5, fwhm=5*u.deg, cbar=False, rlabel='Q',
-        width=width)
+        width=2)
     plt.savefig(f'compsep_res_{bands[i]}_Q.pdf', bbox_inches='tight', dpi=dpi)
     cg.plot(m, sig=2, min=-5, max=5, fwhm=5*u.deg, cbar=False, rlabel='U',
-        width=width)
+        width=2)
     plt.savefig(f'compsep_res_{bands[i]}_U.pdf', bbox_inches='tight', dpi=dpi)
     plt.close('all')
 
