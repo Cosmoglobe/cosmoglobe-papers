@@ -8,6 +8,10 @@ rng = np.random.default_rng()
 
 width = 6
 xsize = 1200
+fontsize = {
+    "llabel": 8,
+    "rlabel": 8,
+}
 
 dpi = 150
 
@@ -83,11 +87,12 @@ rms_V = []
 
 mu_W = []
 rms_W = []
+ind1 = np.random.randint(burn_in, chain1.nsamples)
+ind2 = np.random.randint(burn_in, chain2.nsamples)
 for n, b in enumerate(bands):
     print(b)
 
-    ind1 = np.random.randint(burn_in, chain1.nsamples)
-    ind2 = np.random.randint(burn_in, chain2.nsamples)
+    print(ind1, ind2)
     m1 = chain1.get(f"tod/{b}/map", samples=ind1) * 1e3
     m2 = chain2.get(f"tod/{b}/map", samples=ind2) * 1e3
     #ms = np.concatenate((m1, m2))
@@ -427,11 +432,12 @@ for n, b in enumerate(bands):
         sub=(1, 3, 1),
         cbar=False,
         width=6,
+        fontsize=fontsize,
     )
     cg.plot(diff, sig=1, rlabel=r"\Delta Q", min=-3, max=3, sub=(1, 3, 2),
-            cbar=False, width=6,)
+            cbar=False, width=6, fontsize=fontsize)
     cg.plot(diff, sig=2, rlabel=r"\Delta U", min=-3, max=3, sub=(1, 3, 3),
-            cbar=False, width=6,)
+            cbar=False, width=6, fontsize=fontsize)
     plt.tight_layout()
     plt.savefig(f"{b}_sampdiff.pdf", bbox_inches="tight", dpi=dpi)
     plt.close()
@@ -606,5 +612,3 @@ cg.standalone_colorbar("RdBu_r", ticks=[-0.5, 0,0.5], extend='both',
             width=4, fontsize=18, unit=r'$\rho$')
 plt.savefig('cbar_rho.pdf', dpi=300)
 plt.close('all')
-
-

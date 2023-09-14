@@ -50,11 +50,11 @@ maps = [K, Ka, Q1, Q2, V1, V2, W1, W2, W3, W4]
 
 for i,m in enumerate(maps):
     cg.plot(m, sig=0, min=-3, max=3, fwhm=2*u.deg, cbar=False,
-        llabel=bands[i], rlabel='T', sub=(1,3,1), width=width,
+        llabel=bands[i], rlabel='\Delta T', sub=(1,3,1), width=width,
         fontsize=fontsize)
-    cg.plot(m, sig=1, min=-3, max=3, fwhm=2*u.deg, cbar=False, rlabel='Q',
+    cg.plot(m, sig=1, min=-3, max=3, fwhm=2*u.deg, cbar=False, rlabel='\Delta Q',
         sub=(1,3,2), width=width, fontsize=fontsize)
-    cg.plot(m, sig=2, min=-3, max=3, fwhm=2*u.deg, cbar=False, rlabel='U',
+    cg.plot(m, sig=2, min=-3, max=3, fwhm=2*u.deg, cbar=False, rlabel='\Delta U',
         sub=(1,3,3), width=width, fontsize=fontsize)
     plt.tight_layout()
     plt.savefig(f'tod_ncorr_{bands[i]}_IQU.pdf', bbox_inches='tight', dpi=dpi)
