@@ -5,7 +5,7 @@ import healpy as hp
 
 import astropy.units as u
 
-DIR = '/mn/stornext/d5/data/duncanwa/WMAP/v1'
+DIR = '/mn/stornext/d16/cmbco/cg/v1'
 
 A = 3366.168
 lon = 264.081 * np.pi/180 - np.pi
@@ -20,12 +20,12 @@ x,y,z = hp.pix2vec(nside, np.arange(12*nside**2))
 
 dip = d_x*x + d_y*y + d_z*z
 
-dpi=200
+dpi=150
 m = hp.read_map(f'{DIR}/CG_cmb_IQU_n1024_v1.fits')
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', min=-3400, max=3400,
-    width=8, xsize=1600, rlabel=r'\langle A_\mathrm{cmb}\rangle',
+    width=8, xsize=1200, rlabel=r'\langle A_\mathrm{cmb}\rangle',
     llabel='T')
-plt.savefig('cmb_I_dipole.pdf', bbox_inches='tight', dpi=300)
+plt.savefig('cmb_I_dipole.pdf', bbox_inches='tight', dpi=dpi)
 
 
 cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', comp='cmb', 
@@ -59,22 +59,22 @@ cg.plot(f'{DIR}/CG_cmb_IQU_n1024_v1.fits', sig=5, min=0, max=30,
 plt.savefig('cmb_U_sigma.pdf', bbox_inches='tight', dpi=dpi)
 
 cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', comp='synch', llabel='T',
-    rlabel=r'\langle A_\mathrm s\rangle', scale=1e-6,
+    rlabel=r'\langle A_\mathrm{s}\rangle', scale=1e-6,
     unit=r'$\mathrm{K_{RJ}}$', min=10, max=200, ticks=[10,100,200], width=4)
 plt.savefig('synch_I.pdf', bbox_inches='tight', dpi=dpi)
 
 cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', comp='synch', sig=1, width=4,
-    rlabel=r'\langle A_\mathrm s\rangle', min=-30, max=30, norm='linear')
+    rlabel=r'\langle A_\mathrm{s}\rangle', min=-30, max=30, norm='linear')
 plt.savefig('synch_Q.pdf', bbox_inches='tight', dpi=dpi)
 cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', comp='synch', sig=2, width=4,
-    rlabel=r'\langle A_\mathrm s\rangle', norm='linear', min=-30, max=30)
+    rlabel=r'\langle A_\mathrm{s}\rangle', norm='linear', min=-30, max=30)
 plt.savefig('synch_U.pdf', bbox_inches='tight', dpi=dpi)
 
 cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', sig=7, width=4, extend='both',
-    rlabel=r'\sigma_\mathrm s', llabel='Q', min=0, max=7.5, cmap='binary_r')
+    rlabel=r'\sigma_\mathrm{s}', llabel='Q', min=0, max=7.5, cmap='binary_r')
 plt.savefig('synch_Q_std.pdf', bbox_inches='tight', dpi=dpi)
 cg.plot(f'{DIR}/CG_synch_IQU_n1024_v1.fits', sig=8, width=4, extend='both',
-    rlabel=r'\sigma_\mathrm s', llabel='U', min=0, max=7.5, cmap='binary_r')
+    rlabel=r'\sigma_\mathrm{s}', llabel='U', min=0, max=7.5, cmap='binary_r')
 plt.savefig('synch_U_std.pdf', bbox_inches='tight', dpi=dpi)
 
 cg.plot(f'{DIR}/CG_freefree_I_n1024_v1.fits', comp='ff', width=4,

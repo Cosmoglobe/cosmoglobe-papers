@@ -11,10 +11,10 @@ xsize = 1200
 
 dpi = 150
 
-DIR1 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_a_230206"
-DIR2 = "/mn/stornext/d5/data/duncanwa/WMAP/chains_CG_b_230203"
+DIR1 = "/mn/stornext/d16/cmbco/cg/chains_CG_a_230206"
+DIR2 = "/mn/stornext/d16/cmbco/cg/chains_CG_b_230203"
 
-RDIR = "/mn/stornext/d5/data/duncanwa/WMAP/v1"
+RDIR = "/mn/stornext/d16/cmbco/cg/v1"
 
 WDIR = "/mn/stornext/d16/cmbco/ola/wmap/freq_maps"
 
@@ -313,7 +313,7 @@ for n, b in enumerate(bands):
     plt.savefig(f"{b}_std.pdf", bbox_inches="tight", dpi=dpi)
     plt.close()
 
-    rlabel = r"\langle\textit{" + b.split("_")[1] + r"}\rangle"
+    rlabel = r"\langle\mathit{" + b.split("_")[1] + r"}\rangle"
     cg.plot(
         mu,
         sig=0,
@@ -456,7 +456,7 @@ V_s = hp.smoothing(V, fwhm=2 * np.pi / 180)
 W_s = hp.smoothing(W, fwhm=2 * np.pi / 180)
 
 
-rlabel = r"\langle \textit{Q}\rangle"
+rlabel = r"\langle \mathit{Q}\rangle"
 cg.plot(
     Q,
     sig=0,
@@ -500,7 +500,7 @@ plt.savefig(f"Q_mu_U.pdf", bbox_inches="tight", dpi=dpi)
 plt.close("all")
 
 
-rlabel = r"\langle \textit{V}\rangle"
+rlabel = r"\langle \mathit{V}\rangle"
 cg.plot(
     V,
     sig=0,
@@ -543,7 +543,7 @@ cg.plot(
 plt.savefig(f"V_mu_U.pdf", bbox_inches="tight", dpi=dpi)
 plt.close("all")
 
-rlabel = r"\langle \textit{W}\rangle"
+rlabel = r"\langle \mathit{W}\rangle"
 cg.plot(
     W,
     sig=0,
