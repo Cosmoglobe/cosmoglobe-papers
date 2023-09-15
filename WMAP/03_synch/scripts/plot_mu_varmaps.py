@@ -45,6 +45,7 @@ plt.savefig('../figures/beta_n0016_mu.pdf', bbox_inches='tight')
 cg.plot(sd_beta, cmap='bone', min=0., max=0.15,
     llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{sys+stat}}', width=4, extend='both')
 plt.savefig('../figures/beta_n0016_sd_tot.pdf', bbox_inches='tight')
-cg.plot(sd_beta_persamp, cmap='bone', min=0., max=0.1,
-    llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{stat}}', width=4, extend='both')
+cg.plot(sd_beta_persamp, cmap='bone', min=0., max=0.15,
+    llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{stat}}', width=4,
+    extend='both', cbar=False)
 plt.savefig('../figures/beta_n0016_sd_samp.pdf', bbox_inches='tight')
