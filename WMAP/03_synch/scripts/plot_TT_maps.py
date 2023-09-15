@@ -47,7 +47,7 @@ for i, f in enumerate(fnames):
             cbar=False,  rlabel=labels[i], 
             fontsize={'rlabel':8, 'llabel':10}
             )
-    plt.savefig(f'TT_map_{fignames[i]}.pdf', bbox_inches='tight', dpi=150)
+    plt.savefig(f'../figures/TT_map_{fignames[i]}.pdf', bbox_inches='tight', dpi=150)
     plt.close()
 
 cg.standalone_colorbar("planck", 
@@ -55,4 +55,4 @@ cg.standalone_colorbar("planck",
         ticklabels=['$-5$','','','', '$-3$','','','', '$-1$'], 
         extend='both',
         width=0.8*columnwidth)
-plt.savefig('cbar_beta_wide.pdf', bbox_inches='tight', dpi=150)
+plt.savefig('../figures/cbar_beta_wide.pdf', bbox_inches='tight', dpi=150)
