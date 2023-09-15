@@ -361,8 +361,7 @@ As the scale of instrumental residuals have been reduced to below the white nois
 	\includegraphics[width=0.9\textwidth]{figures/CG_DR1_residuals.pdf}
 	\end{center}
 	\caption{Residuals with respect to the \cosmoglobe\ DR1 sky model evaluated at $5^\circ$, with common colorscale of $\pm\,5\,\mathrm{\mu K}$. \cosmoglobe\ maps are labeled CG, \Planck\ 2018 and \npipe\ maps are labeled PR3 and PR4, and the legacy \WMAPnine\ maps are labeled \WMAP.
-
-	Remove PR3, reorganize a bit. Perhaps Stokes Q, then Stokes U
+	  Remove PR3, reorganize a bit. Perhaps Stokes Q, then Stokes U
 	}
 	\label{fig:cg_residuals}
 \end{figure*}
@@ -447,11 +446,11 @@ A fundamental challenge in spectral index estimation is due to the fact that eve
 
 In order to test for and mitigate these effects, we perform two approaches, a T-T plot analysis in Sect.~\ref{sec:tt_plot} and a Gibbs sampling analysis using \commanderone\ in Sect.~\ref{sec:comm1}. Sect.~\ref{sec:tt_plot} focuses on pairs of channels to better isolate potential unmodeled systematic effects, while Sect.~\ref{sec:comm1} uses all \WMAP\ and LFI channels plus \Planck\ 353\,GHz to maximize the joint statistical weight of all available data.
 
-\subsection{T-T plot method}
+\subsection{T-T plot analysis}
 \label{sec:tt_plot}
 
-As pointed out in \citet{wehus:2013}, unmodeled instrumental effects, including polarization angle mismatch between detectors and  elliptical beams,  can induce a polarization angle-dependent spectral index that is especially prominent in point sources.
-These effects can often be identified by performing analysis as a function of polarization angle. As both \WMAP\ and \Planck\ have asymmetric beam responses, this effect has long been noticed in the data, contaminating spectral index estimates. Performing a ``temperature-temperature'' (T-T) analysis as a function of polarizatoin angle, as discussed in Sect.~\ref{sec:tt_plot} \textcolor{red}{(this section?)}, shows the magnitude of this effect in the \cosmoglobe, \WMAPnine, and PR4 data.
+As pointed out in \citet{wehus:2013}, unmodeled instrumental effects, including polarization angle mismatch between detectors and  elliptical beams, can induce a polarization angle-dependent spectral index that is especially prominent in point sources.
+These effects can often be identified by performing analysis as a function of polarization angle. As both \WMAP\ and \Planck\ have asymmetric beam responses, this effect has long been noticed in the data, contaminating spectral index estimates. Performing a ``temperature-temperature'' (T-T) analysis as a function of polarization angle, shows the magnitude of this effect in the \cosmoglobe, \WMAPnine, and \Planck\ PR4 data.
 
 
 \begin{figure}
@@ -462,8 +461,10 @@ These effects can often be identified by performing analysis as a function of po
         \label{fig:regions}
 \end{figure}
 
+\subsubsection{Method}
+\label{sec:tt_plot_method}
 
-Following \citet{fuskeland2014} and \citet{fuskeland:2019}, we apply linear regression via the T-T (``temperature-temperature'') \textcolor{red}{<- repetition} plot method, in which spectral indices can be estimated over extended regions with approxiately constant spectral indices. In this approach, our data model for two frequencies is
+Following \citet{fuskeland2014} and \citet{fuskeland:2019}, we apply linear regression via the T-T plot method, in which spectral indices can be estimated over extended regions {\red with approxmiately constant spectral indices}. In this approach, our data model for two frequencies is
 \begin{equation}
 	\boldsymbol m_\nu = \boldsymbol m_{\nu_0}\left(\frac\nu{\nu_0}\right)^\beta+o_\nu+\boldsymbol n_\nu ,
 \end{equation}
@@ -474,10 +475,10 @@ where $\boldsymbol m_\nu$ is a spatially varying amplitude map, $\nu_0$ is the r
 	\Rightarrow
 	\beta_{s,p}=\frac{\ln(m_{\nu_1,p}/m_{\nu_2,p})}{\ln(\nu_1/\nu_2)}.
 \end{equation}
-The standard T-T plot method computes performs a linear regression $\boldsymbol m_{\nu_1}=a\boldsymbol m_{\nu_2}+b$, and associates $\beta_s$ with $\ln a/\ln(\nu_1/\nu_2)$. More care must be taken when the noise amplitudes in both maps are comparable, so we adopt the effective variance method of \citet{orear1982} as implemented by \citet{fuskeland2014}.
+The standard T-T plot method performs a linear regression $\boldsymbol m_{\nu_1}=a\boldsymbol m_{\nu_2}+b$, and associates $\beta_s$ with $\ln a/\ln(\nu_1/\nu_2)$. More care must be taken when the noise amplitudes in both maps are comparable, so we adopt the effective variance method of \citet{orear1982} as implemented by \citet{fuskeland2014}.
 
 For the T-T plot  analysis, we focus exclusively on bands between 23 and 33\,GHz. As in \citet{fuskeland2014}, we use the \WMAP\ \K\ and \Ka\ band Stokes $Q$ and $U$ parameter maps at $23$\,GHz and $33$\,GHz. The respective effective frequencies used are $22.45$\,GHz and $32.64$\,GHz. The maps originally at a \healpix\ pixelization of $N_\textrm{side}=512$ are downgraded to $N_\textrm{side}=64$ and smoothed to a common resolution of $1^\circ$ FWHM.
-The \Planck\ data products used are the $30$\,GHz Stokes $Q$ and $U$ maps, with an effective frequency of $28.4$\,GHz. {\red also mention \BP\ products, if we choose to show them.} The \cosmoglobe\ (PR4) products are natively at $N_\textrm{side}=512$ (1024), but as for the \WMAP\ products, the maps are downgraded to $N_\textrm{side}=64$ and smoothed to $1^\circ$ FWHM.  
+The \Planck\ data products used are the $30$\,GHz Stokes $Q$ and $U$ maps, with an effective frequency of $28.4$\,GHz. Both the \bp\ and \cosmoglobe\ products are natively at $N_\textrm{side}=512$, while for the \Planck\ PR4, it is 1024, but as for the \WMAP\ products, the maps are downgraded to $N_\textrm{side}=64$ and smoothed to $1^\circ$ FWHM.  
 
 
 
@@ -487,21 +488,34 @@ The \Planck\ data products used are the $30$\,GHz Stokes $Q$ and $U$ maps, with 
         \includegraphics[width=\linewidth]{figures/wmap23_plnpipe_ut_spectral_index_scatter_alphamean_1long.png}
         \includegraphics[width=\linewidth]{figures/wmap23_BP10v2_ut_spectral_index_scatter_alphamean_1long.png}
         \includegraphics[width=\linewidth]{figures/coswmap23_cos30_ut_spectral_index_scatter_alphamean_1long.png}
-        \caption{The spatial variation of the synchrotron spectral index, computed using T-T plot between the (from top to bottom) \WMAPnine\ 23\,GHz and \Planck\ 2018 30\,GHz, \WMAPnine\ 23\,GHz and \Planck\ DR4 30\,GHz, \WMAPnine\ 23\,GHz and \BP\ 30\,GHz, and \Cosmoglobe\ 23\,GHz and \Cosmoglobe\ 30\,GHz. The spectral index is inverse variance weighted over rotation angle, and in the \Cosmoglobe\ case also samples. {\red Fix style of maps. Also include uncertainty maps?}}
-        \label{fig:cos20_beta_map}
+        \caption{The spatial variation of the synchrotron spectral index, computed using T-T plot between the (from top to bottom) \WMAPnine\ 23\,GHz and \Planck\ 2018 30\,GHz, \WMAPnine\ 23\,GHz and \Planck\ DR4 30\,GHz, \WMAPnine\ 23\,GHz and \BP\ 30\,GHz, and \Cosmoglobe\ 23\,GHz and \Cosmoglobe\ 30\,GHz. The spectral index is inverse variance weighted over rotation angle, and in the \Cosmoglobe\ case also samples. {\red Fix style of maps.}}
+        \label{fig:TT_beta_maps}
 \end{figure}
 
-The uncertainty is calculated as the minimum of the uncertainties in each rotation angle, and region. As in the Fuskeland 2021 paper, an systematic uncertainty that takes into account the variation of $\beta$ over rotation angle; $[ \max(\beta_\alpha) - \min(\beta_\alpha) ] /2$ is added in quadrature to the statistical uncertainty.
-For the \Cosmoglobe\ analyses the standard deviation of the spectral indices for all samples is also added in quadrature to represent an additional systematic uncertainty.
-
-Much better propagation of uncertainties with a whole suite of maps.
+The uncertainty of the spectral indices is calculated as the minimum of the uncertainties in each rotation angle, and region. As in \citet{fuskeland:2019}, a systematic uncertainty that takes into account the variation of $\beta$ over rotation angle; $[ \max(\beta_\alpha) - \min(\beta_\alpha) ] /2$ is added in quadrature to the statistical uncertainty.
+For the \Cosmoglobe\ analyses we have a whole suite of maps represented by the individual samples instead of just one mean map. Here the standard deviation of the spectral indices of the samples is also added in quadrature to represent an additional systematic uncertainty. This enables us to have a better propagation of uncertainties from the maps to the final spectral indices.
 
 \begin{figure}
         \centering
         \includegraphics[width=\linewidth]{figures/cos30_region_beta_cosmoglobe_vs_wmap_all.png}
-        \caption{The synchrotron spectral index as a function of region number, computed using T-T plot between the 9-yr \WMAP\ 23\,GHz and \Planck\ 2018 30\,GHz (red), 9-yr \WMAP\ 23\,GHz and \Planck\ DR4 30\,GHz (blue), 9-yr \WMAP\ 23\,GHz and \BP\ 30\,GHz (brown), and \Cosmoglobe\ 23\,GHz and \Cosmoglobe\ 30\,GHz (black). The spectral index is inverse variance weighted over rotation angles, and samples. The horizontal line in the high latitude regions corresponds to the estimated spectral index values from the \Planck\ 2018 likelihood analysis. cite?? {\red [Figure is a bit crowded, will discuss what to to (either remove one dataset or clean up a bit using another style (color/markers, etc).]}}
+        \caption{The synchrotron spectral index as a function of region number, computed using T-T plot between the 9-yr \WMAP\ 23\,GHz and \Planck\ 2018 30\,GHz (red), 9-yr \WMAP\ 23\,GHz and \Planck\ DR4 30\,GHz (blue), 9-yr \WMAP\ 23\,GHz and \BP\ 30\,GHz (purple), and \Cosmoglobe\ 23\,GHz and \Cosmoglobe\ 30\,GHz (black). The spectral index is inverse variance weighted over rotation angles, and samples. The horizontal line in the high latitude regions corresponds to the estimated spectral index values from the \Planck\ 2018 likelihood analysis \citep{planck2016-l05}. }
         \label{fig:cos30_beta_region}
 \end{figure}
+
+\subsubsection{Results}
+\label{sec:tt_plot_results}
+
+We start by looking at the results from the T-T plot method applied on $K$-band (23\,GHz) and 30\,GHz maps. We apply the method to the 24 regions to see the spatial variation of the polarized synchrotron spectral index. The three top maps in Fig. \ref{fig:TT_beta_maps} shows the T-T plot method using \WMAPnine\ $K$-band and three incarnations of the \Planck\ 30\,GHz maps; the 2018 version, PR4 and \bp. The bottom map shows the results using the improved maps from the \cosmoglobe\ analysis; \cosmoglobe\ $K$-band and 30\,GHz. The spectral indices are inverse variance weighted over rotation angle, and in the \cosmoglobe\ case also samples. Some of the most bright point sources have been masked out using grey. We see an overall improvement in the results of the spectral index, from regions with clearly unphysical values in the top map represented by dark red and blue values, and then the colors gradually fade in the figures downwards. Note that the range in the plot is quite wide for spectral indices, and goes from -5 to -1. This improvement in the value of the spectral index, and therefore also the underlying data is especially prudent in the high galactic regions, but also region number 22 along the galactic plane has a very striking improvement.
+
+The same results are also shown in Fig. \ref{fig:cos30_beta_region}, here the spectral indices are plotted as a function of region number, from 1 to 24. The different datasets are shown in different colors, and with the same order as the four maps in Fig. \ref{fig:TT_beta_maps}. Here we have also included one sigma uncertainties as errorbars as described in Sect. \ref{sec:tt_plot_method}. Also present in this figure shown as a blue line is the estimated spectral index range for high galactic regions, in our case represented by regions 1-12, as forecasted by the likelihood analysis in \citet{planck2016-l05}, Figure 22. We see as the datasets evolve in time, they draw closer to this line.
+
+For a more detail study of each of the regions, we refer the reader to the Appendix, where we have shown the corresponding T-T scatterplots (Fig.\ref{fig:cos30_beta_bigscatter}) and the spectral index as a function of rotation angle (Fig.\ref{fig:cos30_beta_bigalpha}) for all 24 regions.
+
+As a second part of this T-T plot analysis we apply the method on K-band and Ka-band maps. For the \wmap\ data, this is previosly done in \citet{fuskeland2014}, so here we only present results using the new \cosmoglobe\ data. First, as a consistency check, in Fig.\ref{fig:cos30_xyplot} we plot the spectral indices for all 24 regions in a form of \cosmoglobe\ K/30\,GHz versus \cosmoglobe\ K/Ka. We see that for the regions in the north and south galactic spurs, and along the galactic plane (regions 13-24), there is a good agreement bewteen the spectral indices obtained by the two pairs of datasets. These are the regions with the highest signal to noise ratio.
+
+In Fig.\ref{fig:beta_map_K-Ka} the value of the spectral indices is shown for the 24 regions. We see here that the colors are even fainter than the \cosmoglobe\ K-band versus 30\,GHz values (the bottom figure in Fig. \ref{fig:TT_beta_maps}), meaning there are fewer outliers with respect to a standard value in the range around -3. This is especially visibly in the regions with lowest signal to noise, like regions 6, 8 and 12, at high latitude.
+
+{\red UF: Not sure we can talk about it like I do here, with ``right'' and ``wrong'' values of beta. But clearly, values above -2 and below -3.8 are unphysical, are they not, is this common knowledge? Might be rephrased a bit...}
 
 \begin{figure}
         \centering
@@ -512,6 +526,12 @@ The synchrotron spectral index computed using T-T plot with the \Cosmoglobe\ 23\
 \end{figure}
 
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{figures/ut_spectral_index_scatter_alphamean_1.png}
+	\caption{The spatial variation of the synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band. The spectral index is inverse variance weighted over rotation angle and samples. {\red Fix style of maps.}}
+        \label{fig:beta_map}
+\end{figure}
 
 
 %\begin{figure*}
@@ -534,8 +554,7 @@ The synchrotron spectral index computed using T-T plot with the \Cosmoglobe\ 23\
 
 
 
-We will also use Table 6, Figure (33)
-of Planck 2018 results IV Diffuse component separation
+%We will also use Table 6, Figure (33) of Planck 2018 results IV Diffuse component separation
 
 
 \subsection{Parametric component estimation}
@@ -556,10 +575,9 @@ At high Galactic latitudes (regions 1--12), there is good agreement between each
 \begin{figure}
 	\centering
 	\includegraphics[width=\columnwidth]{figures/compare_betas.pdf}
-	\caption{Spectral index from the \commanderone, T-T plots with \K/\Ka\ and \K/30, the QUIJOTE estimates, and the CLASS estimates
+	\caption{Spectral index from the \commanderone, T-T plots with \K /\Ka\ and \K/30, the QUIJOTE estimates, and the CLASS estimates
 	%
 	Remove TT K/30.
-
 	This is an improvment over the state-of-teh-art TT K/Ka
 	}
 	\label{fig:beta_comp}
@@ -649,34 +667,29 @@ A more persistent residual is found in the the Stokes $Q$ \Ka-band map. This fog
 
 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figures/ut_spectral_index_scatter_alphamean_1.png}
-	\caption{The spatial variation of the synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band. The spectral index is inverse variance weighted over rotation angle and samples. {\red Fix style of maps.}}
-        \label{fig:beta_map}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figures/ut_uncert_scatter_alphamean_1.png}
-	\caption{The uncertainty of the synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band. {\red Fix style of maps if we keep it.}}
-        \label{fig:uncert_map}
-\end{figure}
 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figures/region_beta_cosmoglobe_vs_wmap.png}
-	\caption{The synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band (black) compared to the spectral index using the original 9-yr \WMAP\ data (red) as a function of region number. The spectral index is inverse variance weighted over rotation angles, and in the \Cosmoglobe\ case also samples.}
-        \label{fig:beta_region}
-\end{figure}
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=\linewidth]{figures/ut_uncert_scatter_alphamean_1.png}
+%	\caption{The uncertainty of the synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band. {\red Fix style of maps if we keep it.}}
+%        \label{fig:uncert_map}
+%\end{figure}
 
-\begin{figure*}
-	\centering
-	%\includegraphics[width=\linewidth]{figures/ut_big_multialphaplot.eps}
-        \includegraphics[width=\linewidth]{figures/ut_big_multialphaplot.pdf}
-	\caption{The synchrotron spectral index as a function of rotation angle, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band (black) compared to the spectral index using the original 9-yr \WMAP\ data (red) for all regions. The horizontal lines indicates the corresponding inverse variance weighted values of the spectral indiex.}
-        \label{fig:beta_bigalpha}
-\end{figure*}
+
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=\linewidth]{figures/region_beta_cosmoglobe_vs_wmap.png}
+%	\caption{The synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band (black) compared to the spectral index using the original 9-yr \WMAP\ data (red) as a function of region number. The spectral index is inverse variance weighted over rotation angles, and in the \Cosmoglobe\ case also samples.}
+%        \label{fig:beta_region}
+%\end{figure}
+
+%\begin{figure*}
+%	\centering
+%	%\includegraphics[width=\linewidth]{figures/ut_big_multialphaplot.eps}
+%        \includegraphics[width=\linewidth]{figures/ut_big_multialphaplot.pdf}
+%	\caption{The synchrotron spectral index as a function of rotation angle, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band (black) compared to the spectral index using the original 9-yr \WMAP\ data (red) for all regions. The horizontal lines indicates the corresponding inverse variance weighted values of the spectral indiex.}
+%        \label{fig:beta_bigalpha}
+%\end{figure*}
 
 \end{document}
