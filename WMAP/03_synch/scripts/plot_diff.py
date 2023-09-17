@@ -6,6 +6,8 @@ from glob import glob
 import astropy.units as u
 import h5py
 
+fontsize = {'llabel':8, 'rlabel':8, 'llabel_align':'right'}
+
 # Need to smooth all to common resolution...
 data_dir='/mn/stornext/d5/data/duncanwa/WMAP/data'
 
@@ -143,41 +145,51 @@ CG_model_44 = model(nu, weights, fwhm=fwhm*u.arcmin, output_unit='uK_RJ').value
 
 
 plt.figure(figsize=(8, 8*2/3))
-cg.plot(CG_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,     sub=(5, 4, 1),
-        llabel=r'\mathrm{CG}\ K', rlabel='Q')
-cg.plot(CG_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,     sub=(5, 4, 2),
-        rlabel='U')
-cg.plot(CG_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 3),
-        rlabel='Q', llabel=r'\mathrm{CG}\ \mathit{Ka}')
-cg.plot(CG_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 4),
-        rlabel='U')
-cg.plot(WMAP_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 5),
-    llabel=r'\mathit{WMAP}\ K')
-cg.plot(WMAP_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 6))
-cg.plot(WMAP_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False, sub=(5, 4, 7),
-    llabel=r'\mathit{WMAP}\ \mathit{Ka}')
-cg.plot(WMAP_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False, sub=(5, 4, 8))
+cg.plot(WMAP_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 1),
+    llabel=r'\mathit{WMAP}\ K', fontsize=fontsize)
+cg.plot(WMAP_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 2),
+        fontsize=fontsize)
+cg.plot(CG_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,     sub=(5, 4, 5),
+        llabel=r'\mathrm{CG}\ K', rlabel='Q', fontsize=fontsize)
+cg.plot(CG_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,     sub=(5, 4, 6),
+        rlabel='U', fontsize=fontsize)
+
+cg.plot(WMAP_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False, sub=(5, 4, 9),
+    llabel=r'\mathit{WMAP}\ \mathit{Ka}', fontsize=fontsize)
+cg.plot(WMAP_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False, sub=(5, 4, 10),
+        fontsize=fontsize)
+cg.plot(CG_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 13),
+        rlabel='Q', llabel=r'\mathrm{CG}\ \mathit{Ka}', fontsize=fontsize)
+cg.plot(CG_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 14),
+        rlabel='U', fontsize=fontsize)
 
 
-cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 9),
-    llabel=r'\mathrm{CG}\ 30')
-cg.plot(CG_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 10))
-cg.plot(CG_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 11),
-    llabel=r'\mathrm{CG}\ 44')
-cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 12))
-cg.plot(PR3_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 13),
-    llabel=r'\mathrm{PR3}\ 30')
-cg.plot(PR3_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 14))
-cg.plot(PR3_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 15),
-    llabel=r'\mathrm{PR3}\ 44')
-cg.plot(PR3_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 16))
-cg.plot(PR4_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 17),
-    llabel=r'\mathrm{PR4}\ 30')
-cg.plot(PR4_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 18))
-cg.plot(PR4_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 19),
-    llabel=r'\mathrm{PR4}\ 44')
-cg.plot(PR4_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 20))
-plt.savefig('../figures/CG_DR1_residuals.pdf', bbox_inches='tight')
+cg.plot(PR3_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 3),
+    llabel=r'\mathrm{PR3}\ 30', fontsize=fontsize)
+cg.plot(PR3_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 4),
+        fontsize=fontsize)
+cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 7),
+    llabel=r'\mathrm{CG}\ 30', fontsize=fontsize)
+cg.plot(CG_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 8),
+        fontsize=fontsize)
+
+cg.plot(PR3_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 11),
+    llabel=r'\mathrm{PR3}\ 44', fontsize=fontsize)
+cg.plot(PR3_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 12),
+        fontsize=fontsize)
+cg.plot(CG_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 15),
+    llabel=r'\mathrm{CG}\ 44', fontsize=fontsize)
+cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 16),
+        fontsize=fontsize)
+#cg.plot(PR4_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 17),
+#    llabel=r'\mathrm{PR4}\ 30', fontsize=fontsize)
+#cg.plot(PR4_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 18),
+#        fontsize=fontsize)
+#cg.plot(PR4_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 19),
+#    llabel=r'\mathrm{PR4}\ 44', fontsize=fontsize)
+#cg.plot(PR4_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 20),
+#        fontsize=fontsize)
+plt.savefig('../figures/CG_DR1_residuals.pdf', bbox_inches='tight', dpi=150)
 plt.close('all')
 
 
@@ -189,6 +201,7 @@ cg.plot(CG_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,
 cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False)
 
 
+'''
 model = cg.sky_model_from_chain(f'{DIR_BP}/BP_c0001_v2.h5', nside=512,
         components=['synch', 'dust'])
 
@@ -209,3 +222,4 @@ cg.plot(BP_44 - BP_model_44, sig=1, min=-5, max=5, cbar=False,
 cg.plot(BP_44 - BP_model_44, sig=2, min=-5, max=5, cbar=False)
 
 plt.show()
+'''

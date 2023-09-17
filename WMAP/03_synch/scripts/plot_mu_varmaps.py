@@ -2,6 +2,9 @@ import cosmoglobe as cg
 import healpy as hp
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
+from matplotlib.colors import ListedColormap
+
 
 DIR = '/mn/stornext/d5/data/duncanwa/comm1'
 
@@ -49,3 +52,39 @@ cg.plot(sd_beta_persamp, cmap='bone', min=0., max=0.15,
     llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{stat}}', width=4,
     extend='both', cbar=False)
 plt.savefig('../figures/beta_n0016_sd_samp.pdf', bbox_inches='tight')
+plt.close('all')
+
+# Transparency
+
+
+
+sky_mean = mu + 3.1
+
+cg.plot((mu-mu.mean())/sd_beta, min=-6, max=6)
+plt.show()
+
+#ret = cg.plot(mu, return_figure=True, return_only_data=True)
+#plt.close('all')
+#lon, lat, mu = ret[0]
+#clip = 0.15/2
+#sd_beta[sd_beta < clip] = clip
+#weights = 1/sd_beta**2
+#weights /= weights.max()
+#cg.plot(weights, min=0, max=1)
+#plt.show()
+##weights = weights*0 + 1
+#ret = cg.plot(weights, return_figure=True, return_only_data=True)
+#lon, lat, alph = ret[0]
+#
+#fig = plt.figure(figsize=(5, 0.6*5))
+#ax = fig.add_subplot(1,1,1, projection='mollweide')
+#plt.pcolormesh(lon, lat, 0*mu+1, cmap='binary', vmin=0, vmax=1)
+#
+#cmap_path =  cmap_path = Path(cg.__path__[0]) / "data/planck_cmap.dat"
+#cmap = ListedColormap(np.loadtxt(cmap_path) / 255.0, 'planck')
+#plt.pcolormesh(lon, lat, mu, alpha=alph, cmap=cmap, vmin=-3.5, vmax=-2.5)
+#
+#ax.xaxis.set_ticklabels([])
+#ax.yaxis.set_ticklabels([])
+#ax.tick_params(axis="both", which="both", length=0)
+#plt.savefig('test.pdf', bbox_inches='tight')
