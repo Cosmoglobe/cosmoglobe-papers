@@ -4,6 +4,47 @@ import cosmoglobe as cg
 
 import matplotlib.pyplot as plt
 
+from matplotlib import rcParams, rc
+
+# common setup for matplotlib
+params = {'backend': 'pdf',
+          'savefig.dpi': 300, # save figures to 300 dpi
+          'axes.labelsize': 10,
+          'font.size': 10,
+          'legend.fontsize': 10,
+          'xtick.labelsize': 10,
+          'ytick.major.pad': 6,
+          'xtick.major.pad': 6,
+          'ytick.labelsize': 10,
+          }
+
+def cm2inch(cm):
+    """Centimeters to inches"""
+    return cm *0.393701
+
+from matplotlib.ticker import MaxNLocator
+width = 8.8
+# Create the plot
+fig = plt.figure(figsize=(1.25*cm2inch(width), 6./8.*cm2inch(width)))
+ax = fig.add_subplot(111)
+
+y_est=-3.25796758275099
+y_min=-3.33676787269876
+y_max=-3.18442467987845
+#plt.axhline(y=y_est, linestyle='-', linewidth=0.8)
+plt.plot((0.8,12.2),(y_est,y_est), label=r"Planck 2018 likelihood analysis", linestyle='-', linewidth=0.8)
+plt.fill_between(np.linspace(0.8,12.2,11), y_min, y_max, alpha=0.3)
+
+
+marker='x'
+linewidth=0.5
+markersize=3
+capsize=2
+ls='none'
+alpha=0.4
+
+
+
 from glob import glob
 
 from tqdm import tqdm
@@ -11,7 +52,6 @@ from tqdm import tqdm
 from cycler import cycler
 default_cycler = (cycler(color=[plt.cm.cividis(i) for i in np.linspace(0,1,5)]))
 
-ms=2.5
 elinewidth=1
 
 jitter = 0.12
@@ -84,30 +124,29 @@ plt.xlabel('region')
 
 
 
-fnames = glob(f'{DIR}/cg_chain_n16_??????_?/synch_beta*k*[1-9]?.fits')
+fnames = glob(f'{DIR}/cg_chain_n16_????[2,4,6,8,0]0_1/synch_beta*k*[1-9]?.fits')
 mu, sd, mu_16, sd_16= get_mu_sd(fnames, mu_map=True)
 #plt.errorbar(reg_inds, mu, sd, fmt='.', label=r'$N_\mathrm{side}=16$')
 
-fnames = glob(f'{DIR}/cg_chain_batmask_??????_?/synch_beta*k*?[1-9]?.fits')
+fnames = glob(f'{DIR}/cg_chain_batmask_????[2,4,6,8,0]0_1/synch_beta*k*?[1-9]?.fits')
 #fnames = glob('cg_chain_batmask_??????_?/synch_beta*k*?[1-9]?.fits')
 
 mu, sd, mu_bat, sd_bat = get_mu_sd(fnames, mu_map=True)
 #plt.errorbar(reg_inds, mu, sd, fmt='.')
 
 
-plt.figure(figsize=(8, 4))
+#plt.figure(figsize=(8, 4))
 sd_prior = (mu1 - mu2)/4
 sd_tot = np.hypot(sd, sd_prior)
-plt.errorbar(reg_inds-2*jitter, mu, sd_tot, fmt='.', label=r'Commander1 WMAP+LFI',
-        ms=ms, elinewidth=elinewidth)
 
 
 d_K30 = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_cos30_500s/combab_011-250/ut_sample_betas_invvar.txt')
 d_KKa = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_coswmap33_500s/combab_011-250/ut_sample_betas_invvar.txt')
 
-plt.errorbar(d_K30[:,0]-jitter, d_K30[:,1], d_K30[:,2], fmt='.', label='TT K/30', color='C3', ms=ms, elinewidth=elinewidth)
-plt.errorbar(d_KKa[:,0], d_KKa[:,1], d_KKa[:,2], fmt='.', label='TT K/Ka',
-        color='C4', ms=ms, elinewidth=elinewidth)
+#plt.errorbar(d_K30[:,0]-jitter, d_K30[:,1], d_K30[:,2], fmt='.', label='TT K/30', color='C3', ms=ms, elinewidth=elinewidth)
+plt.errorbar(d_KKa[:,0]-jitter, d_KKa[:,1], d_KKa[:,2], label='TT K/Ka',
+        color='C4', ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
+        capsize=capsize, marker=marker, ls=ls)
 
 
 beta_class = hp.ma(hp.read_map('/mn/stornext/d16/cmbco/ola/class/class_dr1_40GHz_beta_s_nside32-d0.fits'))
@@ -133,10 +172,13 @@ for i in reg_inds:
     print(ok.sum(), var_class[inds].mean()**0.5)
     #sd_vals[i-1] = var_class[inds].mean()**0.5
     if ok.sum() > 0.5:
-        plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='C1', fmt='.', #label='CLASS',
+        plt.errorbar(i, mu_vals[i-1], sd_vals[i-1], color='C1', #label='CLASS',
                 #alpha=alphas[-1])
-                ms=ms, elinewidth=elinewidth)
-plt.errorbar([], [], [], color='C1', fmt='.', label='CLASS 40 + K', ms=ms, elinewidth=elinewidth)
+                ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
+                capsize=capsize, marker=marker, ls=ls)
+plt.errorbar([], [], [], color='C1', label='CLASS 40 + K',
+        ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
+        capsize=capsize, marker=marker, ls=ls)
 
 
 beta_QUI, sigma_QUI = hp.read_map('/mn/stornext/d16/cmbco/ola/quijote/compsep/pol//betas_quijote_mfi_cs_pol_64_dr1.fits', field=(0,1))
@@ -161,23 +203,36 @@ for i in reg_inds:
     #sd_vals[i-1] = var_class[inds].mean()**0.5
     print(ok.sum(), (sigma_QUI[inds]**2).mean()**0.5)
     if ok.sum() > 0.5:
-        plt.errorbar(i+2*jitter, mu_vals[i-1], sd_vals[i-1], color='C2', fmt='.', #label='CLASS',
+        plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='C2', 
                 #alpha=alphas[-1])
-                ms=ms, elinewidth=elinewidth)
-plt.errorbar([], [], [], color='C2', fmt='.', label='MFI+K/Ka+PR4', ms=ms,
-        elinewidth=elinewidth)
+                ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
+                capsize=capsize, marker=marker, ls=ls)
+plt.errorbar([], [], [], color='C2', label='MFI+K/Ka+PR4', ms=markersize,
+        elinewidth=elinewidth, linewidth=linewidth, capsize=capsize,
+        marker=marker, ls=ls)
+
+plt.errorbar(reg_inds+2*jitter, mu, sd_tot, label=r'Commander1 WMAP+LFI',
+        ms=markersize, elinewidth=elinewidth, color='k', linewidth=linewidth,
+        capsize=capsize, marker=marker, ls=ls)
 
 
-plt.legend(loc='best')
-
-
-plt.ylim([-4.75, -2.1])
-plt.xlabel('Region number')
-plt.ylabel(r'Spectral index, $\beta_{\mathrm{s}}$')
+plt.ylim([-4.0, -2.3])
+plt.xlim(0.2,24.8)
 plt.xticks([1,5,10,15,20,24])
+plt.yticks([-4, -3])
 plt.xticks(np.arange(1,25), minor=True)
-plt.yticks(np.arange(-4.7, -2.1, 0.1), minor=True)
-plt.savefig('../figures/compare_betas.pdf', bbox_inches='tight')
+plt.yticks(np.arange(-4.0, -2.3, 0.1), minor=True)
+
+ax.minorticks_on()
+plt.ylabel(r"Spectral index, $\beta_\mathrm{s}$", fontsize=10);
+plt.xlabel(r"Region number", fontsize=10);
+leg = plt.legend(frameon=True, loc='lower right', prop={'size':7})
+leg.get_frame().set_edgecolor("white")
+leg.get_frame().set_alpha(.0)
+
+
+plt.savefig('../figures/compare_betas.pdf', bbox_inches='tight',
+        bbox_extra_artists=[],pad_inches=0.03)
 
 '''
 cg.plot(mu_16, min=-3.5, max=-2.5)
