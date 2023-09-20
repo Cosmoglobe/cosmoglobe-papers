@@ -4,7 +4,9 @@ import healpy as hp
 from glob import glob
 import cosmoglobe as cg
 
-fontsize = {'cbar_tick_label':8}
+fontsize = {'cbar_tick_label':8, 'cbar_label':10}
+
+orp = {'cbar_label_pad':-10}
 
 DIR = '/mn/stornext/d5/data/duncanwa/comm1'
 
@@ -39,10 +41,12 @@ for i in range(len(fnames_res)):
     lim = 2.5
     cg.plot(fnames_res[i], sig=1, sub=(8,4,2*n+1), llabel=band_labels[i],
             min=-lim, max=lim, cbar=cbar, rlabel=rlabQ, fontsize=fontsize,
-            extend='both')
+            extend='both', unit=r'$\mathrm{\mu K}$',
+            override_plot_properties=orp)
     cg.plot(fnames_res[i], sig=2, sub=(8,4,2*n+2),
             min=-lim, max=lim, cbar=cbar, rlabel=rlabU, fontsize=fontsize,
-            extend='both')
+            extend='both', unit=r'$\mathrm{\mu K}$',
+            override_plot_properties=orp)
     n += 1
     if n == 2:
         rlabQ = ''
@@ -64,18 +68,21 @@ for i in range(len(fnames_res)):
     else:
         lim = 5
     cg.plot(fnames_res[i], sig=1, sub=(8,4,2*n+1), llabel=band_labels[i],
-            min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both')
+            min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
+            unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
     cg.plot(fnames_res[i], sig=2, sub=(8,4,2*n+2),
-            min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both')
+            min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
+            unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
     n += 1
 
 m = hp.read_map(f'{DIR}/chisq_PQU.fits', field=(1,2))
 mu = 14
 sd = (2*mu)**0.5
-cg.plot((m-mu)/sd, min=-3, max=3, sig=0, cmap='RdBu_r',
+cg.plot((m-mu)/sd, sig=0, cmap='RdBu_r',
         llabel=r'\chi^2', sub=(8,4,2*n+1), cbar=True, extend='both',
-        fontsize=fontsize)
-cg.plot((m-mu)/sd, min=-3, max=3, sig=1, cmap='RdBu_r',
-        sub=(8,4,2*n+2), cbar=True, extend='both', fontsize=fontsize)
+        fontsize=fontsize, override_plot_properties=orp, ticks=[-2,0,2])
+cg.plot((m-mu)/sd, sig=1, cmap='RdBu_r',
+        sub=(8,4,2*n+2), cbar=True, extend='both', fontsize=fontsize,
+        override_plot_properties=orp, ticks=[-2,0,2])
 #plt.tight_layout()
 plt.savefig('../figures/comm1_res_QU.pdf', bbox_inches='tight')

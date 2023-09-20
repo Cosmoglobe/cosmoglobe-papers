@@ -4,6 +4,11 @@ import healpy as hp
 import cosmoglobe as cg
 from tqdm import tqdm
 
+w = 3.5
+
+fontsize = {'llabel':9, 'rlabel':9}
+dpi = 150
+
 def update(existingAggregate, newValue):
     (count, mean, M2) = existingAggregate
     count += 1
@@ -39,13 +44,17 @@ P_K = hp.ud_grade(np.hypot(d_K2[1], d_K2[2])*1e3*0.47, 128)
 P_30 = hp.ud_grade(np.hypot(d_302[1], d_302[2]), 128)
 
 cg.plot(P_K, min=0, max=50, comp='synch', 
-    llabel=r'K\ \mathrm{(synch.\ scaled})',
-    unit=r'\mathrm{\mu K\,@\,30\,GHz}', rlabel='P', cbar=False)
-plt.savefig('../figures/Kband_polint.pdf', bbox_inches='tight')
+        norm='linear',
+        fontsize=fontsize,
+    llabel=r'K',
+    unit=r'\mathrm{\mu K\,@\,30\,GHz}', rlabel='P', cbar=False, width=w)
+plt.savefig('../figures/Kband_polint.pdf', bbox_inches='tight', dpi=dpi)
 cg.plot(P_30, min=0, max=50, comp='synch',
+        norm='linear',
+        fontsize=fontsize,
     llabel=r'30',
-    unit=r'\mathrm{\mu K\,@\,30\,GHz}', rlabel='P', cbar=False)
-plt.savefig('../figures/30GHz_polint.pdf', bbox_inches='tight')
+    unit=r'\mathrm{\mu K\,@\,30\,GHz}', rlabel='P', cbar=False, width=w)
+plt.savefig('../figures/30GHz_polint.pdf', bbox_inches='tight', dpi=dpi)
 
 
 sigmaQU_K = hp.read_map('CG_023_72_n0128.fits', field=(1,2))
@@ -55,11 +64,15 @@ sigmaQU_30 = hp.read_map('CG_030_72_n0128.fits', field=(1,2))
 sigmaP_30 = np.hypot(sigmaQU_30[0], sigmaQU_30[1])*(28/30)**3.1
 
 cg.plot(sigmaP_K, min=0, max=7.5, cmap='binary_r', unit=r'\mathrm{\mu K}',
-    rlabel=r'\sigma_P', llabel=r'K\ \mathrm{(synch. scaled)}', cbar=False)
-plt.savefig('../figures/Kband_sigmaP.pdf', bbox_inches='tight')
+        fontsize=fontsize,
+    rlabel=r'\sigma_P', llabel=r'K\ \mathrm{(synch. scaled)}', cbar=False,
+    width=w)
+plt.savefig('../figures/Kband_sigmaP.pdf', bbox_inches='tight', dpi=dpi)
 cg.plot(sigmaP_30, cmap='binary_r', unit=r'\mathrm{\mu K}',
-    rlabel=r'\sigma_P', llabel=r'30\,\mathrm{GHz}', min=0, max=7.5, cbar=False)
-plt.savefig('../figures/30GHz_sigmaP.pdf', bbox_inches='tight')
+        fontsize=fontsize,
+    rlabel=r'\sigma_P', llabel=r'30', min=0, max=7.5, cbar=False,
+    width=w)
+plt.savefig('../figures/30GHz_sigmaP.pdf', bbox_inches='tight', dpi=dpi)
 plt.close('all')
 
 cg.plot(P_K/sigmaP_K, min=0, max=10, cmap='bone')
@@ -71,15 +84,19 @@ synch_CG, h = hp.read_map(f'{DIR_CG}/CG_synch_IQU_n1024_v1.fits',
 
 P_synch = np.hypot(synch_CG[1], synch_CG[2])
 sigmaP_synch = np.hypot(synch_CG[3], synch_CG[4])
-cg.plot(P_synch/sigmaP_synch, min=0, max=10, cmap='bone')
+cg.plot(P_synch/sigmaP_synch, min=0, max=10, cmap='bone', width=w)
 
 sigmaP_synch = np.hypot(synch_CG[3], synch_CG[4])
 cg.plot(sigmaP_synch, min=0, max=7.5, cmap='binary_r',
-    llabel=r'\textsc{Cosmoglobe}', rlabel='\sigma_P', unit=r'\mathrm{\mu K}')
-plt.savefig('../figures/polint_CG_sigma.pdf', bbox_inches='tight')
+        fontsize=fontsize,
+    llabel=r'\mathrm{Cosmoglobe}',
+    rlabel='\sigma_P', 
+    unit=r'\mathrm{\mu K}',
+    width=w)
+plt.savefig('../figures/polint_CG_sigma.pdf', bbox_inches='tight', dpi=dpi)
 
 print(sigmaP_K.mean())
 print(sigmaP_30.mean())
 print(sigmaP_synch.mean())
 
-plt.show()
+#plt.show()

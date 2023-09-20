@@ -4,7 +4,9 @@ import cosmoglobe as cg
 import healpy as hp
 from glob import glob
 
-
+w = 3.5
+fontsize = {'llabel':9, 'rlabel':9}
+dpi = 150
 
 CG_DIR = '/mn/stornext/d5/data/duncanwa/WMAP'
 
@@ -74,21 +76,24 @@ cg.plot(np.hypot(synch_BP[3], synch_BP[4]), min=0, max=10, cmap='binary_r',
 '''
 
 cg.plot(np.hypot(synch_CG[1], synch_CG[2]), min=0, max=50, comp='synch', sig=0,
-    llabel=r'\textsc{Cosmoglobe}', rlabel='P', unit=r'\mathrm{\mu K}')
-plt.savefig('../figures/polint_CG.pdf', bbox_inches='tight')
+        norm='linear',
+    llabel=r'\mathrm{Cosmoglobe}', rlabel='P', unit=r'\mathrm{\mu K}', width=w,
+    fontsize=fontsize)
+plt.savefig('../figures/polint_CG.pdf', bbox_inches='tight', dpi=dpi)
 #cg.plot(np.hypot(synch_CG[3], synch_CG[4]), min=0, max=5, cmap='binary_r',
 #    llabel=r'\textsc{Cosmoglobe}', rlabel='\sigma_P', unit=r'\mathrm{\mu K}')
 #plt.savefig('../figures/polint_CG_sigma.pdf', bbox_inches='tight')
 
 cg.plot(np.hypot(synch_CG[3], synch_CG[4])/np.hypot(synch_BP[3], synch_BP[4]),
+        width=w,
     cmap='bone_r',
     min=0.4, max=1,
-    llabel=r'\textrm{Ratio}',
-    rlabel='\sigma_P^\mathrm{CG}/\sigma_P^\mathrm{BP}')
-plt.savefig('../figures/polint_sigma_ratio.pdf', bbox_inches='tight')
+    llabel=r'\mathrm{Ratio}',
+    rlabel='\sigma_P^\mathrm{CG}/\sigma_P^\mathrm{BP}', fontsize=fontsize)
+plt.savefig('../figures/polint_sigma_ratio.pdf', bbox_inches='tight', dpi=dpi)
 
 plt.close('all')
 plt.hist(np.hypot(synch_CG[3], synch_CG[4])/np.hypot(synch_BP[3], synch_BP[4]),
     100)
 plt.yscale('log')
-plt.show()
+#plt.show()
