@@ -65,7 +65,7 @@ sigmaP_30 = np.hypot(sigmaQU_30[0], sigmaQU_30[1])*(28/30)**3.1
 
 cg.plot(sigmaP_K, min=0, max=7.5, cmap='binary_r', unit=r'\mathrm{\mu K}',
         fontsize=fontsize,
-    rlabel=r'\sigma_P', llabel=r'K\ \mathrm{(synch. scaled)}', cbar=False,
+    rlabel=r'\sigma_P', llabel=r'K', cbar=False,
     width=w)
 plt.savefig('../figures/Kband_sigmaP.pdf', bbox_inches='tight', dpi=dpi)
 cg.plot(sigmaP_30, cmap='binary_r', unit=r'\mathrm{\mu K}',
