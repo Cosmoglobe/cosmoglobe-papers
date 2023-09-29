@@ -252,7 +252,7 @@ The goal of \Cosmoglobe\ is to perform joint end-to-end analyses on several data
 % Annoying error when there is hyphen in url...
 
 This paper makes use of \cosmoglobe\ end products produced by the reanalysis of the \WMAP\ and \Planck\ LFI TODs \citep{watts2023_dr1}. That paper produced improved \WMAP\ and \Planck\ LFI maps, which we will use compare our results to those produced by legacy data. 
-Although most of the results in \citet{watts2023_dr1} use the posterior mean of the Gibbs chain, here we make use of the entire sample of 500 sets of frequency maps. This allows us to fully marginalize over the low-level systematic parameters
+Although most of the results in \citet{watts2023_dr1} use the posterior mean of the Gibbs chain, here we make use of the entire sample of 500 sets of frequency maps. This allows us to fully marginalize over the low-level systematic parameters, quantifying the amount instrumental processing affects the 
 
 
 \section{Polarized synchrotron amplitude}
@@ -282,11 +282,9 @@ As shown in \citet{watts2023_dr1}, a single sky model that all datasets are cali
 
 The \cosmoglobe\ DR1 frequency maps are free from previously reported systematics, and are consistent between different frequencies and instruments. Therefore, a coherent model of polarized synchrotron emission can be made by combining these two different datasets.
 The polarized spectral amplitude determined from \cosmoglobe\ fully utilizes the \Planck\ and \WMAP\ joint reprocessed data, as shown in as shown in Fig.~\ref{fig:synch_polint}. 
-We plot the total polarized amplitude $P=\sqrt{Q^2+U^2}$ for ease of comparison. The visible noise bias from plotting this positive definite quantity
+We plot the total polarized amplitude $P=\sqrt{Q^2+U^2}$ for ease of comparison. The visible noise bias from plotting this positive definite quantity highlights the reduction in the noise level in the \cosmoglobe\ synchrotron map as compared to the \K-band and 30\,GHz maps.
 
-, although it creates a visible noise bias in the low signal-to-noise regions. 
 
-While the \cosmoglobe\ pipeline produces samples of polarized synchrotron emission, the spatial variation of the spectral index is poorly determined within the Gibbs chain. To mitigate the poor Monte Carlo Markov Chain (MCMC) convergence of the spectral indices, the \cosmoglobe\ DR1 sampled the spectral index from a prior distribution, $\beta_s\sim\mathcal N(-3.15, 0.05)$. Improvements within the \commanderthree\ framework will require more high signal-to-noise data and algorithmic improvements within the codebase.
 
 
 
@@ -319,6 +317,7 @@ To quantify the noise improvement in the synchrotron maps over pure templates ba
 At these resolutions, the mean rms for \K-band and 30\,GHz are $4.8\,\mathrm{\mu K}$ and $4.7\,\mathrm{\mu K}$ respectively, compared to the mean value of $3.4\,\mathrm{\mu K}$ for the \cosmoglobe\ DR1 synchrotron map, consistent with adding the scaled maps in quadrature.  While this may seem obvious on its face,  the combination of \WMAP\ \K-band and \Planck\ 30\,GHz is not straightforward due to instrumental effects that remain in the maps, notably poorly measured modes in \WMAP\ \citep{bennett2012,weiland:2018} and gain uncertainty in \Planck\ \citep{planck2016-l02}. These effects remain in the official \WMAPnine\ \citep{bennett2012} and \Planck\ PR3/PR4 \citep{planck2016-l02,planck2020-LVII} maps, making combination of these datasets unsuitable for Galactic science and cosmological analyses. However, the end-to-end \bp\ \citep{bp01} products effectively removed the gain uncertainty modes from the \Planck\ LFI maps, and the \cosmoglobe\ DR1 results \citep{watts2023_dr1} are free from the poorly measured modes. As shown in Fig.~46 of \citet{watts2023_dr1}, the \Planck\ 30\,GHz and the \WMAP\ \K-band are consistent with each other at the $10\,\mathrm{\mu K}$ level, indicating that the maps are consistent with each other down to the white noise level. 
 
 This polarized synchrotron map, derived from consistent datasets, has a white noise level 29\,\% lower than both the \K-band map and the 30\,GHz map, with minimal systematic uncertainties in the posterior standard deviation. Therefore, the synchrotron map derived from the \cosmoglobe\ DR1 Gibbs chain should be used for the characterization and removal of polarized synchrotron emission between 23--90\,GHz.
+While the \cosmoglobe\ pipeline produces samples of polarized synchrotron emission, the spatial variation of the spectral index is poorly determined within the Gibbs chain. To mitigate the poor Monte Carlo Markov Chain (MCMC) convergence of the spectral indices, the \cosmoglobe\ DR1 sampled the spectral index from a prior distribution, $\beta_s\sim\mathcal N(-3.15, 0.05)$. Improvements within the \commanderthree\ framework will require more high signal-to-noise data and algorithmic improvements within the codebase.
 
 
 %\subsection{Quantifying uncertainty}
@@ -362,7 +361,7 @@ Using the polarized synchrotron model generated in the main \cosmoglobe\ DR1 cha
 
 As shown in \citet{watts2023_dr1} and the first and third rows of Fig.~\ref{fig:cg_residuals}, the synchrotron model matches the sky model within $5\,\mathrm{\mu K}$ across the sky, with no signature of observational artifacts in the maps. In contrast, the \WMAP, PR3, and PR4 residuals show known observational residuals in each of the maps. In particular, the \WMAP\ maps show artifacts of the poorly-measured modes due to transmission imbalance in the differential horns \citep{jarosik2007,bennett2012}, while the PR3 and PR4 differences mostly due to relative gain errors \citep{planck2016-l02,planck2020-LVII}.
 
-The \WMAPnine\ \K-band residuals, and to a lesser extent the \WMAPnine\ \Ka-band residuals, are largely dominated by the imbalance modes, and virtually no trace of them can be found in the \cosmoglobe\ residuals. Most of the residuals are associated with the Galactic plane and diffuse structure uncorrelated with the \WMAP\ observation strategy. The positive excess in the \Ka\ Stokes $Q$ map could be due to as yet unmitigated data processing artifacts, but we consider this unlikely, as a similar large-scale excess can also be seen in the LFI 30 and 44\,GHz Stokes $Q$ map.
+The \WMAPnine\ \K-band residuals, and to a lesser extent the \WMAPnine\ \Ka-band residuals, are largely dominated by the imbalance modes, and virtually no trace of them can be found in the \cosmoglobe\ residuals. Most of the residuals are associated with the Galactic plane and diffuse structure uncorrelated with the \WMAP\ observation strategy. The positive excess in the \Ka\ Stokes $Q$ map could be due to as yet unmitigated data processing artifacts. While a similar large-scale excess can also be seen in the LFI 30 and 44\,GHz Stokes $Q$ maps, the signature strongly resembles the bandpass correction in \WMAP\ \K-band, suggesting incomplete treatment of bandpasses could be contributing to this large-scale signal.
 The LFI residuals, while much improved, still show traces residuals, especially near the Galactic center, that are somewhat correlated with the gain correction templates, but not at a level that high Galactic latitude features can be identified. 
 
 As the scale of instrumental residuals have been reduced to below the white noise level for each of the synchrotron-dominated full-sky polarization maps, we are now able to associate the residuals with potential modifications to the sky model. Specifically, the \cosmoglobe\ DR1 processing sampled a spatially constant $\beta_\mathrm s$ with a final mean of $\beta_\mathrm s=-3.15$. In Sec.~\ref{sec:specvar}, we will determine the extent to which true on-sky variation can be determined based on these maps.
@@ -383,9 +382,9 @@ As the scale of instrumental residuals have been reduced to below the white nois
 
 Due to the importance of foreground removal for precise primordial gravitational wave measurement, the ratio of synchrotron B-modes to E-modes has long been studied, and has been consistently noted to be less than one \citep{page2007,planck2014-a12,planck2016-l04}. The physical mechanism for this has been discussed in the context of Galactic magnetic fields and polarized thermal dust, but similar mechanisms are likely to be in play for synchrotron polarization.
 
-To estimate the power spectra without a noise bias, we performed a \commander\ run using half-mission splits with odd-numbered scans and even-numbered scans being analyzed in runs labeled HM1 and HM2, analogous to the \Planck\ ``half-mission'' splits. Each of these chains were performed using the same data as in the main \cosmoglobe\ chain, with 200 samples each.\footnote{These products can be found at \url{cosmoglobe.uio.no}.}
+To estimate the power spectra without a noise bias, we performed a \commanderthree\ run using half-mission splits with odd-numbered scans and even-numbered scans being analyzed in runs labeled HM1 and HM2, analogous to the \Planck\ ``half-mission'' splits. Each of these chains were performed using the same data as in the main \cosmoglobe\ chain, with 200 samples each.\footnote{These products can be found at \url{cosmoglobe.uio.no}.}
 The highest quality similar half-mission splits that are publically available are from the \Planck\ PR3 analysis, as discussed in \citet{planck2016-l04}. We therefore compute power spectra from the PR3 results and compare them directly with the \cosmoglobe\ HM splits.
-We needed to run a special \commanderthree\ chain, splitting the TODs into half mission, with all odd-numbered scans being processed in chain ``HM1'', and all even-numbered scans in ``HM2'', and produced 200 samples each. We provide these data at \url{cosmoglobe.uio.no}.
+We needed to run a special \commanderthree\ chain, splitting the TODs into half mission, with all odd-numbered scans being processed in chain HM1, and all even-numbered scans in HM2, and produced 200 samples each. 
 
 %We perform cross-spectra to avoid an additive noise bias.
 
@@ -409,9 +408,9 @@ These fit parameters yield a $\lesssim2~\sigma$ lower $A_s^\mathrm{BB}/A_s^\math
 
 \begin{table}
 \newdimen\tblskip \tblskip=5pt
-	\caption{Synchotron power spectrum estimates}
+	\caption{Synchrotron power spectrum estimates}
 \label{tab:synch_powspec}
-\vskip -8mm
+\vskip -5mm
 \footnotesize
 \setbox\tablebox=\vbox{
  \newdimen\digitwidth
@@ -448,9 +447,8 @@ These fit parameters yield a $\lesssim2~\sigma$ lower $A_s^\mathrm{BB}/A_s^\math
 
 \label{sec:specvar}
 
-The determination of polarized synchrotron spectral index variation across the sky has been studied in detail over the past decade using several different data combinations. Although the small-scale details vary, nearly every analysis has $\beta_\mathrm s\simeq=2.8$ in the Galactic plane and $\beta_\mathrm s\sim-3.3$ in high Galactic latitudes \citep{fuskeland2014,krachmalnicoff2018,fuskeland:2019,weiland:2022}, with the exception of QUIJOTE \citep{QUIJOTE_IV,QUIJOTE_VIII}, who find a much flatter spectral index along the Galactic plane.
-
-However, true spatial variations beyond the high-latitude and low-latitude regions have been difficult to determine. Both \citet{fuskeland2014} and \citet{weiland:2022} report oscillations with Galactic longitude close to the Galactic plane, but high-latitude regions variations are more difficult to determine, and tend to depend on the specific dataset chosen and the analysis method chosen. For example, \citet{deBelsunce:2022} find high-latitude spectral indices varying from $-5$ to $-1$ using 30\,GHz and 70\,GHz.
+The determination of polarized synchrotron spectral index variation across the sky has been studied in detail over the past decade using several different data combinations. Although the small-scale details vary, nearly every analysis has $\beta_\mathrm s\simeq=2.8$ in the Galactic plane and $\beta_\mathrm s\sim-3.3$ in high Galactic latitudes \citep{fuskeland2014,krachmalnicoff2018,fuskeland:2019,weiland:2022}, with the exception of QUIJOTE \citep{QUIJOTE_IV,QUIJOTE_VIII}, who find a slightly flatter spectral index along the Galactic plane.
+However, true spatial variations beyond the high-latitude and low-latitude regions have been difficult to determine. Both \citet{fuskeland2014} and \citet{weiland:2022} report oscillations with Galactic longitude close to the Galactic plane, but high-latitude regions variations are more difficult to determine, and tend to depend on the specific dataset chosen and the analysis method chosen.
 
 A fundamental challenge in spectral index estimation is due to the fact that every difference between two channels can be associated with a spectral index variation if not accounted for fully. Therefore, it is necessary to not only make sure that results are robust towards data selection, but also to ensure that differences between results are not due to instrumental effects.
 
@@ -466,7 +464,7 @@ These effects can often be identified by performing analysis as a function of po
 \begin{figure}
         \centering
         \includegraphics[width=\linewidth]{figures/utnymaske_tall_converted.pdf}
-        \caption{The sky is split into the same 24 regions as in \citet{fuskeland2014}. The most prominent point sources are masked out and shown as the grey circular areas.
+        \caption{Spectral index regions as defined in \citet{fuskeland2014}. The most prominent point sources are masked out and shown in grey circular areas.
         }
         \label{fig:regions}
 \end{figure}
@@ -499,7 +497,7 @@ The \Planck\ data products used are the $30$\,GHz Stokes $Q$ and $U$ maps, with 
 	\includegraphics{figures/TT_map_W9BP_K30.pdf}\vspace{-0.25cm}\\
 	\includegraphics{figures/TT_map_CG_K30.pdf}\vspace{-0.25cm}\\
 	\hspace{0.25cm}\includegraphics{figures/cbar_beta_wide.pdf}
-	\caption{The spatial variation of the synchrotron spectral index, computed using T-T plot between the (from top to bottom) \WMAPnine\ 23\,GHz and \Planck\ 2018 30\,GHz, \WMAPnine\ 23\,GHz and \Planck\ DR4 30\,GHz, \WMAPnine\ 23\,GHz and \BP\ 30\,GHz, and \Cosmoglobe\ 23\,GHz and \Cosmoglobe\ 30\,GHz. The spectral index is inverse variance weighted over rotation angle, and in the \Cosmoglobe\ case also samples.}
+	\caption{Spatial variation of the synchrotron spectral index, computed using T-T plot between the (from top to bottom) \WMAPnine\ 23\,GHz and \Planck\ 2018 30\,GHz, \WMAPnine\ 23\,GHz and \Planck\ DR4 30\,GHz, \WMAPnine\ 23\,GHz and \BP\ 30\,GHz, and \Cosmoglobe\ 23\,GHz and \Cosmoglobe\ 30\,GHz. The spectral index is inverse variance weighted over rotation angle, and in the \Cosmoglobe\ case also samples.}
         \label{fig:TT_beta_maps}
 \end{figure}
 
@@ -516,23 +514,21 @@ For the \Cosmoglobe\ analyses we have a whole suite of maps represented by the i
 \subsubsection{Results}
 \label{sec:tt_plot_results}
 
-We start by looking at the results from the T-T plot method applied on $K$-band (23\,GHz) and 30\,GHz maps. We apply the method to the 24 regions to see the spatial variation of the polarized synchrotron spectral index. The three top maps in Fig. \ref{fig:TT_beta_maps} shows the T-T plot method using \WMAPnine\ $K$-band and three incarnations of the \Planck\ 30\,GHz maps; the 2018 version, PR4 and \bp. The bottom map shows the results using the improved maps from the \cosmoglobe\ analysis; \cosmoglobe\ $K$-band and 30\,GHz. The spectral indices are inverse variance weighted over rotation angle, and in the \cosmoglobe\ case also samples. Some of the most bright point sources have been masked out using grey. We see an overall improvement in the results of the spectral index, from regions with clearly unphysical values in the top map represented by dark red and blue values, and then the colors gradually fade in the figures downwards. Note that the range in the plot is quite wide for spectral indices, and goes from -5 to -1. This improvement in the value of the spectral index, and therefore also the underlying data is especially prudent in the high galactic regions, but also region number 22 along the galactic plane has a very striking improvement.
+We start by looking at the results from the T-T plot method applied to the $K$-band (23\,GHz) and 30\,GHz maps. We apply the method to the 24 regions to see the spatial variation of the polarized synchrotron spectral index. The three top maps in Fig. \ref{fig:TT_beta_maps} shows the T-T plot method using \WMAPnine\ $K$-band and three incarnations of the \Planck\ 30\,GHz maps; PR3, PR4, and \bp. The bottom map shows the results using the improved maps from the \cosmoglobe\ analysis; \cosmoglobe\ $K$-band and 30\,GHz. The spectral indices are inverse variance weighted over rotation angle, and in the \cosmoglobe\ case also samples. Some of the most bright point sources have been masked out using grey. We see an overall improvement in the results of the spectral index, from regions with extreme values in the top map represented by dark red and blue values, with colors gradually fading in the lower figures. The range in the plot is quite wide for spectral indices, and goes from $-5$ to $-1$. This improvement in the value of the spectral index, and therefore also the underlying data, is especially prominent in the high Galactic regions, as well as region  number 22 along the Galactic plane.
 
-The same results are also shown in Fig. \ref{fig:cos30_beta_region}, here the spectral indices are plotted as a function of region number, from 1 to 24. The different datasets are shown in different colors, and with the same order as the four maps in Fig. \ref{fig:TT_beta_maps}. Here we have also included one sigma uncertainties as errorbars as described in Sect. \ref{sec:tt_plot_method}. Also present in this figure shown as a blue line is the estimated spectral index range for high galactic regions, in our case represented by regions 1-12, as forecasted by the likelihood analysis in \citet{planck2016-l05}, Figure 22. We see as the datasets evolve in time, they draw closer to this line.
+The same results are also shown in Fig. \ref{fig:cos30_beta_region}, with the spectral indices plotted as a function of region number. The different datasets are shown in different colors, and with the same order as the four maps in Fig.~\ref{fig:TT_beta_maps}. Here we have also included one sigma uncertainties as errorbars as described in Sect. \ref{sec:tt_plot_method}. We also plot the estimated spectral index range for high Galactic regions, in our case represented by regions 1--12, as forecasted by the likelihood analysis in Figure 22 of \citet{planck2016-l05}. We see with each iteration of the data processing, the region estimates draw closer to this line.
+For a more detailed study of each of the regions, we refer the reader to the Appendix, where we have shown the corresponding T-T scatterplots (Fig.~\ref{fig:cos30_beta_bigscatter}) and the spectral index as a function of rotation angle (Fig.~\ref{fig:cos30_beta_bigalpha}) for all 24 regions.
 
-For a more detail study of each of the regions, we refer the reader to the Appendix, where we have shown the corresponding T-T scatterplots (Fig.\ref{fig:cos30_beta_bigscatter}) and the spectral index as a function of rotation angle (Fig.\ref{fig:cos30_beta_bigalpha}) for all 24 regions.
+As a second part of this T-T plot analysis we apply the method on \K-band and \Ka-band maps. For the \wmap\ data, this analysis was already performed in  \citet{fuskeland2014}, so here we only present results using the new \cosmoglobe\ data. First, as a consistency check, in Fig.~\ref{fig:cos30_xyplot} we plot the spectral indices for all 24 regions in the form of \cosmoglobe\ \K/30\,GHz versus \cosmoglobe\ \K/\Ka. We see that for the regions in the north and south Galactic spurs, and along the Galactic plane (regions 13-24), there is a good agreement between the spectral indices obtained by the two pairs of datasets. Regions 1--12, all of which are high-latitude regions with low signal-to-noise, are all consistent with the two data combinations, with the most prominent outliers, regions 6 and 12, the regions with the lowest signal-to-noise ratio.
 
-As a second part of this T-T plot analysis we apply the method on K-band and Ka-band maps. For the \wmap\ data, this is previosly done in \citet{fuskeland2014}, so here we only present results using the new \cosmoglobe\ data. First, as a consistency check, in Fig.\ref{fig:cos30_xyplot} we plot the spectral indices for all 24 regions in a form of \cosmoglobe\ K/30\,GHz versus \cosmoglobe\ K/Ka. We see that for the regions in the north and south galactic spurs, and along the galactic plane (regions 13-24), there is a good agreement bewteen the spectral indices obtained by the two pairs of datasets. These are the regions with the highest signal to noise ratio.
+In Fig.~\ref{fig:beta_map} the value of the spectral indices is shown for the 24 regions. We see here that the colors are even fainter than the \cosmoglobe\ \K-band versus 30\,GHz values (the bottom figure in Fig.~\ref{fig:TT_beta_maps}), meaning there are fewer outliers with respect to a standard value in the range around $-3$. This is especially visibly in the regions with lowest signal to noise, like regions 6, 8 and 12, at high latitude.
 
-In Fig.\ref{fig:regions} the value of the spectral indices is shown for the 24 regions. We see here that the colors are even fainter than the \cosmoglobe\ K-band versus 30\,GHz values (the bottom figure in Fig. \ref{fig:TT_beta_maps}), meaning there are fewer outliers with respect to a standard value in the range around -3. This is especially visibly in the regions with lowest signal to noise, like regions 6, 8 and 12, at high latitude.
-
-{\red UF: Not sure we can talk about it like I do here, with ``right'' and ``wrong'' values of beta. But clearly, values above -2 and below -3.8 are unphysical, are they not, is this common knowledge? Might be rephrased a bit...}
 
 \begin{figure}
         \centering
         \includegraphics[width=\linewidth]{figures/xy_regions.png}
         \caption{
-The synchrotron spectral index computed using T-T plot with the \Cosmoglobe\ 23\,GHz and 30\,GHz data versus \Cosmoglobe\ 23\,GHz and 33\,GHz data for the 24 regions.}
+Synchrotron spectral index computed using T-T plot with the \Cosmoglobe\ 23\,GHz and 30\,GHz data versus \Cosmoglobe\ 23\,GHz and 33\,GHz data for the 24 regions.}
         \label{fig:cos30_xyplot}
 \end{figure}
 
@@ -540,8 +536,8 @@ The synchrotron spectral index computed using T-T plot with the \Cosmoglobe\ 23\
 \begin{figure}
 	\centering
 	\includegraphics{figures/TT_map_CG_KKa.pdf}\vspace{-0.25cm}\\
-	\hspace{0.25cm}\includegraphics{figures/cbar_beta.pdf}
-	\caption{The spatial variation of the synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band. The spectral index is inverse variance weighted over rotation angle and samples.}
+	\hspace{0.25cm}\includegraphics{figures/cbar_beta_wide.pdf}
+	\caption{Spatial variation of the synchrotron spectral index, computed using T-T plot between the \Cosmoglobe\ \WMAP\ \K- and \Ka-band. The spectral index is inverse variance weighted over rotation angle and samples.}
         \label{fig:beta_map}
 \end{figure}
 
@@ -669,6 +665,8 @@ A more persistent residual is found in the the Stokes $Q$ \Ka-band map. This fog
 
 \appendix
 
+\section{Appendix}
+
 \begin{figure*}
         \centering
         %\includegraphics[width=\linewidth]{figures/ut_big_multiscatterplot.eps}
@@ -681,7 +679,7 @@ A more persistent residual is found in the the Stokes $Q$ \Ka-band map. This fog
         \centering
         %\includegraphics[width=\linewidth]{figures/cos30_ut_big_multialphaplot.eps}
         \includegraphics[width=\linewidth]{figures/cos30_ut_big_multialphaplot_converted.pdf}
-        \caption{The synchrotron spectral index as a function of rotation angle, computed using T-T plot between the \Cosmoglobe\ 23\,GHz and the \Cosmoglobe\ 30\,GHz (black) compared to the spectral index using the 9 yr \WMAP\ 23\,GHz and \Planck\ 2018 30\,GHz (red) for all regions. The horizontal (solid and dotted) lines indicates the corresponding inverse variance weighted values of the spectral index, averaged over rotation angle, and in the \Cosmoglobe\ case also samples.}
+        \caption{Synchrotron spectral index as a function of rotation angle, computed using T-T plot between the \Cosmoglobe\ 23\,GHz and the \Cosmoglobe\ 30\,GHz (black) compared to the spectral index using the 9 yr \WMAP\ 23\,GHz and \Planck\ 2018 30\,GHz (red) for all regions. The horizontal (solid and dotted) lines indicates the corresponding inverse variance weighted values of the spectral index, averaged over rotation angle, and in the \Cosmoglobe\ case also samples.}
         \label{fig:cos30_beta_bigalpha}
 \end{figure*}
 
