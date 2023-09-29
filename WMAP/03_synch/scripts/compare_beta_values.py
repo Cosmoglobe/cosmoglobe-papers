@@ -205,6 +205,7 @@ for i in reg_inds:
     if ok.sum() > 0.5:
         plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='C2', 
                 #alpha=alphas[-1])
+                alpha=0
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
 plt.errorbar([], [], [], color='C2', label='MFI+K/Ka+PR4', ms=markersize,

@@ -44,7 +44,7 @@ for i, f in enumerate(fnames):
         llabel = ''
     if i == 1:
         cg.plot(f,
-                min=-3.5, max=-2.5, width=columnwidth,
+                min=-5, max=-1, width=columnwidth,
                 rlabel=labels[i], llabel=r'\beta_{\mathrm{s}}',
                 fontsize={'rlabel':8, 'llabel':10},
                 cbar=False,
