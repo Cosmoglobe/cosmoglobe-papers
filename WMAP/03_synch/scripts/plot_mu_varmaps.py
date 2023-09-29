@@ -35,6 +35,11 @@ var_beta_persamp = hp.read_map(f'{DIR}/var_beta_persamp.fits')
 mu = hp.read_map(f'{DIR}/mean_beta.fits')
 
 
+mu_30 = hp.read_map(f'{DIR}/mean_beta_-3.0.fits')
+
+prior_var = abs(mu-mu_30)
+
+
 sd_beta= var_beta**0.5
 sd_beta_persamp= var_beta_persamp**0.5
 
@@ -46,8 +51,14 @@ cg.plot(mu, min=-3.5, max=-2.5, llabel=r'\beta_{\mathrm{s}}', width=4,
         extend='both')
 plt.savefig('../figures/beta_n0016_mu.pdf', bbox_inches='tight')
 cg.plot(sd_beta, cmap='bone', min=0., max=0.15,
-    llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{sys+stat}}', width=4, extend='both')
-plt.savefig('../figures/beta_n0016_sd_tot.pdf', bbox_inches='tight')
+    llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{sys+stat}}', width=4,
+    extend='both', cbar=False)
+plt.savefig('../figures/beta_n0016_sd_stat_inst.pdf', bbox_inches='tight')
+
+
+cg.plot(np.hypot(prior_var, sd_beta), cmap='bone', min=0., max=0.15,
+    llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{sys+stat+prior}}', width=4, extend='both')
+plt.savefig('../figures/beta_n0016_sd_stat_inst_prior.pdf', bbox_inches='tight')
 cg.plot(sd_beta_persamp, cmap='bone', min=0., max=0.15,
     llabel=r'\sigma_{\beta_{\mathrm{s}}}^{\mathrm{stat}}', width=4,
     extend='both', cbar=False)
@@ -58,10 +69,10 @@ plt.close('all')
 
 
 
-sky_mean = mu + 3.1
-
-cg.plot((mu-mu.mean())/sd_beta, min=-6, max=6)
-plt.show()
+#sky_mean = mu + 3.1
+#
+#cg.plot((mu-mu.mean())/sd_beta, min=-6, max=6)
+#plt.show()
 
 #ret = cg.plot(mu, return_figure=True, return_only_data=True)
 #plt.close('all')
