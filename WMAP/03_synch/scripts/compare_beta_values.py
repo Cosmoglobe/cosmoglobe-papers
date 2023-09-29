@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 from matplotlib import rcParams, rc
 
+from setup_matplotlib import *
+
 # common setup for matplotlib
 params = {'backend': 'pdf',
           'savefig.dpi': 300, # save figures to 300 dpi
@@ -32,7 +34,7 @@ y_est=-3.25796758275099
 y_min=-3.33676787269876
 y_max=-3.18442467987845
 #plt.axhline(y=y_est, linestyle='-', linewidth=0.8)
-plt.plot((0.8,12.2),(y_est,y_est), label=r"Planck 2018 likelihood analysis", linestyle='-', linewidth=0.8)
+plt.plot((0.8,12.2),(y_est,y_est), label=r"Planck 2018 likelihood", linestyle='-', linewidth=0.8)
 plt.fill_between(np.linspace(0.8,12.2,11), y_min, y_max, alpha=0.3)
 
 
@@ -144,9 +146,9 @@ d_K30 = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_cos30_500s/combab_
 d_KKa = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_coswmap33_500s/combab_011-250/ut_sample_betas_invvar.txt')
 
 #plt.errorbar(d_K30[:,0]-jitter, d_K30[:,1], d_K30[:,2], fmt='.', label='TT K/30', color='C3', ms=ms, elinewidth=elinewidth)
-plt.errorbar(d_KKa[:,0]-jitter, d_KKa[:,1], d_KKa[:,2], label='TT K/Ka',
-        color='C4', ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
-        capsize=capsize, marker=marker, ls=ls)
+plt.errorbar(d_KKa[:,0]-jitter, d_KKa[:,1], d_KKa[:,2], label='WMAP  K/Ka TT',
+        color='red', ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
+        capsize=capsize, marker=marker, ls=ls, alpha=0.4)
 
 
 beta_class = hp.ma(hp.read_map('/mn/stornext/d16/cmbco/ola/class/class_dr1_40GHz_beta_s_nside32-d0.fits'))
@@ -172,13 +174,13 @@ for i in reg_inds:
     print(ok.sum(), var_class[inds].mean()**0.5)
     #sd_vals[i-1] = var_class[inds].mean()**0.5
     if ok.sum() > 0.5:
-        plt.errorbar(i, mu_vals[i-1], sd_vals[i-1], color='C1', #label='CLASS',
-                #alpha=alphas[-1])
+        plt.errorbar(i, mu_vals[i-1], sd_vals[i-1], color='blue', #label='CLASS',
+                alpha=0.4,
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
-plt.errorbar([], [], [], color='C1', label='CLASS 40 + K',
+plt.errorbar([], [], [], color='blue', label='CLASS',
         ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
-        capsize=capsize, marker=marker, ls=ls)
+        capsize=capsize, marker=marker, ls=ls, alpha=0.4)
 
 
 beta_QUI, sigma_QUI = hp.read_map('/mn/stornext/d16/cmbco/ola/quijote/compsep/pol//betas_quijote_mfi_cs_pol_64_dr1.fits', field=(0,1))
@@ -203,26 +205,26 @@ for i in reg_inds:
     #sd_vals[i-1] = var_class[inds].mean()**0.5
     print(ok.sum(), (sigma_QUI[inds]**2).mean()**0.5)
     if ok.sum() > 0.5:
-        plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='C2', 
+        plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='brown',
                 #alpha=alphas[-1])
-                alpha=0
+                alpha=0.4,
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
-plt.errorbar([], [], [], color='C2', label='MFI+K/Ka+PR4', ms=markersize,
+plt.errorbar([], [], [], color='brown', label='QUIJOTE', ms=markersize,
         elinewidth=elinewidth, linewidth=linewidth, capsize=capsize,
-        marker=marker, ls=ls)
+        marker=marker, ls=ls, alpha=0.4)
 
-plt.errorbar(reg_inds+2*jitter, mu, sd_tot, label=r'Commander1 WMAP+LFI',
+plt.errorbar(reg_inds+2*jitter, mu, sd_tot, label=r'Cosmoglobe DR1',
         ms=markersize, elinewidth=elinewidth, color='k', linewidth=linewidth,
         capsize=capsize, marker=marker, ls=ls)
 
 
-plt.ylim([-4.0, -2.3])
+plt.ylim([-4.1, -2.3])
 plt.xlim(0.2,24.8)
 plt.xticks([1,5,10,15,20,24])
 plt.yticks([-4, -3])
 plt.xticks(np.arange(1,25), minor=True)
-plt.yticks(np.arange(-4.0, -2.3, 0.1), minor=True)
+plt.yticks(np.arange(-4.1, -2.3, 0.1), minor=True)
 
 ax.minorticks_on()
 plt.ylabel(r"Spectral index, $\beta_\mathrm{s}$", fontsize=10);
