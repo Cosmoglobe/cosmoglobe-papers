@@ -144,7 +144,7 @@ weights = data['044/bandpass'] * u.Unit("K_RJ")
 CG_model_44 = model(nu, weights, fwhm=fwhm*u.arcmin, output_unit='uK_RJ').value
 
 
-plt.figure(figsize=(8, 8*2/3))
+#plt.figure(figsize=(8, 8*2/3))
 cg.plot(WMAP_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 1),
     llabel=r'\mathit{WMAP}\ K', fontsize=fontsize)
 cg.plot(WMAP_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 2),
@@ -189,6 +189,8 @@ cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 16),
 #    llabel=r'\mathrm{PR4}\ 44', fontsize=fontsize)
 #cg.plot(PR4_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 20),
 #        fontsize=fontsize)
+
+plt.subplots_adjust(wspace=0.1, hspace=0.1)
 plt.savefig('../figures/CG_DR1_residuals.pdf', bbox_inches='tight', dpi=150)
 plt.close('all')
 

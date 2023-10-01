@@ -85,4 +85,5 @@ cg.plot((m-mu)/sd, sig=1, cmap='RdBu_r',
         sub=(8,4,2*n+2), cbar=True, extend='both', fontsize=fontsize,
         override_plot_properties=orp, ticks=[-2,0,2])
 #plt.tight_layout()
+plt.subplots_adjust(wspace=0.1)
 plt.savefig('../figures/comm1_res_QU.pdf', bbox_inches='tight')
