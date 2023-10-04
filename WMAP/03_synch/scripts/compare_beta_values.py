@@ -146,7 +146,7 @@ d_K30 = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_cos30_500s/combab_
 d_KKa = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_coswmap33_500s/combab_011-250/ut_sample_betas_invvar.txt')
 
 #plt.errorbar(d_K30[:,0]-jitter, d_K30[:,1], d_K30[:,2], fmt='.', label='TT K/30', color='C3', ms=ms, elinewidth=elinewidth)
-plt.errorbar(d_KKa[:,0]-jitter, d_KKa[:,1], d_KKa[:,2], label='WMAP  K/Ka TT',
+plt.errorbar(d_KKa[:,0]-jitter, d_KKa[:,1], d_KKa[:,2], label='WMAP K/Ka TT',
         color='red', ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
         capsize=capsize, marker=marker, ls=ls, alpha=0.4)
 
@@ -174,11 +174,11 @@ for i in reg_inds:
     print(ok.sum(), var_class[inds].mean()**0.5)
     #sd_vals[i-1] = var_class[inds].mean()**0.5
     if ok.sum() > 0.5:
-        plt.errorbar(i, mu_vals[i-1], sd_vals[i-1], color='blue', #label='CLASS',
+        plt.errorbar(i, mu_vals[i-1], sd_vals[i-1], color='blue',
                 alpha=0.4,
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
-plt.errorbar([], [], [], color='blue', label='CLASS',
+plt.errorbar([-5], [-5], [2], color='blue', label='CLASS',
         ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
         capsize=capsize, marker=marker, ls=ls, alpha=0.4)
 
@@ -210,7 +210,7 @@ for i in reg_inds:
                 alpha=0.4,
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
-plt.errorbar([], [], [], color='brown', label='QUIJOTE', ms=markersize,
+plt.errorbar([-5], [-5], [0], color='brown', label='QUIJOTE', ms=markersize,
         elinewidth=elinewidth, linewidth=linewidth, capsize=capsize,
         marker=marker, ls=ls, alpha=0.4)
 
