@@ -30,7 +30,7 @@ fnames.sort()
 fnames[1], fnames[2] = fnames[2], fnames[1]
 
 cg.plot(np.arange(12.), cbar=False, sub=(2,4,1))
-plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
+plt.subplots_adjust(wspace=0.1, hspace=-0.1)
 n = 0
 rlabQ = 'Q'
 rlabU = 'U'
@@ -58,7 +58,7 @@ plt.close('all')
 
 n = 0
 cg.plot(np.arange(12.), cbar=False, sub=(3,4,1))
-plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
+plt.subplots_adjust(wspace=0.1, hspace=-0.1)
 
 for i in range(len(fnames_res)):
     if band_labels[i] == 'W3' or band_labels[i] == 'W4':
@@ -96,7 +96,7 @@ for i in range(len(fnames_res)):
         plt.close('all') 
         n = 0
         cg.plot(np.arange(12.), cbar=False, sub=(2,4,1))
-        plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
+        plt.subplots_adjust(wspace=0.1, hspace=-0.1)
     if band_labels[i] == 'W4':
         plt.savefig('../figures/comm1_res_QU_W.pdf', bbox_inches='tight',
                 dpi=300)
@@ -104,7 +104,7 @@ for i in range(len(fnames_res)):
         n = 0
 
 cg.plot(np.arange(12.), cbar=False, sub=(1,4,1))
-plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
+plt.subplots_adjust(wspace=0.1, hspace=-0.1)
 m = hp.read_map(f'{DIR}/chisq_PQU.fits', field=(1,2))
 mu = 14
 sd = (2*mu)**0.5
