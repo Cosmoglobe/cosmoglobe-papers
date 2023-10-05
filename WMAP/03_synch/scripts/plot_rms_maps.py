@@ -48,6 +48,27 @@ cg.plot(P_K, min=0, max=50, comp='synch',
         fontsize=fontsize,
     llabel=r'K',
     unit=r'\mathrm{\mu K\,@\,30\,GHz}', rlabel='P', cbar=False, width=w)
+
+f = plt.gcf()
+plt.sca(f.axes[0])
+
+theta0, phi0 = 53*np.pi/180, (-100)*np.pi/180
+topline_phi = np.linspace(phi0-5*np.pi/180, phi0+5*np.pi/180)
+topline_theta = np.ones_like(topline_phi)*(theta0-5*np.pi/180)
+hp.newprojplot(theta=topline_theta, phi=topline_phi, color='r');
+
+topline_theta = np.ones_like(topline_phi)*(theta0+5*np.pi/180)
+hp.newprojplot(theta=topline_theta, phi=topline_phi, color='r');
+
+leftline_theta = np.linspace(theta0 - np.pi/180*5, theta0 + np.pi/180*5)
+leftline_phi = np.ones_like(leftline_theta)*(phi0 + np.pi/180*5)
+
+hp.newprojplot(theta=leftline_theta, phi=leftline_phi, color='r');
+leftline_phi = np.ones_like(leftline_theta)*(phi0 - np.pi/180*5)
+hp.newprojplot(theta=leftline_theta, phi=leftline_phi, color='r');
+
+
+
 plt.savefig('../figures/Kband_polint.pdf', bbox_inches='tight', dpi=dpi)
 cg.plot(P_30, min=0, max=50, comp='synch',
         norm='linear',
