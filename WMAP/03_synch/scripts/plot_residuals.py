@@ -29,6 +29,8 @@ fnames.sort()
 
 fnames[1], fnames[2] = fnames[2], fnames[1]
 
+cg.plot(np.arange(12.), cbar=False, sub=(2,4,1))
+plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
 n = 0
 rlabQ = 'Q'
 rlabU = 'U'
@@ -39,11 +41,11 @@ for i in range(len(fnames_res)):
     if band_labels[i] == '70':
         cbar = True
     lim = 2.5
-    cg.plot(fnames_res[i], sig=1, sub=(8,4,2*n+1), llabel=band_labels[i],
+    cg.plot(fnames_res[i], sig=1, sub=(2,4,2*n+1), llabel=band_labels[i],
             min=-lim, max=lim, cbar=cbar, rlabel=rlabQ, fontsize=fontsize,
             extend='both', unit=r'$\mathrm{\mu K}$',
             override_plot_properties=orp)
-    cg.plot(fnames_res[i], sig=2, sub=(8,4,2*n+2),
+    cg.plot(fnames_res[i], sig=2, sub=(2,4,2*n+2),
             min=-lim, max=lim, cbar=cbar, rlabel=rlabU, fontsize=fontsize,
             extend='both', unit=r'$\mathrm{\mu K}$',
             override_plot_properties=orp)
@@ -51,7 +53,13 @@ for i in range(len(fnames_res)):
     if n == 2:
         rlabQ = ''
         rlabU = ''
-n += 1
+plt.savefig('../figures/comm1_res_QU_LFI.pdf', bbox_inches='tight', dpi=150)
+plt.close('all')
+
+n = 0
+cg.plot(np.arange(12.), cbar=False, sub=(3,4,1))
+plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
+
 for i in range(len(fnames_res)):
     if band_labels[i] == 'W3' or band_labels[i] == 'W4':
         cbar = True
@@ -67,23 +75,44 @@ for i in range(len(fnames_res)):
         lim = 10
     else:
         lim = 5
-    cg.plot(fnames_res[i], sig=1, sub=(8,4,2*n+1), llabel=band_labels[i],
-            min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
-            unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
-    cg.plot(fnames_res[i], sig=2, sub=(8,4,2*n+2),
-            min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
-            unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
+    if 'W' in band_labels[i]:
+        cg.plot(fnames_res[i], sig=1, sub=(2,4,2*n+1), llabel=band_labels[i],
+                min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
+                unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
+        cg.plot(fnames_res[i], sig=2, sub=(2,4,2*n+2),
+                min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
+                unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
+    else:
+        cg.plot(fnames_res[i], sig=1, sub=(3,4,2*n+1), llabel=band_labels[i],
+                min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
+                unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
+        cg.plot(fnames_res[i], sig=2, sub=(3,4,2*n+2),
+                min=-lim, max=lim, cbar=cbar, fontsize=fontsize, extend='both',
+                unit=r'$\mathrm{\mu K}$', override_plot_properties=orp)
     n += 1
+    if band_labels[i] == 'V2':
+        plt.savefig('../figures/comm1_res_QU_K-V.pdf', bbox_inches='tight',
+                dpi=300)
+        plt.close('all') 
+        n = 0
+        cg.plot(np.arange(12.), cbar=False, sub=(2,4,1))
+        plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
+    if band_labels[i] == 'W4':
+        plt.savefig('../figures/comm1_res_QU_W.pdf', bbox_inches='tight',
+                dpi=300)
+        plt.close('all')
+        n = 0
 
+cg.plot(np.arange(12.), cbar=False, sub=(1,4,1))
+plt.subplots_adjust(wspace=0.1, hspace=0.15, top=1)
 m = hp.read_map(f'{DIR}/chisq_PQU.fits', field=(1,2))
 mu = 14
 sd = (2*mu)**0.5
 cg.plot((m-mu)/sd, sig=0, cmap='RdBu_r',
-        llabel=r'\chi^2', sub=(8,4,2*n+1), cbar=True, extend='both',
+        llabel=r'\chi^2', sub=(1,4,1), cbar=True, extend='both',
         fontsize=fontsize, override_plot_properties=orp, ticks=[-2,0,2])
 cg.plot((m-mu)/sd, sig=1, cmap='RdBu_r',
-        sub=(8,4,2*n+2), cbar=True, extend='both', fontsize=fontsize,
+        sub=(1,4,2), cbar=True, extend='both', fontsize=fontsize,
         override_plot_properties=orp, ticks=[-2,0,2])
 #plt.tight_layout()
-plt.subplots_adjust(wspace=0.1)
-plt.savefig('../figures/comm1_res_QU.pdf', bbox_inches='tight')
+plt.savefig('../figures/comm1_res_QU_chisq.pdf', bbox_inches='tight', dpi=150)
