@@ -294,11 +294,12 @@ plt.plot(cls_cmb_r0[:,0], cls_cmb_r0[:,3], label=r"Best-fit $\Lambda$CDM $\mathc
 
 l_pivot     = 80
 fit = A_synch * (cls_cmb_r0[:,0]/l_pivot)**alpha_synch
-plt.plot(cls_cmb_r0[:,0], fit, color='k', linewidth=1)
+plt.plot(cls_cmb_r0[:,0], fit, color='k', linewidth=1, label='E-modes')
 
 l_pivot     = 80
 fit = A_synch_BB * (cls_cmb_r0[:,0]/l_pivot)**alpha_synch_BB
-plt.plot(cls_cmb_r0[:,0], fit, color='k', linestyle=':', linewidth=1)
+plt.plot(cls_cmb_r0[:,0], fit, color='k', linestyle=':', linewidth=1,
+label='B-modes')
 
 EE_18 = np.loadtxt('ee_spectra_unbinned_2018.txt')[0]
 BB_18 = np.loadtxt('bb_spectra_unbinned_2018.txt')[0]
@@ -327,11 +328,11 @@ print('PR3 results')
 print(med, hi-med, med-lo)
 
 fit = A_EE * (cls_cmb_r0[:,0]/l_pivot)**alpha_EE
-plt.plot(cls_cmb_r0[:,0], fit, color='k', label='E-modes', linewidth=1)
+plt.plot(cls_cmb_r0[:,0], fit, color='C0', linewidth=1)
 
 l_pivot     = 80
 fit = A_BB * (cls_cmb_r0[:,0]/l_pivot)**alpha_BB
-plt.plot(cls_cmb_r0[:,0], fit, color='k', linestyle=':', label='B-modes',
+plt.plot(cls_cmb_r0[:,0], fit, color='C0', linestyle=':', 
     linewidth=1)
 
 
