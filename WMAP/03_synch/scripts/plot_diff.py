@@ -146,28 +146,28 @@ CG_model_44 = model(nu, weights, fwhm=fwhm*u.arcmin, output_unit='uK_RJ').value
 
 #plt.figure(figsize=(8, 8*2/3))
 cg.plot(WMAP_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 1),
-    llabel=r'\mathit{WMAP}\ K', fontsize=fontsize)
+    llabel=r'\mathit{WMAP}\ K', fontsize=fontsize, rlabel='Q')
 cg.plot(WMAP_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 2),
-        fontsize=fontsize)
+        fontsize=fontsize, rlabel='U')
 cg.plot(CG_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,     sub=(5, 4, 5),
-        llabel=r'\mathrm{CG}\ K', rlabel='Q', fontsize=fontsize)
+        llabel=r'\mathrm{CG}\ K', fontsize=fontsize)
 cg.plot(CG_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,     sub=(5, 4, 6),
-        rlabel='U', fontsize=fontsize)
+        fontsize=fontsize)
 
 cg.plot(WMAP_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False, sub=(5, 4, 9),
     llabel=r'\mathit{WMAP}\ \mathit{Ka}', fontsize=fontsize)
 cg.plot(WMAP_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False, sub=(5, 4, 10),
         fontsize=fontsize)
 cg.plot(CG_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 13),
-        rlabel='Q', llabel=r'\mathrm{CG}\ \mathit{Ka}', fontsize=fontsize)
+        llabel=r'\mathrm{CG}\ \mathit{Ka}', fontsize=fontsize)
 cg.plot(CG_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 14),
-        rlabel='U', fontsize=fontsize)
+        fontsize=fontsize)
 
 
 cg.plot(PR3_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 3),
-    llabel=r'\mathrm{PR3}\ 30', fontsize=fontsize)
+    llabel=r'\mathrm{PR3}\ 30', fontsize=fontsize, rlabel='Q')
 cg.plot(PR3_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 4),
-        fontsize=fontsize)
+        fontsize=fontsize, rlabel='U')
 cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 7),
     llabel=r'\mathrm{CG}\ 30', fontsize=fontsize)
 cg.plot(CG_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 8),
