@@ -289,7 +289,7 @@ lo, med, hi = np.percentile(B_arr/E_arr, [16, 50, 84])
 print('Cosmoglobe results')
 print(med, hi-med, med-lo)
 
-plt.plot(cls_cmb_r0[:,0], cls_cmb_r0[:,3], label=r"Best-fit $\Lambda$CDM",
+plt.plot(cls_cmb_r0[:,0], cls_cmb_r0[:,3], label=r"Best-fit $\Lambda$CDM $\mathcal D_\ell^{\mathrm{EE}}$",
     color='black', linewidth=0.5, linestyle='-')
 
 l_pivot     = 80

@@ -146,7 +146,7 @@ d_K30 = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_cos30_500s/combab_
 d_KKa = np.loadtxt('/mn/stornext/d5/unnif/sindex_bp/coswmap23_coswmap33_500s/combab_011-250/ut_sample_betas_invvar.txt')
 
 #plt.errorbar(d_K30[:,0]-jitter, d_K30[:,1], d_K30[:,2], fmt='.', label='TT K/30', color='C3', ms=ms, elinewidth=elinewidth)
-plt.errorbar(d_KKa[:,0]-jitter, d_KKa[:,1], d_KKa[:,2], label='WMAP K/Ka TT',
+plt.errorbar(d_KKa[:,0]-jitter, d_KKa[:,1], d_KKa[:,2], label='Cosmoglobe K/Ka TT',
         color='red', ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
         capsize=capsize, marker=marker, ls=ls, alpha=0.4)
 
