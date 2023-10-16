@@ -260,7 +260,7 @@ inds = (ellb <= l_plot_max) & (ellb >= l_plot_min)
 plt.errorbar(ellb[inds], Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1, label=r'Cosmoglobe',
-    color='C0')
+    color='k')
 ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*EE_K, l_ini=l_ini, l_end=l_end)
 #plt.errorbar(ellb[inds]*0.9, Zb[inds]*Cl_avg[inds], Zb[inds]*Cl_std[inds],
 #    linestyle='',
@@ -279,7 +279,7 @@ ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*BB, l_ini=l_ini, l_end=l_end)
 plt.errorbar(ellb[inds], Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1, 
-    color='C0', markerfacecolor='w')
+    color='k', markerfacecolor='w')
 
 inds = (ellb <= l_fit_max) & (ellb >= l_fit_min)
 
@@ -294,11 +294,11 @@ plt.plot(cls_cmb_r0[:,0], cls_cmb_r0[:,3], label=r"Best-fit $\Lambda$CDM $\mathc
 
 l_pivot     = 80
 fit = A_synch * (cls_cmb_r0[:,0]/l_pivot)**alpha_synch
-plt.plot(cls_cmb_r0[:,0], fit, color='C0', linewidth=1)
+plt.plot(cls_cmb_r0[:,0], fit, color='k', linewidth=1)
 
 l_pivot     = 80
 fit = A_synch_BB * (cls_cmb_r0[:,0]/l_pivot)**alpha_synch_BB
-plt.plot(cls_cmb_r0[:,0], fit, color='C0', linestyle=':', linewidth=1)
+plt.plot(cls_cmb_r0[:,0], fit, color='k', linestyle=':', linewidth=1)
 
 EE_18 = np.loadtxt('ee_spectra_unbinned_2018.txt')[0]
 BB_18 = np.loadtxt('bb_spectra_unbinned_2018.txt')[0]
@@ -309,7 +309,7 @@ inds = (ellb <= l_plot_max) & (ellb >= l_plot_min)
 plt.errorbar(ellb[inds]*1.1, Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1,
-    color='k', label=r'PR3')
+    color='C0', label=r'PR3')
 (alpha_EE, A_EE), E_arr = get_limits(ellb, Dl_avg, Dl_std, inds)
 
 ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*BB_18, l_ini=l_ini, l_end=l_end)
@@ -317,7 +317,7 @@ ellb, Dl_avg, Dl_std = bin_spec(ell_eff, Z*BB_18, l_ini=l_ini, l_end=l_end)
 plt.errorbar(ellb[inds]*1.1, Dl_avg[inds], Dl_std[inds],
     linestyle='',
     marker='o', ms=2, elinewidth=0.7, capsize=1,
-    color='k', markerfacecolor='w')
+    color='C0', markerfacecolor='w')
 
 inds = (ellb <= l_fit_max) & (ellb >= l_fit_min)
 (alpha_BB, A_BB), B_arr = get_limits(ellb, Dl_avg, Dl_std, inds)
@@ -356,9 +356,9 @@ ax.yaxis.labelpad = 10*width/17.; ax.xaxis.labelpad = 10*width/17. # distance of
 plt.grid(False, which="major", axis="both")
 
 # axes limits
-plt.xlim(1.8, 800); plt.ylim(ymin=0.1)
+plt.xlim(1.8, 150); plt.ylim(ymin=0.3)
 
-plt.xticks([3,10,30, 100, 300], [3, 10, r"$30$", r"$100$", r"$300$"])
+plt.xticks([3,10,30, 100], [3, 10, r"$30$", r"$100$"])
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
 #plt.text(2.2, 400, r"$EE$", fontsize=12)

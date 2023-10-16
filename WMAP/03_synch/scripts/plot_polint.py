@@ -79,6 +79,25 @@ cg.plot(np.hypot(synch_CG[1], synch_CG[2]), min=0, max=50, comp='synch', sig=0,
         norm='linear',
     llabel=r'\mathrm{Cosmoglobe}', rlabel='P', unit=r'\mathrm{\mu K}', width=w,
     fontsize=fontsize)
+
+fig = plt.gcf()
+plt.sca(fig.axes[0])
+
+theta0, phi0 = 53*np.pi/180, (-100)*np.pi/180
+topline_phi = np.linspace(phi0-5*np.pi/180, phi0+5*np.pi/180)
+topline_theta = np.ones_like(topline_phi)*(theta0-5*np.pi/180)
+hp.newprojplot(theta=topline_theta, phi=topline_phi, color='r');
+
+topline_theta = np.ones_like(topline_phi)*(theta0+5*np.pi/180)
+hp.newprojplot(theta=topline_theta, phi=topline_phi, color='r');
+
+leftline_theta = np.linspace(theta0 - np.pi/180*5, theta0 + np.pi/180*5)
+leftline_phi = np.ones_like(leftline_theta)*(phi0 + np.pi/180*5)
+
+hp.newprojplot(theta=leftline_theta, phi=leftline_phi, color='r');
+leftline_phi = np.ones_like(leftline_theta)*(phi0 - np.pi/180*5)
+hp.newprojplot(theta=leftline_theta, phi=leftline_phi, color='r');
+
 plt.savefig('../figures/polint_CG.pdf', bbox_inches='tight', dpi=dpi)
 #cg.plot(np.hypot(synch_CG[3], synch_CG[4]), min=0, max=5, cmap='binary_r',
 #    llabel=r'\textsc{Cosmoglobe}', rlabel='\sigma_P', unit=r'\mathrm{\mu K}')
