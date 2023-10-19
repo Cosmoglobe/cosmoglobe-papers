@@ -107,8 +107,9 @@ cg.plot(np.hypot(synch_CG[3], synch_CG[4])/np.hypot(synch_BP[3], synch_BP[4]),
         width=w,
     cmap='bone_r',
     min=0.4, max=1,
-    llabel=r'\mathrm{Ratio}',
-    rlabel='\sigma_P^\mathrm{CG}/\sigma_P^\mathrm{BP}', fontsize=fontsize)
+    #llabel=r'\mathrm{Ratio}',
+    #rlabel='\sigma_P^\mathrm{CG}/\sigma_P^\mathrm{BP}', 
+    fontsize=fontsize)
 plt.savefig('../figures/polint_sigma_ratio.pdf', bbox_inches='tight', dpi=dpi)
 
 plt.close('all')

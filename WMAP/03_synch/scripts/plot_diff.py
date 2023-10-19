@@ -144,43 +144,60 @@ weights = data['044/bandpass'] * u.Unit("K_RJ")
 CG_model_44 = model(nu, weights, fwhm=fwhm*u.arcmin, output_unit='uK_RJ').value
 
 
-#plt.figure(figsize=(8, 8*2/3))
-cg.plot(WMAP_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 1),
+cg.plot(WMAP_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,   sub=(4, 4, 1),
     llabel=r'\mathit{WMAP}\ K', fontsize=fontsize, rlabel='Q')
-cg.plot(WMAP_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 2),
+cg.plot(WMAP_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,   sub=(4, 4, 2),
         fontsize=fontsize, rlabel='U')
-cg.plot(CG_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,     sub=(5, 4, 5),
+cg.plot(CG_K - CG_model_K, sig=1, min=-5, max=5, cbar=False,     sub=(4, 4, 5),
         llabel=r'\mathrm{CG}\ K', fontsize=fontsize)
-cg.plot(CG_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,     sub=(5, 4, 6),
-        fontsize=fontsize)
-
-cg.plot(WMAP_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False, sub=(5, 4, 9),
-    llabel=r'\mathit{WMAP}\ \mathit{Ka}', fontsize=fontsize)
-cg.plot(WMAP_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False, sub=(5, 4, 10),
-        fontsize=fontsize)
-cg.plot(CG_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 13),
-        llabel=r'\mathrm{CG}\ \mathit{Ka}', fontsize=fontsize)
-cg.plot(CG_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 14),
+cg.plot(CG_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,     sub=(4, 4, 6),
         fontsize=fontsize)
 
 
-cg.plot(PR3_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 3),
+plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.savefig('../figures/CG_DR1_residuals_topleft.pdf', bbox_inches='tight', dpi=150)
+plt.close('all')
+
+cg.plot(PR3_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(4, 4, 1),
     llabel=r'\mathrm{PR3}\ 30', fontsize=fontsize, rlabel='Q')
-cg.plot(PR3_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 4),
+cg.plot(PR3_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(4, 4, 2),
         fontsize=fontsize, rlabel='U')
-cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 7),
+cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,   sub=(4, 4, 5),
     llabel=r'\mathrm{CG}\ 30', fontsize=fontsize)
-cg.plot(CG_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 8),
+cg.plot(CG_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,   sub=(4, 4, 6),
         fontsize=fontsize)
 
-cg.plot(PR3_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 11),
+plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.savefig('../figures/CG_DR1_residuals_topright.pdf', bbox_inches='tight', dpi=150)
+plt.close('all')
+
+
+cg.plot(WMAP_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False, sub=(4, 4, 1),
+    llabel=r'\mathit{WMAP}\ \mathit{Ka}', fontsize=fontsize)
+cg.plot(WMAP_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False, sub=(4, 4, 2),
+        fontsize=fontsize)
+cg.plot(CG_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False,   sub=(4, 4, 5),
+        llabel=r'\mathrm{CG}\ \mathit{Ka}', fontsize=fontsize)
+cg.plot(CG_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False,   sub=(4, 4, 6),
+        fontsize=fontsize)
+
+plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.savefig('../figures/CG_DR1_residuals_bottomleft.pdf', bbox_inches='tight', dpi=150)
+plt.close('all')
+
+cg.plot(PR3_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,  sub=(4, 4, 1),
     llabel=r'\mathrm{PR3}\ 44', fontsize=fontsize)
-cg.plot(PR3_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 12),
+cg.plot(PR3_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(4, 4, 2),
         fontsize=fontsize)
-cg.plot(CG_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,   sub=(5, 4, 15),
+cg.plot(CG_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,   sub=(4, 4, 5),
     llabel=r'\mathrm{CG}\ 44', fontsize=fontsize)
-cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 16),
+cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,   sub=(4, 4, 6),
         fontsize=fontsize)
+
+plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.savefig('../figures/CG_DR1_residuals_bottomright.pdf', bbox_inches='tight', dpi=150)
+plt.close('all')
+
 #cg.plot(PR4_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,  sub=(5, 4, 17),
 #    llabel=r'\mathrm{PR4}\ 30', fontsize=fontsize)
 #cg.plot(PR4_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 18),
@@ -190,9 +207,6 @@ cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,   sub=(5, 4, 16),
 #cg.plot(PR4_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,  sub=(5, 4, 20),
 #        fontsize=fontsize)
 
-plt.subplots_adjust(wspace=0.1, hspace=0.1)
-plt.savefig('../figures/CG_DR1_residuals.pdf', bbox_inches='tight', dpi=150)
-plt.close('all')
 
 
 cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,

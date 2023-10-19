@@ -205,12 +205,12 @@ for i in reg_inds:
     #sd_vals[i-1] = var_class[inds].mean()**0.5
     print(ok.sum(), (sigma_QUI[inds]**2).mean()**0.5)
     if ok.sum() > 0.5:
-        plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='brown',
+        plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='purple',
                 #alpha=alphas[-1])
                 alpha=0.4,
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
-plt.errorbar([-5], [-5], [0], color='brown', label='QUIJOTE', ms=markersize,
+plt.errorbar([-5], [-5], [0], color='purple', label='QUIJOTE', ms=markersize,
         elinewidth=elinewidth, linewidth=linewidth, capsize=capsize,
         marker=marker, ls=ls, alpha=0.4)
 

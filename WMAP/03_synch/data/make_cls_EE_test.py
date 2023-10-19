@@ -346,7 +346,7 @@ plt.errorbar(l[inds], Dl[inds], sigmal[inds], fmt='.', color='r',
 '''
 
 # legend
-leg = plt.legend(frameon=True, loc=3, fontsize=8)
+leg = plt.legend(frameon=False, loc=3, fontsize=8)
 
 # labels
 plt.xlabel(r"Multipole moment, $\ell$"); plt.ylabel(r"Power spectrum, $\mathcal{D}_{\ell}$ $[\mu\mathrm{K}^2]$")
