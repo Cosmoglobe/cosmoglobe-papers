@@ -154,7 +154,7 @@ cg.plot(CG_K - CG_model_K, sig=2, min=-5, max=5, cbar=False,     sub=(4, 4, 6),
         fontsize=fontsize)
 
 
-plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.subplots_adjust(wspace=0.05, hspace=-0.1)
 plt.savefig('../figures/CG_DR1_residuals_topleft.pdf', bbox_inches='tight', dpi=150)
 plt.close('all')
 
@@ -167,7 +167,7 @@ cg.plot(CG_30 - CG_model_30, sig=1, min=-5, max=5, cbar=False,   sub=(4, 4, 5),
 cg.plot(CG_30 - CG_model_30, sig=2, min=-5, max=5, cbar=False,   sub=(4, 4, 6),
         fontsize=fontsize)
 
-plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.subplots_adjust(wspace=0.05, hspace=-0.1)
 plt.savefig('../figures/CG_DR1_residuals_topright.pdf', bbox_inches='tight', dpi=150)
 plt.close('all')
 
@@ -181,7 +181,7 @@ cg.plot(CG_Ka - CG_model_Ka, sig=1, min=-5, max=5, cbar=False,   sub=(4, 4, 5),
 cg.plot(CG_Ka - CG_model_Ka, sig=2, min=-5, max=5, cbar=False,   sub=(4, 4, 6),
         fontsize=fontsize)
 
-plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.subplots_adjust(wspace=0.05, hspace=-0.1)
 plt.savefig('../figures/CG_DR1_residuals_bottomleft.pdf', bbox_inches='tight', dpi=150)
 plt.close('all')
 
@@ -194,7 +194,7 @@ cg.plot(CG_44 - CG_model_44, sig=1, min=-5, max=5, cbar=False,   sub=(4, 4, 5),
 cg.plot(CG_44 - CG_model_44, sig=2, min=-5, max=5, cbar=False,   sub=(4, 4, 6),
         fontsize=fontsize)
 
-plt.subplots_adjust(wspace=0.1, hspace=0.05)
+plt.subplots_adjust(wspace=0.05, hspace=-0.1)
 plt.savefig('../figures/CG_DR1_residuals_bottomright.pdf', bbox_inches='tight', dpi=150)
 plt.close('all')
 
