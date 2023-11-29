@@ -72,9 +72,9 @@
 
    \date{\today} 
    
-  \abstract{\blindtext}
+  \abstract{We present \Cosmoglobe\ Data Release 2, which implements an end-to-end time-ordered baysian analysis of all ten DIRBE bands in intensity with the addition of \Planck\ HFI and FIRAS maps to help constrain the sky model. We model the sky as having emission in intensity from thermal dust, polycyclic aromatic hydrocarbon, stars and zodiacal light and the cosmic infrared background. The data processing steps performed on the publicly available DIRBE calibrated individual observations is presented which includes going from the DIRBE pixelization scheme to HEALPix, time reordering, gap-filling. We present frequency maps of the sky from 1.25microns to 857 GHz along with maps of each sky component and maybe some CIB results?}
 
-   \keywords{ISM: general – Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation – Galaxy: general}
+   \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
    \maketitle
 
@@ -87,11 +87,26 @@ Zodiacal emission (ZE) is thermal emission and scattered sunlight from interplan
 
 In this analysis, we describe how the DIRBE Calibrated Individual Observations (CIO), which are publicly available on NASA LAMBDA, was integrated into the \Cosmoglobe framework and used them to extend the \Cosmoglobe sky model from 857 GHz all the way to the optical at 1.25 microns. We may also have made the first ever maps of the CIB, made a three-dimensional dust and PAH model, detected Free-free emission at near terahertz frequencies, made maps of the stars, and more cool stuff.
 
-\section{DIRBE Data Products}
+\section{End-to-end Bayesian analysis of the infrared sky}
+\subsection{Sky model}
+\subsubsection{Thermal dust and PAH emission}
+\subsubsection{Stars}
+\subsubsection{Cosmic infrared background}
+\subsection{Zodiacal light}
+
+
+\section{Data and data processing}
+Instead of using the raw time-ordered data, the DIRBE team recommends using the CIOs, which can be though of as a user friendly version of the TODs. The CIOs consist of 1/8th second calibrated observations ordered after pixel numbers. The CIOs were created pre-HEALPix era, and all three experiments aboard COBE used the Quadrilateralized Spherical Cube pixelization (QUADCUBE) scheme which is an approximately equal-area projection where each pixel lie on one of four cube faces. The DIRBE team did provide us with a script which converts these QUADCUBE pixels into ecliptic longitue and latitude coordinates.
+\subsection{Publicly available DIRBE products}
+\subsection{DIRBE Calibrated Individual Observations (CIOs)}
+\subsubsection{Quadrilateralized Spherical Cube to HEALPix conversion}
+\subsubsection{Time reordering}
+\subsubsection{Gap-filling}
+\subsubsection{Regenerating planet flags}
+
+\subsection{Future plans}
 Most of the data from the DIRBE experiment is publicly available on the LAMBDA page along with a explanetory supplement which describes how to use it.
 
-\subsection{Calibrated Individual Observations}
-Instead of using the raw time-ordered data, the DIRBE team recommends using the CIOs, which can be though of as a user friendly version of the TODs. The CIOs consist of 1/8th second calibrated observations ordered after pixel numbers. The CIOs were created pre-HEALPix era, and all three experiments aboard COBE used the Quadrilateralized Spherical Cube pixelization (QUADCUBE) scheme which is an approximately equal-area projection where each pixel lie on one of four cube faces. The DIRBE team did provide us with a script which converts these QUADCUBE pixels into ecliptic longitue and latitude coordinates.
 
 \begin{figure*}
   \centering
@@ -99,12 +114,18 @@ Instead of using the raw time-ordered data, the DIRBE team recommends using the 
   	\caption{Time-ordered data segment of each DIRBE band (1-10) from top to bottom.}
 	\label{fig: cios}
 \end{figure*}
+
+\section{Frequency maps}
+
+\section{Astrophysical results}
+\subsection{Zodiacal light}
+\subsection{Cosmic infrared background}
+\subsection{Galactic foregrounds}
+\subsection{Goodness-of-fit: residuals}
+
 \section{Conclusions}
 \blindtext
 
-\section{Processing in this analysis}
-In this analysis we have done the following processing to the CIOs:
-1) The CIOs are sorted according to time instead of the native pixel-ordering; 2) We apply gap-filling. We find larger deviations in the data where the samples dont follow the regular intervals of 1/8 seconds. We do this by concatenating the full CIO timestream of the entire DIRBE survey. The time difference between each sample pair is computed and the timestream is chunked everytime two sample pairs differes in time by more than two times the sample rate. We then append N flagged data points to the end of each chunk so that the have a more or less evenly spaced full timestream. This is a requirement in Commander for processing steps such as correlated noise estimation.
 
 
 
