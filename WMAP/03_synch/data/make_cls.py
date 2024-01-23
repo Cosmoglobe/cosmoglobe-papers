@@ -13,7 +13,7 @@ from corner import corner
 
 import emcee
 
-l_fit_min = 2
+l_fit_min = 4
 l_fit_max = 140
 l_plot_max = 140
 l_plot_min = 2

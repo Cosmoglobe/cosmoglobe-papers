@@ -24,6 +24,9 @@ def cm2inch(cm):
     """Centimeters to inches"""
     return cm *0.393701
 
+thresh = 0.75
+
+
 from matplotlib.ticker import MaxNLocator
 width = 8.8
 # Create the plot
@@ -168,14 +171,18 @@ alphas = []
 for i in reg_inds:
     inds = (regs == i)
     ok = (beta_class[inds] != hp.UNSEEN)
-    alphas.append(ok.sum()/inds.sum())
+    frac = ok.sum()/inds.sum()
+    if frac > thresh:
+        alphas.append(0.4)
+    else:
+        alphas.append(0.4*frac/thresh*0)
     mu_vals[i-1] = beta_class[inds].mean()
     sd_vals[i-1] = np.hypot(var_class[inds].mean()**0.5/ok.sum()**0.5, beta_class[inds].std())
     print(ok.sum(), var_class[inds].mean()**0.5)
     #sd_vals[i-1] = var_class[inds].mean()**0.5
-    if ok.sum() > 0.5:
+    if ok.sum() > 0.0:
         plt.errorbar(i, mu_vals[i-1], sd_vals[i-1], color='blue',
-                alpha=0.4,
+                alpha=alphas[-1],
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
 plt.errorbar([-5], [-5], [2], color='blue', label='CLASS',
@@ -199,15 +206,20 @@ alphas = []
 for i in reg_inds:
     inds = (regs == i)
     ok = (beta_QUI[inds] != hp.UNSEEN)
-    alphas.append(ok.sum()/inds.sum())
+    frac = ok.sum()/inds.sum()
+    if frac > thresh:
+        alphas.append(0.4)
+    else:
+        alphas.append(0.4*frac/thresh*0)
+    #alphas.append(ok.sum()/inds.sum())
     mu_vals[i-1] = beta_QUI[inds].mean()
     sd_vals[i-1] = np.hypot((sigma_QUI[inds]**2).mean()**0.5/ok.sum()**0.5, beta_QUI[inds].std())
     #sd_vals[i-1] = var_class[inds].mean()**0.5
     print(ok.sum(), (sigma_QUI[inds]**2).mean()**0.5)
-    if ok.sum() > 0.5:
+    if ok.sum() > 0.0:
         plt.errorbar(i+jitter, mu_vals[i-1], sd_vals[i-1], color='purple',
-                #alpha=alphas[-1])
-                alpha=0.4,
+                alpha=alphas[-1],
+                #alpha=0.4,
                 ms=markersize, elinewidth=elinewidth, linewidth=linewidth,
                 capsize=capsize, marker=marker, ls=ls)
 plt.errorbar([-5], [-5], [0], color='purple', label='QUIJOTE', ms=markersize,
