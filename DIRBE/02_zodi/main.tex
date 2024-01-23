@@ -87,7 +87,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
    
 
 % write an abstract 
-\abstract{We present a new and improved zodiacal light model based on the Kelsall et al. (1998) model, but with a more physical description of the dust distribution inspired by Rowan-Robinson and May (2013) with the addition of interstellar dust. The parameters of the interplanetary dust distribution are sampled using the Cosmoglobe framework to perform a global joint time-ordered analysis of all ten DIRBE bands. This novel method of sampling interplanetary dust parameters sets the stage for new state-of-the-art model with each inclusion of a time-ordered data set containing zodiacal light. This framework of modeling zodiacal light will help unlock a huge part of the frequency spectrum which has preiously been hard to use due to heavy contamination of zodiacal light. The new Cosmoglobe zodiacal light model, which is valid between 1.25 $\mu m$ and 240 $\mu m$, is added as the new default interplanetary dust model in ZodiPy, replacing the DIRBE model as it outperforms this at all measures.}
+\abstract{We present a new and improved zodiacal light model based on the Kelsall et al. (1998) model, but with a more physical description of the dust distribution inspired by Rowan-Robinson and May (2013) with the addition of interstellar dust. The parameters of the interplanetary dust distribution are sampled using the \Cosmoglobe\ framework to perform a global joint time-ordered analysis of all ten DIRBE bands. This novel method of sampling interplanetary dust parameters sets the stage for new state-of-the-art model with each inclusion of a time-ordered data set containing zodiacal light. This framework of modeling zodiacal light will help unlock a huge part of the frequency spectrum which has preiously been hard to use due to heavy contamination of zodiacal light. The new \Cosmoglobe\ zodiacal light model, which is valid between 1.25 $\mu m$ and 240 $\mu m$, is added as the new default interplanetary dust model in ZodiPy, replacing the DIRBE model as it outperforms this at all measures.}
 
 %   \abstract{We present a new and improved interplanetary dust model. The interplanetary dust model is a re-estimation of the parameters in the Kelsall et al. (1998) model in addition to an interstellar dust component inspired by Robinson and May (200?). In addition, other small improvements such as using modern solar irradiance models are included. The model parameters are re-estimated using Commander, where we have added zodiacal parameters as an additional gibbs step. The 180 total parameters in the model are estimated using Gibbs sampling. We demonstrate the use of the new interplanetary model on the binned DIRBE CIOs along with the \Cosmoglobe\ sky model to produce the cleanest to date DIRBE sky maps. The Cosmoglobe model which is valid between 1.25 $\mu m$ and 240 $\mu m$ is added added as the new default interplanetary dust model in ZodiPy.}
 
@@ -102,7 +102,7 @@ Zodiacal emission (ZE), or interplanetary dust emission, is both scattered sun l
 
 \subsection{Current state of zodiacal emission modeling in CMB cosmology with the DIRBE interplanetary dust model}
 \subsection{A more physical model for the interplanetary dust distribution with the Rowan-Robinson and May model}
-\subsection{Improved zodiacal light modeling with Cosmoglobe and Commander}
+\subsection{Improved zodiacal light modeling with \Cosmoglobe\ and Commander}
 Evaluate zodi on tod level and break degeneracies in the interplanetary dust model by analysing multiple data sets jointly.
 
 \section{Zodiacal light}
@@ -213,6 +213,19 @@ See atlases in figure \ref{fig: atlas1} and \ref{fig: atlas2} for degeneracies i
 
 \subsection{Sampling techniques}
 The approach we will use Gibbs sample each of the model parameters. This means that we propose a change to one model parameter, estimate the zodiacal emission over the full timestream of each ten DIRBE bands, compute a chi-squared and accept/reject. We perform N such proposals before we move on the the next parameter. Since the zodiacal emission is mostly very smooth on the sky, we can afford to downsample the TOD timestream before evaluating the zodiacal emission. For the diffuse cloud and the dust bands we downsample the TODS by X. For the circum-solar ring and the Earth-trailing feature, which are less smooth, and harder to constrain, we downsample the TODS by X. The downsampled TODS are subtracted by the \Cosmoglobe\ skymodel, and recomputed after after each parameter evaluation. 
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week_minus_full.pdf}\\
+    \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week_minus_full.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/map_06a_week.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/map_06a_week_minus_full.pdf}
+    \caption{Illustration of the basic sky maps involved in the zodiacal light fitting algorithms adopted by the \Cosmoglobe\ and DIRBE pipelines for one week of $25\,\mu\mathrm{m}$ observations and using the K98 model. For \Cosmoglobe, the basic data element is the full sky signal, $I_{\nu}$ (\emph{top left}), which is fitted with the full zodiacal light model, $Z_{\nu}$ (\emph{middle left}), in time-domain. The ultimate goal is to minimize the total signal-minus-model residual, $I_{\nu}-Z_{\nu}$ (\emph{bottom left}). In contrast, the DIRBE pipeline works exclusively with weekly difference maps on the form $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top right}), where brackets indicate full-survey averages. Correspondingly, the zodiacal light model variations are only constrained through $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle right}), and the final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$. For a comparison of the relative strengths and weaknesses of these two approaches, see the discussion in the main text.}
+    \label{fig:week_vs_full}
+  \end{figure*}
+
 
 \begin{figure*}
   \centering
