@@ -78,16 +78,42 @@
 
    \maketitle
 
+\setcounter{tocdepth}{2}
+\tableofcontents
+   
 % INTRODUCTION
 %-------------------------------------------------------------------
 \section{Introduction}
-\the\textwidth \the\columnwidth
+%\the\textwidth \the\columnwidth
 
 The Diffuse Infrared Background Experiment (DIRBE) \citep{DIRBE} was one of the three instruments on NASA's space-based Cosmic Background Explorer (COBE) satellite. It observed the sky in ten bands (the first three of which was sensitive to polarized emission) in the wavelength range 1.25 to 250 microns with the primary aim to conduct a search for the Cosmic Infrared Background (CIB). The CIB is thermal infrared radiation from extragalactic dust and contains much of the energy released since the formation of galaxies. The first detection of the CIB was with the DIRBE experiment, but due to the hard-to-remove zodiacal emission the CIB proved hard to explore. This problem does however have a double-edged nature, and the DIRBE data is one of the best datasets for understanding the zodiacal emission. 
 
 Zodiacal emission (ZE) is thermal emission and scattered sunlight from interplanetary dust (IPD) grains. The main difficulty when dealing with zodiacal emission contamination in infrared data is that as the observed emission is highly dependent on the position of the observer, and us such, it cant be modeled like a typical galactic foreground. In CMB cosmoglogy, the starte-of-the-art method to remove zodiacal emission from timestreams is to use a three-dimensional interplanetary dust model which describes how the interplanetary dust is distributed within the solar system and perform line-of-sight integrals per observed TOD. The model most widely used IPD model is the K98 model \citep{K98}. In a companion paper, we describe how we used the reprocessed DIRBE data in Commander to fit a new state-of-the-art IPD model which yields lower residuals when used to clean DIRBE data.
 
 In this analysis, we describe how the DIRBE Calibrated Individual Observations (CIO), which are publicly available on NASA LAMBDA, was integrated into the \Cosmoglobe framework and used them to extend the \Cosmoglobe sky model from 857 GHz all the way to the optical at 1.25 microns. We may also have made the first ever maps of the CIB, made a three-dimensional dust and PAH model, detected Free-free emission at near terahertz frequencies, made maps of the stars, and more cool stuff.
+
+\clearpage
+\section{Global Bayesian modelling of the radio, microwave and infrared sky}
+
+\subsection{From Planck to \Cosmoglobe}
+
+\subsection{Global sky modelling}
+
+\subsection{Bayesian analysis and Gibbs sampling}
+
+\clearpage
+\section{Bayesian modelling of COBE-DIRBE}
+
+\subsection{Instrument model}
+
+\input{summary_table.tex}
+
+\begin{figure*}
+  \centering
+   	\includegraphics[width=\linewidth]{figs/cios.pdf}
+  	\caption{Time-ordered data segment of each DIRBE band (1-10) from top to bottom.}
+	\label{fig: cios}
+\end{figure*}
 
 \begin{figure}
   \centering
@@ -104,42 +130,32 @@ In this analysis, we describe how the DIRBE Calibrated Individual Observations (
   \label{fig:bandpass}
 \end{figure}
 
-\section{End-to-end Bayesian analysis of the infrared sky}
-\subsection{Sky model}
-\subsubsection{Thermal dust and PAH emission}
-\subsubsection{Stars}
-\subsubsection{Cosmic infrared background}
-\subsection{Zodiacal light}
 
 
-\section{Data and data processing}
+\subsection{Parametric model of the infrared sky}
+
+\subsection{Data selection and preprocessing}
 Instead of using the raw time-ordered data, the DIRBE team recommends using the CIOs, which can be though of as a user friendly version of the TODs. The CIOs consist of 1/8th second calibrated observations ordered after pixel numbers. The CIOs were created pre-HEALPix era, and all three experiments aboard COBE used the Quadrilateralized Spherical Cube pixelization (QUADCUBE) scheme which is an approximately equal-area projection where each pixel lie on one of four cube faces. The DIRBE team did provide us with a script which converts these QUADCUBE pixels into ecliptic longitue and latitude coordinates.
-\subsection{Publicly available DIRBE products}
-\subsection{DIRBE Calibrated Individual Observations (CIOs)}
+\subsubsection{Publicly available DIRBE products}
+\subsubsection{DIRBE Calibrated Individual Observations (CIOs)}
 \subsubsection{Quadrilateralized Spherical Cube to HEALPix conversion}
 \subsubsection{Time reordering}
 \subsubsection{Gap-filling}
 \subsubsection{Regenerating planet flags}
 
-\subsection{Future plans}
-Most of the data from the DIRBE experiment is publicly available on the LAMBDA page along with a explanetory supplement which describes how to use it.
+\subsection{Ancillary data sets}
 
-\input{summary_table.tex}
+\subsubsection{Planck HFI}
 
-\begin{figure*}
-  \centering
-   	\includegraphics[width=\linewidth]{figs/cios.pdf}
-  	\caption{Time-ordered data segment of each DIRBE band (1-10) from top to bottom.}
-	\label{fig: cios}
-\end{figure*}
+\subsubsection{WISE}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{figs/sigma0_bands.pdf}
-	\caption{Sigma0 for each band}
-	\label{fig:sigma0}
-\end{figure}
+\subsubsection{COBE-FIRAS}
 
+
+
+
+
+\clearpage
 \section{Frequency maps}
 \begin{figure*}
 	\centering
@@ -148,6 +164,76 @@ Most of the data from the DIRBE experiment is publicly available on the LAMBDA p
 	\caption{Cosmoglobe, DIRBE ZSMA official maps, their difference, and the internal halfmission splits for Cosmoglobe.}
 	\label{fig:diff_grid}
 \end{figure*}
+
+\subsection{Instrument and frequency map posteriors}
+
+\subsection{Markov chains and correlations}
+
+\subsection{Frequency maps}
+
+
+
+\subsection{Noise characterization}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{figs/sigma0_bands.pdf}
+	\caption{Sigma0 for each band}
+	\label{fig:sigma0}
+\end{figure}
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics{figs/rms_maps/rms_10a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_10b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_09a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_09b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_08a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_08b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_07a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_07b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_06a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_06b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_05a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_05b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_04a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_04b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_03a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_03b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_02a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_02b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\includegraphics{figs/rms_maps/rms_01a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_01b_c0001_000019.pdf}
+  \vspace*{-0.85cm}
+
+	\caption{Cosmoglobe halfmission split white noise RMS for each band. The color scales are (0, 0.02) MJy/sr for bands 1-4, (0, 0.1) for bands 4-6, (0, 0.4) for bands 6-8, and (0, 20) for bands 8-10}
+	\label{fig:rms}
+\end{figure}
+
+\begin{figure}
+  % script to make these are in /mn/stornext/u3/metins/dirbe/DR2/plot_maps.py (cosmoglobe_analysis_plotter.plot_ncorr_maps(sample=19))
+	\centering
+	\includegraphics{figs/ncorr_10_c0001_000019.pdf}
+  \vspace{-1cm}
+  
+	\includegraphics{figs/ncorr_09_c0001_000019.pdf}
+  \vspace{-0.2cm}
+  
+	\includegraphics[width=0.5\columnwidth]{figs/ncorr_cbar_c0001_000019.pdf}
+
+	\caption{Correlated noise maps (inverse-variance-weighted of half-mission splits) for bands 9 and 10. The other bands are not clean enought for correlated noise fitting.}
+	\label{fig:ncorr}
+\end{figure}
 
 % \begin{figure*}
 
@@ -186,11 +272,13 @@ Most of the data from the DIRBE experiment is publicly available on the LAMBDA p
 %     \label{fig:freq_maps}
 % \end{figure*}
 
-\section{Astrophysical results}
-\subsection{Zodiacal light}
+\clearpage
+\section{Overview of astrophysical results}
+\subsection{Zodiacal light emission}
+\subsection{Galactic emission}
 \subsection{Cosmic infrared background}
-\subsection{Galactic foregrounds}
 \subsection{Goodness-of-fit: residuals}
+
 
 \begin{figure}
 	\centering
@@ -235,6 +323,16 @@ Most of the data from the DIRBE experiment is publicly available on the LAMBDA p
 	\caption{Cosmoglobe halfmission split residuals for each band. The color scales are $\pm 0.05$ (MJy/sr) for bands 1-5, $\pm 0.5$ for bands 5-7, and $\pm 2.5$ for bands 8-10.}
 	\label{fig:res}
 \end{figure}
+
+
+
+\clearpage
+\section{Future directions}
+Most of the data from the DIRBE experiment is publicly available on the LAMBDA page along with a explanetory supplement which describes how to use it.
+
+
+\clearpage
+\section{Conclusions}
 
 \begin{figure*}
   \centering
@@ -292,63 +390,6 @@ Most of the data from the DIRBE experiment is publicly available on the LAMBDA p
   \caption{Comparison between the raw DIRBE data and the various fitted components for one single Gibbs sample. Columns show, from left to right, 1) the time-ordered DIRBE data co-added into pixelized maps; 2) zodiacal light emission; 3) thermal dust emission; 4) star emission; and 5) data-minus-model residual emission. Rows show individual frequency channels. Missing entries corresponds to components that are forced to zero in the model. Note that all panels are plotted with the same color scale in units of MJy/sr, and can be directly compared.}
   \label{fig:comp_vs_freq}
 \end{figure*}
-
-
-
-\subsection{Correlated noise}
-\begin{figure}
-  % script to make these are in /mn/stornext/u3/metins/dirbe/DR2/plot_maps.py (cosmoglobe_analysis_plotter.plot_ncorr_maps(sample=19))
-	\centering
-	\includegraphics{figs/ncorr_10_c0001_000019.pdf}
-  \vspace{-1cm}
-  
-	\includegraphics{figs/ncorr_09_c0001_000019.pdf}
-  \vspace{-0.2cm}
-  
-	\includegraphics[width=0.5\columnwidth]{figs/ncorr_cbar_c0001_000019.pdf}
-
-	\caption{Correlated noise maps (inverse-variance-weighted of half-mission splits) for bands 9 and 10. The other bands are not clean enought for correlated noise fitting.}
-	\label{fig:ncorr}
-\end{figure}
-
-\subsection{White noise RMS}
-\begin{figure}
-	\centering
-	\includegraphics{figs/rms_maps/rms_10a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_10b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_09a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_09b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_08a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_08b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_07a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_07b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_06a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_06b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_05a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_05b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_04a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_04b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_03a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_03b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_02a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_02b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/rms_maps/rms_01a_c0001_000019.pdf}\includegraphics{figs/rms_maps/rms_01b_c0001_000019.pdf}
-  \vspace*{-0.85cm}
-
-	\caption{Cosmoglobe halfmission split white noise RMS for each band. The color scales are (0, 0.02) MJy/sr for bands 1-4, (0, 0.1) for bands 4-6, (0, 0.4) for bands 6-8, and (0, 20) for bands 8-10}
-	\label{fig:rms}
-\end{figure}
-
-\section{Conclusions}
 
 
 \begin{figure*}
