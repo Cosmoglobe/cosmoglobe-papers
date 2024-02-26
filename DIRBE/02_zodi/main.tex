@@ -108,16 +108,16 @@ step towards building better zodiacal light models and opening the infrared spec
 % INTRODUCTION
 %-------------------------------------------------------------------
 \section{Introduction}
-Zodiacal emission (ZE), or interplanetary dust emission, is both scattered sun light and thermal emission from dust grains in the solar system. In addition to scattering light from the sun at infrared wavelengths, the dust grains absorb and re-emit thermal emission at frequencies all the way from infrared to the Planck HFI-bands (Planck 2018?). 
+Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m \cite{leinert1998}. The emission comes from scattering and re-emission of sunlight from interplanetary dust grains. This results in a spectra that looks like two blackbodies, with one peak near ~15$\mu$m corresponding to the thermal emission and another near ~0.5 $\mu$m corresponding to the scattered sunlight.
 
-%\subsection{Current state of zodiacal emission modeling in CMB cosmology with the DIRBE interplanetary dust model}
-%\subsection{A more physical model for the interplanetary dust distribution with the Rowan-Robinson and May model}
-%\subsection{Improved zodiacal light modeling with \Cosmoglobe\ and Commander}
-Evaluate zodi on tod level and break degeneracies in the interplanetary dust model by analysing multiple data sets jointly.
+Foregrounds, such as the CMB and galactic thermal dust emission, are assumed to be stationary in the sky and are usually modeled by a single template describing the structure of the component at some reference frequency. The template can then be scaled to arbitrary frequencies given a description of the component's spectral energy density (SED). However, this is not the case for the zodiacal light, which highly depends on the position of the observer within the Solar system and the scanning strategy of the telescope. The ZL is a local foreground originating from the near vicinity of the observer. As such, it is impossible to describe and model the zodiacal light foreground through a single template, applicable to all experiments. Instead, the zodiacal light must be dynamically modeled on a per-experiment basis. In this paper, we will detail the modeling of zodiacal light in the Commander framework, both in terms of the interplanetary dust model used but also from a Bayesian perspective, utilizing all DIRBE bands jointly along with HFI and FIRAS to produce the best zodiacal light model of the infrared sky.
+
 
 \clearpage
 \section{Bayesian modelling of zodiacal light emission with DIRBE data}
 Introduction to the foreground and why it differs from typical CMB foregrounds with time-variations. More or less a copy of \cite{ZODIPY} section 3
+
+
 
 \subsection{Interplanetary dust modelling}
 Write an introduction to interlanetary dust, how it is distributed with a brief introduction to each classic component, cloud, asteroid bands, cometary dust, interstellar dust, circumsolar rings around each planet etc.
@@ -212,6 +212,20 @@ n_\mathrm{C}(R_\mathrm{C}, Z_\mathrm{C}) = n_{0,\mathrm{C}} R_\mathrm{C}^{-\alph
 \begin{equation}\label{eq: feature}
    n_\mathrm{F}(R_\mathrm{F}, Z_\mathrm{F}, \theta_\mathrm{F}) = n_{\mathrm{F}, 0} \exp \left[-\frac{\left(R_\mathrm{F}-R_{\mathrm{F}, 0}\right)^{2}}{\sigma_{\mathrm{F}, r}^{2}}-\frac{\left|Z_\mathrm{F}\right|}{\sigma_{\mathrm{F}, z}}-\frac{\left(\theta_\mathrm{F}-\theta_{\mathrm{F}, 0}\right)^{2}}{\sigma_{\mathrm{F}, \theta }^{2}}\right],
 \end{equation}
+
+\subsection{Geocentric static zodiacal emission}
+The circumsolar-ring and Earth-trailing feature are by definition distributed with respect to the Earth. In an Earth-centric, or geocentric, reference frame, the signal from such components will be stationary on the sky, if these are infact perfectly following the Earth around in the orbit. We can therefore make a geocentric map of the full survey, where we have subtracted away the sky model in addition to the diffuse cloud and the asteroidal dust bands. What we are left with is the static zodiacal emission coming from the circumsolar ring and the Earth-trailing feature and other potential earth centric interplanetary dust. This map can then be used as a lookup map for the combined emission from the circumsolar ring and the Earth-trailing feature components. The projection of the signal from this map to the timestream at a DIRBE frequency $\nu$, at a pixel $p$ in galactic coordinates, and at at a time $t$ is then a matter of a simple lookup
+\begin{equation}
+    S_{\nu, t, p}^{\mathrm{Ring + Feature}} = M^{\bigoplus}_{\nu, p'},
+\end{equation}
+where $M^{\bigoplus}_{\nu, p'}$ is the geocentric lookup map and $p'$ is the corresponding pixel index in the geocentric reference frame. An example of such a map is shown in figure \ref{fig: geomap}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/zodi_static.pdf}
+    \caption{Geocentric map $M^{\bigoplus}_\nu$ of the full survey, where we have subtracted away the sky model in addition to the diffuse cloud and the asteroidal dust bands. What we are left with is the stationary emission from the circumsolar ring and the Earth-trailing and possible other contamination from sidelobes.}
+    \label{fig: geomap}
+\end{figure}
 
 \subsubsection{Rowan-Robinson and May (RRM) model}
 Fill in sections with model components we end up trying/using.
@@ -351,7 +365,8 @@ See atlases in figure \ref{fig: atlas1} and \ref{fig: atlas2} for degeneracies i
     \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week.pdf}
     \includegraphics[width=0.49\linewidth]{figs/map_06a_week_minus_full.pdf}
     \includegraphics[width=0.49\linewidth]{figs/map_06a_week.pdf}
-    \caption{Illustration of the basic sky maps involved in the zodiacal light fitting algorithms adopted by the DIRBE (\emph{left column}) and \Cosmoglobe\ (\emph{right column}) pipelines for one week of $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The DIRBE pipeline used exclusively differences between weekly and full-season maps, both for the observed signal, $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), and the zodiacal light model, $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), where brackets indicate full-survey averages. Correspondingly, the final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ (\emph{bottom left}), and is by constrution only sensitive to time-variable signals. In contrast, the basic data element in \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), which is fitted with the full zodiacal light model, $Z_{\nu}$ (\emph{middle right}), both modelled in time-domain. The $\chi^2$ the minimizes minimize the total signal-minus-model residual, $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the DIRBE approach is insensitivity to stationary sky signals, in particular thermal dust and CIB, while the main advantage of the \Cosmoglobe\ approach is a much higher effective signal-to-noise ratio, both to zodiacal light parameters and zero-levels.}
+    \caption{Illustration of the basic sky maps involved in the zodiacal light fitting algorithms adopted by the DIRBE (\emph{left column}) and \Cosmoglobe\ (\emph{right column}) pipelines for one week of $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The DIRBE pipeline used exclusively differences between weekly and full-season maps, both for the observed signal, $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), and the zodiacal light model, $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), where brackets indicate full-survey averages. Correspondingly, the final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ (\emph{bottom left}), and is by constrution only sensitive to time-variable signals. 
+    In contrast, the basic data element in \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), which is fitted with the full zodiacal light model, $Z_{\nu}$ (\emph{middle right}), both modelled in time-domain. The $\chi^2$ the minimizes minimize the total signal-minus-model residual, $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the DIRBE approach is insensitivity to stationary sky signals, in particular thermal dust and CIB, while the main advantage of the \Cosmoglobe\ approach is a much higher effective signal-to-noise ratio, both to zodiacal light parameters and zero-levels.}
     \label{fig:week_vs_full}
   \end{figure*}
 
