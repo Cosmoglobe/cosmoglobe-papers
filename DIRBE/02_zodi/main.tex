@@ -108,9 +108,16 @@ step towards building better zodiacal light models and opening the infrared spec
 % INTRODUCTION
 %-------------------------------------------------------------------
 \section{Introduction}
-Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m \cite{leinert1998}. The emission comes from scattering and re-emission of sunlight from interplanetary dust grains. This results in a spectra that looks like two blackbodies, with one peak near ~15$\mu$m corresponding to the thermal emission and another near ~0.5 $\mu$m corresponding to the scattered sunlight.
+Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m (\cite{leinert1998} and references therein). The emission comes from scattering and re-emission of sunlight from interplanetary dust grains. This results in a spectra that looks like two blackbodies, with one peak near $\sim 15\mu$m corresponding to the thermal emission and another near $\sim 0.5 \mu$m corresponding to the scattered sunlight.
 
-Foregrounds, such as the CMB and galactic thermal dust emission, are assumed to be stationary in the sky and are usually modeled by a single template describing the structure of the component at some reference frequency. The template can then be scaled to arbitrary frequencies given a description of the component's spectral energy density (SED). However, this is not the case for the zodiacal light, which highly depends on the position of the observer within the Solar system and the scanning strategy of the telescope. The ZL is a local foreground originating from the near vicinity of the observer. As such, it is impossible to describe and model the zodiacal light foreground through a single template, applicable to all experiments. Instead, the zodiacal light must be dynamically modeled on a per-experiment basis. In this paper, we will detail the modeling of zodiacal light in the Commander framework, both in terms of the interplanetary dust model used but also from a Bayesian perspective, utilizing all DIRBE bands jointly along with HFI and FIRAS to produce the best zodiacal light model of the infrared sky.
+Ever since it was first understood in the 17th century \citep{cassini}, zodiacal light has been a driving force for the exploration of the interplanetary medium. The Diffuse Infrared Background Experiment (DIRBE) instrument, onboard the Cosmic Background Explorer (COBE), found that the zodiacal light could be effectively characterized in the infrared \citep{mather:1994, hauser:1998}. The DIRBE team developed a geometric model that represented the interplanetary medium and its identifiable components.
+These components were assumed to emit like modified blackbodies and could be evaluated through line-of-sight integrations to simulate the observed zodiacal light. This model, detailed in \cite{K98}, (here-after K98), has demonstrated its effectiveness in describing zodiacal light in the infrared and sub-millimeter domains and has been the default modeling used in the cosmology community for the past twenty years. The Planck Collaboration \citep{PLANCK2013, PLANCK2015, PLANCK2018} recently utilized the DIRBE model in their analysis of the High Frequency Instrument (HFI) data. They adapted the model to be applicable at sub-terahertz frequencies by evaluating the K98 model with the HFI scanning strategy and fitting an overall amplitude to model components.
+
+The ZL is considered a local foreground in CMB studies with the emission originating from the near vicinity of the observer. This is a contrast to more common foregrounds such as the CMB and galactic thermal dust emission, which we assume to be stationary in the sky. Galactic and extragalactic foregrounds can be modeled with a single template describing the structure of the component at some reference frequency. The template can then be scaled to arbitrary frequencies given a description of the component's spectral energy density (SED). Simple models like this does not apply to the zodiacal light, which highly depends on the position and time of observation.
+It is impossible to describe and model the zodiacal light foreground through a single template, applicable to all experiments. Instead, the zodiacal light must be dynamically modeled on a per-experiment basis taking into account the position of the observer within the solar system and the scanning strategy. 
+
+In this paper, we will detail the zodiacal light modeling approach used in the Commander framework during the production of Cosmoglobe DR2. Furthermore, the perhaps greatest result from this works comes from the fitting of the model parameters from a Bayesian perspective, utilizing all DIRBE bands jointly along with HFI, FIRAS and WISE data to produce the best zodiacal light model of the infrared sky. In Sect. 2 we describe zodiacal light model in terms of the interplanetary dust models, source functions, and line-of-sight integrations. 
+Additionally, introduce and interpret the zodiacal light in the DIRBE time-ordered data. Finally we discuss the sampling techniques used to fit the many zodiacal light model parameters from a Bayesian perspective. In Sect. 3 we reanalyze the DIRBE data using the K98 model as derived by the DIRBE team, and see that we recover their results. In Sect. 4 we explore extensions to the K98 model by lifting some of the constraints set on the model parameter by the DIRBE team, and including some of the more physical descriptions of the zodiacal components from \cite{RRM}. These extended models are referred to as model A and B, where model A is the relaxed K98 model, while model B is a more complex model with additional modifications.
 
 
 \clearpage
@@ -126,14 +133,14 @@ Write an introduction to interlanetary dust, how it is distributed with a brief 
     \centering
          \includegraphics[width=\linewidth]{figs/zodi_obs_diff.pdf}
         \caption{Difference in simulated zodiacal light between an observed at the center of Earth and an observer moved 900km in the positive z-direction from the center of Earth.}
-      \label{fig: z}
+    \label{fig: z}
 \end{figure}
 
 \begin{figure}
     \centering
         \includegraphics[width=\columnwidth]{figs/mask_zodi_fitting.pdf}
         \caption{Masks applied when fitting zodiacal light parameters for the $2.2\mathrm{\mu m}$, $25\mathrm{\mu m}$ and $240\mathrm{\mu m}$ bands.}
-      \label{fig:masks}
+    \label{fig:masks}
 \end{figure}
 
 %\subsubsection{Coordinate and geometry}
@@ -395,7 +402,7 @@ The approach we will use Gibbs sample each of the model parameters. This means t
 \begin{figure*}
     \centering
 	 \includegraphics[width=0.8\linewidth]{figs/tod_zodi_residuals.pdf}
-	\caption{Data-minus-model residual for \cosmoglobe\ results (CG, black) and the official \citet{k98} model (K98, orange), as a function of ecliptic latitude, Galactic latitude, and Solar elongation. The offset for \cosmoglobe\ and the K98 model are listed on the left and right axes of each row, respectively. The \cosmoglobe\ and K98 values are horizontally offset left and right respectively for clarity.}
+	\caption{Data-minus-model residual for \cosmoglobe\ results (CG, black) and the official \cite{K98} model (K98, orange), as a function of ecliptic latitude, Galactic latitude, and Solar elongation. The offset for \cosmoglobe\ and the K98 model are listed on the left and right axes of each row, respectively. The \cosmoglobe\ and K98 values are horizontally offset left and right respectively for clarity.}
       \label{fig: zodi_timestream}
   \end{figure*}
 
