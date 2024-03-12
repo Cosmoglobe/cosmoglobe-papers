@@ -95,7 +95,7 @@ Many full-sky datasets exist which measure the emissions from stars in our galax
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth]{figs/sed/all_fgs.pdf}
-  \caption{Components of the infrared temperature sky from 0.1$\mu$m to 1m wavelengths. The contribution from stars is shown in blue, and the DIRBE and HFI band nominal frequencies are indicated by the vertical lines.}
+  \caption{Components of the infrared temperature sky from 0.1$\mu$m to 1m wavelengths. The approximate contribution from stars is shown in blue, and the DIRBE and HFI band nominal frequencies are indicated by the vertical lines.}
   \label{fig:sed}
 \end{figure*}
 
@@ -104,18 +104,47 @@ In this paper, part of the larger Cosmoglobe DR2 results paper suite, we discuss
 \section{Star modelling in a Bayesian context}
 \label{sec:models}
 
+The full Bayesian data mode is shown in \cite{CG02_01}, and includes the star component $s_{stars}(p, \lambda_j)$, the star emissions as a function of pixel $p$ and frequency $\lambda_j$ for a band $j$. Equation \ref{eq:datamodel} shows the data model for the star component that we describe in this paper
 
 \begin{equation}
-d = s_{stars}
+s_{stars}(p, \lambda_j) = \sum_i a_i B_i(p, \lambda_j) E_i(\lambda_j).
 \label{eq:datamodel}
 \end{equation}
 
+Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the GAIA data and the PHOENIX starlight database (see Sec. \ref{sec:catalogue}), and the beam $B$ is fixed for each detector, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star (Sec. \ref{sec:impact}). We include a star component in DIRBE bands 01-06, as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
 
-Equation \ref{eq:datamodel} shows the data model used in the analysis
+To sample the star amplitudes $a_i$ we attempt to minimize the residual in each band for each source $i$
 
-\clearpage
+\begin{equation}
+\label{eq:minimize}
+X_ia_i - Y_i = 0.
+\end{equation}
+
+The solution is just the mapmaking equation, where
+
+\begin{equation}
+X_i = S^T N^{-1} S = \sum_{j,p}\frac{E_{ij}^2 B^2_{ij}(p)}{\sigma_j^2(p)} 
+\end{equation}
+
+and
+
+\begin{equation}
+Y_i = S^TN^{-1}d = \sum_{j,p} \frac{E_{ij}B_{ij}(p) d_j(p)}{\sigma_j^2(p)}.
+\end{equation}
+
+Here, $\sigma_j^2(p)$ is the noise in pixel $p$ in band $j$, and $d_j(p)$ is the data map in band $j$ at pixel $p$. To reduce degeneracies, we fit the point sources on a data map with all other astrophysical components already removed, so $d_j(p)$ contains only noise and the point source $i$. The solution to \ref{eq:minimize} is simply $a_i = \frac{Y_i}{X_i}$, which gives a single overall amplitude for each star $i$. To sample the amplitudes, we also include a fluctuation term, such that our final sample for the amplitudes is given by
+
+\begin{equation}
+a_i = \frac{Y_i}{X_i} + \frac{1}{\sqrt{X_i}} N_i(0,1),
+\end{equation}
+
+where $N_i(0,1)$ is a sample drawn from a unit Gaussian with 0 mean.
+
+
 \section{Impact of starlight on DIRBE observations}
 \label{sec:impact}
+
+The DIRBE data contain 
 
 %\begin{figure}
 %  \centering
@@ -135,18 +164,46 @@ Diffuse stars vs. point sources?
 The results presented in Section \ref{sec:results} are a part of the Cosmoglobe DR2 release. Here we will discuss only the data selection specific to star modelling, for a full overview of Cosmoglobe DR2, please refer to  \cite{CG02_01}.
 
 \subsection{Catalogue Creation}
+\label{sec:catalogue}
 
 Star positions are drawn from a catalogue 
 
 \subsection{Data Cleaning}
 
+
+
 \clearpage
 \section{Astrophysical results}
 \label{sec:results}
 
-Figure: Plot of star component
+In Figure \ref{fig:stars} we show the mean star component maps for the full pipeline run in all six DIRBE bands where stars are subtracted. 
 
-Figure: standard deviation of star amplitudes
+\begin{figure*}
+  \centering
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_mean_01.pdf}
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_mean_02.pdf} \\
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_mean_03.pdf}
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_mean_04.pdf} \\
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_mean_05.pdf}
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_mean_06.pdf} \\
+  \caption{Mean star maps from the Cosmoglobe DR2 release for the first 6 DIRBE bands. }
+  \label{fig:stars}
+\end{figure*}
+
+In Figure \ref{fig:std} we show the standard deviations of the same data, which correspond to the errors on our star fits. 
+
+\begin{figure*}
+  \centering
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_std_01.pdf}
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_std_02.pdf} \\
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_std_03.pdf}
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_std_04.pdf} \\
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_std_05.pdf}
+%  \includegraphics[width=0.49\columnwidth]{figs/stars_std_06.pdf} \\
+  \caption{Standard deviation star maps from the Cosmoglobe DR2 release for the first 6 DIRBE bands. }
+  \label{fig:std}
+\end{figure*}
+
 
 Figure: all star fits as a function of frequency 
 
@@ -158,7 +215,7 @@ Stars are a critical component of the infrared sky, which must be correctly mode
 
 \subsection{Future Work}
 
-
+Including the WISE data directly in the full run would be an important next step, and could potentially give enough extra information to constrain the star SEDs directly instead of pre-computing them. 
 
 
 
