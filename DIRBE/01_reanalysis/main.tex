@@ -55,8 +55,10 @@
 % Custom definitions
 \newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
 \def\Cosmoglobe{\textsc{Cosmoglobe}}
+\def\commanderthree{\textsc{Commander3}}
 \def\Planck{\textit{Planck}}
 \def\WMAP{\textit{WMAP}}
+\def\COBE{\textit{COBE}}
 
 \newcommand{\CII}{$\mathrm{C}_{\textsc{II}}$}
 
@@ -64,7 +66,7 @@
 \begin{document} 
 
 
-   \title{\bfseries{\Cosmoglobe\ DR2. I. Improved COBE-DIRBE maps\\ through global Bayesian analysis }}
+   \title{\bfseries{\Cosmoglobe\ DR2. I. Global end-to-end Bayesian\\ analysis of COBE-DIRBE }}
 
    \author{M.~San et al.}
 
@@ -76,7 +78,7 @@
 
    \date{\today} 
    
-   \abstract{We present a global Bayesian analysis of the time-ordered Diffuse Infrared Background Experiment (DIRBE) data within the \Cosmoglobe\ framework, building on the same methodology as has previously been successfully applied to \Planck\ LFI and \WMAP. These data are analysed jointly with COBE-FIRAS, GAIA, and \Planck\ HFI observations, which allows for a more accurate instrumental and astrophysical characterization than possible through single-experiment analysis only. This paper provides an overview of the full analysis pipeline and main results, and we present and characterize a new set of zodiacal light subtracted mission average (ZSMA) DIRBE maps spanning the wavelength range between 1.25 and 240\,$\mu$m. These products have several notable advantages with respect to the official maps, including 1) lower zodiacal light residuals; 2) better determined zero-levels; 3) natively HEALPix tesselated maps with a $7\arcm$ pixel size; 4) nearly white noise at pixel scales; and 5) a far more complete and accurate noise characterization established through the combination of Markov Chain Monte Carlo samples and half-mission maps. Based on this improved processing, we are able to establish a new sky model of the infrared sky that includes a state-of-the-art zodiacal light model; a simple yet efficient three-component thermal dust model; a new map of \CII\ line emission with degree-scale angular resolution; and a robust characterization of both cosmic infrared and optical background fluctuations, all of which are described in further detail in a series of companion papers. In addition, it is important to note that this model has been simultaneously fitted with both both DIRBE and HFI data, and it represents as such the first consistent unification of the infrared and CMB wavelength ranges into one global sky model covering 100\,GHz to 1\,$\mu$m. However, we do note that even though the new maps represent a massive improvement with respect to the official maps, and should be preferred for most future analysis that require DIRBE information, they still exhibit non-negligible zodiacal light residuals between 12 and 60$\,\mu$m. Further improvements should be made through joint analysis with complementry infrared experiments such IRAS, AKARI, WISE and SPHEREx, and thereby release the full combined potential of all these powerful infrared observatories. 
+   \abstract{We present the first global Bayesian analysis of the time-ordered Diffuse Infrared Background Experiment (DIRBE) data within the \Cosmoglobe\ framework, building on the same methodology that has previously been successfully applied to \Planck\ LFI and \WMAP. These data are analysed jointly with COBE-FIRAS, GAIA, and \Planck\ HFI observations, which allows for a more accurate instrumental and astrophysical characterization than possible through single-experiment analysis only. This paper provides an overview of the analysis pipeline and main results, and we present and characterize a new set of zodiacal light subtracted mission average (ZSMA) DIRBE maps spanning the wavelength range between 1.25 and 240\,$\mu$m. These products have several notable advantages with respect to the official maps, including 1) lower zodiacal light residuals; 2) better determined zero-levels; 3) natively HEALPix tesselated maps with a $7\arcm$ pixel size; 4) nearly white noise at pixel scales; and 5) a far more complete and accurate noise characterization established through the combination of Markov Chain Monte Carlo samples and half-mission maps. Based on this improved processing, we are able to establish a new sky model of the infrared sky that includes a state-of-the-art zodiacal light model; a simple yet efficient three-component thermal dust model; a new map of \CII\ line emission with degree-scale angular resolution; and a robust characterization of both cosmic infrared and optical background fluctuations, all of which are described in further detail in a series of companion papers. In addition, it is important to note that this model has been simultaneously fitted with both DIRBE and HFI data, and it represents as such the first consistent unification of the infrared and CMB wavelength ranges into one global sky model covering 100\,GHz to 1\,$\mu$m. However, we do note that even though the new maps represent a massive improvement with respect to the official maps, and should be preferred for most future analysis that require DIRBE information, they still exhibit non-negligible zodiacal light residuals between 12 and 60$\,\mu$m. Further improvements should be made through joint analysis with complementry infrared experiments such IRAS, AKARI, WISE and SPHEREx, and thereby release the full combined potential of all these powerful infrared observatories. 
    }
 
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
@@ -91,14 +93,75 @@
 \section{Introduction}
 %\the\textwidth \the\columnwidth
 
-The Diffuse Infrared Background Experiment (DIRBE) \citep{DIRBE} was one of the three instruments on NASA's space-based Cosmic Background Explorer (COBE) satellite. It observed the sky in ten bands (the first three of which was sensitive to polarized emission) in the wavelength range 1.25 to 250 microns with the primary aim to conduct a search for the Cosmic Infrared Background (CIB). The CIB is thermal infrared radiation from extragalactic dust and contains much of the energy released since the formation of galaxies. The first detection of the CIB was with the DIRBE experiment, but due to the hard-to-remove zodiacal emission the CIB proved hard to explore. This problem does however have a double-edged nature, and the DIRBE data is one of the best datasets for understanding the zodiacal emission. 
+\begin{table*}[t]
+  \begingroup
+  \newdimen\tblskip \tblskip=5pt
+  \caption{
+    Overview of \Cosmoglobe\ DR2 papers.
+  }
+  \label{tab:papers}
+  \nointerlineskip
+  \vskip -3mm
+  \footnotesize
+  \setbox\tablebox=\vbox{
+    \newdimen\digitwidth
+    \setbox0=\hbox{\rm 0}
+    \digitwidth=\wd0
+    \catcode`*=\active
+    \def*{\kern\digitwidth}
+    %
+    \newdimen\signwidth
+    \setbox0=\hbox{-}
+    \signwidth=\wd0
+    \catcode`!=\active
+    \def!{\kern\signwidth}
+    %
+ \halign{
+      \hbox to 3.5cm{#\leaderfil}\tabskip 1em&
+      #\hfil \tabskip 0pt\cr
+    \noalign{\doubleline}
+      \omit\textsc{Reference}\hfil&
+      \omit\textsc{Title}\hfil\cr
+      \noalign{\vskip 4pt\hrule\vskip 4pt}
+      \hspace{3mm}\citet{CG02_01}&{I. Global end-to-end Bayesian analysis of COBE-DIRBE}\hfil\cr
+      \hspace{3mm}\citet{CG02_02}&{II. Bayesian global modelling of zodiacal light with a first application to COBE-DIRBE}\hfil\cr
+      \hspace{3mm}\citet{CG02_03}&{III. CIB and COB measurements in COBE-DIRBE through global Bayesian analysis}\hfil\cr
+      \hspace{3mm}\citet{CG02_04}&{IV. Modelling starlight emission in DIRBE with GAIA and WISE}\hfil\cr
+      \hspace{3mm}\citet{CG02_05}&{V. A compact model of large-scale thermal dust emission in DIRBE and Planck HFI without spatially varying SEDs}\hfil\cr
+      \hspace{3mm}\citet{CG02_06}&{VI. A full-sky map at $1^{\circ}$ resolution of Galactic \CII\ line emission from joint analysis of DIRBE, Planck, and FIRAS}\hfil\cr
+      \noalign{\vskip 4pt\hrule\vskip 5pt} } }
+  \endPlancktablewide \endgroup
+\end{table*}
 
-Zodiacal emission (ZE) is thermal emission and scattered sunlight from interplanetary dust (IPD) grains. The main difficulty when dealing with zodiacal emission contamination in infrared data is that as the observed emission is highly dependent on the position of the observer, and us such, it cant be modeled like a typical galactic foreground. In CMB cosmoglogy, the starte-of-the-art method to remove zodiacal emission from timestreams is to use a three-dimensional interplanetary dust model which describes how the interplanetary dust is distributed within the solar system and perform line-of-sight integrals per observed TOD. The model most widely used IPD model is the K98 model \citep{K98}. In a companion paper, we describe how we used the reprocessed DIRBE data in Commander to fit a new state-of-the-art IPD model which yields lower residuals when used to clean DIRBE data.
+The astrophysical sky contains a wealth of information about our own Solar System, the Milky Way, and the high-frequency universe in the infrared wavelength regime from roughly 1 to 1000\,$\mu$m, These wavelengths have therefore been the target of many ground-breaking experiments during the last five decades, most of which have been satellite-based due to the high opacity of the Earth's atmosphere. The first transformational observations were made by the NASA-led Infrared Astronomical Satellite (IRAS), which observed the sky for ten months in 1983, covering four wavelength bands from 12 to 100$\,\mu$m. IRAS revealed for the first time the intricate nature of thermal dust emission both in the Solar System and the Milky Way.
 
-In this analysis, we describe how the DIRBE Calibrated Individual Observations (CIO), which are publicly available on NASA LAMBDA, was integrated into the \Cosmoglobe framework and used them to extend the \Cosmoglobe sky model from 857 GHz all the way to the optical at 1.25 microns. We may also have made the first ever maps of the CIB, made a three-dimensional dust and PAH model, detected Free-free emission at near terahertz frequencies, made maps of the stars, and more cool stuff.
+IRAS was quickly followed by another NASA-led satellite experiment called Cosmic Background Explorer (COBE), which launched in 1989 and carried three instruments. One of these was the Diffuse Infrared Background Experiment (DIRBE; \citealp{DIRBE}), which observed the sky in ten wavelength bands between 1.25 to 240 microns, with the primary aim to characterize the statistical properties of the Cosmic Infrared Background (CIB). The CIB is thermal infrared radiation from dust particles in distant galaxies, and contains a large fraction of the total energy released in the Universe since the formation of galaxies. After an extended period of detailed analysis, clear CIB signatures were finally discovered in the DIRBE data, but confusion from both zodiacal light from the Solar system and thermal dust emission from the Milky Way made it difficult to fully reach DIRBE's original goal. However, the fact that these emission processes are so bright also have ensured that the DIRBE data have had a far-reaching legacy value, and it remains one of the most important data sets for understanding zodiacal light emission to this date. The main goal of the work presented in this paper, and in its companion papers, is to resolve the most important and long-standing problems regarding the DIRBE data, and thereby finally release the full potential of these invaluable measurements.
 
-\clearpage
+
+Following DIRBE, almost a dozen other satellite experiments have targeted the same wavelengths with different angular resolution, sensitivity, and observation strategies, and there therefore today exists a wealth of complementary and ancillary information that was not available at the time when the official DIRBE analysis was completed, between 1990 and 1994. Two examples of such experiments are AKARI, which covered six bands from 9 to 180\,$\mu$m, and WISE, which covered four bands from 3.4 to 22\,$\mu$m). Other examples of recent and highly complementary datasets are Planck, which covered nine bands from 350\,$\mu$m to 10\,mm, and the optical GAIA experiment, which recently completed a deep survey of stars in the Milky Way.
+
+Not only has great observational progress been made in terms of detailed measurements across the entire electromagnetic frequency spectrum during the last decades, but major breakthroughs have also been achieved in terms of understanding the detailed structure of the Milky Way, and in how to analyse complex datasets optimally. One particularly striking example of this is provided by the cosmic microwave background (CMB) community, which through a series of transformational experiments has revolutionized our understanding of the early universe, including COBE, WMAP, and a host of ground-based and sub-orbital experiments. However, nowhere is the intimate coupling between instrumental systematics and astrophysical confusion clearer than for  \Planck, which currently defines the state-of-the-art in terms of full-sky CMB sensitivity and cosmological constraining power. The reason for this is simply as the sensitivity increases, the relative importance of systematic uncertainties become relatively larger compared to white noise, until they finally dominate the total error budget. Thus, precisely because of its exquisite signal-to-noise ratio, \Planck\ was the first full-sky CMB experiment for which instrumental and astrophysical uncertainties dominated the total error budget, as opposed to white noise.
+
+
+One of the main lessons learned from \Planck, following years of detailed analysis by hundreds of scientists, was that in order to properly mitigate the dominant systematic effects, it was no longer possible to consider each systematic uncertainty in isolation. Rather, it was necessary to perform a global integrated analysis in which all parameters, whether of instrumental or astrophyiscal origin, are optimized at once. Two pioneering efforts in this direction were the SROLL and NPIPE pipelines, both of which were developed within the official \Planck\ consortium, and eventually formed the algorithmic basis for the \Planck\ PR3 and PR4 data releases. Both SROLL and NPIPE integrated knowledge about the astrophysical sky directly in their instrument calibration and mapmaking steps; however, neither actually re-fitted the astrophysical parameters during the low-level processing itself.
+
+The first pipeline to perform true integrated global analysis of \Planck\ data was implemented in a computer code called \texttt{Commander3} by the \textsc{BeyondPlanck} collaboration. This extended earlier work performed within the \Planck\ collaboration, and it was implemented in terms of an end-to-end Bayesian Monte Carlo Gibbs sampler in which an explicit parametric data model was fitted to raw uncalibrated time-ordered data (TOD). As a result of this integrated analysis, a number of long-standing problems regarding the \Planck\ LFI data were resolved, in particular with respect to gain calibration, and the full LFI data set was now for the first time finally available for cosmological analysis.
+
+Recognizing the importance of global Bayesian analysis for all high-sensitivity experiments, a separate effort called \Cosmoglobe\ was started in 2019. The basic idea underlying \Cosmoglobe\ was very simple: All radio, microwave and infrared experiments measure fundamentally the same sky. However, due to technical limitations, each experiment only measures a relatively small part of the electromagnetic spectrum, and with limited angular resolution and sensitivity. At the same time, we are currently at the stage where astrophysical uncertainties play a dominating role in understanding the systematic properties of each experiment. It is therefore natural to believe that better results will be obtained by analyzing multiple complementary experiments together than each separately, and in effect use information from one experiment to break the basic degeneracies in another. In effect, the long-term goal of \Cosmoglobe\ is to build one single state-of-the-art model of the astrophysical sky covering the entire electromagnetic spectrum that fits a broad range of available experiments at the same time. Obviously, this is a monumental task, and will require the combined effort of the entire astrophysical community in order to be successful. However, because of the large investments made by the \Planck\ and BeyondPlanck collaborations, the algorithmic basis needed to do this now actually does exist, and is ready to be expanded.
+
+The first explicit demonstration of this simple idea was presented by \citet{CG01}, who generalized the \commanderthree\ computer code to perform joint end-to-end Bayesian analysis of both the \WMAP\ and \Planck\ LFI data at the same time. This turned out to be very effective, and the introduction of LFI measurements effectively resolved a number of long-standing calibration issues in the \WMAP\ data that never could be resolved with \WMAP\ data alone. The products from this analysis were released in March 2022 as ``\Cosmoglobe\ Data Release 1 (DR1)'', and defines today the state-of-the-art in terms of both \Planck\ LFI and \WMAP\ sky maps.
+
+In a series of six papers (see Table~\ref{tab:papers}), of which this is the first one, we perform a similar analysis for the \COBE-DIRBE data. This represents a major step forward in the \Cosmoglobe\ program by expanding the modelled frequency range by three orders of magnitude, and it is a first step towards merging the microwave and infrared fields into one joint effort. The reasons for considering \COBE-DIRBE in this first step, as opposed to AKARI, IRAS, or WISE, are two-fold. First and foremomst, DIRBE has excellent systematics properties, both in terms of absolute calibration and zero-level determination, thermal stability, and in terms of a highly inter-connected scanning strategy. At the same time, both its data volume and angular resolution are relatively modest, and this makes the computational load and debug cycle very manageable. Overall, DIRBE is an ideal dataset for generalizing the previous CMB-oriented model and computer code into the infrared regime.
+
+At the same time, the fundamental challenges faced by DIRBE are very similar to those of faced by any other infrared experiment. In particular, the single most challenging aspect is the zodiacal emission (ZE). This is thermal emission and scattered sunlight from interplanetary dust (IPD) grains. The main difficulty when dealing with zodiacal emission contamination in infrared data is that as the observed emission is highly dependent on the position of the observer, and as such, it cannot be modeled like a static foreground, as for instance Galactic foregrounds are treated in the CMB community. Rather, the state-of-the-art method to remove zodiacal emission from timestreams today is to use a three-dimensional interplanetary dust model which describes the distribution of interplanetary dust within the solar system, and perform line-of-sight integration for every single time step. The IPD model most widely used today is the so-called K98 model \citep{K98} produced by the DIRBE team, or variants thereof. In one of the companion papers in the current suite, we present a major step forward in this modelling, by exploiting the fact that some of the IPD components do indeed appear stationary on the sky as seen from the Earth (namely the so-called circumsolar ring and Earth-trailing feature), and these may therefore be modelled as stationary 2D signals per sky pixel rather than as highly constrained 3D objects. This, together with joint diffuse component separation algorithms, use of ancillary datasets, and better parameter fitting algorithms lead to a greatly improved ZE model that should be use to the entire infrared community.
+
+These improvements also lead to better science exploitation overall. Most notably, we are in the current analysis for the first time able to characterize fluctuations in the extra-galactic optical background (COB) at 3.5 and 4.9$\,\mu$m. We also obtain robust CIB measurements, both in terms of fluctuations and zero-levels at all wavelengths between 60 and 240$\,\mu$m, and these measurements are highly complementary to those obtained from \Planck\ and other experiments, allowing for new constraints on cosmic structure formation. Similar improvements are obtained for the Galactic science targets, and we are for instance now able to constrain diffuse polycyclic aromatic hydrocarbon (PAH) emission between 3.5 and 12$\,\mu$m at high confidence. Finally, we also present a novel three-component thermal dust emission model without spatial spectral variations that is able to describe thermal dust emission from 100\,GHz to 1.25$\,\mu$m with only two free parameters per pixel; a novel WISE-plus-GAIA based starlight model for frequencies between 1.25 and 25$\,\mu$m; and a new map of ionized carbon (\CII) with an angular resolution of $1^{\circ}$ FWHM. Overall, we argue that these new products come close to fulfilling the original science potential of the DIRBE experiment, even though there are still a number of issues that should be resolved through further joint analysis with other complementary datasets, such as AKARI and WISE. All products and computer codes are made publicly available,\footnote{\url{https://cosmoglobe.uio.no}} and we will in the following refer to the current data release as ``\Cosmoglobe\ Data Release 2'', or CG DR2 for short.
+
+The rest of the paper is organized as follows. In Sect.~\ref{sec:global_modelling} we review the historical background and algorithmic foundation of the \Cosmoglobe\ effort. In Sect.~\ref{sec:data} we briefly describe the DIRBE data as provided by the \COBE\ team, the pre-processing steps that we apply the them, the fitted data model, and the new \commanderthree\ extenstions that are needed to fit this model. Next, in Sect.~\ref{sec:posteriors} we present the low-level and frequency map posterior distribution derived from the DIRBE data,  before considering the main astrophysical results in Sect.~\ref{sec:astrophysics}; full details are provided in the respective companion papers. Finally, we conclude and discuss avenues for future work in Sect.~\ref{sec:conclusions}.
+
+
 \section{Global Bayesian modelling of the radio, microwave and infrared sky}
+\label{sec:global_modelling}
 
 \subsection{From Planck to \Cosmoglobe}
 
@@ -107,7 +170,8 @@ In this analysis, we describe how the DIRBE Calibrated Individual Observations (
 \subsection{Bayesian analysis and Gibbs sampling}
 
 \clearpage
-\section{Bayesian modelling of COBE-DIRBE}
+\section{DIRBE data, preprocessing, and modelling}
+\label{sec:data}
 
 \subsection{Instrument model}
 
@@ -168,6 +232,7 @@ Instead of using the raw time-ordered data, the DIRBE team recommends using the 
 
 \clearpage
 \section{Instrument and frequency map posteriors}
+\label{sec:posteriors}
 
 \subsection{Markov chains and correlations}
 
@@ -317,6 +382,8 @@ Instead of using the raw time-ordered data, the DIRBE team recommends using the 
 
 \clearpage
 \section{Astrophysical results}
+\label{sec:astrophysics}
+
 \subsection{Zodiacal light emission}
 
 \clearpage
@@ -466,13 +533,14 @@ Instead of using the raw time-ordered data, the DIRBE team recommends using the 
 
 
 
-\clearpage
-\section{Future directions}
-Most of the data from the DIRBE experiment is publicly available on the LAMBDA page along with a explanetory supplement which describes how to use it.
+%\clearpage
+%\section{Future directions}
+%Most of the data from the DIRBE experiment is publicly available on the LAMBDA page along with a explanetory supplement which describes how to use it.
 
 
 \clearpage
 \section{Conclusions}
+\label{sec:conclusions}
 
 
 
@@ -501,6 +569,11 @@ Most of the data from the DIRBE experiment is publicly available on the LAMBDA p
 %
 
 \bibliographystyle{aa}
-\bibliography{references}
+\bibliography{../../common/CG_bibliography,references}
 \end{document}
 %%%% End of aa.dem
+
+
+
+
+In this analysis, we describe how the DIRBE Calibrated Individual Observations (CIO), which are publicly available on NASA LAMBDA, was integrated into the \Cosmoglobe framework and used them to extend the \Cosmoglobe sky model from 857 GHz all the way to the optical at 1.25 microns. We may also have made the first ever maps of the CIB, made a three-dimensional dust and PAH model, detected Free-free emission at near terahertz frequencies, made maps of the stars, and more cool stuff.
