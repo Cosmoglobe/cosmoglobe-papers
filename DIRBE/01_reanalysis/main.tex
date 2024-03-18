@@ -338,6 +338,16 @@ channel); and $\n^{\mathrm{w}}$ denotes white instrumental noise. We
 also define $\s^{\mathrm{tot}}$ to be the sum of all terms in data
 model except the white noise.
 
+Both the pointing $\P$ and the beam operator $\B$ are provided by the
+DIRBE team, and we do not account for any uncertainties for
+these. However, we do note that the DIRBE beams have an intrinsically
+square shape, while our current beam convolution implementation only
+supports azimuthally symmetric beams. This will necessary lead to a
+residual that should ideally be accounted for through full
+integration, for instance using a Conviqt-style algorithm; this is
+left for future work. For further details regarding the pointing and
+beam preprocessing, see Sect.~\ref{sec:data}.
+
 \subsubsection{Sky model}
 
 For the sky signal defined implicitly by the sum in
@@ -558,6 +568,7 @@ component, see the respective specialized paper.
 \subsection{The DIRBE instrument}
 Instead of using the raw time-ordered data, the DIRBE team recommends using the CIOs, which can be though of as a user friendly version of the TODs. The CIOs consist of 1/8th second calibrated observations ordered after pixel numbers. The CIOs were created pre-HEALPix era, and all three experiments aboard \COBE used the Quadrilateralized Spherical Cube pixelization (QUADCUBE) scheme which is an approximately equal-area projection where each pixel lie on one of four cube faces. The DIRBE team did provide us with a script which converts these QUADCUBE pixels into ecliptic longitue and latitude coordinates.
 \subsection{DIRBE time-ordered data}
+\label{sec:tod}
 \subsubsection{DIRBE Calibrated Individual Observations (CIOs)}
 \subsubsection{Quadrilateralized Spherical Cube to HEALPix conversion}
 \subsubsection{Time reordering}
