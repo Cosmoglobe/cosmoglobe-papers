@@ -614,7 +614,7 @@ the following form:
 \begin{alignat}{11}
 \G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
 \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}})\\
+&\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
 \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
 \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
 &\,\a_{\mathrm{static}})\\
@@ -625,9 +625,9 @@ the following form:
 &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
 \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
 \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\
+&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
 \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}
 \end{alignat}
 Here, the symbol $\leftarrow$ indicates drawing a sample from the
 conditional distribution on the right-hand side. However, we note that
@@ -636,7 +636,7 @@ likelihood) analysis, in which case we maximize the probability
 distribution instead of drawing a sample from it.
 
 The current state-of-the-art in terms of CMB Gibbs sampling
-implementation is \commander \citep{eriksen2004}, which was used
+implementation is \commander \citep{Eriksen:2004ss}, which was used
 extensively for the \Planck\ analysis. However, during the
 \Planck\ analysis this code only supported high-level component
 separation operations, and the low-level time-domain support was added
@@ -656,30 +656,28 @@ instrumental gain; \citet{bp06} describe how to estimate instrumental
 noise parameters, and \citet{bp02} discuss how to make optimal maps
 with full noise propagation efficiently with Gibbs sampling; and
 \citet{bp13} describe how to sample from intensity foregrounds
-posteriors. However, most of these steps require slight modifications
-in order to work efficiently for DIRBE, and we discuss these
-optimizations below. In contrast, the two last steps which correspond
-to zodiacal light sampling have been unsupported until the current
-work, and the full implementation of these steps is described in a
-companion paper by \citet{CG02_2}. 
+posteriors. 
 
-\subsection{Components and sampling steps added in \Cosmoglobe\ DR2}
-\label{sec:sampling_steps}
+While by far most of the code infrastructure required to process the
+DIRBE TOD already exists, several of these steps and models discussed
+above require slight modifications in order to work efficiently in a
+production environment. In particular, efficient diffuse foreground
+sampling for DIRBE --- and the closely connected gain sampler --- are
+described by \citet{CG02_05}; the novel starlight model and sampler
+are described by \citet{CG02_04}; and the \CII\ sampler is described
+by \citet{CG02_06}. 
 
+The two last sampling steps summarized in Eqs.~\eqref{eq:gibbs_zodi}
+and \eqref{eq:gibbs_static}, however, did until the current work not
+have support in the existing \commander\ implementation, and had to be
+developed from scratch. An early step towards goal this was described
+by \citet{san:2022}, who reimplemented the default DIRBE zodiacal
+light model (K98; \citealp{kelsall1998}) in Python. This served as the
+basis for the code developed here, which now is a set of native
+\commander\ modules written in Fortran. The full details of the new
+framework, including a dramatically improved best-fit model with
+respect to K98, is presented by \citet{CG02_02}.
 
-
-\subsubsection{Zodiacal emission sampling}
-
-\subsubsection{Thermal dust emission}
-
-\subsubsection{Starlight emission}
-
-\subsubsection{\CII\ modelling}
-
-
-
-
-\clearpage
 \section{Data}
 \label{sec:data}
 
@@ -1114,7 +1112,7 @@ Instead of using the raw time-ordered data, the DIRBE team recommends using the 
 %
 
 \bibliographystyle{aa}
-\bibliography{../../common/CG_bibliography,references}
+\bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
 \end{document}
 %%%% End of aa.dem
 
