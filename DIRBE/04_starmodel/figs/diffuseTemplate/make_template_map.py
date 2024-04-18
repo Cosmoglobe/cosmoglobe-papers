@@ -8,6 +8,6 @@ template = '/mn/stornext/d16/cmbco/bp/mathew/commander3/wiseDiffuse/diffuse_star
 
 map_in = hp.read_map(template)
 
-cg.plot(map_in, cmap='Oranges', unit='mJy', rlabel='DIRBE 01', llabel='S_{diffuse}')
+cg.plot(map_in, cmap='Oranges', unit='mJy', max=0.0001, rlabel='DIRBE 01', llabel='S_{diffuse}')
 
 plt.savefig('diffuse_stars.pdf')
