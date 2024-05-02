@@ -57,13 +57,13 @@ for band in bands:
         plt.figure()
         map_mean[map_mean<0] = 0
         print(np.sum(map_mean/np.size(map_mean)))
-        cg.plot(map_mean, min=0, max=2, cmap='Oranges', rlabel=rlabel, llabel='S_{stars}', unit='mJy')
+        cg.plot(map_mean, min=0, max=1, cmap='Oranges', rlabel=rlabel, llabel='S_{stars}', unit='mJy')
 
         plt.savefig('stars_mean_'+band+'.pdf')
         plt.close()
 
         plt.figure()
-        cg.plot(map_square, min=0, cmap='grey', rlabel=rlabel, llabel='RMS_{stars}', unit='mJy')
+        cg.plot(map_square, min=0, max=0.01, cmap='grey', rlabel=rlabel, llabel='RMS_{stars}', unit='mJy')
         plt.savefig('stars_std_'+band+'.pdf')
         plt.close()
 
@@ -74,7 +74,7 @@ for band in bands:
         plt.savefig('ptsrc_mean_'+band+'.pdf')
 
         plt.figure()
-        cg.plot(ptsrc_square, min=0, cmap='grey', rlabel=rlabel, llabel='RMS_{ptsrc}', unit='mJy')
+        cg.plot(ptsrc_square, min=0, max=0.01, cmap='grey', rlabel=rlabel, llabel='RMS_{ptsrc}', unit='mJy')
         plt.savefig('ptsrc_std_'+band+'.pdf')
 
  
