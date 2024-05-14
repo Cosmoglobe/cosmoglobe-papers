@@ -64,7 +64,7 @@
 
    \title{\bfseries{\Cosmoglobe\ DR2. IV. Modelling compact objects\\ in DIRBE with GAIA and WISE}}
 
-   \author{Placeholder}
+   \author{Galloway et al.}
 
    \institute{Institute of Theoretical Astrophysics, University of Oslo, Blindern, Oslo, Norway}
   
@@ -99,16 +99,21 @@ Many full-sky datasets exist which measure the emissions from pointsources in ou
   \label{fig:sed}
 \end{figure*}
 
-In this paper, part of the larger Cosmoglobe DR2 results paper suite, we discuss the modelling of compact objects as part of our larger full sky astrophysical model. Section \ref{sec:models} discusses this modelling in a larger Bayesian context. Section \ref{sec:consistency} shows the consistency between our results and other work in this area. Section \ref{sec:data} discusses the data selection and cleaning used in our analysis, and then Section \ref{sec:results} shows the astrophysical results of the work by presenting a unified star model and its associated errors. Finally, we conclude in Section \ref{sec:conclusions}, discussing the impacts of this work and offering some avenues for future research.
+In this paper, part of the larger Cosmoglobe DR2 results paper suite, we discuss the modelling of compact objects as part of our larger full sky astrophysical model. Section \ref{sec:models} discusses this modelling in a larger Bayesian context. Section \ref{sec:results} shows the astrophysical results of the work by presenting a unified star model and its associated errors. Section \ref{sec:consistency} then shows the consistency between our results and other work in this area. Finally, we conclude in Section \ref{sec:conclusions}, discussing the impacts of this work and offering some avenues for future research.
 
 \section{Compact Object modelling in a Bayesian context}
 \label{sec:models}
 
-For each star brighter than magnitude 8 in the WISE 3.4$\,\mu$m band \citep{wiseCat}, we extract estimates of the effective temperature, $T_{\mathrm{eff}}$, the gravitational acceleration, $\log g$, and the metallicity, $[M/H]$, from the GAIA DR2 database \cite{gaiaCat}, and use those to identify a best-fit spectral energy density (SED) from the PHOENIX starlight database. The NUMBER sources which pass our WISE magnitude cut but which either do not match against the GAIA catalogue or do not have sufficient data in GAIA to estimate an SED are assumed to be extra-galactic sources. Finally, the remaining sources from the WISE point-source catalogue that are not included in either of these other populations are used to construct a full sky diffuse point-source template, which is fit as a component in the full commander run. 
+In this work, we break the compact objects into three categories as follows: 1 - Bright (> Mag 8 in the WISE 3.4 $\,\mu$m) objects with SEDs measured by Gaia (hereafter 'stars'), described in section \ref{sec:starmodel}, 2 - Bright objects without SED information (hereafter 'extragalactic sources'), described in section \ref{sec:extragalacticmodel}, and a diffuse background of dim objects (hereafter 'diffuse'), described in section \ref{sec:diffusemodel}.
 
 \subsection{Stars}
 
-The full Bayesian data model is shown in \cite{CG02_01}, and includes the star component $s_{stars}(p, \lambda_j)$, the star emissions as a function of pixel $p$ and frequency $\lambda_j$ for a band $j$. Equation \ref{eq:datamodel} shows the data model for the star component that we describe in this paper
+\label{sec:starmodel}
+
+For each star we extract estimates of the effective temperature, $T_{\mathrm{eff}}$, the gravitational acceleration, $\log g$, and the metallicity, $[M/H]$, from the GAIA DR2 database \cite{gaiaCat}, and use those to identify a best-fit spectral energy density (SED) from the PHOENIX starlight database. 
+
+The full Bayesian data mode is shown in \cite{CG02_01}, and includes the star component $s_{stars}(p, \lambda_j)$, the star emissions as a function of pixel $p$ and frequency $\lambda_j$ for a band $j$. Equation \ref{eq:datamodel} shows the data model for the star component that we describe in this paper
+
 
 \begin{equation}
 s_{stars}(p, \lambda_j) = \sum_i a_i B_i(p, \lambda_j) E_i(\lambda_j),
@@ -119,7 +124,6 @@ where in the notation of \cite{CG02_01}
 
 \begin{equation}
 f_{\mathrm{GAIA}} = B_i(p, \lambda_j) E_i(\lambda_j),
-\label{eq:datamodel}
 \end{equation}
 
 which is the beam-convolved SED taken from the PHOENIX catalogue.
@@ -155,6 +159,8 @@ where $N_i(0,1)$ is a sample drawn from a unit Gaussian with 0 mean.
 
 \subsection{Extragalactic Pointsources}
 
+\label{sec:extragalacticmodel}
+
 After fitting the star catalogue, we are left with another background of pointsources, those with extragalactic origins. Sources that do not match against the GAIA catalogue or that do not have sufficient SED information to model, but which are still brighter than magnitude 5.06 in the WISE $3.4 \mu m$ band ($3000$ MJy in DIRBE 01) are fit with a more general blackbody of the form:
 
 \begin{equation}
@@ -163,16 +169,58 @@ After fitting the star catalogue, we are left with another background of pointso
 
 Here, $\nu_0$ is a reference frequency, set to $239833.966$ GHz (1.25 $\mu m$). 
 
-\subsection{Diffuse Star Background}
 
-The diffuse star background is made up of the remainder of the 747 634 026 objects in the AllWISE catalogue \citep{wiseCat}. These are 
- 
+
+\subsection{Diffuse Star Emission}
+
+\label{sec:diffusemodel}
+
+Finally, after modelling the brightest sources using one of the two methods described above, we are left with a diffuse background of stars that are too dim to be individually resolved, but that can still couple to other parameters such as the band monopoles and so must be accounted for. We model this diffuse background using a single full-sky template, generated from the WISE W1 data. We take the full AllWISE pointsource catalog, and for each source with a included W1 magnitude that isn't already included in one of the previous pointsource models (ie. sources dimmer than Mag. 5) we create a high resolution healpix map \citep{healpix} at nside=2048. Adding each source in turn to this map, we then downgrade to nside=512, which gives the map shown in Fig. \ref{fig:diffuseStars}. 
+
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figs/diffuseTemplate/diffuse_stars.pdf}
   \caption{The template of diffuse star emission evaluated in the DIRBE 01 band.}
   \label{fig:diffuse}
 \end{figure}
+
+This template is then included in the full sky model, and fit jointly in bands 01-04, with an SED given by the mean of all SEDs of stars modelled in section \ref{sec:starmodel}. This SED is fit with a single amplitude parameter, which compensates for the overall difference in bandpass between W1 and the DIRBE bands. The mean of this SED averaged over all the samples in the full chain is shown as the red line in Fig. \ref{fig:starSEDs}.
+
+\subsection{Masking}
+
+
+\clearpage
+\section{Astrophysical results}
+\label{sec:results}
+
+\subsection{Maps}
+
+In Figure \ref{fig:starsT} we show the mean star component maps for the full pipeline run in all six DIRBE bands where stars are subtracted. Here, the maps show the sum of star component and the extragalactic source component, which fully accounts for the pointsource emission in the galactic plane.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_01.pdf}
+  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_02.pdf} \\
+  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_03.pdf}
+  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_04.pdf} \\
+  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_05.pdf}
+  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_06.pdf} \\
+  \caption{Mean star maps from the Cosmoglobe DR2 release for the first 6 DIRBE bands. }
+  \label{fig:starsT}
+\end{figure*}
+
+
+\subsection{Spectral Energy Densities}
+
+Figure \ref{fig:starSEDs} shows the SED models for all 717454 star sources in our catalogue, as well as the full sky mean emission attributable to stars. 
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figs/starseds/star_seds.pdf}
+  \caption{Star emission as a function of wavelength. In blue we have the SEDs for each source in our catalogue, and overplotted in red is the full sky mean of all emissions. \textbf{this is a bad plot and I am too tired to figure out how to fix it right now}}
+  \label{fig:starSEDs}
+\end{figure}
+
+SEDs for extragalactic sources
 
 
 \section{Consistency with other Data Sets}
@@ -195,96 +243,6 @@ Types of objects, classification?
 
 Beam stacking comparison?
 
-\clearpage
-\section{Data selection and cleaning}
-\label{sec:data}
-
-The results presented in Section \ref{sec:results} are a part of the Cosmoglobe DR2 release. Here we will discuss only the data selection specific to star modelling, for a full overview of Cosmoglobe DR2, please refer to  \cite{CG02_01}.
-
-\subsection{Catalogue Creation}
-\label{sec:catalogue}
-
-Star positions are drawn from a catalogue 
-
-The extragalatic pointsources are simply taken from the WISE catalogue of point sources, with a magnitude cut of 
-
-\subsection{Data Cleaning}
-
-Masks?
-
-\clearpage
-\section{Astrophysical results}
-\label{sec:results}
-
-\subsection{Maps}
-
-In Figure \ref{fig:starsT} we show the mean star component maps for the full pipeline run in all six DIRBE bands where stars are subtracted. In Figure \ref{fig:starsstd} we show the standard deviations of the same data, which correspond to the errors on our star fits. 
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_01.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_02.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_03.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_04.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_05.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_mean_06.pdf} \\
-  \caption{Mean star maps from the Cosmoglobe DR2 release for the first 6 DIRBE bands. }
-  \label{fig:starsT}
-\end{figure*}
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_std_01.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_std_02.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_std_03.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_std_04.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_std_05.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/stars_std_06.pdf} \\
-  \caption{Standard deviation star maps from the Cosmoglobe DR2 release for the first 6 DIRBE bands. }
-  \label{fig:starsstd}
-\end{figure*}
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_mean_01.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_mean_02.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_mean_03.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_mean_04.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_mean_05.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_mean_06.pdf} \\
-  \caption{Mean extragalactic point source maps from the Cosmoglobe DR2 release for the first 6 DIRBE bands. }
-  \label{fig:exgalT}
-\end{figure*}
-
-For the extragalactic sources we show the same plots as for the stars, first in figure \ref{fig:exgalT} we show the maps, then in figure \ref{fig:exgalstd} we show the standard deviations of the extragalactic sources. 
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_std_01.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_std_02.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_std_03.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_std_04.pdf} \\
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_std_05.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/starmaps/ptsrc_std_06.pdf} \\
-  \caption{Standard deviation extragalactic source maps from the Cosmoglobe DR2 release for the first 6 DIRBE bands. }
-  \label{fig:exgalstd}
-\end{figure*}
-
-
-
-\subsection{Spectral Energy Densities}
-
-Figure \ref{fig:starSEDs} shows the SED models for all 717454 star sources in our catalogue, as well as the full sky mean emission attributable to stars. 
-
-\begin{figure}
-  \includegraphics[width=\columnwidth]{figs/starseds/star_seds.pdf}
-  \caption{Star emission as a function of wavelength. In blue we have the SEDs for each source in our catalogue, and overplotted in red is the full sky mean of all emissions. \textbf{this is a bad plot and I am too tired to figure out how to fix it right now}}
-  \label{fig:starSEDs}
-\end{figure}
-
-SEDs for extragalactic sources
-
-
 \section{Conclusions}
 \label{sec:conclusions}
 
@@ -303,7 +261,7 @@ Including the WISE data directly in the full run would be an important next step
  The current work has received funding from the European
   Union’s Horizon 2020 research and innovation programme under grant
   agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
-  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{HEALPIX} package.
+  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{healpix} package.
   We acknowledge the use of the Legacy Archive for Microwave Background Data
   Analysis (LAMBDA), part of the High Energy Astrophysics Science Archive Center
   (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science Division at
