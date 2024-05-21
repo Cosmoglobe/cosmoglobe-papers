@@ -108,19 +108,18 @@ However, we do note that even though the zodiacal light model represent an impro
 %\tableofcontents
    
 \section{Introduction}
-Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m (\cite{leinert1998} and references therein). The light comes from scattering and re-emission of sunlight from interplanetary dust (IPD) grains. ZL is usually the most difficult source of foreground contamination to remove in studies of the Extragalactic Background Light (EBL) due to its seasonal nature. As such, a big part of the infrared sky has been inaccessible to cosmological analysis, due to difficulties with ZL modeling. Improving our models of the interplanetary medium is on of the most crucial steps for large scale detections of the EBL.
+Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m (\cite{leinert1998} and references therein). The light comes from scattering and re-emission of sunlight from interplanetary dust (IPD) grains. The inner Solar system is enveloped in a sun-centered cloud of IPD, with a symmetry axis tilted slightly with respect to the Ecliptic, known as the zodiacal cloud. The ZL is seasonal, and its appearance in the sky changes as the Earth moves through the IPD distribution. The most common way to model the observer position-dependent ZL is to evaluate a line-of-sight integral for each observation directly in the time-ordered domain. The time-varying and three-dimensional nature of the ZL makes it one of the most challenging foregrounds to model in astrophysical and cosmological studies of the infrared sky. The lack of a good ZL model has left a vast portion of the electromagnetic spectrum inaccessible to cosmological analysis attempting to measure the Cosmic Optical and Infrared Backgrounds (COB, CIB). 
 
-Existing ZL model typically consists of a three-dimensional model for the IPD distribution in the Solar system, along with a description of the ZL brightness through the radiative and scattering properties of the IPD. The ZL observed by an instrument is then computed by evaluating the brightness along each observed line-of-sight. The state-of-the-art ZL model is the field of cosmology is the Kelsall et al. 1998\citep{K98} (K98), which was built by the DIRBE team for the purpose of removing ZL from their data in the late 1900s. Since then, our understanding of the infrared sky has improved drastically with experiments such as Planck HFI, Gaia, and WISE, giving us access to far superior sky models. These new models, along with computational advances in Bayesian cosmological analysis \citep{BP2023, Galloway2023, Watts2023}, complimentary data in the infrared, and more compute power allows us to extract much more information about the true nature of the interplanetary medium from the DIRBE data then what was possible for the DIRBE team at the time.
+The state-of-the-art ZL model in the field of cosmology is the \cite{Kelsall1998} model (K98, sometimes referred to as the \textit{COBE}/DIRBE or just the DIRBE model). K98 is a parametric ZL model describing the three-dimensional IPD distribution and the radiative properties of the dust. The model was developed by the \textit{COBE}/DIRBE team to remove ZL from their data in the late 1900s. Since then, our understanding of the infrared sky has improved with new observational data from experiments like Planck HFI, GAIA, and WISE. Combining recent computational advances in Bayesian cosmological analysis \citep{BP2023, Galloway2023, Watts2023}, more readily available computing power and new complementary infrared datasets allow us to extract significantly more information about the true nature of the ZL from the DIRBE data than was possible at the time of the original DIRBE analysis.
 
-In this paper we present the ZL modelling efforts in the \Cosmoglobe\ DR2 release. In Sect. 2, we give a brief overview of the ZL model and its implementation in Commander. In Sect. 3 we discuss sampling of ZL models and present new novel techniques. In Sect. 4 we present the new state-of-the-art ZL model obtained, which is a re-stimation of the the parameters in the K98 model with some additional modification, along with preliminary results from more comprehensive modifications to the ZL models achieved by generalizing the K98 model and incorporating various features from the Rowan-Robinson and May 2013 (RRM) model. Finally, we discuss the implications of these results and the future of ZL modeling in the \Cosmoglobe\ framework, with suggestions for better ZL modelling and which data sets to include in future studies.
+This paper is the second in a series of six describing the methods and results of our re-analysis of the time-ordered \textit{COBE}/DIRBE data within a global end-to-end Bayesian analysis framework. Here, we describe the ZL modeling approach in Commander3 and demonstrate the benefits of fitting a ZL model directly within a global end-to-end Bayesian framework. The basis of the newly implemented ZL module in Commander3 is ZodiPy\citep{San2024}, which is an Astropy-affiliated Python package for ZL simulations. The development of ZodiPy was motivated by two factors. It would serve as a basis for the code development in Commander3, and secondly, it would provide the astrophysical and cosmology communities with an accessible, easy-to-use interface to existing and coming ZL models. As an early application, \cite{San2022} demonstrates the removal of ZL from the DIRBE TOD with ZodiPy using the K98 model.
 
-\section{Zodiacal light modelling}
-Generalizing the CMB-oriented Commander3 software into the infrared regime required the implementation of a ZL simulation module. A significant part of the algorithmical development in Commander3 between Cosmoglobe DR1 and DR2 invovled the implementation of the ZL module which is very similar to the implementation of ZodiPy\citep{San2022}. ZodiPy is an Astropy-affiliated Python package for zodiacal light simulations, which we developed and tested against the DIRBE CIOs\citep{San2024} as part of our transition into the infrared. 
+The following sections are organized as follows. In Sect. \ref{sect:zodi-model}, we introduce the K98 ZL model and discuss implementation details and some optimizations regarding evaluating ZL models on HEALPix grids. Next, in Sect. \ref{sect:param-estimation}, we discuss ZL parameter estimation and our implementation, which involves the use of a function minimizer on a sub-sample of the DIRBE TOD. Finally, in Sect. \ref{sect:improved-model}, we present a greatly improved ZL model, yielding lower residuals at all ten DIRBE channels. The improved model uses only a slightly different parametrization than the K98 model. We recommend using this model over K98 for all infrared community members.
 
-The parametric ZL model used in this analysis is a modified version of the K98 model. In the following, we briefly introduce the model and the various zodiacal components that.
-
+\section{Zodiacal light modelling}\label{sect:zodi-model}
+In the following we present a very brief overview of the Zodiacal light model as implemented in Commander and used during the \Cosmoglobe\ DR2 reanalysis of the DIRBE data. The implemented model is a modified version of the K98 model. For more a details on the model and the implementation, we refer to \cite{K98, ZODIPY}.
 \subsection{Parameterization of interplanetary dust}
-The IPD distribution in the zodiacal cloud is both smooth and stable and most of the dust can be accounted for by a diffuse cloud-like component. However, fine structures are produced within the otherwise smooth cloud, from processes such as asteroidal collisions and mass-shedding, cometary trails and outgassing, and gravitational resonance in the orbit of the planets. The full IPD distribution is therefore a sum of several zodiacal components, denoted by $c$, each described by a heliocentric ecliptic number density $n_c(x,y,z)$. Zodiacal components are allowed to have their own origins with respect to the heliocenter $(x_{0,c}, y_{0,c}, z_{0,c})$, so that the component-centric coordinates are
+The IPD distribution in the zodiacal cloud is both smooth and stable and most of the dust can be accounted for by a diffuse cloud-like component. However, fine structures are produced within the otherwise smooth cloud, from processes such as asteroidal collisions, cometary trails, and gravitational resonance in the orbit of the planets. The full IPD distribution is therefore a sum of several zodiacal components, denoted by $c$, each described by a heliocentric ecliptic number density $n_c(x,y,z)$. We allow each zodiacal component to have a heliocentric offset $(x_{0,c}, y_{0,c}, z_{0,c})$, such that the component-centric coordinates become
 \begin{equation}    
     \begin{aligned}
         x_c&= x - x_{0,c}\\
@@ -128,7 +127,7 @@ The IPD distribution in the zodiacal cloud is both smooth and stable and most of
         z_c&= z - z_{0,c}.
     \end{aligned}
 \end{equation}
-Similarly, the tilt and orientation of the respective symmetry planes are described by their inclination $i_c$ and ascending node $\Omega_c$. In the these coordinates, assuming that the component is symmetrically distributed in the plane, the density is fully described by the radial distance $r_c$ from the origin, and the height above the symmetry plane $Z_c$
+Additionally, each zodiacal component are allowed to have a plane of symmetry different to the smooth zodiacal cloud component which is described through an inclination $i_c$ and ascending node $\Omega_c$. Due to gravitational dynamics the dust in a zodiacal component is expected to be symmetrically distributed about its plane. In the component-centric coordinates the density is then fully described by the radial distance $r_c$ from the origin, and the height above the symmetry plane $Z_c$
 \begin{align}
     r_c &= \sqrt{x_c^2 + y_c^2 + z_c^2},\\
     Z_c &= x_c\sin{\Omega_c}\sin{i_c} - y_c \cos{\Omega_c}\sin{i_c} + z_c \cos{i_c}.
@@ -167,17 +166,15 @@ Finally, a circum-solar ring component was included, representing dust accumulat
 where $\theta$ is the heliocentric longitude of the Earth, and the radial locations $r_{0, \mathrm{SR}}$, $r_{0, \mathrm{TF}}$ specifies the distances to the peak densities $n_{0, \mathrm{SR}}$, $n_{0, \mathrm{TF}}$. The $\sigma$ parameters are length scales for the $r$, $Z$ and $\theta$ parameters, respectively. This is the only zodiacal component that is not perfectly symmetric in the plane due to the Earth-trailing feature.
 
 \subsection{Radiative and scattering properties}
-IPD grains are assumed to emit thermal emission at a wavelength $\lambda$ on the form of a blackbody modified by an emissivity factor $E_{c, \lambda}$
+IPD grains are assumed to emit thermal emission on the form of a blackbody modified by an emissivity factor $E_{c, \lambda}$
 \begin{equation}
     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T).
 \end{equation}
-where $B_\lambda$ is the Planck function. The temperature $T$ of the IPD is assumed to fall off with radial distance from the Sun $r$ as is moddeled as
+where $B_\lambda$ is the Planck function at a wavelength $\lambda$. The temperature $T$ of the IPD is assumed to fall off with radial distance $r$ from the Sun
 \begin{equation}
     T(r) = T_0 R^{-\delta},
 \end{equation}
-where $\delta$ is the power law index, which is $0.5$ for theoretical gray dust.
-
-At wavelengths where $\lambda \sim$ the grain size, sunlight will scatter off the IPD grains. The scattered light is modelled as 
+where $T_0$ is the temperature at 1 AU and $\delta$ the power law index. The IPD dust grains will scatter sunlight at wavelengths similar to the grain sizes. This contribution to the observed zodiacal light is modelled as
 \begin{equation}\label{eq: scat_term}
     I^\mathrm{Scattering}_{c, \lambda} = A_{c, \lambda} F_\lambda^\odot(r) \Phi_\lambda(\Theta).
 \end{equation}
@@ -188,8 +185,8 @@ The total intensity from IPD grains is then
     I^\mathrm{Total}_{c, \lambda} &= I^\mathrm{Scattering}_{c,\lambda} + I^\mathrm{Thermal}_{c,\lambda}\\
     &= A_{c, \lambda} F_\lambda^\odot(R) \Phi_\lambda(\Theta) + E_{c,\lambda} B_\lambda(T(R)).
 \end{align}
+\subsection{Evaluating the zodiacal model}
 
-\subsection{Line-of-sight brightness integrals}
 To evaluate the zodiacal light model we solve the brightness integral
 \begin{equation}\label{eq:los}
     I_{p,t} = \sum_c \int n_c \left[  A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda \right]\,\mathrm {ds},
@@ -211,13 +208,13 @@ where $M^{\bigoplus}_{\nu, p'}$ is the geocentric lookup map and $p'$ is the cor
     \label{fig: geomap}
 \end{figure}
 
-\section{Bayesian zodiacal light parameter estimation}
+\section{Bayesian zodiacal light parameter estimation}\label{sect:param-estimation}
 \subsection{Data selection and masks}
 \subsection{Time-ordered sampling vs week maps}
 \subsection{Zodiacal light parameter atlas}
 \subsection{Gibbs sampling of zodiacal light parameters}
 
-\section{Improved zodiacal light models}
+\section{Improved zodiacal light model}\label{sect:improved-model}
 \subsection{Re-estimated DIRBE/K98 model}
 \subsection{Exploring alternative zodiacal light models}
 \subsubsection{Freeing up frozen K98 parameters}
@@ -620,18 +617,18 @@ where $M^{\bigoplus}_{\nu, p'}$ is the geocentric lookup map and $p'$ is the cor
 
 % \end{figure*}
 
-% \begin{figure*}
-%     \centering
-%     \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week_minus_full.pdf}
-%     \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week.pdf}\\
-%     \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week_minus_full.pdf}
-%     \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week.pdf}
-%     \includegraphics[width=0.49\linewidth]{figs/map_06a_week_minus_full.pdf}
-%     \includegraphics[width=0.49\linewidth]{figs/map_06a_week.pdf}
-%     \caption{Illustration of the basic sky maps involved in the zodiacal light fitting algorithms adopted by the DIRBE (\emph{left column}) and \Cosmoglobe\ (\emph{right column}) pipelines for one week of $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The DIRBE pipeline used exclusively differences between weekly and full-season maps, both for the observed signal, $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), and the zodiacal light model, $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), where brackets indicate full-survey averages. Correspondingly, the final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ (\emph{bottom left}), and is by constrution only sensitive to time-variable signals. 
-%     In contrast, the basic data element in \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), which is fitted with the full zodiacal light model, $Z_{\nu}$ (\emph{middle right}), both modelled in time-domain. The $\chi^2$ the minimizes minimize the total signal-minus-model residual, $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the DIRBE approach is insensitivity to stationary sky signals, in particular thermal dust and CIB, while the main advantage of the \Cosmoglobe\ approach is a much higher effective signal-to-noise ratio, both to zodiacal light parameters and zero-levels.}
-%     \label{fig:week_vs_full}
-%   \end{figure*}
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week_minus_full.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week.pdf}\\
+    \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week_minus_full.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/map_06a_week_minus_full.pdf}
+    \includegraphics[width=0.49\linewidth]{figs/map_06a_week.pdf}
+    \caption{Illustration of the basic sky maps involved in the zodiacal light fitting algorithms adopted by the DIRBE (\emph{left column}) and \Cosmoglobe\ (\emph{right column}) pipelines for one week of $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The DIRBE pipeline used exclusively differences between weekly and full-season maps, both for the observed signal, $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), and the zodiacal light model, $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), where brackets indicate full-survey averages. Correspondingly, the final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ (\emph{bottom left}), and is by constrution only sensitive to time-variable signals. 
+    In contrast, the basic data element in \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), which is fitted with the full zodiacal light model, $Z_{\nu}$ (\emph{middle right}), both modelled in time-domain. The $\chi^2$ the minimizes minimize the total signal-minus-model residual, $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the DIRBE approach is insensitivity to stationary sky signals, in particular thermal dust and CIB, while the main advantage of the \Cosmoglobe\ approach is a much higher effective signal-to-noise ratio, both to zodiacal light parameters and zero-levels.}
+    \label{fig:week_vs_full}
+  \end{figure*}
 
 
 % The approach we will use Gibbs sample each of the model parameters. This means that we propose a change to one model parameter, estimate the zodiacal emission over the full timestream of each ten DIRBE bands, compute a chi-squared and accept/reject. We perform N such proposals before we move on the the next parameter. Since the zodiacal emission is mostly very smooth on the sky, we can afford to downsample the TOD timestream before evaluating the zodiacal emission. For the diffuse cloud and the dust bands we downsample the TODS by X. For the circum-solar ring and the Earth-trailing feature, which are less smooth, and harder to constrain, we downsample the TODS by X. The downsampled TODS are subtracted by the \Cosmoglobe\ skymodel, and recomputed after after each parameter evaluation. 
