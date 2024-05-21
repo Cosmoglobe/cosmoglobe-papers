@@ -115,9 +115,12 @@ Existing ZL model typically consists of a three-dimensional model for the IPD di
 In this paper we present the ZL modelling efforts in the \Cosmoglobe\ DR2 release. In Sect. 2, we give a brief overview of the ZL model and its implementation in Commander. In Sect. 3 we discuss sampling of ZL models and present new novel techniques. In Sect. 4 we present the new state-of-the-art ZL model obtained, which is a re-stimation of the the parameters in the K98 model with some additional modification, along with preliminary results from more comprehensive modifications to the ZL models achieved by generalizing the K98 model and incorporating various features from the Rowan-Robinson and May 2013 (RRM) model. Finally, we discuss the implications of these results and the future of ZL modeling in the \Cosmoglobe\ framework, with suggestions for better ZL modelling and which data sets to include in future studies.
 
 \section{Zodiacal light modelling}
-In the following we present a very brief overview of the Zodiacal light model as implemented in Commander and used during the \Cosmoglobe\ DR2 reanalysis of the DIRBE data. The implemented model is a modified version of the K98 model. For more a details on the model and the implementation, we refer to \cite{K98, ZODIPY}.
+Generalizing the CMB-oriented Commander3 software into the infrared regime required the implementation of a ZL simulation module. A significant part of the algorithmical development in Commander3 between Cosmoglobe DR1 and DR2 invovled the implementation of the ZL module which is very similar to the implementation of ZodiPy\citep{San2022}. ZodiPy is an Astropy-affiliated Python package for zodiacal light simulations, which we developed and tested against the DIRBE CIOs\citep{San2024} as part of our transition into the infrared. 
+
+The parametric ZL model used in this analysis is a modified version of the K98 model. In the following, we briefly introduce the model and the various zodiacal components that.
+
 \subsection{Parameterization of interplanetary dust}
-The IPD distribution in the zodiacal cloud is both smooth and stable and most of the dust can be accounted for by a diffuse cloud-like component. However, fine structures are produced within the otherwise smooth cloud, from processes such as asteroidal collisions, cometary trails, and gravitational resonance in the orbit of the planets. The full IPD distribution is therefore a sum of several zodiacal components, denoted by $c$, each described by a heliocentric ecliptic number density $n_c(x,y,z)$. Zodiacal components do not necessarily share a plane of symmetry with the smooth zodiacal cloud component and are therefore allowed to have their own origins $(x_{0,c}, y_{0,c}, z_{0,c})$,  The component-centric coordinates are then
+The IPD distribution in the zodiacal cloud is both smooth and stable and most of the dust can be accounted for by a diffuse cloud-like component. However, fine structures are produced within the otherwise smooth cloud, from processes such as asteroidal collisions and mass-shedding, cometary trails and outgassing, and gravitational resonance in the orbit of the planets. The full IPD distribution is therefore a sum of several zodiacal components, denoted by $c$, each described by a heliocentric ecliptic number density $n_c(x,y,z)$. Zodiacal components are allowed to have their own origins with respect to the heliocenter $(x_{0,c}, y_{0,c}, z_{0,c})$, so that the component-centric coordinates are
 \begin{equation}    
     \begin{aligned}
         x_c&= x - x_{0,c}\\
@@ -133,8 +136,8 @@ Similarly, the tilt and orientation of the respective symmetry planes are descri
 
 
 \subsection{Zodiacal components}
-\subsubsection{Diffuse cloud}
-The diffuse cloud component represents the smooth IPD distribution in the zodiacal cloud and is parametrized as
+\subsubsection{Smooth cloud}
+The smooth cloud component represents the smooth IPD distribution in the zodiacal cloud and is parametrized as
 \begin{equation}
     n_\mathrm{C}(x,y,z)=n_{0, \mathrm{C}}r_\mathrm{C}^{-\alpha}f(\zeta_\mathrm{C}),
 \end{equation}
@@ -181,21 +184,21 @@ At wavelengths where $\lambda \sim$ the grain size, sunlight will scatter off th
 where, $A_{c, \lambda}$ is the albedo,  $F_\lambda^\odot(r)$ the solar flux at a heliocentric distance from the Sun $r$, and $\Phi_\lambda(\Theta)$ the phase function for scattering angles $\Theta$.
 
 The total intensity from IPD grains is then
-\begin{align}
+\begin{align}\label{eq:I_tot}
     I^\mathrm{Total}_{c, \lambda} &= I^\mathrm{Scattering}_{c,\lambda} + I^\mathrm{Thermal}_{c,\lambda}\\
-    &= A_{c, \lambda} F_\lambda^\odot(R) \Phi_\lambda(\Theta) + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda(T(R)).
+    &= A_{c, \lambda} F_\lambda^\odot(R) \Phi_\lambda(\Theta) + E_{c,\lambda} B_\lambda(T(R)).
 \end{align}
 
 \subsection{Line-of-sight brightness integrals}
 To evaluate the zodiacal light model we solve the brightness integral
-\begin{equation}
+\begin{equation}\label{eq:los}
     I_{p,t} = \sum_c \int n_c \left[  A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda \right]\,\mathrm {ds},
 \end{equation}
-where $p$ is a point on the sky, $\lambda$ is the observational wavelength, and $t$ the time of observation and ds a small distance along the time dependant line-of-sight. This amounts to solving line-of-sight integrals from the position of the observer through the IPD distribution for each unique observation. Since the zodiacal light changes by $\sim 1^\circ$ on the sky each day, observations towards the same point on the sky at close by times can be caches and reused.
+where $p$ is a point on the sky, $\lambda$ is the observational wavelength, and $t$ the time of observation and ds a small distance along the time dependant line-of-sight. This amounts to solving line-of-sight integrals from the position of the observer through the IPD distribution for each unique observation. Note that there is a factor (1 - $A_{c, \lambda}$) difference between equation \eqref{eq:los} and \eqref{eq:I_tot} which represents the extinction of the thermal emission in the line-of-sight by scattering. 
 
 \subsection{Geocentric stationary zodiacal light}
 The circumsolar-ring and Earth-trailing feature are by definition distributed with respect to the Earth. In an Earth-centric, or geocentric, reference frame, the signal from such components will be stationary on the sky, if these are infact perfectly following the Earth around in the orbit. 
-We can therefore make a geocentric map of the full survey, where we have subtracted away the sky model in addition to the diffuse cloud and the asteroidal dust bands. What we are left with is the static zodiacal emission coming from the circumsolar ring and the Earth-trailing feature and other potential earth centric interplanetary dust. 
+We can therefore make a geocentric map of the full survey, where we have subtracted away the sky model in addition to the smooth cloud and the asteroidal dust bands. What we are left with is the static zodiacal emission coming from the circumsolar ring and the Earth-trailing feature and other potential earth centric interplanetary dust. 
 This map can then be used as a lookup map for the combined emission from the circumsolar ring and the Earth-trailing feature components. The projection of the signal from this map to the timestream at a DIRBE frequency $\nu$, at a pixel $p$ in galactic coordinates, and at at a time $t$ is then a matter of a simple lookup
 \begin{equation}
     S_{\nu, t, p}^{\mathrm{Ring + Feature}} = M^{\bigoplus}_{\nu, p'},
@@ -204,7 +207,7 @@ where $M^{\bigoplus}_{\nu, p'}$ is the geocentric lookup map and $p'$ is the cor
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figs/zodi_static.pdf}
-    \caption{Geocentric map $M^{\bigoplus}_\nu$ of the full survey, where we have subtracted away the sky model in addition to the diffuse cloud and the asteroidal dust bands. What we are left with is the stationary emission from the circumsolar ring and the Earth-trailing and possible other contamination from sidelobes.}
+    \caption{Geocentric map $M^{\bigoplus}_\nu$ of the full survey, where we have subtracted away the sky model in addition to the smooth cloud and the asteroidal dust bands. What we are left with is the stationary emission from the circumsolar ring and the Earth-trailing and possible other contamination from sidelobes.}
     \label{fig: geomap}
 \end{figure}
 
@@ -311,6 +314,141 @@ where $M^{\bigoplus}_{\nu, p'}$ is the geocentric lookup map and $p'$ is the cor
 \end{figure*}
 
 
+\begin{table*}
+    \centering
+    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
+    \begin{tabular}{l l *2{rCl}}
+    \hline
+    \hline
+     Parameter & Description & \multicolumn{3}{c}{DIRBE} & \multicolumn{3}{c}{Cosmoglobe DR2} \\ 
+     \hline
+     \multicolumn{8}{c}{Smooth Cloud}\\
+     \hline
+     $n_{0, \mathrm{C}}$ [$10^{-7}$ AU$^{-1}$] & Number density & 1.13 &\pm& 0.0064 & 1.13 &\pm& 0.0064\\
+     $\alpha$ & Radial power-law exponent \quad& 1.34 &\pm& 0.022 & 1.13 &\pm& 0.0064\\
+     $\beta$ & Vertical shape parameter & 4.14 &\pm& 0.067 & 1.13 &\pm& 0.0064\\
+     $\gamma$ & Vertical power-law exponent & 0.942 &\pm& 0.025 & 1.13 &\pm& 0.0064\\
+     $\mu$ & Widening parameter & 0.189 &\pm& 0.014 & 1.13 &\pm& 0.0064\\
+     $i$ [deg] & Inclination & 2.03 &\pm& 0.017 & 1.13 &\pm& 0.0064\\
+     $\Omega$ [deg] & Ascending node & 77.7 &\pm& 0.6 & 1.13 &\pm& 0.0064\\
+     $X_0$ [$10^{-3}$ AU] & x-offset from the Sun  & 11.9 &\pm& 1.1 & 1.13 &\pm& 0.0064\\
+     $Y_0$ [$10^{-3}$ AU] & y-offset from the Sun & 5.48 &\pm& 0.77 & 1.13 &\pm& 0.0064\\
+     $Z_0$ [$10^{-3}$ AU] & z-offset from the Sun & -2.15 &\pm& 0.43 & 1.13 &\pm& 0.0064\\
+     \hline
+     \multicolumn{8}{c}{Dust band 1}\\
+     \hline
+     $n_{0, \mathrm{B}_1}$ [$10^{-10}$ AU$^{-1}$] & Number density & 5.59 &\pm& 0.72 & 1.13 &\pm& 0.0064\\
+     $\delta_{\zeta_{\mathrm{B}_1}}$ [deg] & Shape parameter & 8.78 && Fixed & 1.13 &\pm& 0.0064\\
+     $v_{\mathrm{B}_1}$ & Shape parameter & 0.10 && Fixed & 1.13 &\pm& 0.0064\\
+     $p_{\mathrm{B}_1}$ & Shape parameter & 4 && Fixed & 0.10 &\pm& 0.0064\\
+     $i_{\mathrm{B}_1}$ [deg] & Inclination & 0.56 && Fixed & 0.10 &\pm& 0.0064\\
+     $\Omega_{\mathrm{B}_1}$ [deg] & Ascending node & 80 && Fixed & 0.10 &\pm& 0.0064\\
+     $\delta_{R_{\mathrm{B}_1}}$ [AU] & Inner radial cutoff & 1.5 && Fixed & 0.10 &\pm& 0.0064\\
+     \hline
+     \multicolumn{8}{c}{Dust band 2}\\
+     \hline
+     $n_{0, \mathrm{B}_2}$ [$10^{-9}$ AU$^{-1}$] & Number density & 1.99 &\pm& 0.128 & 1.13 &\pm& 0.0064\\
+     $\delta_{\zeta_{\mathrm{B}_2}}$ [deg] & Shape parameter & 1.99 && Fixed & 1.13 &\pm& 0.0064\\
+     $v_{\mathrm{B}_2}$ & Shape parameter & 0.9 && Fixed & 1.13 &\pm& 0.0064\\
+     $p_{\mathrm{B}_2}$ & Shape parameter & 4 && Fixed & 0.10 &\pm& 0.0064\\
+     $i_{\mathrm{B}_2}$ [deg] & Inclination & 1.2 && Fixed & 0.10 &\pm& 0.0064\\
+     $\Omega_{\mathrm{B}_2}$ [deg] & Ascending node & 30.3 && Fixed & 0.10 &\pm& 0.0064\\
+     $\delta_{R_{\mathrm{B}_2}}$ [AU] & Inner radial cutoff & 0.94 &\pm& 0.025 & 0.10 &\pm& 0.0064\\
+     \hline
+     \multicolumn{8}{c}{Dust band 3}\\
+     \hline
+     $n_{0, \mathrm{B}_3}$ [$10^{-10}$ AU$^{-1}$] & Number density & 1.44 &\pm& 0.234 & 1.13 &\pm& 0.0064\\
+     $\delta_{\zeta_{\mathrm{B}_3}}$ [deg] & Shape parameter & 15 && Fixed & 1.13 &\pm& 0.0064\\
+     $v_{\mathrm{B}_3}$ & Shape parameter & 0.05 && Fixed & 1.13 &\pm& 0.0064\\
+     $p_{\mathrm{B}_3}$ & Shape parameter & 4 && Fixed & 0.10 &\pm& 0.0064\\
+     $i_{\mathrm{B}_3}$ [deg] & Inclination & 0.8 && Fixed & 0.10 &\pm& 0.0064\\
+     $\Omega_{\mathrm{B}_3}$ [deg] & Ascending node & 80 && Fixed & 0.10 &\pm& 0.0064\\
+     $\delta_{R_{\mathrm{B}_3}}$ [AU] & Inner radial cutoff & 1.5 && Fixed & 0.10 &\pm& 0.0064\\
+     \hline
+     \multicolumn{8}{c}{Circum-solar ring}\\
+     \hline
+     $n_{0, \mathrm{SR}}$ [$10^{-8}$ AU$^{-1}$] & Number density & 1.83 &\pm& 0.127 & 1.13 &\pm& 0.0064\\
+     $R_\mathrm{SR}$ [AU] & Radius of peak number density & 1.03 &\pm& 0.00064 & 1.13 &\pm& 0.0064\\
+     $\sigma_{r,\mathrm{SR}}$ [AU] & Radial dispersion & 0.025 && Fixed & 1.13 &\pm& 0.0064\\
+     $\sigma_{z,\mathrm{SR}}$ [AU] & Vertical dispersion & 0.054 &\pm& 0.0066 & 1.13 &\pm& 0.0064\\
+     $i_{\mathrm{SR}}$ [deg] & Inclination & 0.49 &\pm& 0.063 & 0.10 &\pm& 0.0064\\
+     $\Omega_{\mathrm{SR}}$ [deg] & Ascending node & 22.3 &\pm& 0.0014 & 0.10 &\pm& 0.0064\\
+     \hline
+     \multicolumn{8}{c}{Earth-trailing feature}\\
+     \hline
+     $n_{0, \mathrm{TB}}$ [$10^{-8}$ AU$^{-1}$] & Number density & 1.9 &\pm& 0.142 & 1.13 &\pm& 0.0064\\
+     $R_\mathrm{TB}$ [AU] & Radius of peak number density & 1.06 &\pm& 0.011 & 1.13 &\pm& 0.0064\\
+     $\sigma_{r,\mathrm{TB}}$ [AU] & Radial dispersion & 0.10 &\pm& 0.0097 & 1.13 &\pm& 0.0064\\
+     $\sigma_{z,\mathrm{TB}}$ [AU] & Vertical dispersion & 0.091 &\pm& 0.013 & 1.13 &\pm& 0.0064\\
+     $\theta_{\mathrm{TB}}$ [deg] & Longitude with respect to Earth  & -10 && Fixed & 0.10 &\pm& 0.0064\\
+     $\sigma_{\theta,\mathrm{TB}}$ [deg] & Longitude dispersion & 12.1 &\pm& 3.4 & 0.10 &\pm& 0.0064\\
+     \hline
+    \end{tabular}
+    \caption{Comparison between best-fit number density and geometrical interplanetary dust parameters in the DIRBE model and our model.}
+    \label{table:zodi-params-geo}
+    \end{table*}
+    
+    \begin{table*}
+    \centering
+    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
+    \begin{tabular}{l l *2{rCl}}
+    \hline
+    \hline
+     Parameter & Description & \multicolumn{3}{c}{DIRBE} & \multicolumn{3}{c}{Cosmoglobe DR2} \\ 
+     \hline
+     \multicolumn{8}{c}{Smooth Cloud}\\
+     \hline
+     $A_1$ & Albedo at 1.25$\mu $m & 0.204 &\pm& 0.0013 & 1.13 &\pm& 0.0064\\
+     $A_2$ & Albedo at 2.2$\mu $m & 0.255 &\pm& 0.0017 & 1.13 &\pm& 0.0064\\
+     $A_3$ & Albedo at 3.5$\mu $m & 0.210 &\pm& 0.019 & 1.13 &\pm& 0.0064\\
+     $A_4$ & Albedo at 4.9$\mu $m  & 0 && Fixed & 1.13 &\pm& 0.0064\\
+     $E_3$ & Emissivity at 3.5$\mu $m  & 1.66 &\pm& 0.088 & 1.13 &\pm& 0.0064\\
+     $E_4$ & Emissivity at 4.9$\mu $m  & 0.997 &\pm& 0.0036 & 1.13 &\pm& 0.0064\\
+     $E_5$ & Emissivity at 12$\mu $m  & 0.958 &\pm& 0.0026 & 1.13 &\pm& 0.0064\\
+     $E_6$ & Emissivity at 25$\mu $m  & 1 && Fixed & 1.13 &\pm& 0.0064\\
+     $E_7$ & Emissivity at 60$\mu $m  & 0.733 &\pm& 0.0055 & 1.13 &\pm& 0.0064\\
+     $E_8$ & Emissivity at 100$\mu $m  & 0.647 &\pm& 0.012 & 1.13 &\pm& 0.0064\\
+     $E_9$ & Emissivity at 140$\mu $m  & 0.677 && ? & 1.13 &\pm& 0.0064\\
+     $E_10$ & Emissivity at 240$\mu$m    & 0.519 && ? & 1.13 &\pm& 0.0064\\
+     \hline
+     \multicolumn{8}{c}{Dust bands}\\
+     \hline
+     \hline
+     $A_1$ & Albedo at 1.25$\mu $m & 0.204 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $A_2$ & Albedo at 2.2$\mu $m & 0.255 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $A_3$ & Albedo at 3.5$\mu $m & 0.210 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $A_4$ & Albedo at 4.9$\mu $m  & 0 && Fixed & 1.13 &\pm& 0.0064\\
+     $E_3$ & Emissivity at 3.5$\mu $m  & 1.66 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $E_4$ & Emissivity at 4.9$\mu $m  & 0.359 &\pm& 0.054 & 1.13 &\pm& 0.0064\\
+     $E_5$ & Emissivity at 12$\mu $m  & 1.01 &\pm& 0.15 & 1.13 &\pm& 0.0064\\
+     $E_6$ & Emissivity at 25$\mu $m  & 1 && Fixed & 1.13 &\pm& 0.0064\\
+     $E_7$ & Emissivity at 60$\mu $m  & 1.25 &\pm& 0.3 & 1.13 &\pm& 0.0064\\
+     $E_8$ & Emissivity at 100$\mu $m  & 1.52 &\pm& 0.65 & 1.13 &\pm& 0.0064\\
+     $E_9$ & Emissivity at 140$\mu $m  & 1.13 && ? & 1.13 &\pm& 0.0064\\
+     $E_10$ & Emissivity at 240$\mu $m  & 1.40 && ? & 1.13 &\pm& 0.0064\\
+     \hline
+     \multicolumn{8}{c}{Circum-solar ring and Earth-trailing feature}\\
+     \hline
+     \hline
+     $A_1$ & Albedo at 1.25$\mu $m & 0.204 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $A_2$ & Albedo at 2.2$\mu $m & 0.255 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $A_3$ & Albedo at 3.5$\mu $m & 0.210 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $A_4$ & Albedo at 4.9$\mu $m  & 0 && Fixed & 1.13 &\pm& 0.0064\\
+     $E_3$ & Emissivity at 3.5$\mu $m  & 1.66 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
+     $E_4$ & Emissivity at 4.9$\mu $m  & 1.06 &\pm& 0.0089 & 1.13 &\pm& 0.0064\\
+     $E_5$ & Emissivity at 12$\mu $m  & 1.06 &\pm& 0.00078 & 1.13 &\pm& 0.0064\\
+     $E_6$ & Emissivity at 25$\mu $m  & 1 && Fixed & 1.13 &\pm& 0.0064\\
+     $E_7$ & Emissivity at 60$\mu $m  & 0.873 &\pm& 0.0042 & 1.13 &\pm& 0.0064\\
+     $E_8$ & Emissivity at 100$\mu $m  & 1.1 &\pm& 0.000075 & 1.13 &\pm& 0.0064\\
+     $E_9$ & Emissivity at 140$\mu $m  & 1.15 && ? & 1.13 &\pm& 0.0064\\
+     $E_10$ & Emissivity at 240$\mu $m  & 0.858 && ? & 1.13 &\pm& 0.0064\\
+     \hline
+    \end{tabular}
+    \caption{Comparison between best-fit spectral parameters in the DIRBE model and our model.}
+    \label{table:zodi-params-spectral}
+    \end{table*}
+    
+
 % % INTRODUCTION
 % %-------------------------------------------------------------------
 % \section{Introduction}
@@ -336,118 +474,6 @@ where $M^{\bigoplus}_{\nu, p'}$ is the geocentric lookup map and $p'$ is the cor
 % In Sect. 4 we explore extensions to the K98 model by lifting some of the constraints set on the model parameter by the DIRBE team, and including some of the more physical descriptions of the zodiacal components from \cite{RRM}. These extended models are referred to as model A and B, where model A is the relaxed K98 model, while model B is a more complex model with additional modifications.
 
 
-% \section{Modeling zodiacal light in the DIRBE data}
-% Introduction to the foreground and why it differs from typical CMB foregrounds with time-variations. More or less a copy of \cite{ZODIPY} section 3
-
-% \subsection{Zodiacal light models}
-% The zodiacal light models we use are two-fold. The first part considers the three-dimensional parameteric description of how the interplanetary dust is distributed in the solar system, consisting of several zodiacal components. The second part of the model considers the emission mechanisms of the dust. 
-% The three-dimensional model is defined in cartesian heliocentric coordinates $(x, y, z)$ with each zodiacal component $c$ being allowed to have an offset from the sun $(x_0, y_0, z_0)$. The component-centric coordinates are then
-% \begin{equation}    
-%     \begin{aligned}
-%         x_c&= x - x_{0,c}\\
-%         y_c&= y - y_{0,c}\\
-%         z_c&= z - z_{0,c}.
-%     \end{aligned}
-% \end{equation}
-% Additionally, each component is allowed to have its own symmetry-plane described by the inclination $i$ and the ascending node $\Omega$. 
-% In the component-centric coordinates we can then describe the full density distribution of the component $n_c(r_c, z_c)$ with the two parameters $r_c$ and $z_c$
-% \begin{align}
-%     r_c &= \sqrt{x_c^2 + y_c^2 + z_c^2}\\
-%     z_c &= x_c\sin{\Omega_c}\sin{i_c} - y_c \cos{\Omega_c}\sin{i_c} + z_c \cos{i_c},
-% \end{align}
-% where $r_c$ is the radial distance from the components center $(x_{0,c}, y_{0,c}, z_{0,c})$ and $z_c$ height above the symmetry plane. Note that all distances are in units of AU.
-
-
-% \subsection{Emission mechanisms}
-% We assume that the thermal emission from the interplanetary dust grains are on the form of a blackbody modified by an emissivity factor $E_{c, \lambda}$
-% \begin{equation}
-%     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T).
-% \end{equation}
-% where $B_\lambda(T)$ is the Planck function with the temperature $T$ given by the heliocentric distance from the sun $r$
-% \begin{equation}
-%     T(r) = T_0 R^{-\delta},
-% \end{equation}
-% where $\delta$ describes how the temperature decreases with distance from the sun.
-
-% The scattered light is described by the solar flux $F_\lambda^\odot$, the phase function $\Phi_\lambda(\Theta)$ representing the probability of a photon being scattered at an angle $\Theta$, and the reflectivity or albedo $A_{c, \lambda}$ of the dust grains
-% \begin{equation}\label{eq: scat_term}
-%     I^\mathrm{Scattering}_{c, \lambda} = A_{c, \lambda} F_\lambda^\odot(R) \Phi_\lambda(\Theta).
-% \end{equation}
-% We refer to \cite{ZODIPY} for a more details. The total intensity from the zodiacal light is then the sum of the scattered and thermal emission
-% \begin{align}
-%     I^\mathrm{Total}_{c, \lambda} &= I^\mathrm{Scattering}_{c,\lambda} + I^\mathrm{Thermal}_{c,\lambda}\\
-%     &= A_{c, \lambda} F_\lambda^\odot(R) \Phi_\lambda(\Theta) + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda(T(R)).
-% \end{align}
-
-% \subsection{Line-of-sight integration}
-% When evaluating the zodiacal emission at a time $t$ we integrating along a line-of-sight $ds$ from the observer towards the observed pixel $p$
-% \begin{equation}\label{eq: intensity}
-%     I_{p,t} = \sum_c \int n_c \left[  A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda \right]\,\mathrm ds,
-% \end{equation}
-
-% \subsection{Novel techniques for zodiacal light modelling}
-% \subsubsection{Geocentric static zodiacal emission}
-% The circumsolar-ring and Earth-trailing feature are by definition distributed with respect to the Earth. In an Earth-centric, or geocentric, reference frame, the signal from such components will be stationary on the sky, if these are infact perfectly following the Earth around in the orbit. 
-% We can therefore make a geocentric map of the full survey, where we have subtracted away the sky model in addition to the diffuse cloud and the asteroidal dust bands. What we are left with is the static zodiacal emission coming from the circumsolar ring and the Earth-trailing feature and other potential earth centric interplanetary dust. 
-% This map can then be used as a lookup map for the combined emission from the circumsolar ring and the Earth-trailing feature components. The projection of the signal from this map to the timestream at a DIRBE frequency $\nu$, at a pixel $p$ in galactic coordinates, and at at a time $t$ is then a matter of a simple lookup
-% \begin{equation}
-%     S_{\nu, t, p}^{\mathrm{Ring + Feature}} = M^{\bigoplus}_{\nu, p'},
-% \end{equation}
-% where $M^{\bigoplus}_{\nu, p'}$ is the geocentric lookup map and $p'$ is the corresponding pixel index in the geocentric reference frame. An example of such a map is shown in figure \ref{fig: geomap}.
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=\columnwidth]{figs/zodi_static.pdf}
-%     \caption{Geocentric map $M^{\bigoplus}_\nu$ of the full survey, where we have subtracted away the sky model in addition to the diffuse cloud and the asteroidal dust bands. What we are left with is the stationary emission from the circumsolar ring and the Earth-trailing and possible other contamination from sidelobes.}
-%     \label{fig: geomap}
-% \end{figure}
-
-% \subsubsection{Pixel Fourier interpolation}
-% Write this if we end up using it.
-
-% \section{Reference models}
-% Below is a brief overview of the six zodiacal components in the K98 and RRM models. For a more detailed description of the components, see \cite{K98} and \cite{RRM}.
-% \subsection{DIRBE/Kelsall (K98) model}
-% The K98 model includes six zodiacal components. For a visual representation of the components, see Figure 1 and 2 in \cite{ZODIPY}. 
-
-% \subsubsection{The diffuse cloud}
-% The diffuse cloud is the primary source of interplanetary dust in the model and is a cloud-like distribution of dust that encapsulates most of the inner solar system. 
-% The density of the cloud is described on a seperable form with a radial and a vertical component motived by the Pointing-Robertson effect
-% \begin{equation}
-%     n_\mathrm{C}(r_\mathrm{C}, z_\mathrm{C}) = n_{0,\mathrm{C}} r_\mathrm{C}^{-\alpha} f(\zeta_\mathrm{C}),
-% \end{equation}
-% where 
-% \begin{equation}
-%     f(\zeta) = \exp \left(-\beta g^{\gamma} \right),
-% \end{equation}
-% and $\zeta \equiv |z_c|/r_c$, $g$ is
-% \begin{equation}
-%     g = \begin{cases}
-%         \zeta^2/2\mu, & \text{for } \zeta < \mu\\
-%         \zeta - \mu/2, & \text{for } \zeta \geq \mu,
-%     \end{cases}
-% \end{equation}
-% where $\mu$, $\alpha$, $\beta$, and $\gamma$ are all shape parameters.
-
-% \subsubsection{Asteroidal dust bands}
-% The K98 model includes three asteroidal dust band pairs, each associated with a different asteroidal family. 
-% The bands are described as a sum of two Gaussian distributions in the radial and vertical direction
-% \begin{equation}
-%     \begin{aligned}
-%         n_{\mathrm{B}_j}(r_{\mathrm{B}_j}, z_{\mathrm{B}_j})=& \frac{3 n_{0, \mathrm{B}_j}}{r_{\mathrm{B}_j}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_j}}{\delta_{\zeta_{\mathrm B_j}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_j}}{\delta_{\zeta_{\mathrm{B}_j}}}\right)^{p_{\mathrm{B}_j}}v^{-1}_{\mathrm{B}_j}\right] \\
-%         & \times\left\{1-\exp \left[-\left(\frac{r_{\mathrm{B}_j}}{\delta_{r_{\mathrm{B}_j}}}\right)^{20}\right]\right\},
-%     \end{aligned}
-% \end{equation}
-% \subsubsection{Circumsolar ring and Earth-trailing feature}
-% The circumsolar ring and Earth-trailing feature are two components that are associated with the Earth's orbit around the sun. 
-% The circumsolar ring is a toroidal distribution of dust that is centered around the sun, while the Earth-trailing is an enhancement to this distribution in the region that trails the Earth.
-% \begin{equation}\label{eq: ring}
-%     n_\mathrm{R}(r_\mathrm{R}, z_\mathrm{R})=n_{\mathrm{R},0} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{R}}\right)^2}{\sigma_{\mathrm{R}, r} ^2}-\frac{\left| z_\mathrm{R} \right|}{\sigma_{\mathrm{R}, z}}\right],
-% \end{equation}
-% \begin{equation}\label{eq: feature}
-%    n_\mathrm{F}(r_\mathrm{F}, z_\mathrm{F}, \theta_\mathrm{F}) = n_{\mathrm{F}, 0} \exp \left[-\frac{\left(r_\mathrm{F}-r_{\mathrm{F}, 0}\right)^{2}}{\sigma_{\mathrm{F}, r}^{2}}-\frac{\left|z_\mathrm{F}\right|}{\sigma_{\mathrm{F}, z}}-\frac{\left(\theta_\mathrm{F}-\theta_{\mathrm{F}, 0}\right)^{2}}{\sigma_{\mathrm{F}, \theta }^{2}}\right].
-% \end{equation}
-% The Earth-trailing feature is the only part of the zodiacal light model that is not symmetric in the solar system and requires the observer to input the angle $\theta_\mathrm{F}$ which describes the longitude of the Earth. Note that in K98 these two densities was joined to one single component.
 
 % \subsection{Rowan-Robinson and May (RRM) model}
 % In the RRM model, the components are described in terms of the radial distance from the component center $r_c$ and the the latitude above the symmetry-plane $\beta_0$. The transformation between the two angular and cartesian representations are given by $z_c = r_c \sin{\beta_0}$, 
