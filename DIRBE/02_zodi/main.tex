@@ -93,12 +93,31 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 
 % write an abstract 
 
-\abstract{We present the first Bayesian framework for global modelling of zodiacal light and its application to the Diffuse Infrared Background Experiment (DIRBE) time-ordered data (TOD). The framework uses a modified version of the COBE/DIRBE zodiacal light model to estimate the zodiacal light along the observed line-of-sights in the time domain. We obtain a new state-of-the-art zodiacal light model by re-estimating the free parameters in the COBE/DIRBE model and produce DIRBE zodiacal light subtracted mission average (ZSMA) maps with much smaller zodiacal light residuals. We argue that the improved zodiacal light model fit becomes possible through global Bayesian end-to-end analysis of the DIRBE TODs with COBE-FIRAS, GAIA, Planck HFI, and WISE observations, giving us a more accurate instrumental and astophysical characterization of the infrared sky.
-However, we do note that even though the zodiacal light model represent an improvement with respect to original DIRBE model when it comes to removing ZL from the DIRBE data, this is still a preliminary model. We illustrate the potential of this framework for building zodiacal models by conducting a small study where we further extend and modifcations to the zodiacal light model by adding more asteroidal bands, interstellar dust and using a more physically motivated parameterization of the interplanetary medium as described in \cite{RRM}. A more modern and physical parametrization of the interplanetary medium in combination with joint analysis with complementry infrared experiments such IRAS, AKARI, WISE and SPHEREx will 
-
+\abstract{We present the first Bayesian framework for global modelling 
+of zodiacal light and its application to the Diffuse Infrared Background 
+Experiment (DIRBE) time-ordered data (TOD). The framework uses a 
+modified version of the COBE/DIRBE zodiacal light model to estimate the 
+zodiacal light along the observed line-of-sights in the time domain. We 
+obtain a new state-of-the-art zodiacal light model by re-estimating the 
+free parameters in the COBE/DIRBE model and produce DIRBE zodiacal light 
+subtracted mission average (ZSMA) maps with much smaller zodiacal light 
+residuals. We argue that the improved zodiacal light model fit becomes 
+possible through global Bayesian end-to-end analysis of the DIRBE TODs 
+with COBE-FIRAS, GAIA, Planck HFI, and WISE observations, giving us a 
+more accurate instrumental and astophysical characterization of the 
+infrared sky. However, we do note that even though the zodiacal light 
+model represent an improvement with respect to original DIRBE model when 
+it comes to removing ZL from the DIRBE data, this is still a preliminary 
+model. We illustrate the potential of this framework for building 
+zodiacal models by conducting a small study where we further extend and 
+modifcations to the zodiacal light model by adding more asteroidal 
+bands, interstellar dust and using a more physically motivated 
+parameterization of the interplanetary medium as described in 
+\cite{Robinson2013}. A more modern and physical parametrization of the 
+interplanetary medium in combination with joint analysis with 
+complementry infrared experiments such IRAS, AKARI, WISE and SPHEREx 
+will 
 }
-
-%   \abstract{We present a new and improved interplanetary dust model. The interplanetary dust model is a re-estimation of the parameters in the Kelsall et al. (1998) model in addition to an interstellar dust component inspired by Robinson and May (200?). In addition, other small improvements such as using modern solar irradiance models are included. The model parameters are re-estimated using Commander, where we have added zodiacal parameters as an additional gibbs step. The 180 total parameters in the model are estimated using Gibbs sampling. We demonstrate the use of the new interplanetary model on the binned DIRBE CIOs along with the \Cosmoglobe\ sky model to produce the cleanest to date DIRBE sky maps. The Cosmoglobe model which is valid between 1.25 $\mu m$ and 240 $\mu m$ is added added as the new default interplanetary dust model in ZodiPy.}
 
    \keywords{Zodiacal dust, Interplanetary medium, Cosmology: cosmic background radiation}
 
@@ -107,21 +126,95 @@ However, we do note that even though the zodiacal light model represent an impro
 \setcounter{tocdepth}{3}
 %\tableofcontents
    
+
 \section{Introduction}
-Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m (\cite{Leinert1998} and references therein). The light comes from scattering and re-emission of sunlight from interplanetary dust (IPD) grains. The inner Solar system is embedded in a sun-centered cloud of IPD, with a symmetry axis tilted slightly with respect to the Ecliptic, known as the zodiacal cloud. The ZL is seasonal, and its appearance in the sky changes as the Earth moves through the IPD distribution. The most common way to model the observer position-dependent ZL is to evaluate a line-of-sight integral for each observation directly in the time-ordered domain. The time-varying and three-dimensional nature of the ZL makes it one of the most challenging foregrounds to model in astrophysical and cosmological studies of the infrared sky. The lack of a good ZL model has left a vast portion of the electromagnetic spectrum inaccessible to cosmological analysis attempting to measure the Cosmic Optical and Infrared Backgrounds (COB, CIB). 
+Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust 
+emission) is the primary source of diffuse radiation observed in the 
+infrared sky between 1-100 $\mu$m (\cite{Leinert1998} and references 
+therein). The light comes from scattering and re-emission of sunlight 
+from interplanetary dust (IPD) grains. The inner Solar system is 
+embedded in a sun-centered cloud of IPD, with a symmetry axis tilted 
+slightly with respect to the Ecliptic, known as the zodiacal cloud. The 
+ZL is seasonal, and its appearance in the sky changes as the Earth moves 
+through the IPD distribution. The most common way to model the observer 
+position-dependent ZL is to evaluate a line-of-sight integral for each 
+observation directly in the time-ordered domain. The time-varying and 
+three-dimensional nature of the ZL makes it one of the most challenging 
+foregrounds to model in astrophysical and cosmological studies of the 
+infrared sky. The lack of a good ZL model has left a vast portion of the 
+electromagnetic spectrum inaccessible to cosmological analysis 
+attempting to measure the Cosmic Optical and Infrared Backgrounds (COB, 
+CIB). 
 
-The state-of-the-art ZL model in the field of cosmology is the \cite{Kelsall1998} model (K98, sometimes referred to as the \textit{COBE}/DIRBE or just the DIRBE model). K98 is a parametric ZL model describing the three-dimensional IPD distribution and the radiative properties of the dust. The model was developed by the \textit{COBE}/DIRBE team to remove ZL from their data in the late 1900s. Since then, our understanding of the infrared sky has improved with new observational data from experiments like Planck HFI, GAIA, and WISE. Combining recent computational advances in Bayesian cosmological analysis \citep{BP2023, Galloway2023, Watts2023}, more readily available computing power and new complementary infrared datasets allow us to extract significantly more information about the true nature of the ZL from the DIRBE data than was possible at the time of the original DIRBE analysis.
+The state-of-the-art ZL model in the field of cosmology is the 
+\cite{Kelsall1998} model (K98, sometimes referred to as the 
+\textit{COBE}/DIRBE or just the DIRBE model). K98 is a parametric ZL 
+model describing the three-dimensional IPD distribution and the 
+radiative properties of the dust. The model was developed by the 
+\textit{COBE}/DIRBE team to remove ZL from their data in the late 1900s.
+ Since then, our understanding of the infrared sky has improved with new 
+ observational data from experiments like Planck HFI, GAIA, and WISE. 
+ Combining recent computational advances in Bayesian cosmological 
+ analysis \citep{BP2023, Galloway2023, Watts2023}, more readily 
+ available computing power and new complementary infrared datasets 
+ allow us to extract significantly more information about the true 
+ nature of the ZL from the DIRBE data than was possible at the time 
+ of the original DIRBE analysis.
 
-This paper is the second in a series of six describing the methods and results of our re-analysis of the time-ordered \textit{COBE}/DIRBE data within a global end-to-end Bayesian analysis framework. Here, we describe the ZL modeling approach in Commander3 and demonstrate the benefits of fitting a ZL model directly within a global end-to-end Bayesian framework. The basis of the newly implemented ZL module in Commander3 is ZodiPy \citep{San2024}, which is an Astropy-affiliated Python package for ZL simulations. The development of ZodiPy was motivated by two factors. It would serve as a basis for the code development in Commander3, and secondly, it would provide the astrophysical and cosmology communities with an accessible, easy-to-use interface to existing and coming ZL models. As an early application, \cite{San2022} demonstrates the removal of ZL from the DIRBE TOD with ZodiPy using the K98 model.
+This paper is the second in a series of six describing the methods and 
+results of our re-analysis of the time-ordered \textit{COBE}/DIRBE data 
+within a global end-to-end Bayesian analysis framework. Here, we 
+describe the ZL modeling approach in Commander3 and demonstrate the 
+benefits of fitting a ZL model directly within a global end-to-end 
+Bayesian framework. The basis of the newly implemented ZL module in 
+Commander3 is ZodiPy \citep{San2024}, which is an Astropy-affiliated 
+Python package for ZL simulations. The development of ZodiPy was 
+motivated by two factors. It would serve as a basis for the code 
+development in Commander3, and secondly, it would provide the 
+astrophysical and cosmology communities with an accessible, easy-to-use 
+interface to existing and coming ZL models. As an early application, 
+\cite{San2022} demonstrates the removal of ZL from the DIRBE TOD with 
+ZodiPy using the K98 model.
 
-The following sections are organized as follows. In Sect. \ref{sect:zodi-model}, we introduce the K98 ZL model and discuss implementation details and some optimizations regarding evaluating ZL models on HEALPix grids. Next, in Sect. \ref{sect:param-estimation}, we discuss ZL parameter estimation and our implementation, which involves the use of a function minimizer on a sub-sample of the DIRBE TOD. Finally, in Sect. \ref{sect:improved-model}, we present a greatly improved ZL model, yielding lower residuals at all ten DIRBE channels. The improved model uses only a slightly different parametrization than the K98 model. We recommend using this model over K98 for all infrared community members.
+The following sections are organized as follows. In Sect.~\ref{sect:zodi-model}
+, we introduce the K98 ZL model and discuss 
+implementation details and some optimizations regarding evaluating ZL 
+models on HEALPix grids. Next, in Sect.~\ref{sect:param-estimation}, we 
+discuss ZL parameter estimation and our implementation, which involves 
+the use of a function minimizer on a sub-sample of the DIRBE TOD. 
+Finally, in Sect.~\ref{sect:improved-model}, we present a greatly 
+improved ZL model, yielding lower residuals at all ten DIRBE channels. 
+The improved model uses only a slightly different parametrization than 
+the K98 model. We recommend using this model over K98 for all infrared 
+community members.
+
 
 \section{Zodiacal light modelling}\label{sect:zodi-model}
-ZL is commonly removed directly from timestreams by performing line-of-sight integration at each observation through a parametric three-dimensional model of the IPD distribution. We use a slightly modified version of the K98 ZL model in Commander3. Below we present a short introduction to the model parametrization in terms of the three-dimensional IPD distribution and the radiative and scattering properties of the IPD. We refer to \cite{Kelsall1998} for a more detailed discussion about the ZL model.
-\subsection{Parameterization of interplanetary dust}
-The IPD in the zodiacal cloud is smooth and stable, and most of the dust is accounted for by a diffuse cloud-like component \citep{Leinert1998}. The majority of the dust in this cloud component stems from the mass-shedding of Jupiter family comets with low eccentricities and inclinations with respect to the ecliptic. However, fine structures within the zodiacal cloud exist as a result of collisions and fragmentation in asteroids and gravitational resonance in the orbit of planets \citep{Low1984, Dermott1984, Dermott1994, Reach1997}. 
+ZL is commonly removed directly from timestreams by performing 
+line-of-sight integration at each observation through a parametric 
+three-dimensional model of the IPD distribution. We use a slightly 
+modified version of the K98 ZL model in Commander3. Below we present a 
+short introduction to the model parametrization in terms of the 
+three-dimensional IPD distribution and the radiative and scattering p
+roperties of the IPD. We refer to~\cite{Kelsall1998} for a more detailed 
+discussion about the ZL model.
 
-We model the IPD distribution as a combination of several zodiacal components, denoted by $c$, each described by a heliocentric ecliptic number density $n_c(x,y,z)$. Each zodiacal component is allowed to have a heliocentric offset $(x_{0,c}, y_{0,c}, z_{0,c})$, such that the component-centric coordinates become
+
+\subsection{Parameterization of interplanetary dust}
+The IPD in the zodiacal cloud is smooth and stable, and most of the dust 
+is accounted for by a diffuse cloud-like component \citep{Leinert1998}. 
+The majority of the dust in this cloud component stems from the 
+mass-shedding of Jupiter family comets with low eccentricities and 
+inclinations with respect to the ecliptic. However, fine structures 
+within the zodiacal cloud exist as a result of collisions and 
+fragmentation in asteroids and gravitational resonance in the orbit of 
+planets \citep{Low1984, Dermott1984, Dermott1994, Reach1997}. 
+
+We model the IPD distribution as a combination of several zodiacal 
+components, denoted by $c$, each described by a heliocentric ecliptic 
+number density $n_c(x,y,z)$. Each zodiacal component is allowed to have 
+a heliocentric offset $(x_{0,c}, y_{0,c}, z_{0,c})$, such that the 
+component-centric coordinates become
 \begin{equation}    
     \begin{aligned}
         x_c&= x - x_{0,c}\\
@@ -129,7 +222,11 @@ We model the IPD distribution as a combination of several zodiacal components, d
         z_c&= z - z_{0,c}.
     \end{aligned}
 \end{equation}
-Additionally, each zodiacal component is allowed to have a plane of symmetry different from the ecliptic, given by an inclination $i_c$ and ascending node $\Omega_c$. In component-centric coordinates, the number density is then fully described by the radial distance $r_c$ from the origin and the height above the symmetry plane $Z_c$
+Additionally, each zodiacal component is allowed to have a plane of 
+symmetry different from the ecliptic, given by an inclination $i_c$ and 
+ascending node $\Omega_c$. In component-centric coordinates, the number 
+density is then fully described by the radial distance $r_c$ from the 
+origin and the height above the symmetry plane $Z_c$
 \begin{align}
     r_c &= \sqrt{x_c^2 + y_c^2 + z_c^2},\\
     Z_c &= x_c\sin{\Omega_c}\sin{i_c} - y_c \cos{\Omega_c}\sin{i_c} + z_c \cos{i_c}.
@@ -138,11 +235,17 @@ Additionally, each zodiacal component is allowed to have a plane of symmetry dif
 
 \subsection{Zodiacal components}
 \subsubsection{Smooth cloud}
-The cloud component represents the smooth IPD distribution that embeds the inner Solar system. Its number density is modeled as
+The cloud component represents the smooth IPD distribution that embeds 
+the inner Solar system. Its number density is modeled as
 \begin{equation}
     n_\mathrm{C}(x,y,z)=n_{0, \mathrm{C}}r_\mathrm{C}^{-\alpha}f(\zeta_\mathrm{C}),
 \end{equation}
-where $n_{0, \mathrm{C}}$ is the number density at 1 AU, $\alpha$ is a power-law index, $f(\zeta_\mathrm{C})$ is the fan-like vertical distribution given as $f(\zeta_\mathrm{C}) = \exp {\left[-\beta g^\gamma \right]}$, where $\zeta_\mathrm{c} = |Z_\mathrm{c}|/r_\mathrm{c}$ is the radial height above the symmetry plane, 
+where $n_{0, \mathrm{C}}$ is the number density at 1 AU, $\alpha$ is a 
+power-law index, $f(\zeta_\mathrm{C})$ is the fan-like vertical 
+distribution given as 
+$f(\zeta_\mathrm{C}) = \exp {\left[-\beta g^\gamma \right]}$, where 
+$\zeta_\mathrm{c} = |Z_\mathrm{c}|/r_\mathrm{c}$ is the radial height 
+above the symmetry plane, 
 \begin{equation}
     g = \begin{cases}
         \zeta^2/2\mu & \mathrm{for}\; \zeta < \mu,\\
@@ -152,34 +255,62 @@ where $n_{0, \mathrm{C}}$ is the number density at 1 AU, $\alpha$ is a power-law
 and  $\beta$, $\gamma$ and $\mu$ are shape parameters.
 
 \subsubsection{Dust bands}
-Three dust bands are included in the model to represent the observed shoulder-like structure in the IRAS scans across the ecliptic plane. These bands appear at ecliptic latitudes of $\pm \sim 1.4^\circ$, $10^\circ$, and $15^\circ$, and are associated with the Themis, Koronis, and Eos asteroid families, respectively. Dust bands are modeled as
+Three dust bands are included in the model to represent the observed 
+shoulder-like structure in the IRAS scans across the ecliptic plane. 
+These bands appear at ecliptic latitudes of 
+$\pm \sim 1.4^\circ$, $10^\circ$, and $15^\circ$, and are associated 
+with the Themis, Koronis, and Eos asteroid families, respectively. Dust 
+bands are modeled as
 \begin{align}
     n_{\mathrm{B}_i}(x,y,z) &= \frac{3 n_{0, \mathrm{B}_i}}{r_{\mathrm{B}_i}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{p}v^{-1}\right] \\
     &\times\left\{1-\exp \left[-\left(\frac{r_{\mathrm{B}_i}}{\delta_{r_{\mathrm{B}_i}}}\right)^{20}\right]\right\},
 \end{align}
-where $n_{0, \mathrm{B}_i}$ is the number density of band $\mathrm{B}_i$ at 3 AU, $\delta_{r_{\mathrm{B}_i}}$ is the inner radial cut-off, and $p$, $v$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
+where $n_{0, \mathrm{B}_i}$ is the number density of band $\mathrm{B}_i$ 
+at 3 AU, $\delta_{r_{\mathrm{B}_i}}$ is the inner radial cut-off, and 
+$p$, $v$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
 \subsubsection{Circum-solar ring and Earth-trailing feature}
-A circum-solar ring component is included in the model to represent dust that has accumulated in Earth's orbit due to gravitational effects. This component also includes an enhancement to the IPD distribution at Earth's wake, known as the Earth-trailing feature. The ring component is modeled as
+A circum-solar ring component is included in the model to represent dust 
+that has accumulated in Earth's orbit due to gravitational effects. This 
+component also includes an enhancement to the IPD distribution at 
+Earth's wake, known as the Earth-trailing feature. The ring component is 
+modeled as
 \begin{align}
     n_\mathrm{R}(x, y, z, \theta)&=n_{0, \mathrm{SR}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{SR}}\right)^2}{\sigma_{R,\mathrm{SR}} ^2}-\frac{\left| Z_\mathrm{R} \right|}{\sigma_{Z, \mathrm{SR}}}\right],\\
    &+ n_{0, \mathrm{TF}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{TF}}\right)^{2}}{\sigma_{R, \mathrm{TF}}^{2}}-\frac{\left|Z_\mathrm{F}\right|}{\sigma_{Z, \mathrm{TF}}}-\frac{\left(\theta-\theta_{0, \mathrm{TF}}\right)^{2}}{\sigma_{\theta,\mathrm{TF}}^{2}}\right],
 \end{align}
-where $\theta$ is the heliocentric longitude of the Earth, and the radial locations $r_{0, \mathrm{SR}}$, $r_{0, \mathrm{TF}}$ specifies the distances to the peak densities $n_{0, \mathrm{SR}}$, $n_{0, \mathrm{TF}}$. The $\sigma$ parameters are length scales for the $r$, $Z$ and $\theta$ parameters, respectively. Note that the Earth-trailing feature depends on the position of the Earth and does not have a plane symmetry like the other zodiacal components. 
+where $\theta$ is the heliocentric longitude of the Earth, and the 
+radial locations $r_{0, \mathrm{SR}}$, $r_{0, \mathrm{TF}}$ specifies 
+the distances to the peak densities $n_{0, \mathrm{SR}}$, 
+$n_{0, \mathrm{TF}}$. The $\sigma$ parameters are length scales for the 
+$r$, $Z$ and $\theta$ parameters, respectively. Note that the 
+Earth-trailing feature depends on the position of the Earth and does not 
+have a plane symmetry like the other zodiacal components. 
+
 
 \subsection{Radiative and scattering properties}
-Thermal emission from IPD grains is modeled on the form of a blackbody modified by an emissivity factor $E_{c, \lambda}$
+Thermal emission from IPD grains is modeled on the form of a blackbody
+ modified by an emissivity factor $E_{c, \lambda}$
 \begin{equation}
     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T),
 \end{equation}
-where $B_\lambda$ is the Planck function at a wavelength $\lambda$. The temperature $T$ of the IPD falls off with radial distance $r$ from the Sun as
+where $B_\lambda$ is the Planck function at a wavelength $\lambda$. The 
+temperature $T$ of the IPD falls off with radial distance $r$ from the 
+Sun as
 \begin{equation}
     T(r) = T_0 r^{-\delta},
 \end{equation}
-where $T_0$ is the temperature of IPD at 1 AU and $\delta$ the power law index. In addition to emitting thermally, IPD grains also scatter sunlight in the near-infrared. The contribution to the total signal from scattering is modeled as
+where $T_0$ is the temperature of IPD at 1 AU and $\delta$ the power law 
+index. In addition to emitting thermally, IPD grains also scatter 
+sunlight in the near-infrared. The contribution to the total signal from 
+scattering is modeled as
 \begin{equation}\label{eq: scat_term}
     I^\mathrm{Scattering}_{c, \lambda} = A_{c, \lambda} F_\lambda^\odot(r) \Phi_\lambda(\Theta),
 \end{equation}
-where $A_{c, \lambda}$ is the albedo, or reflectivity of the IPD of a given zodiacal component, $F_\lambda^\odot(r)$ the solar flux at a radial distance from the Sun, and $\Phi_\lambda(\Theta)$ is the phase function for scattering angles $\Theta$, which describes the angular distribution of the scattered light.
+where $A_{c, \lambda}$ is the albedo, or reflectivity of the IPD of a 
+given zodiacal component, $F_\lambda^\odot(r)$ the solar flux at a 
+radial distance from the Sun, and $\Phi_\lambda(\Theta)$ is the phase 
+function for scattering angles $\Theta$, which describes the angular 
+distribution of the scattered light.
 
 The total intensity from a single IPD grain is
 \begin{align}\label{eq:I_tot}
@@ -188,40 +319,114 @@ The total intensity from a single IPD grain is
 \end{align}
 
 \subsection{Evaluating the zodiacal model}
-The ZL model is evaluated by solving the following line-of-sight integral for each observation in the timestream
+The ZL model is evaluated by solving the following line-of-sight 
+integral for each observation in the timestream
 \begin{equation}\label{eq:los}
     I_{p,t} = \sum_c \int n_c \left[  A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda \right]\,\mathrm {ds}.
 \end{equation}
-Here, $p$ is a point in the sky, $t$ is the time of observation, and ds is a small distance along the line-of-sight $s$ from the observer and towards $p$, and $n_c$ is the number density of component $c$ in the line-of-sight. Note that there is a factor (1 - $A_{c, \lambda}$) difference between equation \eqref{eq:los} and \eqref{eq:I_tot}. This factor represents a form of extinction where thermal emission is sometimes scattered away from the line-of-sight. 
+Here, $p$ is a point in the sky, $t$ is the time of observation, and ds 
+is a small distance along the line-of-sight $s$ from the observer and 
+towards $p$, and $n_c$ is the number density of component $c$ in the 
+line-of-sight. Note that there is a factor (1 - $A_{c, \lambda}$) 
+difference between equation~\eqref{eq:los} and~\eqref{eq:I_tot}. This 
+factor represents a form of extinction where thermal emission is 
+sometimes scattered away from the line-of-sight. 
 
-\subsection{Optimizing model evaluations}
-The line-of-sight evaluations are an expensive part of the analysis pipeline and significantly increase the time that it takes to complete a single Gibbs sample. Additionally, when estimating ZL parameters we need to make a pass over the entire data set for each proposal. The DIRBE data set is very light when compared with modern observations, meaning that we can get away with some additional computational time. But for future data releases with AKARI or SPHEREx data, this will become computationally unfeasible. As such, we have implemented a few optimizations regarding ZL evaluation. 
 
-The main optimization comes from the implementation of a ZL cache. The cache takes advantage of the smoothly varying nature of the ZL, and lets us reuse computed ZL estimates for proximate re-observations. Internally, Commander3 works with instrument pointing on the form of discrete pixel indices, meaning that re-observerations of a given pixel, within a short timeframe $\Delta t$, can be reused
+\subsection{Optimizing model evaluations}\label{sect:optimization}
+The line-of-sight evaluations are an expensive part of the analysis 
+pipeline and significantly increase the time that it takes to complete a 
+single Gibbs sample. Additionally, when estimating ZL parameters we need 
+to make a pass over the entire data set for each proposal. The DIRBE 
+data set is very light when compared with modern observations, meaning 
+that we can get away with some additional computational time. But for 
+future data releases with AKARI or SPHEREx data, this will become 
+computationally unfeasible. As such, we have implemented a few 
+optimizations regarding ZL evaluation. 
+\begin{figure}
+    \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}
+    \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
+    \caption{\textit{(top):} Difference between two instantaneous views 
+    of the ZL separated by 2 hours. \textit{(bottom):} Difference 
+    between an instantaneous view of the ZL from 900 km above Earth's 
+    north pole and one from 900km below Earth's south pole.}    
+    \label{fig:cache-error}
+\end{figure}
+The main optimization comes from the implementation of a ZL cache. The 
+cache takes advantage of the smoothly varying nature of the ZL, and lets 
+us reuse computed ZL estimates for proximate re-observations. 
+Internally, Commander3 works with instrument pointing on the form of 
+discrete pixel indices, meaning that re-observerations of a given pixel, 
+within a short timeframe $\Delta t$, can be reused
 \begin{equation}
     s_\mathrm{zodi}(p, t_i) = s_\mathrm{zodi}(p, t_j).
 \end{equation}
-The error induces from this cache is directly proportional to the time $\Delta t$. As a reference, the ZL moves by about $1^\circ$ on the sky each day as the Earth orbits the Sun. We found that resetting the cache every 2 hours resulted in a good compromise between speed and accuracy. Note that a cache on this form is only efficient for experiments with scanning strategies with partially overlapping subsequent scans. 
+The error induces from this cache is directly proportional to the 
+distance that the observer has moved through the $\Delta t$ parameter. 
+As a reference, the ZL moves by about $1^\circ$ on the sky each day as 
+the Earth orbits the Sun. In addition to the positional change along 
+Earth's orbit, the COBE satellite also orbits the Earth at an altitude 
+of 900 km. This motion is lost when using the cache. These magnitude of 
+the error induced by the cache is illustrated in 
+Figure~\ref{fig:cache-error}.  We found that resetting the cache every 
+2 hours resulted in a good compromise between speed and accuracy. Note 
+that a cache on this form is only efficient for experiments with scanning 
+strategies with partially overlapping subsequent scans. The magnitude of
+the errors are well below the the residuals, justifying the use of the 
+cache.
 
-The smooth nature of the ZL can be exploited in more ways. When sampling ZL parameters is is possible to use a subsample of the full TOD while still resolving the smooth ZL structure. In our analysis we have used a thinning factor of 8 meaning that we fit the data to a timestream with 1 Hz. Another optimization comes in form of spatial downsampling, where the smoothness of the ZL is resolved adequatly at a HEALPix resolution of $n_\mathrm{SIDE} = 64$ down from the original 512, further reducing the volume of the data used in the fits by a factor of 64. The downsampling is simulated by projecting all the original pointing to the lower HEALPix resolution, and using a corresponding low-res cache.
+The smooth nature of the ZL can be exploited in more ways. When sampling 
+ZL parameters is is possible to use a subsample of the full TOD while 
+still resolving the smooth ZL structure. In our analysis we have used a 
+thinning factor of 8 meaning that we fit the data to a timestream with 1 
+Hz. Another optimization comes in form of spatial downsampling, where 
+the smoothness of the ZL is resolved adequatly at a HEALPix resolution 
+of $n_\mathrm{SIDE} = 64$ down from the original 512, further reducing 
+the volume of the data used in the fits by a factor of 64. The 
+downsampling is simulated by projecting all the original pointing to the 
+lower HEALPix resolution, and using a corresponding low-res cache.
 
 
 \section{Bayesian parameter estimation of zodiacal light parameters}\label{sect:param-estimation}
 \subsection{Parameter atlas}
-The K98 ZL model contains around 50 parameters to describe the three-dimensional IPD distribution and another 30 or more to describe the thermal emission and scattered sunlight source functions. Around 50 of these were fit to the DIRBE data, while the rest were held fixed. To illustrate how each parameter influences the final mission averaged ZL map, we have produced a so-called ZL parameter atlas, which can be seen in figures \ref{fig:atlas1} and \ref{fig:atlas2}. Each map in the atlas shows the effects of changing a single ZL parameter by $\pm 5\%$. The albedo and emissivity parameters are excluded from the atlas as these represent a direct scaling of the component maps and are degenerate with the $n_0$ maps. The number associated with each map is the scaling factor applied to each map to get them on the same color scale. A small scale factor means that the parameter has a large effect on the total ZL amplitude.
+The K98 ZL model contains around 50 parameters to describe the 
+three-dimensional IPD distribution and another 30 or more to describe 
+the thermal emission and scattered sunlight source functions. Around 50 
+of these were fit to the DIRBE data, while the rest were held fixed. To 
+illustrate how each parameter influences the final mission averaged ZL 
+map, we have produced a so-called ZL parameter atlas, which can be seen 
+in figures~\ref{fig:atlas1} and~\ref{fig:atlas2}. Each map in the atlas 
+shows the effects of changing a single ZL parameter by $\pm 5\%$. The 
+albedo and emissivity parameters are excluded from the atlas as these 
+represent a direct scaling of the component maps and are degenerate with 
+the $n_0$ maps. The number associated with each map is the scaling 
+factor applied to each map to get them on the same color scale. A small 
+scale factor means that the parameter has a large effect on the total ZL 
+amplitude.
 \begin{figure*}
   \centering
    	\includegraphics[width=0.84\linewidth]{figs/atlas_1_v2.pdf}
-  	\caption{ZL parameter atlas showing the effects that changing the smooth cloud and dust band paramters by $\pm 5\%$ has on the mission-averaged ZL signal. The number associated with each map represents a scaling factor mapping all maps to the same color scale, and inicates how strongly (inversly proportional to the number) the change to a given parameter affects the total ZL signal.}
+  	\caption{ZL parameter atlas showing the effects that changing the 
+    smooth cloud and dust band paramters by $\pm 5\%$ has on the 
+    mission-averaged ZL signal. The number associated with each map 
+    represents a scaling factor mapping all maps to the same color 
+    scale, and inicates how strongly (inversly proportional to the number) 
+    the change to a given parameter affects the total ZL signal.}
 	\label{fig:atlas1}
 \end{figure*}
-
 \begin{figure*}
     \centering
     \includegraphics[width=0.84\linewidth]{figs/atlas_2_v2.pdf}
-    \caption{ZL parameter atlas showing the effects that changing the circum-solar ring, Earth-trailing feature, and the temperature paramters by $\pm 5\%$ has on the mission-averaged ZL signal. The number associated with each map represents a scaling factor mapping all maps to the same color scale, and inicates how strongly (inversly proportional to the number) the change to a given parameter affects the total ZL signal.}    
+    \caption{ZL parameter atlas showing the effects that changing the 
+    circum-solar ring, Earth-trailing feature, and the temperature 
+    paramters by $\pm 5\%$ has on the mission-averaged ZL signal. The 
+    number associated with each map represents a scaling factor mapping 
+    all maps to the same color scale, and inicates how strongly 
+    (inversly proportional to the number) the change to a given 
+    parameter affects the total ZL signal.}    
     \label{fig:atlas2}
 \end{figure*}
+
 
 \subsection{Goodness-of-fit}
 \begin{figure*}
@@ -232,17 +437,40 @@ The K98 ZL model contains around 50 parameters to describe the three-dimensional
     \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week.pdf}
     \includegraphics[width=0.49\linewidth]{figs/map_06a_week_minus_full.pdf}
     \includegraphics[width=0.49\linewidth]{figs/map_06a_week.pdf}
-    \caption{Illustration of the basic sky maps involved in the zodiacal light fitting algorithms adopted by the DIRBE (\emph{left column}) and \Cosmoglobe\ (\emph{right column}) pipelines for one week of $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The DIRBE pipeline used exclusively differences between weekly and full-season maps, both for the observed signal, $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), and the zodiacal light model, $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), where brackets indicate full-survey averages. Correspondingly, the final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ (\emph{bottom left}), and is by constrution only sensitive to time-variable signals. 
-    In contrast, the basic data element in \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), which is fitted with the full zodiacal light model, $Z_{\nu}$ (\emph{middle right}), both modelled in time-domain. The $\chi^2$ the minimizes minimize the total signal-minus-model residual, $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the DIRBE approach is insensitivity to stationary sky signals, in particular thermal dust and CIB, while the main advantage of the \Cosmoglobe\ approach is a much higher effective signal-to-noise ratio, both to zodiacal light parameters and zero-levels.}
+    \caption{Illustration of the basic sky maps involved in the zodiacal 
+    light fitting algorithms adopted by the DIRBE (\emph{left column}) 
+    and \Cosmoglobe\ (\emph{right column}) pipelines for one week of 
+    $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The 
+    DIRBE pipeline used exclusively differences between weekly and 
+    full-season maps, both for the observed signal, 
+    $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), 
+    and the zodiacal light model, 
+    $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), 
+    where brackets indicate full-survey averages. Correspondingly, the 
+    final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ 
+    (\emph{bottom left}), and is by constrution only sensitive to 
+    time-variable signals. In contrast, the basic data element in 
+    \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), 
+    which is fitted with the full zodiacal light model, $Z_{\nu}$ 
+    (\emph{middle right}), both modelled in time-domain. The $\chi^2$ 
+    the minimizes minimize the total signal-minus-model residual, 
+    $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the 
+    DIRBE approach is insensitivity to stationary sky signals, in 
+    particular thermal dust and CIB, while the main advantage of the 
+    \Cosmoglobe\ approach is a much higher effective signal-to-noise 
+    ratio, both to zodiacal light parameters and zero-levels.}
     \label{fig:week_vs_full}
 \end{figure*}
 \begin{figure}
     \centering
-        \includegraphics[width=\columnwidth]{figs/mask_zodi_fitting.pdf}
-        \caption{Masks applied when fitting zodiacal light parameters for the $2.2\mathrm{\mu m}$, $25\mathrm{\mu m}$ and $240\mathrm{\mu m}$ bands.}
+    \includegraphics[width=\columnwidth]{figs/mask_zodi_fitting.pdf}
+    \caption{Masks applied when fitting zodiacal light parameters for 
+    the $2.2\mathrm{\mu m}$, $25\mathrm{\mu m}$ and $240\mathrm{\mu m}$ 
+    bands.}
     \label{fig:masks}
 \end{figure}
-The K98 model was obtained by fitting the model to a set of week-maps. The $\chi^2$ measure used by the DIRBE team is given by
+The K98 model was obtained by fitting the model to a set of week-maps. 
+The $\chi^2$ measure used by the DIRBE team is given by
 \begin{equation}
     \chi^2_\mathrm{K98} = \Delta I_\nu - \Delta Z_\nu,
 \end{equation}
@@ -251,20 +479,62 @@ where
     &\Delta I_\nu = I_\nu - \langle I_\nu \rangle,\\
     &\Delta Z_\nu = Z_\nu - \langle Z_\nu \rangle,
 \end{align}
-and $I_\nu$ and $Z_\nu$ are the full-mission frequency and ZL estimate maps, and $\Delta I\nu$ and $\Delta Z_\nu$ are the difference between the full-mission and a week frequency and ZL map, respectively. These maps are illustrated in the left column in Figure \ref{fig:week_vs_full}. $\chi^2_\mathrm{K98}$ is by construction only sensitive to time-variable signal, effectively removing the need for a good sky model of the then less well-understood infrared sky. Using week maps instead of the full timestreams has the additional effect of reducing the overall data volume in the fits, which would seem beneficial considering the computing resources available during the early DIRBE analysis. A downside of this method is that the monopole induced by the smooth ZL is removed, resulting in a much weaker signal-to-noise ratio in the ZL parameter estimates and to the zero-levels. In contrast, we fit the data at each time step to the signal minus model residual
-\begin{equation}
-    \chi^2_\Cosmoglobe\ = I_\nu - Z_\nu.
+and $I_\nu$ and $Z_\nu$ are the full-mission frequency and ZL estimate 
+maps, and $\Delta I\nu$ and $\Delta Z_\nu$ are the difference between 
+the full-mission and a week frequency and ZL map, respectively. These 
+maps are illustrated in the left column in Figure~\ref{fig:week_vs_full}. 
+$\chi^2_\mathrm{K98}$ is by construction only sensitive to time-variable 
+signal, effectively removing the need for a good sky model of the then 
+less well-understood infrared sky. Using week maps instead of the full 
+timestreams has the additional effect of reducing the overall data 
+volume in the fits, which would seem beneficial considering the 
+computing resources available during the early DIRBE analysis. A 
+downside of this method is that the monopole induced by the smooth ZL is 
+removed, resulting in a much weaker signal-to-noise ratio in the ZL 
+parameter estimates and to the zero-levels. In contrast, we fit the data 
+at each time step to the signal minus model residual
+\begin{equation}\label{eq:chisq}
+    \chi^2 = I_\nu - Z_\nu.
 \end{equation}
 
 To minimize the amount of unmodeled galactic emission that enters our 
-ZL parameter estimates, we use strict channel-specific processing masks, masking out the brightest galactic regions. The 1.25, 25, and 240 $\mu$m masks, corresponding to stellar light, ZL, and thermal dust-dominated channels, are shown in Figure \ref{fig:masks}.
+ZL parameter estimates, we use strict channel-specific processing masks, 
+masking out the brightest galactic regions. The 1.25, 25, and 240 $\mu$m 
+masks, corresponding to stellar light, ZL, and thermal dust-dominated 
+channels, are shown in Figure~\ref{fig:masks}.
 
 
-\subsection{Minimizing with Powell's method}
+\subsection{Sampling zodiacal light parameters}
+The total number of free ZL model parameters in this analysis are N, 
+compared to the M parameters fit in K98. We have included a non-zero
+scattering contribution at 4.9 $\mu$m. This 
+
+
+ZL parameters are sampled as part of the Gibbs sweep in Commander3 (see 
+Equation something in Paper I). We use a function minimizer, to minimize 
+a variant of Equation~\eqref{eq:chisq} using a downsampled version of the
+TOD as described in Section~\ref{sect:optimization}. The minimizer employed
+is Powell's method, which performs bi-directional searches along a parameter 
+vector. Initially we attempted to use MCMC methods such as a 
+Metropolis-Hastings (MH) sampler, and a combined Gibbs and MH sampler but
+due to the high-dimensional parameter space of 
+The reason we are not using MCMC 
+sampling is due to the difficulty of exploring the entire parameter space 
+appropriately due to the many degeneracies between the model parameters. 
+Following the Powell minimization, random noise is added to each parameter
+to simulate a stochastic draw. 
+
+We can improve our error estimates on the ZL parameters by including the 
+Powell search history in our error estimation. For each bi-directional 
+search, we output both the parameter values and the intermediate $\chi^2$
+values which lets us find the 95\% confidence interval in the search. This
+is used jointly with the uncertienties determined from the Gibbs chain.
+\textcolor{red}{Do this with Duncan}
 
 
 
-\section{Improved zodiacal light model}\label{sect:improved-model}
+\section{State-of-the-art zodiacal light model}\label{sect:improved-model}
+\input{ipd_param_table.tex}
 
 \begin{figure*}
     \centering
@@ -301,45 +571,38 @@ ZL parameter estimates, we use strict channel-specific processing masks, masking
     \label{fig:zodi_freq}
   \end{figure*}
 
-  \begin{figure*}
+
+  \begin{figure}
     \centering
-    \includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_cloud_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_cloud_full.pdf}
+    \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
+    \caption{ZL intensity as a function of wavelength simulated with ZodiPy in 
+    the DIRBE frequency range, using the Cosmoglobe ZL model. The SED of the 
+    ZL depends on the line-of-sight. As such, we show four intensity curves. 
+    The black curve the mean ZL intensity as seen in a HEALPix map at an 
+    instant in time, where pixels with a angular separation from the Sun 
+    smaller than $60^\circ$ is masked. The blue, red, and green dashed lines 
+    represent the ZL intensity in three different line-of-sights. 
+    \textcolor{red}{(Update with final zodi model values)}}
+    \label{fig:zodi-intensity}
+\end{figure}
 
-    \vspace{-0.6cm}
-
-    \includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_band1_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_band1_full.pdf}
-
-    \vspace{-0.6cm}
-
-    \includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_band2_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_band2_full.pdf}
-
-    \vspace{-0.6cm}
-
-    \includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_band3_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_band3_full.pdf}
-
-    \vspace{-0.6cm}
-
-    \includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_ring_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_ring_full.pdf}
-
-    \vspace{-0.6cm}
-
-    \includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_feature_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_06_feature_full.pdf}
-
-    \caption{week map of comps*}
-    \label{fig: comp week}
-  \end{figure*}
-
+\textcolor{red}{(Fill in once the zodi paper gets further along and we have our results)}
 \begin{figure*}
-\centering
-\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_sky_98_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_cloud_98_week.pdf}
-\vspace{-0.6cm}
-
-\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_zodi_98_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_bands_98_week.pdf}
-\vspace{-0.6cm}
-
-\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_res_98_week.pdf}\includegraphics[width=0.88\columnwidth]{figs/zodi_comps/zodi_ring+feature_98_week.pdf}
-\caption{week map of comps*}
-\label{fig: K98 week comparison}
+    \centering
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_04.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_04.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_04.pdf}\\
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_05.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_05.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_05.pdf}\\
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_06.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_06.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_06.pdf}\\
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_07.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_07.pdf}
+    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_07.pdf}\\
+    \caption{Comparison between the zodiacal light corrections in the official DIRBE and Cosmoglobe DR2 analysis. The left column shows the mission-averaged maps, the middle column the Cosmoglobe DR2 ZSMA maps, and the right column the DIRBE ZSMA maps. The same color scale is used for the middle and right column in each row.}
+    \label{fig:dr2-zsma-compare}
 \end{figure*}
 
 \begin{figure*}
@@ -349,147 +612,13 @@ ZL parameter estimates, we use strict channel-specific processing masks, masking
     \label{fig:geo-trace}
 \end{figure*}
 
-
-
-\begin{table*}
-    \centering
-    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
-    \begin{tabular}{l l *2{rCl}}
-    \hline
-    \hline
-     Parameter & Description & \multicolumn{3}{c}{DIRBE} & \multicolumn{3}{c}{Cosmoglobe DR2} \\ 
-     \hline
-     \multicolumn{8}{c}{Smooth Cloud}\\
-     \hline
-     $n_{0, \mathrm{C}}$ [$10^{-7}$ AU$^{-1}$] & Number density & 1.13 &\pm& 0.0064 & 1.13 &\pm& 0.0064\\
-     $\alpha$ & Radial power-law exponent \quad& 1.34 &\pm& 0.022 & 1.13 &\pm& 0.0064\\
-     $\beta$ & Vertical shape parameter & 4.14 &\pm& 0.067 & 1.13 &\pm& 0.0064\\
-     $\gamma$ & Vertical power-law exponent & 0.942 &\pm& 0.025 & 1.13 &\pm& 0.0064\\
-     $\mu$ & Widening parameter & 0.189 &\pm& 0.014 & 1.13 &\pm& 0.0064\\
-     $i$ [deg] & Inclination & 2.03 &\pm& 0.017 & 1.13 &\pm& 0.0064\\
-     $\Omega$ [deg] & Ascending node & 77.7 &\pm& 0.6 & 1.13 &\pm& 0.0064\\
-     $X_0$ [$10^{-3}$ AU] & x-offset from the Sun  & 11.9 &\pm& 1.1 & 1.13 &\pm& 0.0064\\
-     $Y_0$ [$10^{-3}$ AU] & y-offset from the Sun & 5.48 &\pm& 0.77 & 1.13 &\pm& 0.0064\\
-     $Z_0$ [$10^{-3}$ AU] & z-offset from the Sun & -2.15 &\pm& 0.43 & 1.13 &\pm& 0.0064\\
-     \hline
-     \multicolumn{8}{c}{Dust band 1}\\
-     \hline
-     $n_{0, \mathrm{B}_1}$ [$10^{-10}$ AU$^{-1}$] & Number density & 5.59 &\pm& 0.72 & 1.13 &\pm& 0.0064\\
-     $\delta_{\zeta_{\mathrm{B}_1}}$ [deg] & Shape parameter & 8.78 && Fixed & 1.13 &\pm& 0.0064\\
-     $v_{\mathrm{B}_1}$ & Shape parameter & 0.10 && Fixed & 1.13 &\pm& 0.0064\\
-     $p_{\mathrm{B}_1}$ & Shape parameter & 4 && Fixed & 0.10 &\pm& 0.0064\\
-     $i_{\mathrm{B}_1}$ [deg] & Inclination & 0.56 && Fixed & 0.10 &\pm& 0.0064\\
-     $\Omega_{\mathrm{B}_1}$ [deg] & Ascending node & 80 && Fixed & 0.10 &\pm& 0.0064\\
-     $\delta_{R_{\mathrm{B}_1}}$ [AU] & Inner radial cutoff & 1.5 && Fixed & 0.10 &\pm& 0.0064\\
-     \hline
-     \multicolumn{8}{c}{Dust band 2}\\
-     \hline
-     $n_{0, \mathrm{B}_2}$ [$10^{-9}$ AU$^{-1}$] & Number density & 1.99 &\pm& 0.128 & 1.13 &\pm& 0.0064\\
-     $\delta_{\zeta_{\mathrm{B}_2}}$ [deg] & Shape parameter & 1.99 && Fixed & 1.13 &\pm& 0.0064\\
-     $v_{\mathrm{B}_2}$ & Shape parameter & 0.9 && Fixed & 1.13 &\pm& 0.0064\\
-     $p_{\mathrm{B}_2}$ & Shape parameter & 4 && Fixed & 0.10 &\pm& 0.0064\\
-     $i_{\mathrm{B}_2}$ [deg] & Inclination & 1.2 && Fixed & 0.10 &\pm& 0.0064\\
-     $\Omega_{\mathrm{B}_2}$ [deg] & Ascending node & 30.3 && Fixed & 0.10 &\pm& 0.0064\\
-     $\delta_{R_{\mathrm{B}_2}}$ [AU] & Inner radial cutoff & 0.94 &\pm& 0.025 & 0.10 &\pm& 0.0064\\
-     \hline
-     \multicolumn{8}{c}{Dust band 3}\\
-     \hline
-     $n_{0, \mathrm{B}_3}$ [$10^{-10}$ AU$^{-1}$] & Number density & 1.44 &\pm& 0.234 & 1.13 &\pm& 0.0064\\
-     $\delta_{\zeta_{\mathrm{B}_3}}$ [deg] & Shape parameter & 15 && Fixed & 1.13 &\pm& 0.0064\\
-     $v_{\mathrm{B}_3}$ & Shape parameter & 0.05 && Fixed & 1.13 &\pm& 0.0064\\
-     $p_{\mathrm{B}_3}$ & Shape parameter & 4 && Fixed & 0.10 &\pm& 0.0064\\
-     $i_{\mathrm{B}_3}$ [deg] & Inclination & 0.8 && Fixed & 0.10 &\pm& 0.0064\\
-     $\Omega_{\mathrm{B}_3}$ [deg] & Ascending node & 80 && Fixed & 0.10 &\pm& 0.0064\\
-     $\delta_{R_{\mathrm{B}_3}}$ [AU] & Inner radial cutoff & 1.5 && Fixed & 0.10 &\pm& 0.0064\\
-     \hline
-     \multicolumn{8}{c}{Circum-solar ring}\\
-     \hline
-     $n_{0, \mathrm{SR}}$ [$10^{-8}$ AU$^{-1}$] & Number density & 1.83 &\pm& 0.127 & 1.13 &\pm& 0.0064\\
-     $R_\mathrm{SR}$ [AU] & Radius of peak number density & 1.03 &\pm& 0.00064 & 1.13 &\pm& 0.0064\\
-     $\sigma_{r,\mathrm{SR}}$ [AU] & Radial dispersion & 0.025 && Fixed & 1.13 &\pm& 0.0064\\
-     $\sigma_{z,\mathrm{SR}}$ [AU] & Vertical dispersion & 0.054 &\pm& 0.0066 & 1.13 &\pm& 0.0064\\
-     $i_{\mathrm{SR}}$ [deg] & Inclination & 0.49 &\pm& 0.063 & 0.10 &\pm& 0.0064\\
-     $\Omega_{\mathrm{SR}}$ [deg] & Ascending node & 22.3 &\pm& 0.0014 & 0.10 &\pm& 0.0064\\
-     \hline
-     \multicolumn{8}{c}{Earth-trailing feature}\\
-     \hline
-     $n_{0, \mathrm{TB}}$ [$10^{-8}$ AU$^{-1}$] & Number density & 1.9 &\pm& 0.142 & 1.13 &\pm& 0.0064\\
-     $R_\mathrm{TB}$ [AU] & Radius of peak number density & 1.06 &\pm& 0.011 & 1.13 &\pm& 0.0064\\
-     $\sigma_{r,\mathrm{TB}}$ [AU] & Radial dispersion & 0.10 &\pm& 0.0097 & 1.13 &\pm& 0.0064\\
-     $\sigma_{z,\mathrm{TB}}$ [AU] & Vertical dispersion & 0.091 &\pm& 0.013 & 1.13 &\pm& 0.0064\\
-     $\theta_{\mathrm{TB}}$ [deg] & Longitude with respect to Earth  & -10 && Fixed & 0.10 &\pm& 0.0064\\
-     $\sigma_{\theta,\mathrm{TB}}$ [deg] & Longitude dispersion & 12.1 &\pm& 3.4 & 0.10 &\pm& 0.0064\\
-     \hline
-    \end{tabular}
-    \caption{Comparison between best-fit number density and geometrical interplanetary dust parameters in the DIRBE model and our model.}
-    \label{table:zodi-params-geo}
-    \end{table*}
-    
-\begin{table*}
-    \centering
-    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
-    \begin{tabular}{l l *2{rCl}}
-    \hline
-    \hline
-     Parameter & Description & \multicolumn{3}{c}{DIRBE} & \multicolumn{3}{c}{Cosmoglobe DR2} \\ 
-     \hline
-     \multicolumn{8}{c}{Smooth Cloud}\\
-     \hline
-     $A_1$ & Albedo at 1.25$\mu $m & 0.204 &\pm& 0.0013 & 1.13 &\pm& 0.0064\\
-     $A_2$ & Albedo at 2.2$\mu $m & 0.255 &\pm& 0.0017 & 1.13 &\pm& 0.0064\\
-     $A_3$ & Albedo at 3.5$\mu $m & 0.210 &\pm& 0.019 & 1.13 &\pm& 0.0064\\
-     $A_4$ & Albedo at 4.9$\mu $m  & 0 && Fixed & 1.13 &\pm& 0.0064\\
-     $E_3$ & Emissivity at 3.5$\mu $m  & 1.66 &\pm& 0.088 & 1.13 &\pm& 0.0064\\
-     $E_4$ & Emissivity at 4.9$\mu $m  & 0.997 &\pm& 0.0036 & 1.13 &\pm& 0.0064\\
-     $E_5$ & Emissivity at 12$\mu $m  & 0.958 &\pm& 0.0026 & 1.13 &\pm& 0.0064\\
-     $E_6$ & Emissivity at 25$\mu $m  & 1 && Fixed & 1.13 &\pm& 0.0064\\
-     $E_7$ & Emissivity at 60$\mu $m  & 0.733 &\pm& 0.0055 & 1.13 &\pm& 0.0064\\
-     $E_8$ & Emissivity at 100$\mu $m  & 0.647 &\pm& 0.012 & 1.13 &\pm& 0.0064\\
-     $E_9$ & Emissivity at 140$\mu $m  & 0.677 && ? & 1.13 &\pm& 0.0064\\
-     $E_10$ & Emissivity at 240$\mu$m    & 0.519 && ? & 1.13 &\pm& 0.0064\\
-     \hline
-     \multicolumn{8}{c}{Dust bands}\\
-     \hline
-     \hline
-     $A_1$ & Albedo at 1.25$\mu $m & 0.204 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $A_2$ & Albedo at 2.2$\mu $m & 0.255 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $A_3$ & Albedo at 3.5$\mu $m & 0.210 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $A_4$ & Albedo at 4.9$\mu $m  & 0 && Fixed & 1.13 &\pm& 0.0064\\
-     $E_3$ & Emissivity at 3.5$\mu $m  & 1.66 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $E_4$ & Emissivity at 4.9$\mu $m  & 0.359 &\pm& 0.054 & 1.13 &\pm& 0.0064\\
-     $E_5$ & Emissivity at 12$\mu $m  & 1.01 &\pm& 0.15 & 1.13 &\pm& 0.0064\\
-     $E_6$ & Emissivity at 25$\mu $m  & 1 && Fixed & 1.13 &\pm& 0.0064\\
-     $E_7$ & Emissivity at 60$\mu $m  & 1.25 &\pm& 0.3 & 1.13 &\pm& 0.0064\\
-     $E_8$ & Emissivity at 100$\mu $m  & 1.52 &\pm& 0.65 & 1.13 &\pm& 0.0064\\
-     $E_9$ & Emissivity at 140$\mu $m  & 1.13 && ? & 1.13 &\pm& 0.0064\\
-     $E_10$ & Emissivity at 240$\mu $m  & 1.40 && ? & 1.13 &\pm& 0.0064\\
-     \hline
-     \multicolumn{8}{c}{Circum-solar ring and Earth-trailing feature}\\
-     \hline
-     \hline
-     $A_1$ & Albedo at 1.25$\mu $m & 0.204 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $A_2$ & Albedo at 2.2$\mu $m & 0.255 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $A_3$ & Albedo at 3.5$\mu $m & 0.210 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $A_4$ & Albedo at 4.9$\mu $m  & 0 && Fixed & 1.13 &\pm& 0.0064\\
-     $E_3$ & Emissivity at 3.5$\mu $m  & 1.66 && Fixed to smooth cloud & 1.13 &\pm& 0.0064\\
-     $E_4$ & Emissivity at 4.9$\mu $m  & 1.06 &\pm& 0.0089 & 1.13 &\pm& 0.0064\\
-     $E_5$ & Emissivity at 12$\mu $m  & 1.06 &\pm& 0.00078 & 1.13 &\pm& 0.0064\\
-     $E_6$ & Emissivity at 25$\mu $m  & 1 && Fixed & 1.13 &\pm& 0.0064\\
-     $E_7$ & Emissivity at 60$\mu $m  & 0.873 &\pm& 0.0042 & 1.13 &\pm& 0.0064\\
-     $E_8$ & Emissivity at 100$\mu $m  & 1.1 &\pm& 0.000075 & 1.13 &\pm& 0.0064\\
-     $E_9$ & Emissivity at 140$\mu $m  & 1.15 && ? & 1.13 &\pm& 0.0064\\
-     $E_10$ & Emissivity at 240$\mu $m  & 0.858 && ? & 1.13 &\pm& 0.0064\\
-     \hline
-    \end{tabular}
-    \caption{Comparison between best-fit spectral parameters in the DIRBE model and our model.}
-    \label{table:zodi-params-spectral}
-\end{table*}
     
 
 % % INTRODUCTION
 % %-------------------------------------------------------------------
 % \section{Introduction}
-% Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m (\cite{leinert1998} and references therein). The light comes from scattering and re-emission of sunlight from interplanetary dust grains. ZL has been the most problematic source of foreground contamination in studies of the Extragalactic Background Light (EBL) the infrared sky due, mainly due to its time-varying nature. Improving our understanding of the interplanetary medium and building better ZL models is arguably the most critical step in making a large part of the infrared sky accessible to cosmological analysis. 
+% Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m (\cite{leinert1998} and references therein). The light comes from scattering and re-emission of sunlight from interplanetary dust grains. ZL has been the most problematic source of foreground contamination in studies of the Extragalactic Background Light (EBL) the infrared sky due, mainly due to its time-varying nature. Improving our understanding of the interplanetary medium and 
+%building better ZL models is arguably the most critical step in making a large part of the infrared sky accessible to cosmological analysis. 
 
 % The current state-of-the-art ZL model is the Kelsall et al. 1998 (K98), which was developed by the DIRBE team for the purpose of removing ZL from their data. It consists of a parametric three-dimensional model of the interplanetary dust distribution with several distinguishable components such as 
 % These components were assumed to emit like modified blackbodies and could be evaluated through line-of-sight integrations to simulate the observed zodiacal light. 
@@ -501,7 +630,8 @@ ZL parameter estimates, we use strict channel-specific processing masks, masking
 % The ZL is considered a local foreground in CMB studies with the emission originating from the near vicinity of the observer. This is a contrast to more common foregrounds such as the CMB and galactic thermal dust emission, which we assume to be stationary in the sky. Galactic and extragalactic foregrounds can be modeled with a single template describing the structure of the component at some reference frequency. The template can then be scaled to arbitrary frequencies given a description of the component's spectral energy density (SED). Simple models like this does not apply to the zodiacal light, which highly depends on the position and time of observation.
 % It is impossible to describe and model the zodiacal light foreground through a single template, applicable to all experiments. Instead, the zodiacal light must be dynamically modeled on a per-experiment basis taking into account the position of the observer within the solar system and the scanning strategy. 
 
-% The main highlight of this work is that we are able to produce a better zodiacal light model with much smaller residuals in the frequency maps using only the same zodiacal light-contaminated data used by the DIRBE team in their original analysis. We attribute most of this success to the Cosmoglobe effort of joint global Bayesian analysis of the time-ordered DIRBE data along with maps and point source catalogs from HFI, FIRAS, and WISE. This results in a much better constrained sky model than what was possible at the time of the original DIRBE analysis, making it easier to distinguish the zodiacal light from other signal sources. Additionally, when fitting the zodiacal light model parameters, the DIRBE team used week maps differenced by the full survey sky map. While this removes all static signals from the sky, it also kills much of the effective signal-to-noise ratio for both zodiacal light parameters and the zero levels. In the Cosmoglobe approach, we fit all zodiacal light parameters directly to the timestreams, making it easier to resolve the degeneracies of the geometric interplanetary dust parameters. 
+% The main highlight of this work is that we are able to produce a better zodiacal light model with much smaller residuals in the frequency maps using only the same zodiacal light-contaminated data used by the DIRBE team in their original analysis. We attribute most of this success to the Cosmoglobe effort of joint global Bayesian analysis of the time-ordered DIRBE data along with maps and point source catalogs from HFI, FIRAS, and WISE. This results in a much better constrained sky model than what was possible at the time of the original DIRBE analysis, making it easier to distinguish the zodiacal light from other signal sources. Additionally, when 
+% fitting the zodiacal light model parameters, the DIRBE team used week maps differenced by the full survey sky map. While this removes all static signals from the sky, it also kills much of the effective signal-to-noise ratio for both zodiacal light parameters and the zero levels. In the Cosmoglobe approach, we fit all zodiacal light parameters directly to the timestreams, making it easier to resolve the degeneracies of the geometric interplanetary dust parameters. 
 
 % This goes to show that even when only using archival data, it is possible to create more robust descriptions of the interplanetary medium and the observed zodiacal light. In coming Cosmoglobe data releases we will include more zodiacal light-contaminated time-ordered data from experiments such as AKARI and IRAS, which will help break many of the geometric parameter degeneracies in the interplanetary dust model due to the complimentary scanning strategies of the respective experiments.
 
@@ -656,8 +786,6 @@ ZL parameter estimates, we use strict channel-specific processing masks, masking
 
 % \section{Reanalysis of the K98 zodiacal light model}
 
-
-
 % \begin{figure*}
 % 	\centering
 % 	\includegraphics[width=0.8\linewidth]{figs/zodi_diff.pdf}
@@ -671,149 +799,6 @@ ZL parameter estimates, we use strict channel-specific processing masks, masking
 % 	\caption{Data-minus-model residual for \cosmoglobe\ results (CG, black) and the official \cite{K98} model (K98, orange), as a function of ecliptic latitude, Galactic latitude, and Solar elongation. The offset for \cosmoglobe\ and the K98 model are listed on the left and right axes of each row, respectively. The \cosmoglobe\ and K98 values are horizontally offset left and right respectively for clarity.}
 %       \label{fig: zodi_timestream}
 %   \end{figure*}
-
-% \begin{table*}
-%     % \renewcommand{\arraystretch}{1.1} % Default value: 1
-%     \begin{center}
-%     \small
-%     \caption{Best fit geometrical interplanetary dust parameters as fit by K98 and us.}
-%     \label{table:zodi parameters}
-%     \begin{tabular}{
-%         l 
-%         l 
-%         >{\collectcell{}}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell{}}l<{\endcollectcell}
-%         >{\collectcell{}}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell{}}l<{\endcollectcell}
-%         >{\collectcell{}}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell{}}l<{\endcollectcell}
-%     }
-%     \hline \hline
-%     Parameter & Description & \multicolumn{2}{c}{K98} & \multicolumn{2}{c}{Model A} & \multicolumn{2}{c}{Model B} \\
-%     \hline
-%     \multicolumn{8}{c}{All zodiacal components}\\
-%     \hline
-%     $T_0$ [K]     & Temperature at 1 AU    & \multicolumn{2}{c}{286} & \multicolumn{2}{c}{286} & \multicolumn{2}{c}{286}\\
-%     $\delta$      & Temperature power-law exponent    & \multicolumn{2}{c}{0.467} & \multicolumn{2}{c}{0.467} & \multicolumn{2}{c}{0.467}\\
-%     \hline
-%     \multicolumn{8}{c}{Diffuse cloud}\\
-%     \hline
-%     $n_0$ [$10^{-7}$ AU$^{-1}$]     & Density at 1 AU               & 1.13 & 0.0064           & 1.13 & 0.0064         & 1.13 & 0.0064\\
-%     $\alpha$                        & Radial power-law exponent     & 1.34 & 0.022            & 1.34 & 0.022          & 1.34 & 0.022\\
-%     $\beta$                         & Vertical shape parameter      & 4.14 & 0.067            & 4.14 & 0.067          & 4.14 & 0.067\\
-%     $\gamma$                        & Vertical power-law exponent   & 0.942 & 0.025           & 0.942 & 0.025         & 0.942 & 0.025\\
-%     $\mu$                           & Widening parameter            & 0.189 & 0.014           & 0.189 & 0.014         & 0.189 & 0.014\\
-%     $i$ [deg]                       & Inclination                   & 2.03 & 0.017            & 2.03 & 0.017          & 2.03 & 0.017\\
-%     $\Omega$ [deg]                  & Ascending node                & 77.7 & 0.6              & 77.7 & 0.6            & 77.7 & 0.6\\
-%     $X_0$ [$10^{-3}$ AU]            & x offset from Sun             & 11.9 & 1.1 & 11.9 & 11.9 & 1.1 & 11.9 \\ 
-%     $Y_0$ [$10^{-3}$ AU]            & y offset from Sun             & 5.48 & 0.77 & 5.48 & 5.48 & 0.77 & 5.48 \\ 
-%     $Z_0$ [$10^{-3}$ AU]            & z offset from Sun             & 2.15 & 0.43 & 2.15 & 2.15 & 0.43 & 2.15 \\ 
-%     \hline
-%     \multicolumn{8}{c}{Asteroidal dust band 1}\\
-%     \hline
-%     $n_0$ [$10^{-10}$ AU$^{-1}$]  & Density at 3 AU               & 5.59 & 0.72                 & 5.59 & 0.72               & 5.59 & 0.72\\
-%     $\delta_{\zeta_{B}}$ [deg]    & Shape parameter               & \multicolumn{2}{c}{8.78}    & \multicolumn{2}{c}{8.78}  & \multicolumn{2}{c}{8.78}\\
-%     $v_{B}$                       & Shape parameter               & \multicolumn{2}{c}{0.1}     & \multicolumn{2}{c}{0.1}   & \multicolumn{2}{c}{0.1}\\
-%     $p_{B}$                       & Shape parameter               & \multicolumn{2}{c}{4}       & \multicolumn{2}{c}{4}     & \multicolumn{2}{c}{4}\\
-%     $i_{B}$ [deg]                 & Inclination                   & \multicolumn{2}{c}{0.56}    & \multicolumn{2}{c}{0.56}  & \multicolumn{2}{c}{0.56}\\
-%     $\Omega_{B}$ [deg]            & Ascending node                & \multicolumn{2}{c}{80}      & \multicolumn{2}{c}{80}    & \multicolumn{2}{c}{80}\\
-%     $\delta_{R_{B}}$ [AU]         & Inner radial cutoff           & \multicolumn{2}{c}{1.5}     & \multicolumn{2}{c}{1.5}   & \multicolumn{2}{c}{1.5}\\
-%     \hline
-%     \multicolumn{8}{c}{Asteroidal dust band 2}\\
-%     \hline
-%     $n_0$ [$10^{-9}$ AU$^{-1}$]   & Density at 3 AU               & 1.99 & 0.128                & 1.99 & 0.128              & 1.99 & 0.128\\
-%     $\delta_{\zeta_{B}}$ [deg]    & Shape parameter               & \multicolumn{2}{c}{8.78}    & \multicolumn{2}{c}{8.78}  & \multicolumn{2}{c}{8.78}\\
-%     $v_{B}$                       & Shape parameter               & \multicolumn{2}{c}{0.9}     & \multicolumn{2}{c}{0.9}   & \multicolumn{2}{c}{0.9}\\
-%     $p_{B}$                       & Shape parameter               & \multicolumn{2}{c}{4}       & \multicolumn{2}{c}{4}     & \multicolumn{2}{c}{4}\\
-%     $i_{B}$ [deg]                 & Inclination                   & \multicolumn{2}{c}{1.2}     & \multicolumn{2}{c}{1.2}   & \multicolumn{2}{c}{1.2}\\
-%     $\Omega_{B}$ [deg]            & Ascending node                & \multicolumn{2}{c}{30.3}    & \multicolumn{2}{c}{30.3}  & \multicolumn{2}{c}{30.3}\\
-%     $\delta_{R_{B}}$ [AU]         & Inner radial cutoff           & \multicolumn{2}{c}{0.94}    & \multicolumn{2}{c}{0.94}  & \multicolumn{2}{c}{0.94}\\
-%     \hline
-%     \multicolumn{8}{c}{Asteroidal dust band 3}\\
-%     \hline
-%     $n_0$ [$10^{-10}$ AU$^{-1}$]  & Density at 3 AU               & 1.44 & 0.234                & 1.44 & 0.234              & 1.44 & 0.234  \\
-%     $\delta_{\zeta_{B}}$ [deg]    & Shape parameter               & \multicolumn{2}{c}{15}      & \multicolumn{2}{c}{15}    & \multicolumn{2}{c}{15}\\
-%     $v_{B}$                       & Shape parameter               & \multicolumn{2}{c}{0.05}    & \multicolumn{2}{c}{0.05}  & \multicolumn{2}{c}{0.05}\\
-%     $p_{B}$                       & Shape parameter               & \multicolumn{2}{c}{4}       & \multicolumn{2}{c}{4}     & \multicolumn{2}{c}{4}\\
-%     $i_{B}$ [deg]                 & Inclination                   & \multicolumn{2}{c}{0.8}     & \multicolumn{2}{c}{0.8}   & \multicolumn{2}{c}{0.8}\\
-%     $\Omega_{B}$ [deg]            & Ascending node                & \multicolumn{2}{c}{80}      & \multicolumn{2}{c}{80}    & \multicolumn{2}{c}{80}\\
-%     $\delta_{R_{B}}$ [AU]         & Inner radial cutoff           & \multicolumn{2}{c}{1.5}     & \multicolumn{2}{c}{1.5}   & \multicolumn{2}{c}{1.5}\\
-%     \hline
-%     \multicolumn{8}{c}{Circumsolar Ring}\\
-%     \hline
-%     $n_\mathrm{SR}$ [$10^{-8}$ AU$^{-1}$]   & Density at 1 AU           & 1.83 & 0.127              & 1.83 & 0.127              & 1.83 & 0.127\\
-%     $R_\mathrm{SR}$ [AU]                    & Radius of peak density    & 1.03 & 0.00016            & 1.03 & 0.00016            & 1.03 & 0.00016\\
-%     $\sigma_\mathrm{rSR}$ [AU]              & Radial dispersion         & \multicolumn{2}{c}{0.025} & \multicolumn{2}{c}{0.025} & \multicolumn{2}{c}{0.025}\\
-%     $\sigma_\mathrm{zSR}$ [AU]              & Vertical dispersion       & 0.054 & 0.0066            & 0.054 & 0.0066            & 0.054 & 0.0066\\
-%     $i_\mathrm{RB}$ [deg]                   & Inclination               & 0.49  & 0.063             & 0.49  & 0.063             & 0.49  & 0.063\\
-%     $\Omega_\mathrm{RB}$ [deg]              & Ascending node            & 22.3  & 0.0014            & 22.3 & 0.0014             & 22.3 & 0.0014\\
-%     \hline
-%     \multicolumn{8}{c}{Trailing Feature}\\
-%     \hline
-%     $n_\mathrm{TB}$ [$10^{-8}$ AU$^{-1}$]   & Density at 1 AU                   & 1.9 & 0.142 & 1.9 & 0.142 & 1.9 & 0.142\\
-%     $R_\mathrm{TB}$ [AU]                    & Radius of peak density            & 1.06 & 0.011 & 1.06 & 0.011 & 1.06 & 0.011\\
-%     $\sigma_\mathrm{rTB}$ [AU]              & Radial dispersion                 &  0.10 & 0.0097 & 0.10 & 0.0097 & 0.10 & 0.0097\\
-%     $\sigma_\mathrm{zTB}$ [AU]              & Vertical dispersion               & 0.091 &  0.013 & 0.091 &  0.013 & 0.091 &  0.013\\
-%     $\theta_\mathrm{TB}$ [deg]              & Longitude with respect to Earth   & \multicolumn{2}{c}{-10} & \multicolumn{2}{c}{-10} & \multicolumn{2}{c}{-10}\\
-%     $\sigma_\mathrm{\theta TB}$ [deg]       & Longitude dispersion              & 12.1 & 3.4 & 12.1 & 3.4 & 12.1 & 3.4\\
-%     \hline    
-%     \end{tabular}
-%     \end{center}
-% \end{table*}
-
-
-% \begin{table*}
-%     % \renewcommand{\arraystretch}{1.1} % Default value: 1
-%     \begin{center}
-%     \small
-%     \caption{Best fit zodiacal light source parameters from this analysis and the K98 model.}
-%     \label{table:zodi parameters}
-%     \begin{tabular}{
-%         l 
-%         >{\collectcell\Num}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell\Num}l<{\endcollectcell}
-%         >{\collectcell\Num}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell\Num}l<{\endcollectcell}
-%         >{\collectcell\Num}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell\Num}l<{\endcollectcell}
-%         >{\collectcell\Num}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell\Num}l<{\endcollectcell}
-%         >{\collectcell\Num}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell\Num}l<{\endcollectcell}
-%         >{\collectcell\Num}r<{\endcollectcell}
-%         @{${}\pm{}$}
-%         >{\collectcell\Num}l<{\endcollectcell}
-%     }
-%     \hline \hline
-%     Channel [$\mu$m] & \multicolumn{2}{c}{Diffuse Cloud} & \multicolumn{2}{c}{Dust band 1} & \multicolumn{2}{c}{Dust band 2} & \multicolumn{2}{c}{Dust band 3} & \multicolumn{2}{c}{Circumsolar ring} & \multicolumn{2}{c}{Trailing feature} \\
-%     \hline
-%     \multicolumn{13}{c}{Emissivity}\\
-%     \hline
-%     3.5  & 1.66 & 0.088 & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     4.9  & 0.997 & 0.0036 & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     12  & 0.958 & 0.002 & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     25  & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     60  & 0.733 & 0.0055 & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     100  & 0.647 & 0.012 & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     140  & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     240  & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     \hline
-%     \multicolumn{13}{c}{Albedo}\\
-%     \hline
-%     1.25  & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     2.2  & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     3.5  & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{1} \\
-%     \end{tabular}
-%     \end{center}
-% \end{table*}
 
 
 % \clearpage
@@ -837,11 +822,14 @@ ZL parameter estimates, we use strict channel-specific processing masks, masking
  The current work has received funding from the European
   Union’s Horizon 2020 research and innovation programme under grant
   agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
-  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{HEALPIX} package.
-  We acknowledge the use of the Legacy Archive for Microwave Background Data
-  Analysis (LAMBDA), part of the High Energy Astrophysics Science Archive Center
-  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science Division at
-  the NASA Goddard Space Flight Center.  
+  \textsc{bits2cosmology}). Some of the results in this paper have been 
+  derived using the HEALPix \citep{HEALPIX} package.
+  We acknowledge the use of the Legacy Archive for Microwave Background 
+  Data
+  Analysis (LAMBDA), part of the High Energy Astrophysics Science
+  Archive Center
+  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science 
+  Division at the NASA Goddard Space Flight Center.  
 \end{acknowledgements}
 
 
