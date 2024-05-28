@@ -49,6 +49,7 @@
     linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 \hypersetup{linktocpage}
 \usepackage{bold-extra}
+\usepackage{tabularx, booktabs}
 
 \input{Planck}
 
@@ -70,7 +71,7 @@
   
    % Shortened title, author list for top of page 
    \titlerunning{Compact objects in DIRBE}
-   \authorrunning{Placeholder}
+   \authorrunning{Galloway et al.}
 
    \date{\today} 
    
@@ -104,7 +105,16 @@ In this paper, part of the larger Cosmoglobe DR2 results paper suite, we discuss
 \section{Compact Object modelling in a Bayesian context}
 \label{sec:models}
 
-In this work, we break the compact objects into three categories as follows: 1 - Bright (> Mag 8 in the WISE 3.4 $\,\mu$m) objects with SEDs measured by Gaia (hereafter 'stars'), described in section \ref{sec:starmodel}, 2 - Bright objects without SED information (hereafter 'extragalactic sources'), described in section \ref{sec:extragalacticmodel}, and a diffuse background of dim objects (hereafter 'diffuse'), described in section \ref{sec:diffusemodel}.
+In this work, we break the compact objects into three categories as follows: 1) Bright (> Mag 8 in the WISE 3.4 $\,\mu$m) objects with SEDs measured by Gaia (hereafter 'stars'), described in section \ref{sec:starmodel}, 2) Bright objects without SED information (hereafter 'extragalactic sources'), described in section \ref{sec:extragalacticmodel}, and 3) a diffuse background of dim objects (hereafter 'diffuse'), described in section \ref{sec:diffusemodel}.
+
+Figure \ref{fig:starcount} shows the total number of stars and extragalactic objects in each pixel at nside=512. There are a total of 717454 stars supplemented with 3122 extragalactic sources over the full sky, but, as is expected, they are primarily clustered in the galactic plane. The majority of the sky contains 0-1 sources/pixel, making it well behaved. In the galactic plane, we have degeneracy between sources, which leads to instability in the individual star parameters, but the overall estimate of pointsource emission is quite stable, as shown in section \ref{sec:results}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figs/sourcecount/source_count.pdf}
+  \caption{The total number of independent sources in each pixel, counting both stars and extragalactic sources. }
+  \label{fig:starcount}
+\end{figure}
 
 \subsection{Stars}
 
@@ -175,7 +185,7 @@ Here, $\nu_0$ is a reference frequency, set to $239833.966$ GHz (1.25 $\mu m$).
 
 \label{sec:diffusemodel}
 
-Finally, after modelling the brightest sources using one of the two methods described above, we are left with a diffuse background of stars that are too dim to be individually resolved, but that can still couple to other parameters such as the band monopoles and so must be accounted for. We model this diffuse background using a single full-sky template, generated from the WISE W1 data. We take the full AllWISE pointsource catalog, and for each source with a included W1 magnitude that isn't already included in one of the previous pointsource models (ie. sources dimmer than Mag. 5) we create a high resolution healpix map \citep{healpix} at nside=2048. Adding each source in turn to this map, we then downgrade to nside=512, which gives the map shown in Fig. \ref{fig:diffuseStars}. 
+Finally, after modelling the brightest sources using one of the two methods described above, we are left with a diffuse background of stars that are too dim to be individually resolved, but that can still couple to other parameters such as the band monopoles and so must be accounted for. We model this diffuse background using a single full-sky template, generated from the WISE W1 data. We take the full AllWISE pointsource catalog, and for each source with a included W1 magnitude that isn't already included in one of the previous pointsource models (ie. sources dimmer than Mag. 5) we create a high resolution healpix map \citep{healpix} at nside=2048. Adding each source in turn to this map, we then downgrade to nside=512, which gives the map shown in Fig. \ref{fig:diffuse}. 
 
 \begin{figure}
   \centering
@@ -186,10 +196,6 @@ Finally, after modelling the brightest sources using one of the two methods desc
 
 This template is then included in the full sky model, and fit jointly in bands 01-04, with an SED given by the mean of all SEDs of stars modelled in section \ref{sec:starmodel}. This SED is fit with a single amplitude parameter, which compensates for the overall difference in bandpass between W1 and the DIRBE bands. The mean of this SED averaged over all the samples in the full chain is shown as the red line in Fig. \ref{fig:starSEDs}.
 
-\subsection{Masking}
-
-
-\clearpage
 \section{Astrophysical results}
 \label{sec:results}
 
@@ -209,24 +215,73 @@ In Figure \ref{fig:starsT} we show the mean star component maps for the full pip
   \label{fig:starsT}
 \end{figure*}
 
+In Figure \ref{fig:amptrace}, we show the amplitude of the diffuse template across all samples, with the overall mean shown as the horizontal line. Also plotted are the monopole amplitudes in DIRBE band 01, which appears to SOMETHING ABOUT WHAT THE PLOT LOOKS LIKE.
+
+\begin{figure}
+  \centering
+%  \includegraphics[width=\columnwidth]{figs/mixing/mixing_chain1.pdf} \\
+%  \includegraphics[width=\columnwidth]{figs/mixing/mixing_chain2.pdf} \\
+%  \includegraphics[width=\columnwidth]{figs/mixing/mixing_chain3.pdf} \\
+%  \includegraphics[width=\columnwidth]{figs/mixing/mixing_chain4.pdf} \\
+%  \includegraphics[width=\columnwidth]{figs/mixing/mixing_chain5.pdf} \\
+%  \includegraphics[width=\columnwidth]{figs/mixing/mixing_chain6.pdf} \\
+  \caption{Trace plots of the diffuse star template amplitude and the DIRBE 01 monopole amplitudes for all six chains in the data release. The mean of the diffuse template amplitude over all samples is plotted as the horizontal line.}
+  \label{fig:amptrace}
+\end{figure}
+
 
 \subsection{Spectral Energy Densities}
 
-Figure \ref{fig:starSEDs} shows the SED models for all 717454 star sources in our catalogue, as well as the full sky mean emission attributable to stars. 
+Figure \ref{fig:starSEDs} shows the SED models for all 717454 star sources in our catalogue, as well as the full sky mean SED, which is used as the SED for the diffuse component. 
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figs/starseds/star_seds.pdf}
-  \caption{Star emission as a function of wavelength. In blue we have the SEDs for each source in our catalogue, and overplotted in red is the full sky mean of all emissions. \textbf{this is a bad plot and I am too tired to figure out how to fix it right now}}
+  \caption{Star emission as a function of wavelength. In blue we have the SEDs for each source in our catalogue, and overplotted in red is the full sky mean of all sources, which is used as the SED for the diffuse template. \textbf{this is a bad plot and I am too tired to figure out how to fix it right now}}
   \label{fig:starSEDs}
 \end{figure}
 
 SEDs for extragalactic sources
 
 
-\section{Consistency with other Data Sets}
+\section{Comparison to other Analyses}
 \label{sec:consistency}
 
-The DIRBE data contain 
+The original DIRBE analysis team \citep{dirbeFaint} also removed point sources from their measurement of the CIB emission, but followed a different approach. Instead of modelling the bright sources, the original analysis simply masked pixels brighter than a threshold (15 Jy in band 01), which resulted in cutting almost 35 \% of the sky at 1.25 $\mu$m. For the diffuse sources, they build a model (the 'faint source model' or FSM) using the mechanism of \cite{wainscoat}, which integrates a model of source counts over the full, including models of galactic morphology, 87 discrete source types and the contribution from dust extinction. The results of this model in the DIRBE 01 band are shown in Figure \ref{fig:DIRBEfaint}, as well at the difference between our faint source model and theirs, evaluated in that same band. 
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figs/diffuseTemplate/dirbe_template.pdf}\\
+  \includegraphics[width=\columnwidth]{figs/diffuseTemplate/diffuse_diff.pdf}\\
+  \includegraphics[width=\columnwidth]{figs/diffuseTemplate/band01_res.pdf}\\
+  \caption{The DIRBE faint star model at 1.25 $\mu$m retrieved from LAMBDA and converted from QuadCube to healpix (top) and the difference between that model and the Cosmoglobe star model (fig. \ref{fig:diffuse}) used in this analysis (middle). The bottom panel shows the DIRBE 01 residual from the Commander run, which shows that our star model is slightly overestimating signal in the galactic plane.}
+  \label{fig:DIRBEfaint}
+\end{figure}
+
+This difference shows that the DIRBE FSM predicts more star emission in the galactic plane than the integrated AllWISE pointsource catalogue, except in the very inner part of the plane where dust extinction is dominant. The AllWISE data was found to be complete to Mag 17, so it is possible that a large number of fainter sources are missing, which could cause an underestimate of the total star emission. Dust extinction is also not explicitly included in our star model, although should be implicitly accounted for due to the missing and dimmer catalogue sources within that region. The bottom panel of fig. \ref{fig:DIRBEfaint} shows the Commander DIRBE 01 residuals, averaged over the full chain. The blue area in the galactic plane shows that when fit against the data, our current star model overestimates the galactic emission in this band, indicating that the DIRBE FSM with its even higher estimate would be a worse fit to the data. 
+
+After the official DIRBE analysis, \cite{DIRBE2mass}, following \cite{gorjian} used the 2MASS catalogue to remove star emissions from DIRBE and find an improved upper limit on the CIB monopole, but were ultimately unable to claim a detection due to the zodiacal light contamination that they were unable to fully correct. Their analysis looked at four dark patches of the sky and used 2MASS to estimate the contribution of both bright and faint sources to the total signal in each patch, which we can compare with the Cosmoglobe estimates, as shown in Table \ref{tab:2mass}.
+
+\begin{table*}
+    \centering
+    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
+    \begin{tabular}{l c c c c c c c c c}
+    \hline
+    \hline
+     Patch & $l$ & $b$ & $r$ & \multicolumn{2}{c}{Bright Stars} & \multicolumn{2}{c}{Diffuse Stars} & \multicolumn{2}{c}{Galaxies} \\ 
+     & ($^{\circ}$) & ($^{\circ}$) & ($^{\circ}$) & \multicolumn{2}{c}{(kJy/sr)} & \multicolumn{2}{c}{(kJy/sr)} & \multicolumn{2}{c}{(kJy/sr)} \\
+          &  & & & \cite{DIRBE2mass} & CG & \cite{DIRBE2mass} & CG & \cite{DIRBE2mass} & CG\\
+    
+     \hline
+     1 \rule{0pt}{2ex} & 127.3 & 63.8  & 1.5 & 48.23 & & 3.08 & & 0.1 &\\
+     2 & 107.7 & 57.7 & 2.0 & 58.86 & & 3.62 & & 0.1 &\\
+     3 & 157.0 & -26.0 & 2.0 & 51.48 & & 2.94 & & 0.1 &\\
+     4 & 257.8 & -59.4 & 1.9 & 70.01 & & 3.92 & & 0.1 &\\
+     \hline
+    \end{tabular}
+    \caption{Comparison of component intensities in patches from \cite{DIRBE2mass} and Cosmoglobe (CG) at 1.25 $\mu$m in the DRIBE 01 band. $l$ and $b$ are the galactic longitude and latitude of the region center, and $r$ is the radius of the field. TODO: make estimates of these numbers with CG}
+    \label{tab:2mass}
+\end{table*}
+
+
 
 %\begin{figure}
 %  \centering
