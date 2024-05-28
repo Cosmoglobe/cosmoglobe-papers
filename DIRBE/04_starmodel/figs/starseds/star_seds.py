@@ -26,8 +26,6 @@ data = data[0]
 
 cat = h5py.File(catalog)
 
-data = data
-
 plt.figure()
 
 plt.plot(dirbe_bands, data[0]/cat['reported_values'][0][0]*cat['reported_values'][0][0:6], alpha=0.1, color='blue', label='Star SEDs')
