@@ -74,7 +74,7 @@
 
    \date{\today} 
    
-   \abstract{We present a three-component model of thermal dust emission in the combined DIRBE and Planck HFI frequency range. The three components correspond respectively to cold, hot, and near-by dust. All three components are modelled with spatially constant spectral energy density (SED) parameters, but with a spatially varying amplitude. However, the near-by dust component is additionally strongly constrained by  the GAIA-based 3D model of Edenhofer which provides a template of thermal dust emission closer than 1.25\,kpc from the Sun. Each pixel has therefore only two freely fitted degrees of freedom, and this model is fitted to a set of 12 independent frequency channels between 100\,GHz to 25\,$\mu$m. The original motivation for considering such a highly constrained model was to facilitate deep searches for extragalactic background fluctuations in DIRBE, for which minimizing degeneracies between extragalactic and Galactic signals is key. However, and despite its algorithmic motivation, we find that the model provides a surprisingly good fit on large angular scales, with more than 90\,\% of the sky being dominated by non-Galactic residuals (zodiacal light, cosmic infrared background fluctuations, and instrumental noise) at channels as different as Planck 100 and 857\,GHz and DIRBE 240 and 25\,$\mu$m. Perhaps even more strikingly, we also find that the amplitude maps corresponding to the cold and hot dust components correlate spatially very strongly with external $H_I$ and $C_{II}$ templates, respectively. Thus, the model appears not only to provide a compact numerical representation of thermal dust emission in the Milky Way, but it also seems to represent a key aspect the true underlying physics. This observation may also have important consequences for future CMB $B$-mode polarization studies, for which thermal dust emission is the single most important astrophysical contaminant. }
+   \abstract{We present a three-component model of thermal dust emission in the combined DIRBE and Planck HFI frequency range. The three components correspond respectively to cold, hot, and nearby dust. All three components are modelled with spatially constant spectral energy density (SED) parameters, but with a spatially varying amplitude. However, the nearby dust component is additionally strongly constrained by  the GAIA-based 3D model of Edenhofer which provides a template of thermal dust emission closer than 1.25\,kpc from the Sun. Each pixel has therefore only two freely fitted degrees of freedom, and this model is fitted to a set of 12 independent frequency channels between 100\,GHz to 25\,$\mu$m. The original motivation for considering such a highly constrained model was to facilitate deep searches for extragalactic background fluctuations in DIRBE, for which minimizing degeneracies between extragalactic and Galactic signals is key. However, and despite its algorithmic motivation, we find that the model provides a surprisingly good fit on large angular scales, with more than 90\,\% of the sky being dominated by non-Galactic residuals (zodiacal light, cosmic infrared background fluctuations, and instrumental noise) at channels as different as Planck 100 and 857\,GHz and DIRBE 240 and 25\,$\mu$m. Perhaps even more strikingly, we also find that the amplitude maps corresponding to the cold and hot dust components correlate spatially very strongly with external $H_I$ and $C_{II}$ templates, respectively. Thus, the model appears not only to provide a compact numerical representation of thermal dust emission in the Milky Way, but it also seems to represent a key aspect the true underlying physics. This observation may also have important consequences for future CMB $B$-mode polarization studies, for which thermal dust emission is the single most important astrophysical contaminant. }
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
    \maketitle
@@ -86,14 +86,38 @@
 %-------------------------------------------------------------------
 \section{Introduction}
 %\the\textwidth \the\columnwidth
-Stars are really important!
+Dust is really important!
 
 \clearpage
-\section{Star modelling in a Bayesian context}
+\section{Dust modelling}
+\subsection{Current state}
+Interstellar dust -- amorphous particles of silicate and carbonaceous materials -- makes its presence known on practically all astrophysically relevant wavelengths. The efforts to classify and describe this material is significant in its own right, but knowing its properties also allows for better and more precise astrophysical foreground removal in cases where interstellar dust emission contaminate the other signals of interest.\footnote{For a recent review, see \cite{Hensley2022}}.
+
+In the frequency/wavelength regime between 100 GHz and 1.25\,$\mu$ m, interstellar dust emission is typically classified as a modified blackbody, i.e. where the SED is given by 
+\begin{equation}
+s(\nu) = \nu^\beta B(\nu, T),
+\label{eq:mbb}
+\end{equation}
+
+where $B$ is the Planck law for a perfect blackbody, and $\beta$ is the spectral index. Typical temperatures of this blackbody in the diffuse ISM is around $\sim$ 20 K, meaning that the typical peak of the distribution happens around 150\,$\mu$ m ($\sim 2000$ GHz).
+
+At lower wavelengths (2.5\,$\mu$m - 12\,$\mu$m) there is additionally a contribution from so-called polycyclic aromatic hydrocarbon (PAH) emission, which is characterized by spikes in its SED. Such emission counteracts the fall-off of the modified blackbody spectrum at wavelengths below the peak.
+
+\subsubsection{Spatial variations}
+This is a general picture -- typically, in a given line-of-sight the relative contribution of various dust components will vary. At the same time, the degree to which such variations can be detected and described is limited by the resolution and signal-to-noise ratios of the available data at the wavelengths involved. For example, .... Thus classifying populations of interstellar dust with common spectral parameters has been of high importance.
+
+One natural distinction that has been made is between ``hot'' and ``cold'' dust. If we are able to divide the interstellar dust into components of high and low energy, such components could lend themselves to be traced by independent probes of interstellar matter. For the low-energy component, a natural tracer would be the H I column density as measured by experiments such as HI4PI. The hot dust component, similarly, could be traced by other measures of high-energy regions, with the traditional candidates being either the H$\alpha$ or C II spectral lines.
+
+MORE HERE ON WHAM ETC
+
+\subsection{This analysis}
+In this work, we are using a parametric Bayesian Gibbs sampling approach for model exploration. This requires a data model that is parametrized with parameters that can be sampled over. For the dust emission part of the data model, we are using a constrained three--component dust model to describe the dust emission from 100 GHz to 1.25\,$\mu$m. The model is binned spatially in HEALPix $n_{side}$ 2048 maps, and the dust emission in each pixel is assumed to be described by the sum of the three components. Other types of emission, such as planetary dust and the CIB, are modelled in other ways, and they are all described in {ref:DR2_overview}.
+
+Each component is given by an MBB term (Eq. \eqref{eq:mbb}) which is used for frequencies below 1050 GHz. The temperature and spectral index of each component are spatially constant allowed to vary between iterations.
 
 
 \clearpage
-\section{Impact of starlight on DIRBE observations}
+\section{Data}
 
 %\begin{figure}
 %  \centering
@@ -105,11 +129,8 @@ Stars are really important!
 
 
 \clearpage
-\section{Data selection and cleaning}
-
-
-\clearpage
 \section{Astrophysical results}
+
 
 \clearpage
 \section{Future directions}
@@ -144,6 +165,6 @@ Stars are really important!
 %
 
 \bibliographystyle{aa}
-\bibliography{references}
+\bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
 \end{document}
 %%%% End of aa.dem
