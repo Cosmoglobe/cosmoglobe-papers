@@ -218,7 +218,7 @@ However, since the DIRBE data were made public in 1996, many other experiments h
 
 Not only has there been made great observational breakthroughs since the time of the DIRBE release, but this progress has also been accompanied closely by corresponding efforts in algorithm development. One striking example of this is the field of cosmic microwave background (CMB) analysis, which during more than three decades have established a wide range of highly efficient tools to search for weak signals in data that are strongly contaminated by astrophysical foregrounds, instrumental noise and systematics. One specific branch of this community-wide effort focused on so-called global Bayesian analysis. This work started within the \Planck\ collaboration, and the first major application was multi-experiment component separation as described by \citet{planck2014-a12}. However, toward the end of the \Planck\ collaboration it became evident that the main limiting factor was not component separation in itself, but rather a tight coupling between uncertainties in the astrophysical sky model and instrumental systematics, in particular in the form of gain uncertainties. As a response to this major lesson learned, the BeyondPlanck project was formed with the explicit goal to implement the world's first end-to-end Bayesian analysis code by extendig an existing CMB Gibbs sampler called \commander\ with time-ordered data (TOD) modelling capabilities, and apply this to the \Planck\ Low Frequency Instrument (LFI) data. The effort was highly successful, and the resulting \Planck\ LFI frequency maps represent today the cleanest and best characterized LFI data available.
 
-In parallel with this effort, the \Cosmoglobe\ collaboration was formed as a direct response to a second major lesson learned from \Planck, namely that better results are obtained when analyzing multiple experiments together. The goal of this work is simply to establish a single coherent model of the astrophysical sky from radio to infrared frequencies by combining information from as many state-of-the-art experiments as possible. The first application of this framework was described in \cosmoglobe\ Data Release 1 (DR1; \citealp{CG01_01}), which performed the first joint analysis of time-ordered data from both the Wilkinson Microwave Anisotropy Probe (WMAP; \citealp{bennett:2013}) and \Planck\ LFI. As a result of this joint analysis, the quality of the sky maps from both experiments improved, and a long-standing discrepancy between the two experiments was finally resolved; ultimately, it was tracked down to calibration uncertainties in both experiments.
+In parallel with this effort, the \Cosmoglobe\ collaboration was formed as a direct response to a second major lesson learned from \Planck, namely that better results are obtained when analyzing multiple experiments together. The goal of this work is simply to establish a single coherent model of the astrophysical sky from radio to infrared frequencies by combining information from as many state-of-the-art experiments as possible. The first application of this framework was described in \cosmoglobe\ Data Release 1 (DR1; \citealp{CG02_01}), which performed the first joint analysis of time-ordered data from both the Wilkinson Microwave Anisotropy Probe (WMAP; \citealp{bennett:2013}) and \Planck\ LFI. As a result of this joint analysis, the quality of the sky maps from both experiments improved, and a long-standing discrepancy between the two experiments was finally resolved; ultimately, it was tracked down to calibration uncertainties in both experiments.
 
 In the current \cosmoglobe\ DR2 data release, of which this paper represents one of five main papers, we apply the same process to the DIRBE data, with the ambitious goal of finally fulfilling DIRBE's original purpose, namely to characterize the CIB spectrum from 1 to 240$\,\mu\mathrm{m}$. As will become clear from the following presentation, we are indeed able to make large improvements to the original analysis, as we are able to measure the CIB monopole robustly at five out of ten wavelength bands, and we also for the first time observe CIB anisotropies at 3.5\,$\mu\mathrm{m}$ both by eye and in terms of angular power spectra. However, even after all this work, there are several problems remaining that will require further work, both in terms of astrophysical and instrument modelling. The following results therefore do not in any represent the final and definitive results that ultimately can derived from DIRBE. Rather, they represent the first step in a long process in which the CIB is gradually being harnessed through the same Bayesian end-to-end methods that has proven so effective for analyzing CMB experiments, with the ultimate goal of seamlessly merging the two fields. Two natural next steps in this process are, first, to include high-resolution experiments such as IRAS and AKARI that can break important degeneracies in the current zodiacal light model, and, second, to reprocess the \Planck\ HFI measurements at the level of raw TOD; preliminary steps towards both of these projects have recently been made, and volunteers are welcome to joint this Open Source effort.
 
@@ -250,9 +250,179 @@ Overview of FIRAS monopole detection, stacking analyses, etc. Limits on monopole
 \section{Reprocessed DIRBE sky maps}
 \label{sec:data}
 
-\subsection{Global sky model}
+The main data set used in this paper is the zodiacal light subtracted
+DIRBE frequency maps described by \citet{CG02_01}. In this section, we
+briefly review the algorithm that was used to generate these maps,
+paying particular attention to residual systematic uncertainties that
+are relevant for CIB analysis. 
+
+\subsection{Global data model}
+
+The first task in any end-to-end Bayesian \cosmoglobe-style analysis
+is to write down an explicit parametric model for the raw time-ordered
+data. For the current DIRBE-targeted analysis, we adopt the following
+model \citep{CG02_01},
+\begin{align}
+	\label{eq:model}
+	\dv &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}}\right] + \n,\\
+        &\equiv \s^{\mathrm{tot}} + \n.
+\end{align}
+In this expression, $\dv$ denotes a stacked vector of the DIRBE
+Calibrated Individual Observations (CIO) for each frequency band; in
+the following, we will refer to these as time-ordered data (TOD),
+following the CMB nomenclature. Next, $\G$ represents in principle an
+$n_{\mathrm{tod}}\times n_{\mathrm{tod}}$ diagonal matrix with an
+overall constant gain calibration factor per frequency channel; unless
+otherwise noted, this is usually set to unity, and we mostly adopt the
+official DIRBE calibration as is. Moving on, $\P$ represents the
+satellite pointing matrix defined in Galactic coordinates; and $\B$
+represents an instrumental beam convolution operator. The sum runs
+over $\n_{\mathrm{comp}}$ astrophysical components, each described by
+a free amplitude $\a_c$ and a mixing matrix, $\M_c$; for full details,
+see \citet{CG02_04,CG02_05}. Next, $\s_{\mathrm{zodi}}$ denotes
+zodiacal light emission, which in the current model is described by
+$\sim$\,70 free parameters \citep{CG02_02}, and $\n$ represents Gaussian
+instrumental noise, which may or may not include correlated noise; the
+correlated component is only included for the 240$\,\mu\mathrm{m}$
+channel. We will return to the static component described by
+$\s_{\mathrm{static}}$ in the next section.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figs/solarmap_06_v1_mono0.pdf}\\
+  \includegraphics[width=\linewidth]{figs/solarmap_06_v1_mono8.pdf}
+  \caption{(\emph{Top:}) Default solar-centric sidelobe model used in the \cosmoglobe\ DR2 analysis for the 25\,$\mu$m channel, plotted in solar-centric coordinates; see \citet{CG02_01} for full discussion. (\emph{Bottom:}) Same as above, but with an additional offset of +0.8\,MJy/sr, corresponding to the CIB monopole at 25\,$\mu$m reported in this paper.}
+  \label{fig:sidelobe}
+\end{figure}
+
+To complete the data model, we need to specify the astrophysical sky
+contribution. In the current analysis, we adopt the following model \citep{CG02_04,CG02_05},
+\begin{alignat}{4}
+  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
+  &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
+  && \textrm{(Cold dust)}\label{eq:skymodel}\\
+  + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
+  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\nonumber \\
+  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
+  a_{\nu} && \textrm{(Nearby dust)} \nonumber \\
+  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \nonumber\\
+  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
+  + &\delta(\nu-\nu_{0,\mathrm{CII}}) \a_{\mathrm{CII}}
+  h^{\mathrm{CII}}_{\nu} && \textrm{(CII)}\nonumber \\
+  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  f_{\mathrm{GAIA},j} a_{\mathrm{s},j}, &\quad&
+  \textrm{(Bright stars)} \nonumber\\
+  + &U_{\mathrm{mJy}} f_{\mathrm{GAIA},j} \a_{\mathrm{fs},j}, &\quad&
+  \textrm{(Faint stars)} \nonumber\\  
+    + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
+  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
+  T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
+  a_{\mathrm{e},j} && \textrm{(FIR sources)}\nonumber\\
+  + &m_{\nu} && \textrm{(Monopole)}, \nonumber
+\end{alignat}
+where rows describe respectively, from top to bottom, 1) cold dust emission; 2)
+hot dust emission; 3) nearby dust emission; 4) free-free emisssion; 5)
+CO emission; 6) CII emission; 7) bright starlight emission; 8) faint
+starlight emission; 9) other compact sources; and 10) one monopole for
+each band. The specific meaning of each symbol is not particularly
+relevant for the purposes of this particular paper, and we therefore
+refer the interested reader to the respective paper for full
+details. However, what is key for the current analysis is the fact
+that all these parameters are fitted simultaneously with the zodiacal
+light and instrumental parameters, leading to one overall global
+posterior distribution.
+
+\subsubsection{Excess radiation in solar-centric coordinates}
+
+The only term in Eq.~\eqref{eq:model} not discussed so far is
+$\s_{\mathrm{static}}$, which denotes the contribution from a
+hither-to unappreciated signal that appears stationary in the
+Sun-Earth coordinate system \citet{CG02_01}. Such radiation could
+arise from at least two potential sources. First, any zodiacal light
+component that is actually stationary in solar-centric coordinates
+would be described by this term; two well-known examples of such are
+the so-called ``circumsolar ring'' and ``Earth-trailing feature'' in
+the K98 model \citep{kelsall1998}, originating from dust particles
+trapped in the gravitational field of the Earth. Another possible
+source is straylight contamination from the Sun. As discussed by
+\citet{hauser:1998}, the DIRBE optics was specifically designed to
+minimize such contamination, and no corrections were made for such
+radiation in the legacy analysis. However, early signs of unexplained
+excess radiation with no clear zodiacal light counterpart were
+reported already by \citet{leinert:1998}, as shown in their Figure~54,
+but these were to our knowledge never followed up systematically or
+explained physically.
+
+A more detailed study of this signal has now been performed by
+\citet{CG02_01} as part of the current analysis, and the excess
+radiation has been mapped for each DIRBE frequency band by binning the
+residual TOD into solar-centric coordinates. The strongest signal was
+found at the 25\,$\mu\mathrm{m}$ channel, as reproduced in the top
+panel of Fig.~\ref{fig:sidelobe}.
+
+Qualitatively similar signals were found at all bands between 4.9 and
+$100\,\mu\mathrm{m}$, while for wavelengths between 1.25 and
+3.5$\,\mu\mathrm{m}$ only weak signatures are visible, and at the
+longer wavelengths there is no evidence at all. In this respect it is
+worth noting that the ten DIRBE detectors are divided into three
+groups in the optical path of the instrument (add reference), with the
+same grouping as observed for the strength of the solar-centric excess
+signal; in this figure, the Sun is located in the center, and the
+equator is aligned with the Ecliptic plane. Gray pixels are directions
+that are observed by the DIRBE instrument.
+
+As far as the current paper is concerned, it is irrelevant whether
+this excess signal is due to a yet-unknown zodiacal light component or
+straylight from the Sun; with an amplitude of up to 5\,MJy/sr, it must
+obviously be fitted and removed from the raw time-ordered data prior
+to mapmaking in order to prevent it from compromising any CIB results
+derived from these data. Unfortunately, since we do not yet have a
+detailed physical model for the signal, it must be fitted freely
+pixel-by-pixel in solar-centric coordinates for each frequency
+band. This, however, introduces a perfect degeneracy between the
+zero-level of the static signal component and the CIB monopole for the
+affected channels; if one adds an arbitrary offset to the map in the
+top panel in Fig.~\ref{fig:sidelobe}, and subtracts exactly the same
+value from the CIB monopole at the same channel, the total
+goodness-of-fit at that channel is unchanged.
+
+As a temporary solution to this fundamental problem, we have for now
+opted to set the zero-level of the static components at each channel
+to the lowest possible value that still results in a positive signal
+within instrumental noise fluctuations. The motivation for this is one
+of simplicity of interpretation: Whether the excess signal is due to
+zodiacal light emission or sidelobes, it should either way be
+positive, and setting it to the lowest possible value ensures that the
+final resulting CIB constraints translate into upper limits. This is
+illustrated in the bottom panel of Fig.~\ref{fig:sidelobe}. In this
+case, we have added an extra offset of +0.8\,MJy/sr to the default
+static template at $25\,\mu\mathrm{m}$; both of these will lead to an
+identical overall $\chi^2$, and both appear as physically plausible,
+but the lower template will yield a CIB monopole that is lower by
+0.8\,MJy/sr; the reason for choosing precisely this value will become
+evident in the next section. Conversely, it is not possible to add a
+negative offset of -0.8\,MJy/sr, since the template will then become
+significantly negative beyond what is allowed by instrumental
+noise.
+
+To summarize, we include a model for the static component,
+$\s_{\mathrm{s}}$, by fitting its amplitude freely and separately at
+each wavelength band between 4.9 and 100$\,\mu\mathrm{m}$. As seen in
+Fig.~\ref{fig:sidelobe}, this results in a high signal-to-noise ratio
+measurement, and it does not significantly increase the overall noise
+level of the higher-level products. However, since the zero-level of
+this signal is unknown, up to positivity, all CIB monopole results
+between 4.9 and 100$\,\mu\mathrm{m}$ quoted in the following are upper
+limits. An important goal for future work is to derive a physical
+model for this signal, and only if that is successful can these upper
+limits be converted into actual detections.
 
 \subsection{Posterior distribution and Gibbs sampling}
+
 
 \subsection{CIB residual maps}
 
@@ -290,13 +460,6 @@ Overview of FIRAS monopole detection, stacking analyses, etc. Limits on monopole
 
 \subsection{Known residual systematic effects}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\linewidth]{figs/solarmap_06_v1_mono0.pdf}\\
-  \includegraphics[width=\linewidth]{figs/solarmap_06_v1_mono8.pdf}
-  \caption{(\emph{Top:}) Default solar-centric sidelobe model used in the \cosmoglobe\ DR2 analysis for the 25\,$\mu$m channel, plotted in solar-centric coordinates; see \citet{CG02_01} for full discussion. (\emph{Bottom:}) Same as above, but with an additional offset of +0.8\,MJy/sr, corresponding to the CIB monopole at 25\,$\mu$m reported in this paper.}
-  \label{fig:sidelobe}
-\end{figure}
 
 
 \clearpage
