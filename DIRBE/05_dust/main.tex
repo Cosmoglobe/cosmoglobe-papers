@@ -90,10 +90,12 @@ Dust is really important!
 
 \clearpage
 \section{Dust modelling}
-\subsection{Current state}
-Interstellar dust -- amorphous particles of silicate and carbonaceous materials -- makes its presence known on practically all astrophysically relevant wavelengths. The efforts to classify and describe this material is significant in its own right, but knowing its properties also allows for better and more precise astrophysical foreground removal in cases where interstellar dust emission contaminate the other signals of interest.\footnote{For a recent review, see \cite{Hensley2022}}.
+\subsection{Current status}
+Interstellar dust -- amorphous particles of silicate and carbonaceous materials -- makes its presence known on practically all astrophysically relevant wavelengths. The efforts to classify and describe this material is significant in its own right, but knowing its properties also allows for better and more precise astrophysical foreground removal in cases where interstellar dust emission contaminate the other signals of interest.\footnote{For a recent review, see \cite{Hensley2021}}.
 
-In the frequency/wavelength regime between 100 GHz and 1.25\,$\mu$ m, interstellar dust emission is typically classified as a modified blackbody, i.e. where the SED is given by 
+Recently, the "astrodust+PAH" model \citep{Hensley2022} was introduced, wherein the diffuse interstellar medium is hypothesised to be made up of a single composite material (the eponymous astrodust) for scales larger than $\sim0.02~\mu$m, and a distinct variety of materials -- including so-called polycyclic aromatic hydrocarbons (PAH) -- on scales smaller than this.
+
+In the wavelength regime between $3000-100~\mu$ m, this model is described well as following a modified blackbody SED\footnote{The actual astrodust model is using a composite MBB which has a transition between 353 and 217 GHz}, that is, a SED with this behavior as a function of frequency:
 \begin{equation}
 s(\nu) = \nu^\beta B(\nu, T),
 \label{eq:mbb}
@@ -101,7 +103,7 @@ s(\nu) = \nu^\beta B(\nu, T),
 
 where $B$ is the Planck law for a perfect blackbody, and $\beta$ is the spectral index. Typical temperatures of this blackbody in the diffuse ISM is around $\sim$ 20 K, meaning that the typical peak of the distribution happens around 150\,$\mu$ m ($\sim 2000$ GHz).
 
-At lower wavelengths (2.5\,$\mu$m - 12\,$\mu$m) there is additionally a contribution from so-called polycyclic aromatic hydrocarbon (PAH) emission, which is characterized by spikes in its SED. Such emission counteracts the fall-off of the modified blackbody spectrum at wavelengths below the peak.
+At lower wavelengths (2.5\,$\mu$m - 12\,$\mu$m), the astrodust+PAH model is mostly dominated by the nanoscale particle emission, and exhibits strong emission lines at various wavelengths (see Fig.~10 in \cite{Hensley2023}).
 
 \subsubsection{Spatial variations}
 This is a general picture -- typically, in a given line-of-sight the relative contribution of various dust components will vary. At the same time, the degree to which such variations can be detected and described is limited by the resolution and signal-to-noise ratios of the available data at the wavelengths involved. For example, .... Thus classifying populations of interstellar dust with common spectral parameters has been of high importance.
@@ -111,20 +113,114 @@ One natural distinction that has been made is between ``hot'' and ``cold'' dust.
 MORE HERE ON WHAM ETC
 
 \subsection{This analysis}
-In this work, we are using a parametric Bayesian Gibbs sampling approach for model exploration. This requires a data model that is parametrized with parameters that can be sampled over. For the dust emission part of the data model, we are using a constrained three--component dust model to describe the dust emission from 100 GHz to 1.25\,$\mu$m. The model is binned spatially in HEALPix $n_{side}$ 2048 maps, and the dust emission in each pixel is assumed to be described by the sum of the three components. Other types of emission, such as planetary dust and the CIB, are modelled in other ways, and they are all described in \citet{ref:DR2_overview}.
+As described in MAINDR2PAPER, we are in this work performing a global end-to-end analysis of HFI and DIRBE data, using a parametric Bayesian Gibbs sampling approach. This means jointly fitting for the theoretical model of the data we are obsering, along with a model describing the instrument and other systematic effects. Through the method of Gibbs sampling, we are thus able to explore the joint posterior distribution of all parameters of interest, as long as we have parametrized models of the instruments and the physical sky that we are observing.
 
-Each component is given by an MBB term (Eq. \eqref{eq:mbb}) which is used for frequencies below 1050 GHz. The temperature and spectral index of each component are spatially constant allowed to vary between iterations.
 
+As this paper is concerned with dust modelling in the infrared and microwave regimes, we will here focus on the part of the total data model that describes the dust emission at these wavelengths. We use a constrained three--component dust model to describe the dust emission from 100 GHz to 1.25\,$\mu$m. The model is binned spatially in HEALPix $n_{side}$ 2048 maps, and the dust emission in each pixel is assumed to be described by the sum of the three components. Other types of emission, such as planetary dust and the CIB, are modelled in other ways, and they are all described in \ref{ref:DR2_overview}.
+
+The SED of each of the three components is based on the astrodust+PAH model. Each component is given by an MBB term (Eq.~\eqref{eq:mbb}) which is used for frequencies below 1050 GHz. The temperature and spectral index of each component are varying from Gibbs sample to Gibbs sample but are spatially constant over the sky. Above 1050 GHz, we define a set of bins, each of which is chosen so that it roughly corresponds to the width of a DIRBE band, as shown in Table \ref{tab:bins}, and define the SED amplitude to be a single value for each bin; these SED amplitudes are treated as free variables (again, spatially constant) for each of the three components. Following the original DIRBE analysis, we have not defined tabulated SED bins in the wavelengths that would correspond to the 1 and 2 DIRBE bands -- this is both because the PAH emission which dominates at these wavelengths are not expected to have any peaks here.
+
+
+\begin{table*}
+    \label{tab:bins}
+    \centering
+    \caption{Defintion of the SED bins used in this paper}
+    \begin{tabular}{c|c|c|c}
+        Bin number & Frequency range (GHz) & Wavelength range ($\mu$m) & DIRBE band correspondence \\
+        \hline
+        1 & 1050-1667 & 286.5-179.8 & 10 \\
+        2 & 1667-2540 & 179.8-118.0 & 9 \\
+        3 & 2540-4064 & 118.0-73.8 & 8 \\
+        4 & 4064-9000 & 73.8-33.3 & 7 \\
+        5 & 9000-18100 & 33.3-16.6 & 6 \\
+        6 & 18100-45500 & 16.6-6.6 & 5  \\
+        7 & 45500-70215 & 6.6-4.3 & 4 \\
+        8 & 70215-109490 & 4.3-2.7 & 3
+    \end{tabular}
+\end{table*}
 
 \clearpage
 \section{Data}
+As mentioned, the two main data sets used for this analysis is the DIRBE and \Planck HFI data REFERENCE, and we describe these below.
+\subsection{DIRBE}
 
+\subsection{Planck HFI}
+\clearpage
+\section{Results}
 %\begin{figure}
 %  \centering
-%  \includegraphics[width=\columnwidth]{figs/mask_proc_calib.pdf}
+%  \includegraphics[width=\columnwidth]{figures/.pdf}
 %  \caption{Processing masks use in the analysis.}
 %  \label{fig:masks}
 %\end{figure}
+
+\subsection{Best-fit three-component dust model}
+
+\subsection{Correlations between our work and potential dust tracers}
+\subsubsection{Hot dust}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/all_components_sed.pdf}
+  \caption{The mean SEDs of the three dust components.}
+  \label{fig:all_components_sed}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/cold_dust_sed.pdf}
+  \caption{The cold dust component SED.}
+  \label{fig:cold_dust_sed}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/hot_dust_sed.pdf}
+  \caption{The cold dust component SED.}
+  \label{fig:hot_dust_sed}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/nearby_dust_sed.pdf}
+  \caption{The nearby dust component SED.}
+  \label{fig:nearby_dust_sed}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/cii_DR2.pdf}
+  \caption{The DR2 CII map}
+  \label{fig:cii_DR2}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/cold_dust.pdf}
+  \caption{The DR2 cold dust map}
+  \label{fig:cold_dust}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/h14pi.pdf}
+  \caption{The HI4PI map}
+  \label{fig:h14pi}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/hot_dust.pdf}
+  \caption{The DR2 hot dust map}
+  \label{fig:hot_dust}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/nearby_dust.pdf}
+  \caption{The DR2 nearby dust map}
+  \label{fig:nearby_dust}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/wham.pdf}
+  \caption{The WHAM map}
+  \label{fig:wham}
+\end{figure}
+
 
 
 
