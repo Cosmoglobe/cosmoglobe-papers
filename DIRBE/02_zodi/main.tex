@@ -23,7 +23,7 @@
 \usepackage{collcell}
 \usepackage{array}
 \usepackage{booktabs}
-
+\usepackage{subfigure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{txfonts}
 \usepackage{xcolor}
@@ -38,7 +38,7 @@
 \usepackage{afterpage}
 \usepackage{ifthen}
 \usepackage[morefloats=12]{morefloats}
-
+\usepackage{tabularx}
 \usepackage{placeins}
 \usepackage{multicol}
 %\usepackage[breaklinks,colorlinks,citecolor=blue]{hyperref}
@@ -346,10 +346,12 @@ optimizations regarding ZL evaluation.
 \begin{figure}
     \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}
     \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
-    \caption{\textit{(top):} Difference between two instantaneous views 
-    of the ZL separated by 2 hours. \textit{(bottom):} Difference 
-    between an instantaneous view of the ZL from 900 km above Earth's 
-    north pole and one from 900km below Earth's south pole.}    
+    \caption{Errors induced by the ZL cache. \textit{(top):} Difference 
+    between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
+    separated by 2 hours. \textit{(bottom):} Difference between two 
+    instantaneous view of the ZL 900 km above Earth's north and south 
+    poles. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
+    are masked.}
     \label{fig:cache-error}
 \end{figure}
 The main optimization comes from the implementation of a ZL cache. The 
@@ -405,76 +407,114 @@ scale factor means that the parameter has a large effect on the total ZL
 amplitude.
 \begin{figure*}
     \centering
-    \includegraphics[width=.24\textwidth]{figs/atlas/C_01.pdf}
-    \includegraphics[width=.24\textwidth]{figs/atlas/B1_01.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_01.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_01.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_02.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_02.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_02.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_02.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_03.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_03.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_03.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_03.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_04.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_04.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_04.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_04.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_05.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_05.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_05.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_05.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_06.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_06.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_06.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_06.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_07.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_07.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_07.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_07.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_08.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_08.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_08.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_08.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_09.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_09.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_09.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_09.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/C_10.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B1_10.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B2_10.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/B3_10.pdf}\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_01.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_02.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_03.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_04.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_05.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_06.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_07.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_08.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_09.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_10.pdf}%
+    }\\
    
-    \caption{ZL parameter atlas showing the effects changing the parameters of the smooth cloud and the dust bands by $5\%$.}
+    \caption{ZL parameter atlas showing the difference between increasing 
+    and lowering each ZL model parameter by $5\%$ in the form of normalized 
+    mission-averaged ZL maps. Columns list, from left to right parameters of
+    1) the smooth cloud; 2) dust band 1; 3) dust band 2; and 4) dust band 3.}
     \label{fig:atlas1}
 \end{figure*}
 \begin{figure*}
     \centering
- 
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_01.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_06.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_01.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_06.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_02.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_07.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_02.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_07.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_03.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_08.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_03.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_08.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_04.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_09.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_04.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_09.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/SR_05.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_05.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_10.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/TF_11.pdf}\\
-    \includegraphics[width=.23\textwidth]{figs/atlas/general_01.pdf}
-    \includegraphics[width=.23\textwidth]{figs/atlas/general_02.pdf}\hspace*{0.5\textwidth}
-    \caption{ZL parameter atlas showing the effects changing the parameters of the circum-solar ring, earth-trailing feature and $T_0$ and $\delta$ by $5\%$.}
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_06.pdf}%
+    }\\   
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_07.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_08.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_09.pdf}%
+    }\\
+    \resizebox{0.92\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_11.pdf}%
+    }\\
+    \resizebox{0.46\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/general_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/general_02.pdf}%
+    }
+    %\hspace*{0.47\textwidth}
+    \caption{ZL parameter atlas showing the difference between increasing 
+    and lowering each ZL model parameter by $5\%$ in the form of normalized 
+    mission-averaged ZL maps. Columns list, from left to right parameters of
+    1) the smooth cloud; 2) dust band 1; 3) dust band 2; and 4) dust band 3.}
     \label{fig:atlas2}
 \end{figure*}
 
@@ -482,12 +522,18 @@ amplitude.
 \subsection{Goodness-of-fit}
 \begin{figure*}
     \centering
-    \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week_minus_full.pdf}
-    \includegraphics[width=0.49\linewidth]{figs/maptot_06a_week.pdf}\\
-    \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week_minus_full.pdf}
-    \includegraphics[width=0.49\linewidth]{figs/mapzodi_06a_week.pdf}
-    \includegraphics[width=0.49\linewidth]{figs/map_06a_week_minus_full.pdf}
-    \includegraphics[width=0.49\linewidth]{figs/map_06a_week.pdf}
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_I_nu.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
+    }\\
     \caption{Illustration of the basic sky maps involved in the zodiacal 
     light fitting algorithms adopted by the DIRBE (\emph{left column}) 
     and \Cosmoglobe\ (\emph{right column}) pipelines for one week of 
@@ -525,13 +571,8 @@ The $\chi^2$ measure used by the DIRBE team is given by
 \begin{equation}
     \chi^2_\mathrm{K98} = \Delta I_\nu - \Delta Z_\nu,
 \end{equation}
-where
-\begin{align}
-    &\Delta I_\nu = I_\nu - \langle I_\nu \rangle,\\
-    &\Delta Z_\nu = Z_\nu - \langle Z_\nu \rangle,
-\end{align}
-and $I_\nu$ and $Z_\nu$ are the full-mission frequency and ZL estimate 
-maps, and $\Delta I\nu$ and $\Delta Z_\nu$ are the difference between 
+where $I_\nu$ and $Z_\nu$ are the full-mission frequency and ZL estimate 
+maps, and $\Delta I_\nu = I_\nu - \langle I_\nu \rangle$ and $\Delta Z_\nu = Z_\nu - \langle Z_\nu \rangle$ are the difference between 
 the full-mission and a week frequency and ZL map, respectively. These 
 maps are illustrated in the left column in Figure~\ref{fig:week_vs_full}. 
 $\chi^2_\mathrm{K98}$ is by construction only sensitive to time-variable 
@@ -545,7 +586,7 @@ removed, resulting in a much weaker signal-to-noise ratio in the ZL
 parameter estimates and to the zero-levels. In contrast, we fit the data 
 at each time step to the signal minus model residual
 \begin{equation}\label{eq:chisq}
-    \chi^2 = I_\nu - Z_\nu. \text{Mean Intensity}
+    \chi^2 = I_\nu - Z_\nu.
 \end{equation}
 
 To minimize the amount of unmodeled galactic emission that enters our 
@@ -556,11 +597,6 @@ channels, are shown in Figure~\ref{fig:masks}.
 
 
 \subsection{Sampling zodiacal light parameters}
-The total number of free ZL model parameters in this analysis are N, 
-compared to the M parameters fit in K98. We have included a non-zero
-scattering contribution at 4.9 $\mu$m. This 
-
-
 ZL parameters are sampled as part of the Gibbs sweep in Commander3 (see 
 Equation something in Paper I). We use a function minimizer, to minimize 
 a variant of Equation~\eqref{eq:chisq} using a downsampled version of the
@@ -573,89 +609,7 @@ The reason we are not using MCMC
 sampling is due to the difficulty of exploring the entire parameter space 
 appropriately due to the many degeneracies between the model parameters. 
 Following the Powell minimization, random noise is added to each parameter
-to simulate a stochastic draw. 
-
-We can improve our error estimates on the ZL parameters by including the 
-Powell search history in our error estimation. For each bi-directional 
-search, we output both the parameter values and the intermediate $\chi^2$
-values which lets us find the 95\% confidence interval in the search. This
-is used jointly with the uncertienties determined from the Gibbs chain.
-\textcolor{red}{Do this with Duncan}
-
-
-
-\section{State-of-the-art zodiacal light model}\label{sect:improved-model}
-\input{ipd_param_table.tex}
-
-% \begin{figure*}
-%     \centering
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_a-b.pdf} 
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_a-b.pdf}
-
-%     \caption{Zodi frequency maps}
-%     \label{fig:zodi_freq}
-%   \end{figure*}
-
-
-  \begin{figure}
-    \centering
-    \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
-    \caption{ZL intensity as a function of wavelength simulated with ZodiPy in 
-    the DIRBE frequency range, using the Cosmoglobe ZL model. The SED of the 
-    ZL depends on the line-of-sight. As such, we show four intensity curves. 
-    The black curve the mean ZL intensity as seen in a HEALPix map at an 
-    instant in time, where pixels with a angular separation from the Sun 
-    smaller than $60^\circ$ is masked. The blue, red, and green dashed lines 
-    represent the ZL intensity in three different line-of-sights. 
-    \textcolor{red}{(Update with final zodi model values)}}
-    \label{fig:zodi-intensity}
-\end{figure}
-
-\textcolor{red}{(Fill in once the zodi paper gets further along and we have our results)}
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_04.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_04.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_04.pdf}\\
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_05.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_05.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_05.pdf}\\
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_06.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_06.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_06.pdf}\\
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_ma_07.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/cosmoglobe_zsma_07.pdf}
-    \includegraphics[width=0.325\textwidth]{figs/zsma_compare/dirbe_zsma_07.pdf}\\
-    \caption{Comparison between the zodiacal light corrections in the official DIRBE and Cosmoglobe DR2 analysis. The left column shows the mission-averaged maps, the middle column the Cosmoglobe DR2 ZSMA maps, and the right column the DIRBE ZSMA maps. The same color scale is used for the middle and right column in each row.}
-    \label{fig:dr2-zsma-compare}
-\end{figure*}
-
+to simulate a stochastic draw \textcolor{red}{(Or was it before sending it into powell to simulate annealing?)}. 
 \begin{figure*}
     \centering
     \includegraphics[width=1\textwidth]{figs/total_trace.pdf}
@@ -669,207 +623,217 @@ is used jointly with the uncertienties determined from the Gibbs chain.
     \caption{Trace plot of all geometrical interplanetary dust paramteres for six independant Markov chains.}
     \label{fig:trace-emissivity-albedo}
 \end{figure*}
+The total number of free ZL model parameters in this analysis are N, 
+compared to the M parameters fit in K98. We have included a non-zero
+scattering contribution at 4.9 $\mu$m. The ZL SED is composed of two 
+blackbody like spectra with a minimum around the $3.5\mu$m band. The first
+blackbody spectrum is associated with the solar flux through the scattering 
+contribution, while the second with the re-radiated thermal emission. With an
+improved sky model and lower residual levels, we believe that it is worth 
+including the small non-zero contribution from scattering at 4.9 $\mu$m.
+Additionally, we are using the 12 $\mu$m band as our ZL reference band, meaning
+that we fix the emissivities at this band to 1 \textcolor{red}{(why?)}. The
+reference ZL band in K98 is $25 \mu$m. Similar to K98, we fit one emissivity 
+for the smooth cloud, and one joint emissivity for the dust bands, while we 
+only fit one overall albedo for all components, at each frequency band. Where,
+K98 fixed emissivities to the cloud at certian bands, we have kept all free.
+
+We can improve our error estimates on the ZL parameters by including the 
+Powell search history in our error estimation. For each bi-directional 
+search, we output both the parameter values and the intermediate $\chi^2$
+values which lets us find the 95\% confidence interval in the search. This
+is used jointly with the uncertienties determined from the Gibbs chain.
+\textcolor{red}{Do this with Duncan}
+
+
+\section{State-of-the-art zodiacal light model}\label{sect:improved-model}
+Here we present our best-fit ZL model from having run Commander3 for six independant
+Markov Chains for N samples. Our best-fit parameters for the geometrical IPD parameters
+and emissivity and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
+and~\ref{table:zodi-params-spectral}, where they are compared to the K98 parameters.
+\input{ipd_param_table.tex}
+
+\textcolor{red}{(Fill in once the zodi paper gets further along and we have our results)}
+\begin{figure*}
+    \centering
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_01.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_01.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_01.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_01.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_01.pdf}%
+    }\\
+
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_02.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_02.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_02.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_02.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_02.pdf}%
+    }\\
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_03.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_03.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_03.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_03.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_03.pdf}%
+    }\\
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_04.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_04.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_04.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_04.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_04.pdf}%
+    }\\
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_05.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_05.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_05.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_05.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_05.pdf}%
+    }\\
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_06.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_06.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_06.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_06.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_06.pdf}%
+    }\\
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_07.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_07.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_07.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_07.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_07.pdf}%
+    }\\
+    \caption{Comparison between the zodiacal light corrections in the official DIRBE and Cosmoglobe DR2 analysis. The left column shows the mission-averaged maps, the middle column the Cosmoglobe DR2 ZSMA maps, and the right column the DIRBE ZSMA maps. The same color scale is used for the middle and right column in each row.}
+    \label{fig:dr2-zsma-compare}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_08.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_08.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_08.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_08.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_08.pdf}%
+    }\\
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_09.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_09.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_09.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_09.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_09.pdf}%
+    }\\
+
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_10.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_10.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_10.pdf}%
+    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_10.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_10.pdf}%
+    }\\
+
+    \caption{Comparison between the zodiacal light corrections in the official DIRBE and Cosmoglobe DR2 analysis. The left column shows the mission-averaged maps, the middle column the Cosmoglobe DR2 ZSMA maps, and the right column the DIRBE ZSMA maps. The same color scale is used for the middle and right column in each row.}
+    \label{fig:dr2-zsma-compare}
+\end{figure*}
+
+Subtracting the ZL with our best-fit-model yields lower sky residuals at all bands 
+compared to the DIRBE ZSMA maps. A comparison between the ZL residuals can be seen 
+in Figure~\ref{fig:dr2-zsma-compare}. Here the first column shows the frequency maps of the
+four most ZL dominated DIREB bands (4.9, 12, 25, and 60 $\mu$m), the second shows the ZL
+subtracted maps with our model, and column three shows the DIRBE ZSMA.
+
+\begin{figure*}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_0.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_0.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_1.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_1.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_2.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_2.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_3.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_3.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3.pdf}%
+    }\\
+    \caption{Mission-averaged component-wise ZL maps at $25\mu$m made with ZodiPy. 
+    \textit{(left column:)} Best-fit Cosmoglobe ZL model. \textit{(right column:)} The K98 model.
+    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
+    dust band 2; 4) dust band 3. The maps are in galactic coordinates.}
+    \label{fig:mission-averaged-comp-maps}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_0_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_0_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0_inst.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_1_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_1_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1_inst.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_2_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_2_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2_inst.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_3_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_3_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3_inst.pdf}%
+    }\\
+    \caption{Full-sky component-wise ZL maps (January 1, 2024) at $25\mu$m made with ZodiPy. 
+    \textit{(left column:)} Best-fit Cosmoglobe ZL model. \textit{(right column:)} The K98 model.
+    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
+    dust band 2; 4) dust band 3. The maps are in ecliptic coordinates, with the Sun marked as 
+    an orange circle.}
+    \label{fig:mission-averaged-inst-maps}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figs/number_density.pdf}
+    \caption{3}
+    \label{fig:ipd-number-density}
+\end{figure*}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
+    \caption{Simulated ZL intensity on January 1, 2024 as a function of wavelength from the best-fit 
+    Cosmoglobe ZL model, made with ZodiPy. The ZL SED is directional 
+    and seasonal due to temperature variations along independent line-of-sights. 
+    The black curve shows the mean sky intensity in a HEALPix map with resolution
+    $N_\mathrm{side}= 64$ where pixels with an angular separation of less than
+    $60^\circ$ are masked out. The colored dashed lines represent the ZL 
+    intensity
+    }
+    \label{fig:zodi-intensity}
+\end{figure}
 
-% % INTRODUCTION
-% %-------------------------------------------------------------------
-% \section{Introduction}
-% Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust emission) is the primary source of diffuse radiation observed in the infrared sky between 1-100 $\mu$m (\cite{leinert1998} and references therein). The light comes from scattering and re-emission of sunlight from interplanetary dust grains. ZL has been the most problematic source of foreground contamination in studies of the Extragalactic Background Light (EBL) the infrared sky due, mainly due to its time-varying nature. Improving our understanding of the interplanetary medium and 
-%building better ZL models is arguably the most critical step in making a large part of the infrared sky accessible to cosmological analysis. 
-
-% The current state-of-the-art ZL model is the Kelsall et al. 1998 (K98), which was developed by the DIRBE team for the purpose of removing ZL from their data. It consists of a parametric three-dimensional model of the interplanetary dust distribution with several distinguishable components such as 
-% These components were assumed to emit like modified blackbodies and could be evaluated through line-of-sight integrations to simulate the observed zodiacal light. 
 
-
-% Ever since it was first understood in the 17th century \citep{cassini}, zodiacal light has been a driving force for the exploration of the interplanetary medium. The Diffuse Infrared Background Experiment (DIRBE) instrument, onboard the Cosmic Background Explorer (COBE), found that the zodiacal light could be effectively characterized in the infrared \citep{mather:1994, hauser:1998}. The DIRBE team developed a geometric model that represented the interplanetary medium and its identifiable components.
-% These components were assumed to emit like modified blackbodies and could be evaluated through line-of-sight integrations to simulate the observed zodiacal light. This model, detailed in \cite{K98}, (here-after K98), has demonstrated its effectiveness in describing zodiacal light in the infrared and sub-millimeter domains and has been the default modeling used in the cosmology community for the past twenty years. The Planck Collaboration \citep{PLANCK2013, PLANCK2015, PLANCK2018} recently utilized the DIRBE model in their analysis of the High Frequency Instrument (HFI) data. They adapted the model to be applicable at sub-terahertz frequencies by evaluating the K98 model with the HFI scanning strategy and fitting an overall amplitude to model components.
-
-% The ZL is considered a local foreground in CMB studies with the emission originating from the near vicinity of the observer. This is a contrast to more common foregrounds such as the CMB and galactic thermal dust emission, which we assume to be stationary in the sky. Galactic and extragalactic foregrounds can be modeled with a single template describing the structure of the component at some reference frequency. The template can then be scaled to arbitrary frequencies given a description of the component's spectral energy density (SED). Simple models like this does not apply to the zodiacal light, which highly depends on the position and time of observation.
-% It is impossible to describe and model the zodiacal light foreground through a single template, applicable to all experiments. Instead, the zodiacal light must be dynamically modeled on a per-experiment basis taking into account the position of the observer within the solar system and the scanning strategy. 
-
-% The main highlight of this work is that we are able to produce a better zodiacal light model with much smaller residuals in the frequency maps using only the same zodiacal light-contaminated data used by the DIRBE team in their original analysis. We attribute most of this success to the Cosmoglobe effort of joint global Bayesian analysis of the time-ordered DIRBE data along with maps and point source catalogs from HFI, FIRAS, and WISE. This results in a much better constrained sky model than what was possible at the time of the original DIRBE analysis, making it easier to distinguish the zodiacal light from other signal sources. Additionally, when 
-% fitting the zodiacal light model parameters, the DIRBE team used week maps differenced by the full survey sky map. While this removes all static signals from the sky, it also kills much of the effective signal-to-noise ratio for both zodiacal light parameters and the zero levels. In the Cosmoglobe approach, we fit all zodiacal light parameters directly to the timestreams, making it easier to resolve the degeneracies of the geometric interplanetary dust parameters. 
-
-% This goes to show that even when only using archival data, it is possible to create more robust descriptions of the interplanetary medium and the observed zodiacal light. In coming Cosmoglobe data releases we will include more zodiacal light-contaminated time-ordered data from experiments such as AKARI and IRAS, which will help break many of the geometric parameter degeneracies in the interplanetary dust model due to the complimentary scanning strategies of the respective experiments.
-
-% In this paper, we will detail the zodiacal light modeling approach used in the Commander framework during the production of Cosmoglobe DR2. Furthermore, the perhaps greatest result from this works comes from the fitting of the model parameters from a Bayesian perspective, utilizing all DIRBE bands jointly along with HFI, FIRAS and WISE data to produce the best zodiacal light model of the infrared sky. 
-% In Sect. 2 we describe zodiacal light model in terms of the interplanetary dust models, source functions, and line-of-sight integrations. 
-% Additionally, introduce and interpret the zodiacal light in the DIRBE time-ordered data. Finally we discuss the sampling techniques used to fit the many zodiacal light model parameters from a Bayesian perspective. In Sect. 3 we reanalyze the DIRBE data using the K98 model as derived by the DIRBE team, and see that we recover their results. 
-% In Sect. 4 we explore extensions to the K98 model by lifting some of the constraints set on the model parameter by the DIRBE team, and including some of the more physical descriptions of the zodiacal components from \cite{RRM}. These extended models are referred to as model A and B, where model A is the relaxed K98 model, while model B is a more complex model with additional modifications.
-
-
-
-% \subsection{Rowan-Robinson and May (RRM) model}
-% In the RRM model, the components are described in terms of the radial distance from the component center $r_c$ and the the latitude above the symmetry-plane $\beta_0$. The transformation between the two angular and cartesian representations are given by $z_c = r_c \sin{\beta_0}$, 
-% \begin{equation}
-%     \beta_0 = \arctan\left(\frac{z_c}{r_c}\right).
-% \end{equation}
-
-% \subsubsection{The fan}
-% The fan is the RRM equivalent of the diffuse cloud in the K98 model. The density of the fan is described in a separable form similar to the diffuse cloud
-% \begin{equation}
-%     n_{\mathrm{Fan}}\left(r_\mathrm{Fan}, \beta_0\right)=n_0 r_\mathrm{Fan}^{-\gamma} f\left(\beta_0\right),
-% \end{equation}
-% but the vertical distribution is rather given as 
-% \begin{equation}
-% f\left(\beta_0\right)=\left(\cos \beta_0\right)^Q \exp \left(-P \sin \left|\beta_0\right|^{\xi}\right),
-% \end{equation}
-% where
-% \begin{equation}\ 
-% \xi= \begin{cases}
-%     2 - |z_{\mathrm{Fan}}/z_{\mathrm{Fan}, 0}| \mid & \text { for }|z_\mathrm{Fan}|<z_{\mathrm{Fan}, 0} \\     1 & \text { otherwise },
-% \end{cases}
-% \end{equation}
-% Add more components if we use them.
-    
-% \begin{figure}
-%     \centering
-%          \includegraphics[width=\linewidth]{figs/zodi_obs_diff.pdf}
-%         \caption{Difference in simulated zodiacal light between an observed at the center of Earth and an observer moved 900km in the positive z-direction from the center of Earth.}
-%     \label{fig: z}
-% \end{figure}
-
-% \begin{figure}
-%     \centering
-%         \includegraphics[width=\columnwidth]{figs/mask_zodi_fitting.pdf}
-%         \caption{Masks applied when fitting zodiacal light parameters for the $2.2\mathrm{\mu m}$, $25\mathrm{\mu m}$ and $240\mathrm{\mu m}$ bands.}
-%     \label{fig:masks}
-% \end{figure}
-
-% \begin{figure*}
-%     \centering
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_a-b.pdf} 
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_06_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_05_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_07_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_04_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_08_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_03_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_09_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_02_a-b.pdf}
-%     \vspace{-0.3cm}
-
-%     \includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_tot.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_a.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_10_b.pdf}\includegraphics[width=0.22\textwidth]{figs/zodi/zodi_01_a-b.pdf}
-
-%     \caption{Zodi frequency maps}
-%     \label{fig:zodi_freq}
-%   \end{figure*}
-
-%   \begin{figure*}
-%     \centering
-%     \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_cloud_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_cloud_full.pdf}
-
-%     \vspace{-0.6cm}
-
-%     \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_band1_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_band1_full.pdf}
-
-%     \vspace{-0.6cm}
-
-%     \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_band2_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_band2_full.pdf}
-
-%     \vspace{-0.6cm}
-
-%     \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_band3_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_band3_full.pdf}
-
-%     \vspace{-0.6cm}
-
-%     \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_ring_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_ring_full.pdf}
-
-%     \vspace{-0.6cm}
-
-%     \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_feature_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_06_feature_full.pdf}
-
-%     \caption{week map of comps*}
-%     \label{fig: comp week}
-%   \end{figure*}
-
-% \begin{figure*}
-% \centering
-% \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_sky_98_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_cloud_98_week.pdf}
-% \vspace{-0.6cm}
-
-% \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_zodi_98_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_bands_98_week.pdf}
-% \vspace{-0.6cm}
-
-% \includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_res_98_week.pdf}\includegraphics[width=0.9\columnwidth]{figs/zodi_comps/zodi_ring+feature_98_week.pdf}
-% \caption{week map of comps*}
-% \label{fig: K98 week comparison}
-% \end{figure*}
-
-
-
-% \subsection{DIRBE data}
-% Discuss data used for sampling of the model. Talk about time-order processing, downsampling, thinning, etc.
-
-% %\subsection{Difficulties with sampling and degeneracies in the interplanetary dust model parameters}
-% See atlases in figure \ref{fig: atlas1} and \ref{fig: atlas2} for degeneracies in the interplanetary dust model parameters.
-
-% \subsection{Sampling techniques}
-
-% \begin{figure*}
-%     \centering
-%     \includegraphics{figs/zodi_params_new.pdf}
-%     \caption{A subset of the estimated zodiacal light parameters fit in this work.}
-%     \label{fig: zodi_trace}
-
-% \end{figure*}
-
-
-
-% The approach we will use Gibbs sample each of the model parameters. This means that we propose a change to one model parameter, estimate the zodiacal emission over the full timestream of each ten DIRBE bands, compute a chi-squared and accept/reject. We perform N such proposals before we move on the the next parameter. Since the zodiacal emission is mostly very smooth on the sky, we can afford to downsample the TOD timestream before evaluating the zodiacal emission. For the diffuse cloud and the dust bands we downsample the TODS by X. For the circum-solar ring and the Earth-trailing feature, which are less smooth, and harder to constrain, we downsample the TODS by X. The downsampled TODS are subtracted by the \Cosmoglobe\ skymodel, and recomputed after after each parameter evaluation. 
-
-
-
-
-
-
-
-
-% \section{Reanalysis of the K98 zodiacal light model}
-
-% \begin{figure*}
-% 	\centering
-% 	\includegraphics[width=0.8\linewidth]{figs/zodi_diff.pdf}
-% 	\caption{Half-mission model. Columns 1 and 2 are the prediction of the zodiacal emission for each band for the first and second half of the DIRBE mission. Column 3 is the difference between these two columns, and column 4 is the difference between the two zodi-subtracted half-mission maps}
-% 	\label{fig: zodi_HM}
-% \end{figure*}
-
-% \begin{figure*}
-%     \centering
-% 	 \includegraphics[width=0.8\linewidth]{figs/tod_zodi_residuals.pdf}
-% 	\caption{Data-minus-model residual for \cosmoglobe\ results (CG, black) and the official \cite{K98} model (K98, orange), as a function of ecliptic latitude, Galactic latitude, and Solar elongation. The offset for \cosmoglobe\ and the K98 model are listed on the left and right axes of each row, respectively. The \cosmoglobe\ and K98 values are horizontally offset left and right respectively for clarity.}
-%       \label{fig: zodi_timestream}
-%   \end{figure*}
-
-
-% \clearpage
-% \section{Extended zodiacal light models}
-
-% \subsection{Generalized K98 modelling}
-
-% \subsection{RRM modelling}
-
-% %\subsection{Interplanetary dust model}
-% Describe the model components used and tabulate all parameters fit.
-
-% %\subsection{Spectral parameters (emissivities / albedos)}
-
-% %\subsection{Zodi subtracted DIRBE maps and timestreams}
 
 \section{Conclusions}
 
@@ -895,6 +859,7 @@ is used jointly with the uncertienties determined from the Gibbs chain.
 %
 
 \bibliographystyle{aa}
-\bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
+% \bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
+\bibliography{references}
 \end{document}
 %%%% End of aa.dem
