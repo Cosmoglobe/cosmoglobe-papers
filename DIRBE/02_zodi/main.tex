@@ -13,7 +13,7 @@
 
 %
 
-\documentclass{aa}  
+\documentclass[twocolumn]{aa}  
 
 %
 \usepackage{graphicx}
@@ -51,13 +51,16 @@
 linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 \hypersetup{linktocpage}
 \usepackage{bold-extra}
-
+\usepackage{ifthen}
 \input{Planck}
 
 % Custom definitions
 \def\Cosmoglobe{\textsc{Cosmoglobe}}
 \def\cosmoglobe{\textsc{Cosmoglobe}}
 \def\Planck{\textit{Planck}}
+
+\renewcommand{\a}[0]{\vec{a}}
+% \newcommand{\g}[0]{\vec{g}}
 
 
 % \renewcommand{\topfraction}{1.0}	% max fraction of floats at top
@@ -390,6 +393,30 @@ lower HEALPix resolution, and using a corresponding low-res cache.
 
 
 \section{Bayesian parameter estimation of zodiacal light parameters}\label{sect:param-estimation}
+We attribute our improved ZL model fit to the fact that the model parameter are sampled within a Bayesian framework. The Gibbs sampling algorithm and its implementation in Commander3 is described in detail in \cite{CG02_01}, but in short, Gibbs sampling allows us to draw samples iteratively from various conditional
+distributions rather than trying to draw directly from a large and complicated
+joint distribution. The following Gibbs-chain show each parameter sampled in the DR2 analysis
+in correct order
+\begin{alignat}{11}
+\mathrm{G} &\,\leftarrow P(\mathrm{G}&\,\mid &\,\dv,&\, &\,\phantom{\mathrm{G}} &\,\xi_n, &
+\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+&\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
+\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\phantom{\xi_n} &
+\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+&\,\a_{\mathrm{static}})\\
+\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
+\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
+\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
+\end{alignat}
+The ZL parameters, sampled in~\eqref{eq:gibbs_zodi}, happen right after the sampling of galactic sky components, in an iterative process, making it much easier to decouple between the two.
+
 \subsection{Parameter atlas}
 The K98 ZL model contains around 50 parameters to describe the 
 three-dimensional IPD distribution and another 30 or more to describe 
@@ -405,118 +432,7 @@ the $n_0$ maps. The number associated with each map is the scaling
 factor applied to each map to get them on the same color scale. A small 
 scale factor means that the parameter has a large effect on the total ZL 
 amplitude.
-\begin{figure*}
-    \centering
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_01.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_02.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_03.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_04.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_05.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_06.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_07.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_08.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_09.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_10.pdf}%
-    }\\
-   
-    \caption{ZL parameter atlas showing the difference between increasing 
-    and lowering each ZL model parameter by $5\%$ in the form of normalized 
-    mission-averaged ZL maps. Columns list, from left to right parameters of
-    1) the smooth cloud; 2) dust band 1; 3) dust band 2; and 4) dust band 3.}
-    \label{fig:atlas1}
-\end{figure*}
-\begin{figure*}
-    \centering
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_06.pdf}%
-    }\\   
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_07.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_08.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_09.pdf}%
-    }\\
-    \resizebox{0.92\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_11.pdf}%
-    }\\
-    \resizebox{0.46\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/general_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/general_02.pdf}%
-    }
-    %\hspace*{0.47\textwidth}
-    \caption{ZL parameter atlas showing the difference between increasing 
-    and lowering each ZL model parameter by $5\%$ in the form of normalized 
-    mission-averaged ZL maps. Columns list, from left to right parameters of
-    1) the smooth cloud; 2) dust band 1; 3) dust band 2; and 4) dust band 3.}
-    \label{fig:atlas2}
-\end{figure*}
+
 
 
 \subsection{Goodness-of-fit}
@@ -531,8 +447,8 @@ amplitude.
     \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
     \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
     }\\
     \caption{Illustration of the basic sky maps involved in the zodiacal 
     light fitting algorithms adopted by the DIRBE (\emph{left column}) 
@@ -625,8 +541,8 @@ to simulate a stochastic draw \textcolor{red}{(Or was it before sending it into 
 \end{figure*}
 The total number of free ZL model parameters in this analysis are N, 
 compared to the M parameters fit in K98. We have included a non-zero
-scattering contribution at 4.9 $\mu$m. The ZL SED is composed of two 
-blackbody like spectra with a minimum around the $3.5\mu$m band. The first
+scattering contribution at 4.9 $\mu$m. The ZL SED is composition of two
+blackbody like spectra with a combined minimum around the $3.5\mu$m band. The first
 blackbody spectrum is associated with the solar flux through the scattering 
 contribution, while the second with the re-radiated thermal emission. With an
 improved sky model and lower residual levels, we believe that it is worth 
@@ -646,12 +562,18 @@ is used jointly with the uncertienties determined from the Gibbs chain.
 \textcolor{red}{Do this with Duncan}
 
 
-\section{State-of-the-art zodiacal light model}\label{sect:improved-model}
+\section{Improved zodiacal light model}\label{sect:improved-model}
 Here we present our best-fit ZL model from having run Commander3 for six independant
-Markov Chains for N samples. Our best-fit parameters for the geometrical IPD parameters
-and emissivity and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
-and~\ref{table:zodi-params-spectral}, where they are compared to the K98 parameters.
+Markov Chains for N samples. Our best-fit parameters for the geometrical IPD, emissivities 
+and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
+and~\ref{table:zodi-params-spectral}, where they are compared to the values in the K98 model.
 \input{ipd_param_table.tex}
+
+We illustrate the effectiveness of our model in figures~\ref{fig:dr2-zsma-compare1} 
+and~\ref{fig:dr2-zsma-compare2}, which shows the data minus model residuals for both models.
+We obtain cleaner residuals in all DIRBE channels with our new ZL model, most notably in the 12 and 25 $\mu$m  
+ZL dominated channels.
+
 
 \textcolor{red}{(Fill in once the zodi paper gets further along and we have our results)}
 \begin{figure*}
@@ -713,8 +635,14 @@ and~\ref{table:zodi-params-spectral}, where they are compared to the K98 paramet
     \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_07.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_07.pdf}%
     }\\
-    \caption{Comparison between the zodiacal light corrections in the official DIRBE and Cosmoglobe DR2 analysis. The left column shows the mission-averaged maps, the middle column the Cosmoglobe DR2 ZSMA maps, and the right column the DIRBE ZSMA maps. The same color scale is used for the middle and right column in each row.}
-    \label{fig:dr2-zsma-compare}
+    \caption{Comparison between ZL subtractions with our best-fit ZL model and with K98. 
+    \textit{(left column):} Mission-averaged containing ZL at native HEALPix resolution 
+    of $N_\mathrm{side} = 512$. \textit{(middle column):} Our ZL subtracted mission-average 
+    maps, downgraded to $N_\mathrm{side} = 256$. \textit{(right column):} DIRBE ZSMA maps
+    at $N_\mathrm{side} = 256$. The rows list to DIRBE frequency channels, from top to 
+    bottom. We observe a clear improved ZL solution at all DIRBE channels.
+    }
+    \label{fig:dr2-zsma-compare1}
 \end{figure*}
 
 \begin{figure*}
@@ -743,8 +671,14 @@ and~\ref{table:zodi-params-spectral}, where they are compared to the K98 paramet
     \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_10.pdf}%
     }\\
 
-    \caption{Comparison between the zodiacal light corrections in the official DIRBE and Cosmoglobe DR2 analysis. The left column shows the mission-averaged maps, the middle column the Cosmoglobe DR2 ZSMA maps, and the right column the DIRBE ZSMA maps. The same color scale is used for the middle and right column in each row.}
-    \label{fig:dr2-zsma-compare}
+    \caption{Comparison between ZL subtractions with our best-fit ZL model and with K98. 
+    \textit{(left column):} Mission-averaged containing ZL at native HEALPix resolution 
+    of $N_\mathrm{side} = 512$. \textit{(middle column):} Our ZL subtracted mission-average 
+    maps, downgraded to $N_\mathrm{side} = 256$. \textit{(right column):} DIRBE ZSMA maps
+    at $N_\mathrm{side} = 256$. The rows list to DIRBE frequency channels, from top to 
+    bottom. We observe a clear improved ZL solution at all DIRBE channels.
+    }    
+    \label{fig:dr2-zsma-compare2}
 \end{figure*}
 
 Subtracting the ZL with our best-fit-model yields lower sky residuals at all bands 
@@ -753,7 +687,189 @@ in Figure~\ref{fig:dr2-zsma-compare}. Here the first column shows the frequency 
 four most ZL dominated DIREB bands (4.9, 12, 25, and 60 $\mu$m), the second shows the ZL
 subtracted maps with our model, and column three shows the DIRBE ZSMA.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
+    \caption{Simulated ZL intensity on January 1, 2024 as a function of wavelength from the best-fit 
+    Cosmoglobe ZL model, made with ZodiPy. The ZL SED is directional 
+    and seasonal due to temperature variations along independent line-of-sights. 
+    The black curve shows the mean sky intensity in a HEALPix map with resolution
+    $N_\mathrm{side}= 64$ where pixels with an angular separation of less than
+    $60^\circ$ are masked out. The colored dashed lines represent the ZL 
+    intensity
+    }
+    \label{fig:zodi-intensity}
+\end{figure}
+
+
+
+\section{Conclusions}
+
+
+\begin{acknowledgements}
+ The current work has received funding from the European
+  Union’s Horizon 2020 research and innovation programme under grant
+  agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
+  \textsc{bits2cosmology}). Some of the results in this paper have been 
+  derived using the HEALPix \citep{HEALPIX} package.
+  We acknowledge the use of the Legacy Archive for Microwave Background 
+  Data
+  Analysis (LAMBDA), part of the High Energy Astrophysics Science
+  Archive Center
+  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science 
+  Division at the NASA Goddard Space Flight Center.  
+\end{acknowledgements}
+
+
+%-------------------------------------------------------------
+%                                       Table with references 
+%-------------------------------------------------------------
+%
+
+\bibliographystyle{aa}
+% \bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
+\bibliography{references}
+
+\appendix
+\onecolumn
+
+\section{Zodiacal light parameter atlas}
+\label{sec:param-atlas}
+In this Appendix, we present an atlas of mission-averaged ZL parameter maps.
+Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ while holding the other fixed. The maps are normalized.
+
+\begin{figure*}[hbt]
+    \centering
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_01.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_02.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_03.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_04.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_05.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_06.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_07.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_08.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_09.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/C_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B1_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B2_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/B3_10.pdf}%
+    }\\
+   
+    \caption{ZL parameter atlas showing the difference between increasing 
+    and lowering each ZL model parameter by $5\%$ in the form of normalized 
+    mission-averaged ZL maps. Columns list, from left to right parameters of
+    1) the smooth cloud; 2) dust band 1; 3) dust band 2; and 4) dust band 3.}
+    \label{fig:atlas1}
+\end{figure*}
 \begin{figure*}
+    \centering
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_06.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_06.pdf}%
+    }\\   
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_07.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_02.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_07.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_08.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_03.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_08.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/SR_09.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_04.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_09.pdf}%
+    }\\
+    \resizebox{0.82\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/SR_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_05.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_10.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/TF_11.pdf}%
+    }\\
+    \resizebox{0.41\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/atlas/general_01.pdf}%
+    \includegraphics[height=1cm]{figs/atlas/general_02.pdf}%
+    }
+    %\hspace*{0.47\textwidth}
+    \caption{ZL parameter atlas showing the difference between increasing 
+    and lowering each ZL model parameter by $5\%$ in the form of normalized 
+    mission-averaged ZL maps. Columns list, from left to right parameters of
+    1) the smooth cloud; 2) dust band 1; 3) dust band 2; and 4) dust band 3.}
+    \label{fig:atlas2}
+\end{figure*}
+
+\clearpage
+\section{Zodiacal component maps and number density}
+\label{sec:zodi-comps}
+
+% \noindent\begin{minipage}{\textwidth}
+In this Appendix, we present maps of visualizations of our best-fit ZL 
+light model. Such figures can help illustrate the physical properties 
+of the model and help validate how physical our models are. The ZL 
+component-wise maps, both the mission-averaged and the instantaneous maps 
+in~\ref{fig:mission-averaged-comp-maps} 
+and~\ref{fig:mission-averaged-inst-maps}, respectively, are compared to 
+the K98 model. The IPD number density visualization for the K98 model, 
+corresponding to Figure~\ref{fig:ipd-number-density} can be seen in 
+Figure~X in~\cite{San2022}.
+
+
+% \end{minipage}
+
+\begin{figure*}[hbt]
     \centering
     \resizebox{\textwidth}{!}{%
     \includegraphics[height=1cm]{figs/comp_maps/CG_0.pdf}%
@@ -815,51 +931,10 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
 \begin{figure*}
     \centering
     \includegraphics[width=\textwidth]{figs/number_density.pdf}
-    \caption{3}
+    \caption{Visualization of the IPD number density of the four fitted zodiacal components in our model. The number densities are shown as a cross-section of the Solar system in the xz-plane. \textit{(top left):} The smooth cloud. \textit{(top right):} Dust band 1. \textit{(bottom left):} Dust band 2. \textit{(bottom right):} Dust band 3. The gray dotted line represents the ecliptic plane and helps illustrate the variations in the components symmetry planes.}
     \label{fig:ipd-number-density}
 \end{figure*}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
-    \caption{Simulated ZL intensity on January 1, 2024 as a function of wavelength from the best-fit 
-    Cosmoglobe ZL model, made with ZodiPy. The ZL SED is directional 
-    and seasonal due to temperature variations along independent line-of-sights. 
-    The black curve shows the mean sky intensity in a HEALPix map with resolution
-    $N_\mathrm{side}= 64$ where pixels with an angular separation of less than
-    $60^\circ$ are masked out. The colored dashed lines represent the ZL 
-    intensity
-    }
-    \label{fig:zodi-intensity}
-\end{figure}
 
-
-
-\section{Conclusions}
-
-
-\begin{acknowledgements}
- The current work has received funding from the European
-  Union’s Horizon 2020 research and innovation programme under grant
-  agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
-  \textsc{bits2cosmology}). Some of the results in this paper have been 
-  derived using the HEALPix \citep{HEALPIX} package.
-  We acknowledge the use of the Legacy Archive for Microwave Background 
-  Data
-  Analysis (LAMBDA), part of the High Energy Astrophysics Science
-  Archive Center
-  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science 
-  Division at the NASA Goddard Space Flight Center.  
-\end{acknowledgements}
-
-
-%-------------------------------------------------------------
-%                                       Table with references 
-%-------------------------------------------------------------
-%
-
-\bibliographystyle{aa}
-% \bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
-\bibliography{references}
 \end{document}
 %%%% End of aa.dem
