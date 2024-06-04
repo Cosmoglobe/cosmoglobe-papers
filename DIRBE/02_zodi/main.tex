@@ -135,7 +135,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR2. II. Bayesian global modelling of zodiacal light\\ with a first application to \textit{COBE}-DIRBE}}
+   \title{\bfseries{\Cosmoglobe\ DR2. III. Bayesian global modelling of zodiacal light\\ with a first application to \textit{COBE}-DIRBE}}
 
    \input{authors.tex}
 
@@ -180,8 +180,8 @@ will
 
    \maketitle
 
-\setcounter{tocdepth}{3}
-%\tableofcontents
+\setcounter{tocdepth}{2}
+\tableofcontents
    
 
 \section{Introduction}
@@ -218,7 +218,7 @@ radiative properties of the dust. The model was developed by the
  nature of the ZL from the DIRBE data than was possible at the time 
  of the original DIRBE analysis.
 
-This paper is the second in a series of six describing the methods and 
+This paper is the third in a series of six describing the methods and 
 results of our re-analysis of the time-ordered \textit{COBE}/DIRBE data 
 within a global end-to-end Bayesian analysis framework. Here, we 
 describe the ZL modeling approach in Commander3 and demonstrate the 
@@ -446,50 +446,42 @@ downsampling is simulated by projecting all the original pointing to the
 lower HEALPix resolution, and using a corresponding low-res cache.
 
 
-\section{Bayesian parameter estimation of zodiacal light parameters}\label{sect:param-estimation}
-We attribute our improved ZL model fit to the fact that the model parameter are sampled within a Bayesian framework. The Gibbs sampling algorithm and its implementation in Commander3 is described in detail in \cite{CG02_01}, but in short, Gibbs sampling allows us to draw samples iteratively from various conditional
-distributions rather than trying to draw directly from a large and complicated
-joint distribution. The following Gibbs-chain show each parameter sampled in the DR2 analysis
-in correct order
+\section{Bayesian zodiacal light parameter estimation}\label{sect:param-estimation}
+Estimating the ZL model parameters happens within the Bayesian end-to-end Commander3 framework. An explaination of the algorithms used to fit the full data and sky model, as well as instrumental parameters are described in detail in \cite{CG02_01}. In short, we use Gibbs sampling to map out the joint posterior distribution\citep{Galloway2023}, which allows us to draw samples iteratively from various conditional distributions rather than trying to draw directly from a large and complicated joint distribution. The following equations show each parameter sampled in this Cosmoglobe analysis in order
 \begin{alignat}{11}
-\mathrm{G} &\,\leftarrow P(\mathrm{G}&\,\mid &\,\dv,&\, &\,\phantom{\mathrm{G}} &\,\xi_n, &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
-\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\phantom{\xi_n} &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}})\\
-\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
-\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
-\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\mathrm{G}, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
+    \G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
+    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+    &\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
+    \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
+    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+    &\,\a_{\mathrm{static}})\\
+    \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+    \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+    \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+    &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+    \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+    &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
+    \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
 \end{alignat}
-The ZL parameters, sampled in~\eqref{eq:gibbs_zodi}, happen right after the sampling of galactic sky components, in an iterative process, making it much easier to decouple between the two.
+Each of the sampling steps in the above Gibbs chain is described by \citet{CG02_01}
+and references therin. 
 
-\subsection{Parameter atlas}
-The K98 ZL model contains around 50 parameters to describe the 
-three-dimensional IPD distribution and another 30 or more to describe 
-the thermal emission and scattered sunlight source functions. Around 50 
-of these were fit to the DIRBE data, while the rest were held fixed. To 
-illustrate how each parameter influences the final mission averaged ZL 
-map, we have produced a so-called ZL parameter atlas, which can be seen 
-in figures~\ref{fig:atlas1} and~\ref{fig:atlas2}. Each map in the atlas 
-shows the effects of changing a single ZL parameter by $\pm 5\%$. The 
-albedo and emissivity parameters are excluded from the atlas as these 
-represent a direct scaling of the component maps and are degenerate with 
-the $n_0$ maps. The number associated with each map is the scaling 
-factor applied to each map to get them on the same color scale. A small 
-scale factor means that the parameter has a large effect on the total ZL 
-amplitude.
+For computational reasons it is sometimes necessary to violate the Gibbs rule,
+which is the case for the step in Equation~\ref{eq:gibbs_zodi}, which describes
+the sampling of the ZL parameters, denoted by $\zeta_\mathrm{z}$. The K98 ZL 
+model contains around 50 parameters to describe the three-dimensional IPD 
+distribution and another 30 or more to describe the thermal emission and 
+scattered sunlight source functions, many of which are heavily degenerate
+due to the difficulties of mapping a three-dimensional structure from a single
+data set. N of these parameters were fit to the DIRBE data, in the original DIRBE analysis while the rest were fixed to parameters motivated by studies of the interplanetary medium. In our analysis we have fit M total parameters. A visualization of the degeneracies and the way in which each ZL parameter impacts the final mission-averaged predicted ZL are seen in figures~\ref{fig:atlas1} and~\ref{fig:atlas2} in Appendix~\ref{sec:param-atlas}. This atlas of ZL parameters shows normalized maps of the effects of changing a single ZL parameter by $\pm 5\%$ while keeping the rest of the model fixed. The albedo and emissivity parameters are excluded from the atlas as these represent a direct scaling of the component maps and are degenerate with the $n_0$ maps.
+The posterior distribution of this complicated set of parameters exhibits a large number of local minima due to the above mentioned reasons. When experimenting we found that strict Gibbs sampling algorithm quickly became trapped. We have opted to instead 
+use a simple non-linear Powell algorithm that is initialized some random parameter distance away from the previous sample, and then searches for the local minimum. Powell's method is a function minimizer, which performs bi-directional searches along a parameter vector. This algorithm is able to escape local minima, but it comes at the cost of larger
+uncertainties than what would result from an ideal posterior mapper.
 
 
-
-\subsection{Goodness-of-fit}
 \begin{figure*}
     \centering
     \resizebox{\textwidth}{!}{%
@@ -566,20 +558,6 @@ masks, corresponding to stellar light, ZL, and thermal dust-dominated
 channels, are shown in Figure~\ref{fig:masks}.
 
 
-\subsection{Sampling zodiacal light parameters}
-ZL parameters are sampled as part of the Gibbs sweep in Commander3 (see 
-Equation something in Paper I). We use a function minimizer, to minimize 
-a variant of Equation~\eqref{eq:chisq} using a downsampled version of the
-TOD as described in Section~\ref{sect:optimization}. The minimizer employed
-is Powell's method, which performs bi-directional searches along a parameter 
-vector. Initially we attempted to use MCMC methods such as a 
-Metropolis-Hastings (MH) sampler, and a combined Gibbs and MH sampler but
-due to the high-dimensional parameter space of 
-The reason we are not using MCMC 
-sampling is due to the difficulty of exploring the entire parameter space 
-appropriately due to the many degeneracies between the model parameters. 
-Following the Powell minimization, random noise is added to each parameter
-to simulate a stochastic draw \textcolor{red}{(Or was it before sending it into powell to simulate annealing?)}. 
 \begin{figure*}
     \centering
     \includegraphics[width=1\textwidth]{figs/total_trace.pdf}
@@ -766,7 +744,7 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
   Union’s Horizon 2020 research and innovation programme under grant
   agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
   \textsc{bits2cosmology}). Some of the results in this paper have been 
-  derived using the HEALPix \citep{HEALPIX} package.
+  derived using the HEALPix \citep{Gorski2005} package.
   We acknowledge the use of the Legacy Archive for Microwave Background 
   Data
   Analysis (LAMBDA), part of the High Energy Astrophysics Science
@@ -788,7 +766,7 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
 \appendix
 \onecolumn
 
-\section{Zodiacal light parameter atlas}
+\section{Interplanetary dust atlas}
 \label{sec:param-atlas}
 In this Appendix, we present an atlas of mission-averaged ZL parameter maps.
 Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ while holding the other fixed. The maps are normalized.
@@ -907,7 +885,7 @@ Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ w
 \end{figure*}
 
 \clearpage
-\section{Zodiacal component maps and number density}
+\section{Component-wise maps and number density}
 \label{sec:zodi-comps}
 
 % \noindent\begin{minipage}{\textwidth}
