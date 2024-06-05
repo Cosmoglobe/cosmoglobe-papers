@@ -254,7 +254,7 @@ modified version of the K98 ZL model in Commander3. Below we present a
 short introduction to the model parametrization in terms of the 
 three-dimensional IPD distribution and the radiative and scattering p
 roperties of the IPD. We refer to~\cite{Kelsall1998} for a more detailed 
-discussion about the ZL model.
+introduction to the K98 ZL model.
 
 
 \subsection{Parameterization of interplanetary dust}
@@ -343,6 +343,21 @@ $r$, $Z$ and $\theta$ parameters, respectively. Note that the
 Earth-trailing feature depends on the position of the Earth and does not 
 have a plane symmetry like the other zodiacal components. 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
+    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single Gibbs chain. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
+    \label{fig:powell_chisq_iter}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
+    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
+    \label{fig:powell_T0}
+\end{figure}
+
 
 \subsection{Radiative and scattering properties}
 Thermal emission from IPD grains is modeled on the form of a blackbody
@@ -403,12 +418,11 @@ optimizations regarding ZL evaluation.
 \begin{figure}
     \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}
     \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
-    \caption{Errors induced by the ZL cache. \textit{(top):} Difference 
-    between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
-    separated by 2 hours. \textit{(bottom):} Difference between two 
+    \caption{Errors induced by the ZL cache. \textit{(top):} Difference between two 
     instantaneous view of the ZL 900 km above Earth's north and south 
-    poles. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
-    are masked.}
+    poles. \textit{(bottom):} Difference between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
+    separated by 2 hours. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
+    are masked in both maps.}
     \label{fig:cache-error}
 \end{figure}
 The main optimization comes from the implementation of a ZL cache. The 
@@ -522,11 +536,12 @@ uncertainties than what would result from an ideal posterior mapper.
 \end{figure*}
 \begin{figure}
     \centering
-    \includegraphics[width=\columnwidth]{figs/mask_zodi_fitting.pdf}
-    \caption{Masks applied when fitting zodiacal light parameters for 
-    the $2.2\mathrm{\mu m}$, $25\mathrm{\mu m}$ and $240\mathrm{\mu m}$ 
-    bands.}
-    \label{fig:masks}
+    \includegraphics[width=\columnwidth]{figs/zodi_proc_masks.pdf}
+    \caption{Three of the processing masks used when estimating ZL parameters. The blue mask is the 
+    mask used in the stellar emission dominated 1.25 $\mathrm{\mu m}$ band, the orange mask is used 
+    in the ZL dominated 25 $\mathrm{\mu m}$ band, and the green mask is used in the thermal dust dominated 
+    240 $\mathrm{\mu m}$ band.}
+    \label{fig:zodi-procmask}
 \end{figure}
 The K98 model was obtained by fitting the model to a set of week-maps. 
 The $\chi^2$ measure used by the DIRBE team is given by
@@ -555,7 +570,7 @@ To minimize the amount of unmodeled galactic emission that enters our
 ZL parameter estimates, we use strict channel-specific processing masks, 
 masking out the brightest galactic regions. The 1.25, 25, and 240 $\mu$m 
 masks, corresponding to stellar light, ZL, and thermal dust-dominated 
-channels, are shown in Figure~\ref{fig:masks}.
+channels, are shown in Figure~\ref{fig:zodi-procmask}.
 
 
 \begin{figure*}
@@ -606,72 +621,73 @@ and~\ref{fig:dr2-zsma-compare2}, which shows the data minus model residuals for 
 We obtain cleaner residuals in all DIRBE channels with our new ZL model, most notably in the 12 and 25 $\mu$m  
 ZL dominated channels.
 
+Figure~\ref{fig:zodi-intensity} shows the interpolated ZL signal as a function of wavelength. The SED will be a composite of many independant 
 
 \textcolor{red}{(Fill in once the zodi paper gets further along and we have our results)}
 \begin{figure*}
     \centering
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_01.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_01.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_01.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_01.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_01.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_01.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_01.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_01.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_01.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_01.pdf}%
     }\\
 
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_02.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_02.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_02.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_02.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_02.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_02.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_02.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_02.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_02.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_02.pdf}%
     }\\
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_03.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_03.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_03.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_03.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_03.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_03.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_03.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_03.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_03.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_03.pdf}%
     }\\
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_04.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_04.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_04.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_04.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_04.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_04.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_04.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_04.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_04.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_04.pdf}%
     }\\
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_05.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_05.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_05.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_05.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_05.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_05.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_05.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_05.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_05.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_05.pdf}%
     }\\
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_06.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_06.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_06.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_06.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_06.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_06.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_06.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_06.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_06.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_06.pdf}%
     }\\
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_07.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_07.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_07.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_07.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_07.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_07.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_07.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_07.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_07.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_07.pdf}%
     }\\
     \caption{Comparison between ZL subtractions with our best-fit ZL model and with K98. 
     \textit{(left column):} Mission-averaged containing ZL at native HEALPix resolution 
-    of $N_\mathrm{side} = 512$. \textit{(middle column):} Our ZL subtracted mission-average 
-    maps, downgraded to $N_\mathrm{side} = 256$. \textit{(right column):} DIRBE ZSMA maps
-    at $N_\mathrm{side} = 256$. The rows list to DIRBE frequency channels, from top to 
+    of $N_\mathrm{side} = 512$. \textit{(middle column):} DIRBE ZSMA maps
+    at $N_\mathrm{side} = 256$.\textit{(right column):} Our ZL subtracted mission-average 
+    maps, downgraded to $N_\mathrm{side} = 256$. The rows list to DIRBE frequency channels, from top to 
     bottom. We observe a clear improved ZL solution at all DIRBE channels.
     }
     \label{fig:dr2-zsma-compare1}
@@ -680,51 +696,45 @@ ZL dominated channels.
 \begin{figure*}
     \centering
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_08.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_08.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_08.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_08.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_08.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_08.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_08.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_08.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_08.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_08.pdf}%
     }\\
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_09.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_09.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_09.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_09.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_09.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_09.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_09.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_09.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_09.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_09.pdf}%
     }\\
 
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_ma_10.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_tot_10.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/cosmoglobe_zsma_10.pdf}%
-    \includegraphics[height=1cm]{figs/zodi_sub/dirbe_zsma_10.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/zodi_sub/cbar_10.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_ma_10.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_tot_10.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/dirbe_zsma_10.pdf}%
+    \includegraphics[height=1cm]{figs/compare_freq_maps/cosmoglobe_zsma_10.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_freq_maps/cbar_10.pdf}%
     }\\
 
     \caption{Comparison between ZL subtractions with our best-fit ZL model and with K98. 
     \textit{(left column):} Mission-averaged containing ZL at native HEALPix resolution 
-    of $N_\mathrm{side} = 512$. \textit{(middle column):} Our ZL subtracted mission-average 
-    maps, downgraded to $N_\mathrm{side} = 256$. \textit{(right column):} DIRBE ZSMA maps
+    of $N_\mathrm{side} = 512$. \textit{(middle column):} DIRBE ZSMA maps
     at $N_\mathrm{side} = 256$. The rows list to DIRBE frequency channels, from top to 
-    bottom. We observe a clear improved ZL solution at all DIRBE channels.
+    bottom. \textit{(right column):} Our ZL subtracted mission-average 
+    maps, downgraded to $N_\mathrm{side} = 256$. We observe a clear improved ZL solution at all DIRBE channels.
     }    
     \label{fig:dr2-zsma-compare2}
 \end{figure*}
-
-Subtracting the ZL with our best-fit-model yields lower sky residuals at all bands 
-compared to the DIRBE ZSMA maps. A comparison between the ZL residuals can be seen 
-in Figure~\ref{fig:dr2-zsma-compare}. Here the first column shows the frequency maps of the
-four most ZL dominated DIREB bands (4.9, 12, 25, and 60 $\mu$m), the second shows the ZL
-subtracted maps with our model, and column three shows the DIRBE ZSMA.
 
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
     \caption{Simulated ZL intensity on January 1, 2024 as a function of wavelength from the best-fit 
     Cosmoglobe ZL model, made with ZodiPy. The ZL SED is directional 
-    and seasonal due to temperature variations along independent line-of-sights. 
+    and seasonal due to temperature variations along independent line-of-sights and variations in IPD composition. 
     The black curve shows the mean sky intensity in a HEALPix map with resolution
     $N_\mathrm{side}= 64$ where pixels with an angular separation of less than
     $60^\circ$ are masked out. The colored dashed lines represent the ZL 
@@ -733,6 +743,34 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
     \label{fig:zodi-intensity}
 \end{figure}
 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/zodi_mean_diff_DIRBE_DR2.pdf}
+    \caption{Monopole difference between official DIRBE and
+      \cosmoglobe\ DR2 ZSMA maps, evaluated as the average of the
+      difference between the maps shown in the second and third
+      columns in Figs.~\ref{fig:dr2-zsma-compare1} and
+      \ref{fig:dr2-zsma-compare2} over the DR2 analysis masks.}
+    \label{fig:zsma_mean}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/zodi_rms_ratio_DIRBE_DR2.pdf}
+    \caption{Excess DIRBE ZSMA rms as compared to the \cosmoglobe\ DR2 maps,
+      $(\sigma_{\mathrm{DIRBE}}^2-\sigma_{\mathrm{DR2}})/\sigma_\mathrm{DR2}$,
+      evaluated outside the DR2 analysis masks and given in units of percent.}
+    \label{fig:zsma_rms}
+\end{figure}
+
+
+
+Subtracting the ZL with our best-fit-model yields lower sky residuals at all bands 
+compared to the DIRBE ZSMA maps. A comparison between the ZL residuals can be seen 
+in Figure~\ref{fig:dr2-zsma-compare}. Here the first column shows the frequency maps of the
+four most ZL dominated DIREB bands (4.9, 12, 25, and 60 $\mu$m), the second shows the ZL
+subtracted maps with our model, and column three shows the DIRBE ZSMA.
 
 
 \section{Conclusions}
@@ -884,6 +922,72 @@ Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ w
 \end{figure*}
 
 \clearpage
+\section{Half-mission residuals}
+\label{sec:zodi-comps}
+
+\begin{figure*}[hbt]
+    \centering
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_01a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_01b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_01.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_02a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_02b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_02.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_03a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_03b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_03.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_04a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_04b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_04.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_05a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_05b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_05.pdf}%
+    }\\
+    \caption{Half-mission split residual maps, smoothed by a 0.5 degrees or 15 arcmin beam.}
+    \label{fig:half-mission-res1}
+\end{figure*}
+
+\begin{figure*}[hbt]
+    \centering
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_06a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_06b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_06.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_07a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_07b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_07.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_08a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_08b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_08.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_09a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_09b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_09.pdf}%
+    }\\
+    \resizebox{0.98\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_10a.pdf}%
+    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_10b.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_10.pdf}%
+    }\\
+    \caption{Half-mission split residual maps, smoothed by a 0.5 degrees or 15 arcmin beam.}
+    \label{fig:half-mission-res2}
+\end{figure*}
+
+\clearpage
 \section{Component-wise maps and number density}
 \label{sec:zodi-comps}
 
@@ -904,27 +1008,27 @@ Figure~X in~\cite{San2022}.
 \begin{figure*}[hbt]
     \centering
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_0.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_0.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_0.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_1.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_1.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_1.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_2.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_2.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_2.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_3.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_3.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_3.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3.pdf}%
     }\\
     \caption{Mission-averaged component-wise ZL maps at $25\mu$m made with ZodiPy. 
-    \textit{(left column:)} Best-fit Cosmoglobe ZL model. \textit{(right column:)} The K98 model.
+    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model.
     Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
     dust band 2; 4) dust band 3. The maps are in galactic coordinates.}
     \label{fig:mission-averaged-comp-maps}
@@ -933,27 +1037,27 @@ Figure~X in~\cite{San2022}.
 \begin{figure*}
     \centering
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_0_inst.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_0_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_0_inst.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0_inst.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_1_inst.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_1_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_1_inst.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1_inst.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_2_inst.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_2_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_2_inst.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2_inst.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_3_inst.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/K98_3_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_3_inst.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3_inst.pdf}%
     }\\
     \caption{Full-sky component-wise ZL maps (January 1, 2024) at $25\mu$m made with ZodiPy. 
-    \textit{(left column:)} Best-fit Cosmoglobe ZL model. \textit{(right column:)} The K98 model.
+    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model. 
     Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
     dust band 2; 4) dust band 3. The maps are in ecliptic coordinates, with the Sun marked as 
     an orange circle.}
