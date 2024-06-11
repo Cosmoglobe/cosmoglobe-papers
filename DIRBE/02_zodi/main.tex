@@ -57,8 +57,10 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 % Custom definitions
 \def\Cosmoglobe{\textsc{Cosmoglobe}}
 \def\commander{\texttt{Commander}}
+\def\commanderthree{\texttt{Commander3}}
 \def\Commander{\texttt{Commander}}
 \def\Planck{\textit{Planck}}
+\def\WMAP{\textit{WMAP}}
 \def\Spitzer{\textit{Spitzer}}
 \def\Gaia{\textit{Gaia}}
 
@@ -181,7 +183,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 
    \input{authors.tex}
 
-   \institute{Institute of Theoretical Astrophysics, University of Oslo, Blindern, Oslo, Norway}
+   %\institute{Institute of Theoretical Astrophysics, University of Oslo, Blindern, Oslo, Norway}
   
    % Shortened title, author list for top of page 
    \titlerunning{\Cosmoglobe: Interplanetary dust}
@@ -228,65 +230,70 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
    
 
 \section{Introduction}
-Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust 
-emission) is the primary source of diffuse radiation observed in the 
-infrared sky between 1-100 $\mu$m (\cite{Leinert1998} and references 
-therein). The light comes from scattering and re-emission of sunlight 
-from interplanetary dust (IPD) grains. The inner Solar system is 
-embedded in a sun-centered cloud of IPD, with a symmetry axis tilted 
-slightly with respect to the Ecliptic, known as the zodiacal cloud. The 
-ZL is seasonal, and its appearance in the sky changes as the Earth moves 
-through the IPD distribution. The most common way to model the observer 
-position-dependent ZL is to evaluate a line-of-sight integral for each 
-observation directly in the time-ordered domain. The time-varying and 
-three-dimensional nature of the ZL makes it one of the most challenging 
-foregrounds to model in astrophysical and cosmological studies of the 
-infrared sky. The lack of a good ZL model has left a vast portion of the 
-electromagnetic spectrum inaccessible to cosmological analysis 
-attempting to measure the Cosmic Optical and Infrared Backgrounds (COB, 
-CIB). 
+Zodiacal light (ZL, sometimes zodiacal emission or interplanetary dust
+emission) is the primary source of diffuse radiation observed in the
+infrared sky between 1-100 $\mu$m (see, e.g., \citealp{Leinert1998}
+and references therein). This radiation comes from scattering and
+re-emission of sunlight from interplanetary dust (IPD) grains, and was
+first mapped in detail by the IRAS satellite
+\citep{neugebauer:1984}.
 
-The state-of-the-art ZL model in the field of cosmology is the 
-\cite{Kelsall1998} model (K98, sometimes referred to as the 
-\textit{COBE}/DIRBE or just the DIRBE model). K98 is a parametric ZL 
-model describing the three-dimensional IPD distribution and the 
-radiative properties of the dust. The model was developed by the 
-\textit{COBE}/DIRBE team to remove ZL from their data in the late 1900s.
- Since then, our understanding of the infrared sky has improved with new 
- observational data from experiments like Planck HFI, GAIA, and WISE. 
- Combining recent computational advances in Bayesian cosmological 
- analysis \citep{BP2023, Galloway2023, Watts2023}, more readily 
- available computing power and new complementary infrared datasets 
- allow us to extract significantly more information about the true 
- nature of the ZL from the DIRBE data than was possible at the time 
- of the original DIRBE analysis.
+The inner Solar system is embedded in a Sun centered cloud of IPD,
+with a symmetry axis tilted slightly with respect to the Ecliptic,
+known as the zodiacal cloud. The ZL is seasonal, and its appearance in
+the sky changes as the Earth moves through the IPD distribution. The
+most common way to model the observer position-dependent ZL is to
+evaluate a line-of-sight integral for each observation directly in the
+time-ordered domain. The time-varying and three-dimensional nature of
+the ZL makes it one of the most challenging foregrounds to model in
+astrophysical and cosmological studies of the infrared sky. The lack
+of a high-accuracy ZL model has left a large part of the
+electromagnetic spectrum inaccessible to cosmological analysis
+attempting to measure the Cosmic Infrared Background (CIB;
+\citealp{partridge1967,hauser1998,hauser:2001}).
 
-This paper is the third in a series of six describing the methods and 
-results of our re-analysis of the time-ordered \textit{COBE}/DIRBE data 
-within a global end-to-end Bayesian analysis framework. Here, we 
-describe the ZL modeling approach in Commander3 and demonstrate the 
-benefits of fitting a ZL model directly within a global end-to-end 
-Bayesian framework. The basis of the newly implemented ZL module in 
-Commander3 is ZodiPy \citep{San2024}, which is an Astropy-affiliated 
-Python package for ZL simulations. The development of ZodiPy was 
-motivated by two factors. It would serve as a basis for the code 
-development in Commander3, and secondly, it would provide the 
-astrophysical and cosmology communities with an accessible, easy-to-use 
-interface to existing and coming ZL models. As an early application, 
-\cite{San2022} demonstrates the removal of ZL from the DIRBE TOD with 
-ZodiPy using the K98 model.
+One of the most widely used ZL models in the field of cosmology is the
+\textit{COBE}/DIRBE model by \citet{Kelsall1998}, often simply
+referred to as the K98 model. This is a parametric three-dimensional
+model that describes the three-dimensional IPD distribution and the
+radiative properties of dust using time-dependent measurements from
+the \textit{COBE}/DIRBE instrument \citep{hauser1998}. Since then, our
+understanding of the infrared sky has improved with new observational
+data from experiments like WISE \citep{wright:2010}, Planck HFI
+\citep{planck2016-l03}, and GAIA \citep{gaia:2016}. However, these
+experiments have largely been analyzed individually, and little or no
+coordinated effort has been made toward combining the data from these
+experiments into one overall state-of-the-art model of the infrared
+sky. The main goal of the current work, summarized in a series of
+papers collectively denoted \cosmoglobe\ Data Release 2, is to make
+the first step toward such a concordance model by leveraging recent
+computational advances in Bayesian cosmological data analysis by the
+\BP\ \citep[][and references therein]{BP2023,Galloway2023} and
+\cosmoglobe\ \citep{Watts2023} collaborations. The computer code
+implementation is called \commanderthree\ \citep{Galloway2023}, which
+is a Bayesian Gibbs sampler that was originally designed for
+end-to-end analysis of cosmic microwave background (CMB) experiments,
+in particular \Planck\ LFI \citep{planck2016-l02} and \WMAP
+\citep{bennett2012}. However, as demonstrated in the current work, the
+same algorithms are after relatively minor modifications also directly
+applicable to infrared measurements.
 
-The following sections are organized as follows. In Sect.~\ref{sect:zodi-model}
-, we introduce the K98 ZL model and discuss 
-implementation details and some optimizations regarding evaluating ZL 
-models on HEALPix grids. Next, in Sect.~\ref{sect:param-estimation}, we 
-discuss ZL parameter estimation and our implementation, which involves 
-the use of a function minimizer on a sub-sample of the DIRBE TOD. 
-Finally, in Sect.~\ref{sect:improved-model}, we present a greatly 
-improved ZL model, yielding lower residuals at all ten DIRBE channels. 
-The improved model uses only a slightly different parametrization than 
-the K98 model. We recommend using this model over K98 for all infrared 
-community members.
+One of the most important generalizations required for application of
+\commanderthree\ to the infrared sky is the implementation of an
+accurate time-variable ZL model. In this paper we therefore implement
+support for the K98 model in \commanderthree, and we apply this to the
+time-domain DIRBE data. This new code is based ZodiPy \citep{San2024},
+which is an Astropy-affiliated Python package for ZL simulations. As
+an early application of this framework, \cite{San2022} demonstrated
+the removal of ZL from the DIRBE TOD with ZodiPy using the K98 model.
+
+The rest of the paper is organized as follows. In
+Sect.~\ref{sect:zodi-model}, we introduce the K98 ZL model and discuss
+implementation and optimization aspects. Next, in
+Sect.~\ref{sect:param-estimation}, we discuss how to optimize the free
+parameters in the model within the \commander\ framework, before
+presenting an updated ZL model derived from DIRBE time-ordered data in
+Sect.~\ref{sect:improved-model}. Finally, we conclude in Sect.~\ref{sec:conclusions}.
 
 
 \section{Zodiacal light modelling}\label{sect:zodi-model}
@@ -474,7 +481,8 @@ In addition to the positional change along Earth's orbit, the COBE satellite als
 The smooth nature of the ZL can be exploited in more ways. When sampling parameters for the ZL model it is possible to use a subsample of the full TOD while still resolving the smooth gradient of the ZL structure. In our analysis, we have used a thinning factor of 8, meaning that we effectively fit the data to a timestream with 1 Hz rather than the 8 Hz DIRBE CIOs. 
 
 A final optimization is implemented in the form of spatial downsampling, where the smoothness of the ZL is resolved adequately at a lower HEALPix resolution. We find that using a $N_\mathrm{side} = 64$ down from the original $N_\mathrm{side} = 512$ results in comparable $\chi^2$ measures while further reducing the volume used in the sampling steps by a factor of 64. The downsampling is simulated by projecting the original pointing to the lower HEALPix resolution and using a corresponding low-res cache.
-\section{Bayesian zodiacal light parameter estimation}\label{sect:param-estimation}
+
+\section{Algorithms}\label{sect:param-estimation}
 Estimating the ZL model parameters happens within the Bayesian end-to-end Commander3 framework. An explaination of the algorithms used to fit the full data and sky model, as well as instrumental parameters are described in detail in \cite{CG02_01}. In short, we use Gibbs sampling to map out the joint posterior distribution\citep{Galloway2023}, which allows us to draw samples iteratively from various conditional distributions rather than trying to draw directly from a large and complicated joint distribution. The following equations show each parameter sampled in this Cosmoglobe analysis in order
 \begin{alignat}{11}
     \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
@@ -622,7 +630,7 @@ is used jointly with the uncertienties determined from the Gibbs chain.
 \textcolor{red}{Do this with Duncan}
 
 
-\section{Improved zodiacal light model}\label{sect:improved-model}
+\section{Results}\label{sect:improved-model}
 Here we present our best-fit ZL model from having run Commander3 for six independant
 Markov Chains for N samples. Our best-fit parameters for the geometrical IPD, emissivities 
 and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
@@ -787,6 +795,7 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
 
 
 \section{Conclusions}
+\label{sec:conclusions}
 
 
 \begin{acknowledgements}
@@ -810,8 +819,8 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
 %
 
 \bibliographystyle{aa}
-% \bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
-\bibliography{references}
+\bibliography{../../common/CG_bibliography,references,../../common/Planck_bib,references}
+%\bibliography{references}
 
 \appendix
 \onecolumn
