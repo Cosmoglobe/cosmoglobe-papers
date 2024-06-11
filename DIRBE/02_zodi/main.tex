@@ -407,15 +407,15 @@ sometimes scattered away from the line-of-sight.
 
 
 \subsection{Optimizing model evaluations}\label{sect:optimization}
-The line-of-sight evaluations are an expensive part of the analysis 
-pipeline and significantly increase the time that it takes to complete a 
-single Gibbs sample. Additionally, when estimating ZL parameters we need 
-to make a pass over the entire data set for each proposal. The DIRBE 
-data set is very light when compared with modern observations, meaning 
-that we can get away with some additional computational time. But for 
-future data releases with AKARI or SPHEREx data, this will become 
-computationally unfeasible. As such, we have implemented a few 
-optimizations regarding ZL evaluation. 
+The ZL line-of-sight evaluations are an expensive part of the Cosmoglobe analysis pipeline and significantly increase the time it takes to complete a Gibbs sample when applying and fitting ZL models. Evaluating a line-of-sight for each TOD is computationally feasible in the context of DIRBE due to the low data volume (18 GB when compressed), but a brute for evaluation on this form will not be an option for future data releases where we include data from the likes of AKARI and SPHEREx. There are a few natural and easy optimizations we can use when working with a smoothly spatially- and time-varying signal like the ZL, which we present in the following sections.
+
+The first and perhaps most trivial optimization when working with discrete HEALPix pixelization is to utilize a ZL cache. The cache takes advantage of the smoothly varying nature of the ZL by letting us reuse a previously computed ZL estimate when re-observing a HEALPix pixel within a small timeframe $\Delta t$
+\begin{equation}
+ s_\mathrm{zodi}(p, t_i) = s_\mathrm{zodi}(p, t_j).
+\end{equation}
+This cache induces an error on the ZL estimate proportional to $\Delta t$, which comes from the changes to the observer position with respect to the zodiacal cloud within the $\Delta t$ timeframe. For reference, the structure of the ZL on the Ecliptic or Galactic sky maps will appear to move by about $1^\circ$ a day as the Earth orbits the Sun. We find that resetting the cache every 2 hours results in a good compromise between speed and accuracy.
+
+In addition to the positional change along Earth's orbit, the COBE satellite also orbits the Earth at an altitude of 900 km. The specific position of the observer is not taken into account when using the cache. The magnitude of these two errors is illustrated in Figure~\ref{fig:cache-error}. The top panel shows the difference between two instantaneous full-sky views at 25 $\mu$m, one simulated from the north ecliptic pole and the other from the south ecliptic pole, and illustrates the maximum error obtain in each pixel by not using the correct observer position with respect to the Earth. The bottom panel shows a similar difference map, but this time for the error induced by the observer's motion around the Sun with a cache reset time of $\Delta t = 2$hours. In both scenarios, the errors induced by the cache are well below our model residuals.
 \begin{figure}
     \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}
     \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
@@ -426,41 +426,10 @@ optimizations regarding ZL evaluation.
     are masked in both maps.}
     \label{fig:cache-error}
 \end{figure}
-The main optimization comes from the implementation of a ZL cache. The 
-cache takes advantage of the smoothly varying nature of the ZL, and lets 
-us reuse computed ZL estimates for proximate re-observations. 
-Internally, Commander3 works with instrument pointing on the form of 
-discrete pixel indices, meaning that re-observerations of a given pixel, 
-within a short timeframe $\Delta t$, can be reused
-\begin{equation}
-    s_\mathrm{zodi}(p, t_i) = s_\mathrm{zodi}(p, t_j).
-\end{equation}
-The error induces from this cache is directly proportional to the 
-distance that the observer has moved through the $\Delta t$ parameter. 
-As a reference, the ZL moves by about $1^\circ$ on the sky each day as 
-the Earth orbits the Sun. In addition to the positional change along 
-Earth's orbit, the COBE satellite also orbits the Earth at an altitude 
-of 900 km. This motion is lost when using the cache. These magnitude of 
-the error induced by the cache is illustrated in 
-Figure~\ref{fig:cache-error}.  We found that resetting the cache every 
-2 hours resulted in a good compromise between speed and accuracy. Note 
-that a cache on this form is only efficient for experiments with scanning 
-strategies with partially overlapping subsequent scans. The magnitude of
-the errors are well below the the residuals, justifying the use of the 
-cache.
 
-The smooth nature of the ZL can be exploited in more ways. When sampling 
-ZL parameters is is possible to use a subsample of the full TOD while 
-still resolving the smooth ZL structure. In our analysis we have used a 
-thinning factor of 8 meaning that we fit the data to a timestream with 1 
-Hz. Another optimization comes in form of spatial downsampling, where 
-the smoothness of the ZL is resolved adequatly at a HEALPix resolution 
-of $n_\mathrm{SIDE} = 64$ down from the original 512, further reducing 
-the volume of the data used in the fits by a factor of 64. The 
-downsampling is simulated by projecting all the original pointing to the 
-lower HEALPix resolution, and using a corresponding low-res cache.
+The smooth nature of the ZL can be exploited in more ways. When sampling parameters for the ZL model it is possible to use a subsample of the full TOD while still resolving the smooth gradient of the ZL structure. In our analysis, we have used a thinning factor of 8, meaning that we effectively fit the data to a timestream with 1 Hz rather than the 8 Hz DIRBE CIOs. 
 
-
+A final optimization is implemented in the form of spatial downsampling, where the smoothness of the ZL is resolved adequately at a lower HEALPix resolution. We find that using a $N_\mathrm{side} = 64$ down from the original $N_\mathrm{side} = 512$ results in comparable $\chi^2$ measures while further reducing the volume used in the sampling steps by a factor of 64. The downsampling is simulated by projecting the original pointing to the lower HEALPix resolution and using a corresponding low-res cache.
 \section{Bayesian zodiacal light parameter estimation}\label{sect:param-estimation}
 Estimating the ZL model parameters happens within the Bayesian end-to-end Commander3 framework. An explaination of the algorithms used to fit the full data and sky model, as well as instrumental parameters are described in detail in \cite{CG02_01}. In short, we use Gibbs sampling to map out the joint posterior distribution\citep{Galloway2023}, which allows us to draw samples iteratively from various conditional distributions rather than trying to draw directly from a large and complicated joint distribution. The following equations show each parameter sampled in this Cosmoglobe analysis in order
 \begin{alignat}{11}
@@ -566,7 +535,6 @@ at each time step to the signal minus model residual
 \begin{equation}\label{eq:chisq}
     \chi^2 = I_\nu - Z_\nu.
 \end{equation}
-
 To minimize the amount of unmodeled galactic emission that enters our 
 ZL parameter estimates, we use strict channel-specific processing masks, 
 masking out the brightest galactic regions. The 1.25, 25, and 240 $\mu$m 
