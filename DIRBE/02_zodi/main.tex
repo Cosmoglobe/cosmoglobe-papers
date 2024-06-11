@@ -395,21 +395,6 @@ $r$, $Z$ and $\theta$ parameters, respectively. Note that the
 Earth-trailing feature depends on the position of the Earth and does not 
 have a plane symmetry like the other zodiacal components. 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
-    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single Gibbs chain. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
-    \label{fig:powell_chisq_iter}
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
-    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
-    \label{fig:powell_T0}
-\end{figure}
-
 
 \subsection{Radiative and scattering properties}
 Thermal emission from IPD grains is modeled on the form of a blackbody
@@ -441,6 +426,15 @@ The total intensity from a single IPD grain is
     I^\mathrm{Total}_{c, \lambda} &= I^\mathrm{Scattering}_{c,\lambda} + I^\mathrm{Thermal}_{c,\lambda}\\
     &= A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + E_{c,\lambda} B_\lambda.
 \end{align}
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figs/band3_instant.pdf}\\
+  \includegraphics[width=\columnwidth]{figs/band3_mission.pdf}\\
+  \includegraphics[width=\columnwidth]{figs/band3_omega.pdf}
+  \caption{}
+  \label{fig:band3}
+\end{figure}
+
 
 \subsection{Evaluating the zodiacal model}
 The ZL model is evaluated by solving the following line-of-sight 
@@ -482,42 +476,6 @@ The smooth nature of the ZL can be exploited in more ways. When sampling paramet
 
 A final optimization is implemented in the form of spatial downsampling, where the smoothness of the ZL is resolved adequately at a lower HEALPix resolution. We find that using a $N_\mathrm{side} = 64$ down from the original $N_\mathrm{side} = 512$ results in comparable $\chi^2$ measures while further reducing the volume used in the sampling steps by a factor of 64. The downsampling is simulated by projecting the original pointing to the lower HEALPix resolution and using a corresponding low-res cache.
 
-\section{Algorithms}\label{sect:param-estimation}
-Estimating the ZL model parameters happens within the Bayesian end-to-end Commander3 framework. An explaination of the algorithms used to fit the full data and sky model, as well as instrumental parameters are described in detail in \cite{CG02_01}. In short, we use Gibbs sampling to map out the joint posterior distribution\citep{Galloway2023}, which allows us to draw samples iteratively from various conditional distributions rather than trying to draw directly from a large and complicated joint distribution. The following equations show each parameter sampled in this Cosmoglobe analysis in order
-\begin{alignat}{11}
-    \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
-    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-    &\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
-    \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\phantom{\xi_n} &
-    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-    &\,\a_{\mathrm{static}})\\
-    \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-    \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-    &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-    \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-    &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
-    \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
-\end{alignat}
-Each of the sampling steps in the above Gibbs chain is described by \citet{CG02_01}
-and references therin. 
-
-For computational reasons it is sometimes necessary to violate the Gibbs rule,
-which is the case for the step in Equation~\ref{eq:gibbs_zodi}, which describes
-the sampling of the ZL parameters, denoted by $\zeta_\mathrm{z}$. The K98 ZL 
-model contains around 50 parameters to describe the three-dimensional IPD 
-distribution and another 30 or more to describe the thermal emission and 
-scattered sunlight source functions, many of which are heavily degenerate
-due to the difficulties of mapping a three-dimensional structure from a single
-data set. N of these parameters were fit to the DIRBE data, in the original DIRBE analysis while the rest were fixed to parameters motivated by studies of the interplanetary medium. In our analysis we have fit M total parameters. A visualization of the degeneracies and the way in which each ZL parameter impacts the final mission-averaged predicted ZL are seen in figures~\ref{fig:atlas1} and~\ref{fig:atlas2} in Appendix~\ref{sec:param-atlas}. This atlas of ZL parameters shows normalized maps of the effects of changing a single ZL parameter by $\pm 5\%$ while keeping the rest of the model fixed. The albedo and emissivity parameters are excluded from the atlas as these represent a direct scaling of the component maps and are degenerate with the $n_0$ maps.
-The posterior distribution of this complicated set of parameters exhibits a large number of local minima due to the above mentioned reasons. When experimenting we found that strict Gibbs sampling algorithm quickly became trapped. We have opted to instead 
-use a simple non-linear Powell algorithm that is initialized some random parameter distance away from the previous sample, and then searches for the local minimum. Powell's method is a function minimizer, which performs bi-directional searches along a parameter vector. This algorithm is able to escape local minima, but it comes at the cost of larger
-uncertainties than what would result from an ideal posterior mapper.
-
-
 \begin{figure*}
     \centering
     \resizebox{\textwidth}{!}{%
@@ -556,6 +514,35 @@ uncertainties than what would result from an ideal posterior mapper.
     ratio, both to zodiacal light parameters and zero-levels.}
     \label{fig:week_vs_full}
 \end{figure*}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
+    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single Gibbs chain. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
+    \label{fig:powell_chisq_iter}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
+    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
+    \label{fig:powell_T0}
+\end{figure}
+
+
+\section{Data}\label{sect:data}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/tod_zodi.pdf}
+    \caption{}
+    \label{fig:tod_zodi}
+\end{figure}
+
+
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figs/zodi_proc_masks.pdf}
@@ -565,6 +552,47 @@ uncertainties than what would result from an ideal posterior mapper.
     240 $\mathrm{\mu m}$ band.}
     \label{fig:zodi-procmask}
 \end{figure}
+
+
+
+
+
+\section{Methods}\label{sect:param-estimation}
+Estimating the ZL model parameters happens within the Bayesian end-to-end Commander3 framework. An explaination of the algorithms used to fit the full data and sky model, as well as instrumental parameters are described in detail in \cite{CG02_01}. In short, we use Gibbs sampling to map out the joint posterior distribution\citep{Galloway2023}, which allows us to draw samples iteratively from various conditional distributions rather than trying to draw directly from a large and complicated joint distribution. The following equations show each parameter sampled in this Cosmoglobe analysis in order
+\begin{alignat}{11}
+    \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
+    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+    &\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
+    \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\phantom{\xi_n} &
+    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+    &\,\a_{\mathrm{static}})\\
+    \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+    \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+    &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+    \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+    &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
+    \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
+\end{alignat}
+Each of the sampling steps in the above Gibbs chain is described by \citet{CG02_01}
+and references therin. 
+
+For computational reasons it is sometimes necessary to violate the Gibbs rule,
+which is the case for the step in Equation~\ref{eq:gibbs_zodi}, which describes
+the sampling of the ZL parameters, denoted by $\zeta_\mathrm{z}$. The K98 ZL 
+model contains around 50 parameters to describe the three-dimensional IPD 
+distribution and another 30 or more to describe the thermal emission and 
+scattered sunlight source functions, many of which are heavily degenerate
+due to the difficulties of mapping a three-dimensional structure from a single
+data set. N of these parameters were fit to the DIRBE data, in the original DIRBE analysis while the rest were fixed to parameters motivated by studies of the interplanetary medium. In our analysis we have fit M total parameters. A visualization of the degeneracies and the way in which each ZL parameter impacts the final mission-averaged predicted ZL are seen in figures~\ref{fig:atlas1} and~\ref{fig:atlas2} in Appendix~\ref{sec:param-atlas}. This atlas of ZL parameters shows normalized maps of the effects of changing a single ZL parameter by $\pm 5\%$ while keeping the rest of the model fixed. The albedo and emissivity parameters are excluded from the atlas as these represent a direct scaling of the component maps and are degenerate with the $n_0$ maps.
+The posterior distribution of this complicated set of parameters exhibits a large number of local minima due to the above mentioned reasons. When experimenting we found that strict Gibbs sampling algorithm quickly became trapped. We have opted to instead 
+use a simple non-linear Powell algorithm that is initialized some random parameter distance away from the previous sample, and then searches for the local minimum. Powell's method is a function minimizer, which performs bi-directional searches along a parameter vector. This algorithm is able to escape local minima, but it comes at the cost of larger
+uncertainties than what would result from an ideal posterior mapper.
+
+
 The K98 model was obtained by fitting the model to a set of week-maps. 
 The $\chi^2$ measure used by the DIRBE team is given by
 \begin{equation}
@@ -594,19 +622,6 @@ masks, corresponding to stellar light, ZL, and thermal dust-dominated
 channels, are shown in Figure~\ref{fig:zodi-procmask}.
 
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=1\textwidth]{figs/total_trace.pdf}
-    \caption{Trace plot of all geometrical interplanetary dust paramteres for six independant Markov chains.}
-    \label{fig:trace-ipd}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=1\textwidth]{figs/emissivity_and_albedo_trace.pdf}
-    \caption{Trace plot of all geometrical interplanetary dust paramteres for six independant Markov chains.}
-    \label{fig:trace-emissivity-albedo}
-\end{figure*}
 The total number of free ZL model parameters in this analysis are N, 
 compared to the M parameters fit in K98. We have included a non-zero
 scattering contribution at 4.9 $\mu$m. The ZL SED is composition of two
@@ -629,13 +644,49 @@ values which lets us find the 95\% confidence interval in the search. This
 is used jointly with the uncertienties determined from the Gibbs chain.
 \textcolor{red}{Do this with Duncan}
 
-
 \section{Results}\label{sect:improved-model}
 Here we present our best-fit ZL model from having run Commander3 for six independant
 Markov Chains for N samples. Our best-fit parameters for the geometrical IPD, emissivities 
 and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
 and~\ref{table:zodi-params-spectral}, where they are compared to the values in the K98 model.
 \input{ipd_param_table.tex}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=1\textwidth]{figs/total_trace.pdf}
+    \caption{Trace plot of all geometrical interplanetary dust paramteres for six independant Markov chains.}
+    \label{fig:trace-ipd}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=1\textwidth]{figs/emissivity_and_albedo_trace.pdf}
+    \caption{Trace plot of all geometrical interplanetary dust paramteres for six independant Markov chains.}
+    \label{fig:trace-emissivity-albedo}
+\end{figure*}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/zodi_comp.pdf}
+    \caption{Simulated ZL intensity on January 1, 2024 as a function of wavelength from the best-fit 
+    Cosmoglobe ZL model, made with ZodiPy. The ZL SED is directional 
+    and seasonal due to temperature variations along independent line-of-sights and variations in IPD composition. 
+    The black curve shows the mean sky intensity in a HEALPix map with resolution
+    $N_\mathrm{side}= 64$ where pixels with an angular separation of less than
+    $60^\circ$ are masked out. The colored dashed lines represent the ZL 
+    intensity
+    }
+    \label{fig:zodi-intensity}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/zodi_reldiff.pdf}
+    \caption{}
+    \label{fig:reldiff}
+\end{figure}
+
+
 
 We illustrate the effectiveness of our model in figures~\ref{fig:dr2-zsma-compare1} 
 and~\ref{fig:dr2-zsma-compare2}, which shows the data minus model residuals for both models.
@@ -750,19 +801,45 @@ Figure~\ref{fig:zodi-intensity} shows the interpolated ZL signal as a function o
     \label{fig:dr2-zsma-compare2}
 \end{figure*}
 
-\begin{figure}
+
+\begin{figure*}[t]
     \centering
-    \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
-    \caption{Simulated ZL intensity on January 1, 2024 as a function of wavelength from the best-fit 
-    Cosmoglobe ZL model, made with ZodiPy. The ZL SED is directional 
-    and seasonal due to temperature variations along independent line-of-sights and variations in IPD composition. 
-    The black curve shows the mean sky intensity in a HEALPix map with resolution
-    $N_\mathrm{side}= 64$ where pixels with an angular separation of less than
-    $60^\circ$ are masked out. The colored dashed lines represent the ZL 
-    intensity
-    }
-    \label{fig:zodi-intensity}
-\end{figure}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_01a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_01b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_01.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_02a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_02b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_02.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_03a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_03b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_03.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_04a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_04b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_04.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_05a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_05b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_05.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_06a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_06b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_06.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_07a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_07b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_07.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_08a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_08b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_08.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_09a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_09b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_09.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_10.pdf}%
+    \caption{Half-mission split residual maps, smoothed by a 0.5 degrees or 15 arcmin beam.}
+    \label{fig:half-mission-res2}
+\end{figure*}
+
+
+
 
 
 \begin{figure}
@@ -778,7 +855,7 @@ Figure~\ref{fig:zodi-intensity} shows the interpolated ZL signal as a function o
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figs/zodi_rms_ratio_DIRBE_DR2.pdf}
+    \includegraphics[width=\linewidth]{figs/zodi_rms_ratio_DIRBE_DR2_v2.pdf}
     \caption{Rms ratio between \cosmoglobe\ DR2 and DIRBE ZSMA, ,
       $\sigma_{\mathrm{DR2}}/\sigma_\mathrm{DIRBE}$,
       as evaluated outside the DR2 analysis masks.}
@@ -787,11 +864,21 @@ Figure~\ref{fig:zodi-intensity} shows the interpolated ZL signal as a function o
 
 
 
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figs/tod_zodi_residuals.pdf}
+    \caption{}
+    \label{fig:res_vs_b}
+\end{figure*}
+
+
 Subtracting the ZL with our best-fit-model yields lower sky residuals at all bands 
 compared to the DIRBE ZSMA maps. A comparison between the ZL residuals can be seen 
 in Figure~\ref{fig:dr2-zsma-compare}. Here the first column shows the frequency maps of the
 four most ZL dominated DIREB bands (4.9, 12, 25, and 60 $\mu$m), the second shows the ZL
 subtracted maps with our model, and column three shows the DIRBE ZSMA.
+
+
 
 
 \section{Conclusions}
@@ -943,71 +1030,6 @@ Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ w
     \label{fig:atlas2}
 \end{figure*}
 
-\clearpage
-\section{DR2 half-mission residuals}
-\label{sec:zodi-comps}
-
-\begin{figure*}[hbt]
-    \centering
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_01a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_01b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_01.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_02a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_02b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_02.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_03a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_03b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_03.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_04a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_04b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_04.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_05a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_05b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_05.pdf}%
-    }\\
-    \caption{Half-mission split residual maps, smoothed by a 0.5 degrees or 15 arcmin beam.}
-    \label{fig:half-mission-res1}
-\end{figure*}
-
-\begin{figure*}[hbt]
-    \centering
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_06a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_06b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_06.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_07a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_07b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_07.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_08a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_08b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_08.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_09a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_09b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_09.pdf}%
-    }\\
-    \resizebox{0.98\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_10a.pdf}%
-    \includegraphics[height=1cm]{figs/compare_zodi_res/cosmoglobe_res_10b.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/compare_zodi_res/cbar_10.pdf}%
-    }\\
-    \caption{Half-mission split residual maps, smoothed by a 0.5 degrees or 15 arcmin beam.}
-    \label{fig:half-mission-res2}
-\end{figure*}
 
 \clearpage
 \section{Component-wise zodiacal light maps and number density cross-sections}
@@ -1027,34 +1049,13 @@ Figure~X in~\cite{San2022} .
 
 % \end{minipage}
 
-\begin{figure*}[hbt]
+\begin{figure*}
     \centering
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_0.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_0.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_1.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_1.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_2.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_2.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_3.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_3.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3.pdf}%
-    }\\
-    \caption{Mission-averaged component-wise ZL maps at $25\mu$m made with ZodiPy. 
-    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model.
-    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
-    dust band 2; 4) dust band 3. The maps are in galactic coordinates.}
-    \label{fig:mission-averaged-comp-maps}
+    \includegraphics[width=\textwidth]{figs/number_density.pdf}
+    \caption{Visualization of the IPD number density of the four fitted zodiacal components in our model. The number densities are shown as a cross-section of the Solar system in the xz-plane. \textit{(top left):} The smooth cloud. \textit{(top right):} Dust band 1. \textit{(bottom left):} Dust band 2. \textit{(bottom right):} Dust band 3. The gray dotted line represents the ecliptic plane and helps illustrate the variations in the components symmetry planes.}
+    \label{fig:ipd-number-density}
 \end{figure*}
+
 
 \begin{figure*}
     \centering
@@ -1086,12 +1087,35 @@ Figure~X in~\cite{San2022} .
     \label{fig:mission-averaged-inst-maps}
 \end{figure*}
 
-\begin{figure*}
+\begin{figure*}[hbt]
     \centering
-    \includegraphics[width=\textwidth]{figs/number_density.pdf}
-    \caption{Visualization of the IPD number density of the four fitted zodiacal components in our model. The number densities are shown as a cross-section of the Solar system in the xz-plane. \textit{(top left):} The smooth cloud. \textit{(top right):} Dust band 1. \textit{(bottom left):} Dust band 2. \textit{(bottom right):} Dust band 3. The gray dotted line represents the ecliptic plane and helps illustrate the variations in the components symmetry planes.}
-    \label{fig:ipd-number-density}
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_0.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_0.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_1.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_1.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_2.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_2.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_3.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_3.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3.pdf}%
+    }\\
+    \caption{Mission-averaged component-wise ZL maps at $25\mu$m made with ZodiPy. 
+    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model.
+    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
+    dust band 2; 4) dust band 3. The maps are in galactic coordinates.}
+    \label{fig:mission-averaged-comp-maps}
 \end{figure*}
+
 
 
 \end{document}
