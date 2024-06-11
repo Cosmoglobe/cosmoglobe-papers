@@ -534,6 +534,10 @@ A final optimization is implemented in the form of spatial downsampling, where t
 
 \section{Data}\label{sect:data}
 
+\subsection{DIRBE Calibrated Individual Observations}
+
+\subsection{Masks}
+
 
 \begin{figure}
     \centering
@@ -558,6 +562,9 @@ A final optimization is implemented in the form of spatial downsampling, where t
 
 
 \section{Methods}\label{sect:param-estimation}
+
+\subsection{Bayesian analysis, posterior distribution, and Gibbs sampling}
+
 Estimating the ZL model parameters happens within the Bayesian end-to-end Commander3 framework. An explaination of the algorithms used to fit the full data and sky model, as well as instrumental parameters are described in detail in \cite{CG02_01}. In short, we use Gibbs sampling to map out the joint posterior distribution\citep{Galloway2023}, which allows us to draw samples iteratively from various conditional distributions rather than trying to draw directly from a large and complicated joint distribution. The following equations show each parameter sampled in this Cosmoglobe analysis in order
 \begin{alignat}{11}
     \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
@@ -622,6 +629,8 @@ masks, corresponding to stellar light, ZL, and thermal dust-dominated
 channels, are shown in Figure~\ref{fig:zodi-procmask}.
 
 
+\subsection{Non-linear posterior maximization}
+
 The total number of free ZL model parameters in this analysis are N, 
 compared to the M parameters fit in K98. We have included a non-zero
 scattering contribution at 4.9 $\mu$m. The ZL SED is composition of two
@@ -644,12 +653,17 @@ values which lets us find the 95\% confidence interval in the search. This
 is used jointly with the uncertienties determined from the Gibbs chain.
 \textcolor{red}{Do this with Duncan}
 
+\subsection{Computational costs and optimization}
+
+
 \section{Results}\label{sect:improved-model}
 Here we present our best-fit ZL model from having run Commander3 for six independant
 Markov Chains for N samples. Our best-fit parameters for the geometrical IPD, emissivities 
 and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
 and~\ref{table:zodi-params-spectral}, where they are compared to the values in the K98 model.
 \input{ipd_param_table.tex}
+
+\subsection{Markov chains}
 
 \begin{figure*}
     \centering
@@ -664,6 +678,9 @@ and~\ref{table:zodi-params-spectral}, where they are compared to the values in t
     \caption{Trace plot of all geometrical interplanetary dust paramteres for six independant Markov chains.}
     \label{fig:trace-emissivity-albedo}
 \end{figure*}
+
+
+\subsection{Updated ZL model and goodness-of-fit}
 
 \begin{figure}
     \centering
@@ -687,6 +704,86 @@ and~\ref{table:zodi-params-spectral}, where they are compared to the values in t
 \end{figure}
 
 
+\begin{table}
+\newdimen\tblskip \tblskip=5pt
+\caption{}
+\label{tab:chisq}
+\vskip -4mm
+\footnotesize
+\setbox\tablebox=\vbox{
+ \newdimen\digitwidth
+ \setbox0=\hbox{\rm 0}
+ \digitwidth=\wd0
+ \catcode`*=\active
+ \def*{\kern\digitwidth}
+%
+  \newdimen\dpwidth
+  \setbox0=\hbox{.}
+  \dpwidth=\wd0
+  \catcode`!=\active
+  \def!{\kern\dpwidth}
+%
+  \halign{\hbox to 2cm{#\leaderfil}\tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&
+    \hfil$#$\hfil \tabskip 2em&
+    \hfil$#$\hfil \tabskip 0em\cr
+\noalign{\doubleline}
+\omit\sc $\lambda$ ($\mu\mathrm{m}$)\hfil& N_{\mathrm{samp}} (10^3) & \sigma_{0}^{\mathrm{(a)}} [\mathrm{MJy/sr}] & \chi^2_{\mathrm{red}} \cr
+\noalign{\vskip 3pt\hrule\vskip 5pt}
+*1.25   & *70 & *0.031 & 0.756 \cr 
+*2.2    & *51 & *0.031 & 0.770 \cr 
+*3.5    & *51 & *0.026 & 1.019 \cr 
+*4.9    & *99 & *0.029 & 1.150 \cr 
+*12     & 225 & *0.102 & 2.649 \cr
+*25     & \cdots & *0.190 & \cdots \cr 
+*60     & *97 & *0.322 & 1.501 \cr 
+100     & *85 & *0.381 & 1.415 \cr 
+140     & 187 & 32.1*  & 1.015 \cr 
+240     & 177 & 18.3*  & 1.024 \cr 
+\noalign{\vskip 5pt\hrule\vskip 5pt}}}
+  \endPlancktable
+  \tablenote {{\rm a}} Mission average TOD noise rms per 8\,Hz sample.\par
+\par
+\end{table}
+
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_01a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_01b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_01.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_02a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_02b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_02.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_03a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_03b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_03.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_04a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_04b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_04.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_05a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_05b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_05.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_06a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_06b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_06.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_07a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_07b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_07.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_08a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_08b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_08.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_09a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_09b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_09.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10a.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10b.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_10.pdf}%
+    \caption{Half-mission split residual maps, smoothed by a 0.5 degrees or 15 arcmin beam.}
+    \label{fig:half-mission-res2}
+\end{figure*}
+
+
 
 We illustrate the effectiveness of our model in figures~\ref{fig:dr2-zsma-compare1} 
 and~\ref{fig:dr2-zsma-compare2}, which shows the data minus model residuals for both models.
@@ -694,6 +791,9 @@ We obtain cleaner residuals in all DIRBE channels with our new ZL model, most no
 ZL dominated channels.
 
 Figure~\ref{fig:zodi-intensity} shows the interpolated ZL signal as a function of wavelength. The SED will be a composite of many independant 
+
+
+\subsection{Comparison of ZSMA maps}
 
 \textcolor{red}{(Fill in once the zodi paper gets further along and we have our results)}
 \begin{figure*}
@@ -802,41 +902,6 @@ Figure~\ref{fig:zodi-intensity} shows the interpolated ZL signal as a function o
 \end{figure*}
 
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_01a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_01b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_01.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_02a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_02b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_02.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_03a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_03b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_03.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_04a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_04b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_04.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_05a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_05b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_05.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_06a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_06b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_06.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_07a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_07b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_07.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_08a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_08b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_08.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_09a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_09b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_09.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_10.pdf}%
-    \caption{Half-mission split residual maps, smoothed by a 0.5 degrees or 15 arcmin beam.}
-    \label{fig:half-mission-res2}
-\end{figure*}
 
 
 
