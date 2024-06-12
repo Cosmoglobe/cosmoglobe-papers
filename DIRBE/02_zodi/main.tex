@@ -662,44 +662,6 @@ emphasize that the approach presented here is only a first step, and
 future work should aim at implementing faster and more robust
 algorithms.
 
-\begin{figure*}
-    \centering
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
-    \includegraphics[height=1cm]{figs/week/week_I_nu.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
-    \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
-    \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
-    }\\
-    \caption{Illustration of the basic sky maps involved in the zodiacal 
-    light fitting algorithms adopted by the DIRBE (\emph{left column}) 
-    and \Cosmoglobe\ (\emph{right column}) pipelines for one week of 
-    $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The 
-    DIRBE pipeline used exclusively differences between weekly and 
-    full-season maps, both for the observed signal, 
-    $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), 
-    and the zodiacal light model, 
-    $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), 
-    where brackets indicate full-survey averages. Correspondingly, the 
-    final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ 
-    (\emph{bottom left}), and is by constrution only sensitive to 
-    time-variable signals. In contrast, the basic data element in 
-    \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), 
-    which is fitted with the full zodiacal light model, $Z_{\nu}$ 
-    (\emph{middle right}), both modelled in time-domain. The $\chi^2$ 
-    the minimizes minimize the total signal-minus-model residual, 
-    $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the 
-    DIRBE approach is insensitivity to stationary sky signals, in 
-    particular thermal dust and CIB, while the main advantage of the 
-    \Cosmoglobe\ approach is a much higher effective signal-to-noise 
-    ratio, both to zodiacal light parameters and zero-levels.}
-    \label{fig:week_vs_full}
-\end{figure*}
 
 \subsection{Data model, posterior distribution, and Gibbs sampling}
 
@@ -708,8 +670,8 @@ write down an explicit parametric data model. For \cosmoglobe\ DR2, we
 adopt the following model,
 \begin{align}
 	\label{eq:model}
-	\dv &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
-          \s_{\mathrm{static}}\right] + \n,\\
+	\dv &=\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}} + \n,\\
         &\equiv \s^{\mathrm{tot}} + \n,
 \end{align}
 where $\dv$ denote observed data; $\G$ denotes an overall calibration
@@ -788,11 +750,31 @@ so-called Gibbs chain:
 where $\leftarrow$ indicates the process of drawing a sample from the
 distribution on the right-hand side. Each sampling step in this chain
 is described by \citet{CG02_01} and references therein --- except for
-Eq.~\eqref{eq:gibbs_zodi}, which is detailed in
-Sect.~\ref{sec:nonlin} in this paper.
+Eq.~\eqref{eq:gibbs_zodi}, which is the main topic of this paper.
 
-
-
+Based on the data model in Eq.~\ref{eq:model}, we can define the
+following residual
+\begin{equation}
+\r = \dv - (\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c +
+          \s_{\mathrm{static}}),
+\end{equation}
+and this should ideally only contain ZL and noise. As such, the
+assumed Gaussianity of the noise also defines the conditional
+distribution in Eq.~\eqref{eq:gibbs_zodi}, and we may write
+\begin{equation}
+  -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{\nu}
+  \left(\frac{\r_{\nu} -
+    \s_{\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \equiv
+  \chi^2 (\zeta_{\mathrm{z}}),
+  \label{eq:gibbs_chisq}
+\end{equation}
+where we have introduced multiple data frequency channels, denoted by
+$\nu$, and also for simplicity neglected the prior,
+$P(\zeta_{\mathrm{z}})$. In this framework, ZL parameter estimation is
+thus nothing but a traditional Gaussian $\chi^2$ sampling or
+optimization problem after all non-ZL contributions have been
+subtracted from the $\dv$. Precisely how we implement this operation
+in the current pipeline is described in Sect.~\ref{sec:nonlin}.
 
 So far we have silently skipped past one important term in
 Eq.~\eqref{eq:model}, namely $\s_{\mathrm{static}}$. This is described
@@ -803,7 +785,46 @@ origin and impact are highly relevant for ZL fitting, and it is
 therefore worth briefly reviewing the salient points from the original
 analysis here.
 
-As noted by \citet{hauser1998} and \citet{kelsall1998}, the DIRBE TOD
+\begin{figure*}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_I_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
+    }\\
+    \caption{Illustration of the basic sky maps involved in the zodiacal 
+    light fitting algorithms adopted by the DIRBE (\emph{right column}) 
+    and \Cosmoglobe\ (\emph{left column}) pipelines for one week of 
+    $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The 
+    DIRBE pipeline used exclusively differences between weekly and 
+    full-season maps, both for the observed signal, 
+    $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top right}), 
+    and the zodiacal light model, 
+    $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle right}), 
+    where brackets indicate full-survey averages. Correspondingly, the 
+    final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ 
+    (\emph{bottom right}), and is by constrution only sensitive to 
+    time-variable signals. In contrast, the basic data element in 
+    \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top left}), 
+    which is fitted with the full zodiacal light model, $Z_{\nu}$ 
+    (\emph{middle left}), both modelled in time-domain. The $\chi^2$ 
+    the minimizes minimize the total signal-minus-model residual, 
+    $I_{\nu}-Z_{\nu}$ (\emph{bottom left}). The main advantage of the 
+    DIRBE approach is insensitivity to stationary sky signals, in 
+    particular thermal dust and CIB, while the main advantage of the 
+    \Cosmoglobe\ approach is a much higher effective signal-to-noise 
+    ratio, both to zodiacal light parameters and zero-levels.}
+    \label{fig:week_vs_full}
+\end{figure*}
+
+As noted by \citet{hauser1998} and \citet{Kelsall1998}, the DIRBE TOD
 contain significant excess radiation that is not well described by the
 low-dimensional parametric K98 model. Shortly after these
 observations, \citet{leinert:1998} showed that some of this radiation
@@ -825,9 +846,104 @@ component presented by \citet{CG02_01} should also be added to this
 model. However, before that is done, it is imperative to rule out the
 straylight hypothesis, and that will require both detailed modelling
 of the DIRBE instrument and joint analysis with other experiments,
-such as AKARI, IRAS, and \Planck HFI. Doing that is beyond the scope
+such as AKARI, IRAS, and \Planck\ HFI. Doing that is beyond the scope
 of the current \cosmoglobe\ data release, but it will certainly be a
 main topic for future work.
+
+
+\subsection{Comparison with K98 fitting algorithm}
+\label{sec:algorithm_comparison}
+
+Before describing the numerical implementation adopted for sampling
+from Eq.~\eqref{eq:gibbs_zodi} in this paper, it is worth first
+considering the more important fundamental differences between our
+approach and that adopted by the DIRBE team as described by
+\citet{Kelsall1998}. The first difference worth noting in this respect
+is that while our $\chi^2$ statistic is defined directly in terms of
+TOD, the K98 parameter estimation method rather work weekly maps. That
+is, the raw data are co-added week-by-week into pixelized maps, and
+these are fed into a corresponding pixel-based $\chi^2$ statistic that
+also accepts the ZL model in terms of pixelized maps. One important
+motivation for working with weekly maps is generally lower
+computational requirements, which was relatively more important two
+decades ago that it is today.
+
+A second important difference between the two algorithms --- and this
+is conceptually a far more important one -- is the fact that while our
+method makes active use of an explicit parametric data model for all
+non-ZL components, the K98 algorithm eliminates any contribution from
+non-ZL components directly by only considering differences between
+weekly maps and the corresponding full-mission average map in their
+$\chi^2$ statistic. That is, rather than optimizing the full $\chi^2$
+as defined in Eq.~\eqref{eq:gibbs_chisq}, their algorithm optimizes
+\begin{equation}
+  -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{i,\nu}
+  \left(\frac{\Delta\dv_{i,\nu} -
+    \Delta\s_{i,\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \equiv
+  \chi^2_{\mathrm{K98}} (\zeta_{\mathrm{z}}),
+  \label{eq:k98_chisq}
+\end{equation}
+where $i$ indicate week number, $\Delta \dv_{i,\nu} = \dv_{i,\nu} -
+\left<\dv_{i,\nu}\right>$, $\Delta \s_{i,\nu,\mathrm{zodi}} =
+\s_{i,\nu,\mathrm{zodi}} - \left<\s_{i,\nu,\mathrm{zodi}}\right>$, and brackets
+denote averaging over the full mission.
+
+Clearly, this statistic has a key philosophical advantage as compared
+to the full-signal statistic in Eq.~\eqref{eq:gibbs_chisq}: It does
+not require any assumptions regarding the astrophysical nature of a
+clearly complicated infrared sky. At least to first order, it is by
+construction safe against biases from foreground modelling
+errors. However, this bias immunity also comes at a massive cost in
+terms of statistical uncertainties, because it is not only immune to
+astrophysical bias, but it is also by construction blind to any
+stationary ZL signal --- and by far most of the actual ZL observed in
+the sky does indeed appear stationary on the sky.
+
+Figure~\ref{fig:week_vs_full} illustrates this difference. The top
+left panel shows the full intensity signal as analyzed in the
+\cosmoglobe\ algorithm for one single week of 25\,$\mu$m
+observations. The visual imprint is strongly dominated by the same ZL
+features as seen in Sect.~\ref{sec:model}, aligned with the Ecliptic
+plane. The right panel show the same after subtracting the
+full-mission mean; the characteristic cloud pattern has now turned
+into differential structures that are difficult to interpret
+visually. The middle row shows the same for the predicted ZL signal,
+and the bottom row shows the difference between the top and middle
+rows, which serves as the input to the $\chi^2$ evaluations.
+
+Several points are worth noting in these figures. First of all, we
+immediately note that the color scale is one order of magnitude lower
+in the right column than in the left column; this will translate
+directly into lower constraining power for the differential
+approach.
+
+Second, we see that the Galactic plane signal represents a strongly
+sub-dominant component in the total signal amplitude. Even relatively
+large errors made in the model assumptions of these will have a very
+small impact on the overall ZL estimates, and it is also
+straightforward to mitigate this effect further by masking out any
+samples that are close known bright Galactic sources; this is fully
+equivalent to what is done in the CMB field when estimating the CMB
+power spectrum.
+
+Third, as seen in the bottom panel, the $\chi^2_{\mathrm{K98}}
+(\zeta_{\mathrm{z}})$ aslo by construction entirely blind to the
+zero-level of the ZL model. On the one hand, such blindness may
+certainly be considered as a strength of the algorithm, as indeed
+argued by \citet{Kelsall1998}, given that one of the main goals of the
+entire DIRBE experiment was to precisely measure the CIB monopole
+spectrum \citep{hauser1998}. At the same time, the final derived CIB
+constraints do of course still depend directly on monopole of the
+reconstructed monopole. Therefore, if the ZL monopoles have a large
+uncertainty, then so do the CIB monopoles. Furthermore, differential
+measurements are in general far much more susceptible to bias from
+systematic modelling errors from sources other than Galactic confusion
+than absolute intensity measurements, including optical
+non-idealities. Intuitively speaking, the differential method aims to
+measure the ZL monopole using only derivatives, and whether that task
+is easier or harder than to establish a sufficiently accurate model of
+the Milky Way can only be determined by trying both methods, and
+comparing the results.
 
 
 \subsection{Posterior sampling by non-linear optimization}
@@ -835,6 +951,20 @@ main topic for future work.
 
 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
+    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single Gibbs chain. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
+    \label{fig:powell_chisq_iter}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
+    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
+    \label{fig:powell_T0}
+\end{figure}
 
 
 
@@ -891,20 +1021,6 @@ values which lets us find the 95\% confidence interval in the search. This
 is used jointly with the uncertienties determined from the Gibbs chain.
 \textcolor{red}{Do this with Duncan}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
-    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single Gibbs chain. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
-    \label{fig:powell_chisq_iter}
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
-    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
-    \label{fig:powell_T0}
-\end{figure}
 
 
 
