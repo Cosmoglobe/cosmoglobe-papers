@@ -195,30 +195,6 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 % write an abstract 
 
    \abstract{We present an improved model of zodiacal light (ZL) emission for \textit{COBE}-DIRBE derived through global Bayesian analysis within \cosmoglobe\ Data Release~2 (DR2). The parametric form of the ZL model is identical to that introduced by Kelsall et al. (1998; K98), but the specific best-fit parameter values are rederived using the combination of DIRBE Calibrated Individual Observations (CIOs), \Planck\ HFI sky maps, and WISE and GAIA compact object catalogs. Furthermore, the ZL parameters are fitted jointly with astrophysical parameters, such as thermal dust and starlight emission, and the new model takes into account excess radiation that appears stationary in solar-centric coordinates as reported in a companion paper. The relative differences in predicted signals at 25$\,\mu\mathrm{m}$ between K98 and our new model are $\lesssim\,2\,\%$ in the Ecliptic plane, and $\lesssim\,5\,\%$ in the Ecliptic poles and along the asteroidal bands. The zero-level of the cleaned DR2 maps are lower than those of the legacy DIRBE Zodiacal light Subtracted Mission Average (ZSMA) maps by $\sim$\,10\,kJy/sr at 1.25--3.5\,$\mu\mathrm{m}$, which is comparable to the entire predicted contribution from high-redshift galaxies to the Cosmic Infrared Background (CIB) at the same wavelengths. The total rms's of each DR2 maps at wavelengths up to and including $60\,\mu\mathrm{m}$ are $\sim$\,30\,\% lower at high Galactic latitudes than the corresponding DIRBE ZSMA maps. The cleaned DR2 maps at 4.9 and 60\,$\mu\mathrm{m}$ are now for the first time visually dominated by Galactic signal at high latitudes rather than by ZL residuals. Even the 100$\,\mu\mathrm{m}$ channel, which has served as a cornerstone for Galactic studies for three decades, appears significantly cleaner in the current processing. Still, obvious ZL residuals can be seen even in several of the DR2 maps, and further work is required to mitigate these. Joint analysis with existing and future high-resolution full-sky surveys such as AKARI, IRAS, \Planck\ HFI, and SPHEREx will be essential both to break key degeneracies in the current model and to determine whether the reported solar-centric excess radiation has a ZL or instrumental origin. On the algorithmic side, more efficient methods for probing massively multi-peaked likelihoods should be explored and implemented. Thus, while the results presented in this paper do re-define the state-of-the-art for DIRBE modelling, it also only represents the first among many steps toward a future optimal Bayesian ZL model.
-%     We present the first Bayesian framework for global modelling 
-%of zodiacal light and its application to the Diffuse Infrared Background 
-%Experiment (DIRBE) time-ordered data (TOD). The framework uses a 
-%modified version of the COBE/DIRBE zodiacal light model to estimate the 
-%zodiacal light along the observed line-of-sights in the time domain. We 
-%obtain a new state-of-the-art zodiacal light model by re-estimating the 
-%free parameters in the COBE/DIRBE model and produce DIRBE zodiacal light 
-%subtracted mission average (ZSMA) maps with much smaller zodiacal light 
-%residuals. We argue that the improved zodiacal light model fit becomes 
-%possible through global Bayesian end-to-end analysis of the DIRBE TODs 
-%with COBE-FIRAS, GAIA, Planck HFI, and WISE observations, giving us a 
-%more accurate instrumental and astophysical characterization of the 
-%infrared sky. However, we do note that even though the zodiacal light 
-%model represent an improvement with respect to original DIRBE model when 
-%it comes to removing ZL from the DIRBE data, this is still a preliminary 
-%model. We illustrate the potential of this framework for building 
-%zodiacal models by conducting a small study where we further extend and 
-%modifcations to the zodiacal light model by adding more asteroidal 
-%bands, interstellar dust and using a more physically motivated 
-%parameterization of the interplanetary medium as described in 
-%\cite{Robinson2013}. A more modern and physical parametrization of the 
-%interplanetary medium in combination with joint analysis with 
-%complementry infrared experiments such IRAS, AKARI, WISE and SPHEREx 
-%will 
 }
 
    \keywords{Zodiacal dust, Interplanetary medium, Cosmology: cosmic background radiation}
@@ -290,37 +266,40 @@ the removal of ZL from the DIRBE TOD with ZodiPy using the K98 model.
 The rest of the paper is organized as follows. In
 Sect.~\ref{sect:zodi-model}, we introduce the K98 ZL model and discuss
 implementation and optimization aspects. Next, in
-Sect.~\ref{sect:param-estimation}, we discuss how to optimize the free
-parameters in the model within the \commander\ framework, before
-presenting an updated ZL model derived from DIRBE time-ordered data in
-Sect.~\ref{sect:improved-model}. Finally, we conclude in Sect.~\ref{sec:conclusions}.
+Sect.~\ref{sect:data}, we describe the data used in the current
+analysis, before summarizing the algorithms in
+Sect.~\ref{sect:param-estimation}. We present our updated ZL model and
+compare this with K98 in Sect.~\ref{sect:improved-model}. Finally, we
+conclude in Sect.~\ref{sec:conclusions}.
 
 
 \section{Zodiacal light modelling}\label{sect:zodi-model}
-ZL is commonly removed directly from timestreams by performing 
-line-of-sight integration at each observation through a parametric 
-three-dimensional model of the IPD distribution. We use a slightly 
-modified version of the K98 ZL model in Commander3. Below we present a 
-short introduction to the model parametrization in terms of the 
-three-dimensional IPD distribution and the radiative and scattering p
-roperties of the IPD. We refer to~\cite{Kelsall1998} for a more detailed 
-introduction to the K98 ZL model.
-
+ZL is commonly modelled sample-by-sample in time-domain by performing
+line-of-sight integration at each observation through a parametric
+three-dimensional model of the IPD distribution. We adopt the same
+general parametrization as introduced by K98 for the current
+\commanderthree\ implementation, and in this section we briefly review
+the main aspects of this model, aiming to build intuition about the
+underlying parametric model. We also consider a few numerical
+approximations that reduce the overall computational cost. For full
+details of this model, we refer the interested reader to
+\citet{Kelsall1998}.
 
 \subsection{Parameterization of interplanetary dust}
-The IPD in the zodiacal cloud is smooth and stable, and most of the dust 
-is accounted for by a diffuse cloud-like component \citep{Leinert1998}. 
-The majority of the dust in this cloud component stems from the 
-mass-shedding of Jupiter family comets with low eccentricities and 
-inclinations with respect to the ecliptic. However, fine structures 
-within the zodiacal cloud exist as a result of collisions and 
-fragmentation in asteroids and gravitational resonance in the orbit of 
-planets \citep{Low1984, Dermott1984, Dermott1994, Reach1997}. 
+IPD in the zodiacal cloud is overall smooth and stable, and most of
+the dust may be accounted for by a diffuse cloud-like component
+\citep{Leinert1998}.  The majority of this dust stems from
+mass-shedding of various Jupiter family comets with low eccentricities
+and inclinations with respect to the Ecliptic. However, fine
+structures within the zodiacal cloud exist as a result of collisions
+and fragmentation in asteroids and gravitational resonance in the
+orbit of planets \citep{Low1984, Dermott1984, Dermott1994, Reach1997}.
 
-We model the IPD distribution as a combination of several zodiacal 
-components, denoted by $c$, each described by a heliocentric ecliptic 
-number density $n_c(x,y,z)$. Each zodiacal component is allowed to have 
-a heliocentric offset $(x_{0,c}, y_{0,c}, z_{0,c})$, such that the 
+We model the IPD distribution as a combination of several zodiacal
+components, each described by a number density $n_c(x,y,z)$, where $c$
+indicates components and $x$, $y$ and $z$ indicate heliocentric
+Ecliptic coordinates. Each zodiacal component is allowed to have a
+heliocentric offset $(x_{0,c}, y_{0,c}, z_{0,c})$, such that the
 component-centric coordinates become
 \begin{equation}    
     \begin{aligned}
@@ -329,11 +308,12 @@ component-centric coordinates become
         z_c&= z - z_{0,c}.
     \end{aligned}
 \end{equation}
-Additionally, each zodiacal component is allowed to have a plane of 
-symmetry different from the ecliptic, given by an inclination $i_c$ and 
-ascending node $\Omega_c$. In component-centric coordinates, the number 
-density is then fully described by the radial distance $r_c$ from the 
-origin and the height above the symmetry plane $Z_c$
+Additionally, each zodiacal component is allowed to have a plane of
+symmetry that is different from the Ecliptic, which is defined by an
+inclination $i_c$ and an ascending node $\Omega_c$. Components that
+happen to be azimuthally symmetric are then fully described by a
+radial distance $r_c$ from the origin and the height above the
+symmetry plane $Z_c$,
 \begin{align}
     r_c &= \sqrt{x_c^2 + y_c^2 + z_c^2},\\
     Z_c &= x_c\sin{\Omega_c}\sin{i_c} - y_c \cos{\Omega_c}\sin{i_c} + z_c \cos{i_c},\\
@@ -342,13 +322,21 @@ origin and the height above the symmetry plane $Z_c$
 where $\zeta_c$ is the radial height above the symmetry plane.
 
 \subsection{Zodiacal components}
+
+With these definitions in hand, we now define parametric models for
+each IPD component type.
+
 \subsubsection{Smooth cloud}
-The cloud component represents the smooth IPD distribution that embeds 
-the inner Solar system. Its number density is modeled as
+By far the most important component is typically referred to as the
+``zodiacal cloud''. This component represents the smooth IPD
+distribution that embeds the inner Solar system. Its number density is
+modeled as
 \begin{equation}
-    n_\mathrm{C}(x,y,z)=n_{0, \mathrm{C}}r_\mathrm{C}^{-\alpha}f(\zeta_\mathrm{C}),
+    n_\mathrm{C}(x,y,z)=n_{0,
+      \mathrm{C}}r_\mathrm{C}^{-\alpha}f(\zeta_\mathrm{C}),
+    \label{eq:cloud}
 \end{equation}
-where $n_{0, \mathrm{C}}$ is the number density at 1 AU, $\alpha$ is a 
+where $n_{0, \mathrm{C}}$ is the number density at 1\,AU, $\alpha$ is a 
 power-law index, $f(\zeta_\mathrm{C})$ is the fan-like vertical 
 distribution given as 
 \begin{equation}
@@ -364,91 +352,202 @@ with
 where $\beta$, $\gamma$ and $\mu$ are shape parameters.
 
 \subsubsection{Dust bands}
-Three dust bands are included in the model to represent the observed 
-shoulder-like structure in the IRAS scans across the ecliptic plane. 
-These bands appear at ecliptic latitudes of 
-$\pm \sim 1.4^\circ$, $10^\circ$, and $15^\circ$, and are associated 
-with the Themis, Koronis, and Eos asteroid families, respectively. Dust 
-bands are modeled as
+Next, three dust bands are included in the model to represent the
+observed shoulder-like structure in the IRAS scans across the ecliptic
+plane.  These bands appear at Ecliptic latitudes of $\pm \sim
+1.4^\circ$, $10^\circ$, and $15^\circ$, and are associated with the
+Themis, Koronis, and Eos asteroid families, respectively ({\bf ADD
+  CITATION}). Each dust band, indicated by $B_ii$, is modeled as
 \begin{align}
     n_{\mathrm{B}_i}(x,y,z) &= \frac{3 n_{0, \mathrm{B}_i}}{r_{\mathrm{B}_i}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{p}v^{-1}\right] \\
     &\times\left\{1-\exp \left[-\left(\frac{r_{\mathrm{B}_i}}{\delta_{r_{\mathrm{B}_i}}}\right)^{20}\right]\right\},
+\label{eq:band}
 \end{align}
 where $n_{0, \mathrm{B}_i}$ is the number density of band $\mathrm{B}_i$ 
-at 3 AU, $\delta_{r_{\mathrm{B}_i}}$ is the inner radial cut-off, and 
+at 3\,AU, $\delta_{r_{\mathrm{B}_i}}$ is the inner radial cut-off, and 
 $p$, $v$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
+
 \subsubsection{Circum-solar ring and Earth-trailing feature}
-A circum-solar ring component is included in the model to represent dust 
-that has accumulated in Earth's orbit due to gravitational effects. This 
-component also includes an enhancement to the IPD distribution at 
-Earth's wake, known as the Earth-trailing feature. The ring component is 
-modeled as
+Finally, a circum-solar ring (denoted ``SR'') component is included in the
+model to represent dust that has accumulated in Earth's orbit due to
+gravitational effects ({\bf ADD REFERENCE}). This component also
+includes an enhancement to the IPD distribution at Earth's wake, known
+as the ``Earth-trailing feature'' (denoted ``TF''). The ring component is modeled as
 \begin{align}
     n_\mathrm{R}(x, y, z, \theta)&=n_{0, \mathrm{SR}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{SR}}\right)^2}{\sigma_{R,\mathrm{SR}} ^2}-\frac{\left| Z_\mathrm{R} \right|}{\sigma_{Z, \mathrm{SR}}}\right],\\
-   &+ n_{0, \mathrm{TF}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{TF}}\right)^{2}}{\sigma_{R, \mathrm{TF}}^{2}}-\frac{\left|Z_\mathrm{F}\right|}{\sigma_{Z, \mathrm{TF}}}-\frac{\left(\theta-\theta_{0, \mathrm{TF}}\right)^{2}}{\sigma_{\theta,\mathrm{TF}}^{2}}\right],
+   &+ n_{0, \mathrm{TF}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0,
+          \mathrm{TF}}\right)^{2}}{\sigma_{R,
+          \mathrm{TF}}^{2}}-\frac{\left|Z_\mathrm{F}\right|}{\sigma_{Z,
+          \mathrm{TF}}}-\frac{\left(\theta-\theta_{0,
+          \mathrm{TF}}\right)^{2}}{\sigma_{\theta,\mathrm{TF}}^{2}}\right],
+    \label{eq:ring}
 \end{align}
 where $\theta$ is the heliocentric longitude of the Earth, and the 
-radial locations $r_{0, \mathrm{SR}}$, $r_{0, \mathrm{TF}}$ specifies 
+radial locations $r_{0, \mathrm{SR}}$, $r_{0, \mathrm{TF}}$ specify
 the distances to the peak densities $n_{0, \mathrm{SR}}$, 
 $n_{0, \mathrm{TF}}$. The $\sigma$ parameters are length scales for the 
-$r$, $Z$ and $\theta$ parameters, respectively. Note that the 
+$r$, $Z$ and $\theta$ parameters, respectively. We note that the 
 Earth-trailing feature depends on the position of the Earth and does not 
 have a plane symmetry like the other zodiacal components. 
 
 
 \subsection{Radiative and scattering properties}
-Thermal emission from IPD grains is modeled on the form of a blackbody
- modified by an emissivity factor $E_{c, \lambda}$
+Equations~\eqref{eq:cloud}--\eqref{eq:ring} define the number density
+of each component. However, the signal actually measured with an
+infrared detector is defined by an intensity, $I_{\nu}$, typically
+measured in units of MJy$\,\mathrm{sr}^{-1}$ or
+nW$\,\mathrm{m}^{-2}\,\mathrm{sr}^{-1}$. The connection between the
+number density and this thermal emission is modeled in terms
+of a blackbody modified by an emissivity factor $E_{c, \lambda}$,
 \begin{equation}
     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T),
 \end{equation}
-where $B_\lambda$ is the Planck function at a wavelength $\lambda$. The 
-temperature $T$ of the IPD falls off with radial distance $r$ from the 
-Sun as
+where $B_\lambda$ is the Planck function at a wavelength $\lambda$
+({\bf ADD REFERENCE}). A key parameter in this equation is the IPD
+temperature $T$, which is assumed to fall off with radial distance $r$
+from the Sun as
 \begin{equation}
     T(r) = T_0 r^{-\delta},
 \end{equation}
-where $T_0$ is the temperature of IPD at 1 AU and $\delta$ the power law 
-index. In addition to emitting thermally, IPD grains also scatter 
-sunlight in the near-infrared. The contribution to the total signal from 
-scattering is modeled as
+where $T_0$ is the temperature of IPD at 1\,AU and $\delta$ is a power
+law index. In addition to emitting thermally, IPD grains also scatter
+sunlight in near-infrared wavelengths. The contribution to the total
+signal from scattering reads
 \begin{equation}\label{eq: scat_term}
     I^\mathrm{Scattering}_{c, \lambda} = A_{c, \lambda} F_\lambda^\odot(r) \Phi_\lambda(\Theta),
 \end{equation}
-where $A_{c, \lambda}$ is the albedo, or reflectivity of the IPD of a 
-given zodiacal component, $F_\lambda^\odot(r)$ the solar flux at a 
-radial distance from the Sun, and $\Phi_\lambda(\Theta)$ is the phase 
-function for scattering angles $\Theta$, which describes the angular 
-distribution of the scattered light.
+where $A_{c, \lambda}$ is the albedo (or reflectivity) of the IPD,
+$F_\lambda^\odot(r)$ the solar flux at a radial distance from the Sun,
+and $\Phi_\lambda(\Theta)$ is the so-called phase function for scattering angles
+$\Theta$, which describes the angular distribution of the scattered
+light ({\bf ADD REFERENCE}).
 
-The total intensity from a single IPD grain is
+\begin{figure}
+  \includegraphics[width=0.95\columnwidth]{figs/band3_cut.pdf}\\
+  \includegraphics[width=0.95\columnwidth]{figs/band3_instant.pdf}\\
+  \includegraphics[width=0.95\columnwidth]{figs/band3_mission.pdf}\\
+  \includegraphics[width=0.95\columnwidth]{figs/band3_omega.pdf}
+  \caption{Geometry of the third asteroidal dust band. (\textit{First row}:)
+    Slice through the $x$--$z$ plane of the number density, $n_{0}$,
+    in heliocentric coordinates. The positions of the Sun and Earth
+    are marked by orange and green dots, respectively. (\textit{Second
+    panel}:) Observed instantaneous intensity plotted in Ecliptic
+    coordinates, obtained by integrating the above figure along each
+    line-of-sight. (\textit{Third row}:) Same as above, but plotted in
+  Galactic coordinates and averaged over a full year of
+  observations. (\textit{Fourth row}:) Difference between observed
+  intensities as defined in the third row after changing the value of
+  the ascending node, $\Omega$, by 10\,\%. Similar plots for all
+  components and parameters are provided in Appendices~\ref{sec:zodi-comps} and \ref{sec:param-atlas}.}
+  \label{fig:band3}
+\end{figure}
+
+The total intensity from a single IPD grain is then
 \begin{align}\label{eq:I_tot}
     I^\mathrm{Total}_{c, \lambda} &= I^\mathrm{Scattering}_{c,\lambda} + I^\mathrm{Thermal}_{c,\lambda}\\
     &= A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + E_{c,\lambda} B_\lambda.
 \end{align}
-
-\begin{figure}
-  \includegraphics[width=\columnwidth]{figs/band3_instant.pdf}\\
-  \includegraphics[width=\columnwidth]{figs/band3_mission.pdf}\\
-  \includegraphics[width=\columnwidth]{figs/band3_omega.pdf}
-  \caption{}
-  \label{fig:band3}
-\end{figure}
-
-
-\subsection{Evaluating the zodiacal model}
-The ZL model is evaluated by solving the following line-of-sight 
-integral for each observation in the timestream
+The total ZL signal may then be evaluated by summing up the intensity
+from all dust grains, which in practice means evaluating a line-of-sight 
+integral for each observation,
 \begin{equation}\label{eq:los}
-    I_{p,t} = \sum_c \int n_c \left[  A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda \right]\,\mathrm {ds}.
+    I_{p,t} = \sum_c \int n_c \left[  A_{c, \lambda} F_\lambda^\odot \Phi_\lambda + \left( 1 - A_{c, \lambda} \right) E_{c,\lambda} B_\lambda \right]\,ds.
 \end{equation}
-Here, $p$ is a point in the sky, $t$ is the time of observation, and ds 
-is a small distance along the line-of-sight $s$ from the observer and 
-towards $p$, and $n_c$ is the number density of component $c$ in the 
-line-of-sight. Note that there is a factor (1 - $A_{c, \lambda}$) 
-difference between equation~\eqref{eq:los} and~\eqref{eq:I_tot}. This 
-factor represents a form of extinction where thermal emission is 
-sometimes scattered away from the line-of-sight. 
+Here, $p$ represents an observed pixel or direction in the sky, $t$ is
+the time of observation; $n_c$ is the number density of component $c$
+in the line-of-sight; and $ds$ is a small distance along the
+line-of-sight $s$ from the observer and towards $p$. Note that
+Eqs.~\eqref{eq:los} and~\eqref{eq:I_tot} differ by a factor (1 -
+$A_{c, \lambda}$). This factor represents the extinction that occurs
+when thermal emission is scattered away from the line-of-sight.
+
+\subsection{Model intuition}
+
+As described above, the K98 model has only $\mathcal{O}(10^2)$ free
+parameters. Clearly, this is in reality far too few to fully capture
+the true complex nature of ZL across many decades in
+wavelength. However, even with such a limited number of parameters,
+the model is still severely under-constrained when fitted to the DIRBE
+data, and the corresponding posterior distribution exhibits many
+strong degeneracies. Consequently, most currently available parameter
+estimation algorithms are prone to getting trapped in local posterior
+maxima, and this then will result in significant residuals in the
+final ZL cleaned maps.
+
+In order to interpret such residuals, and potentially define better
+starting points for the non-linear optimization algorithm, it is
+useful to build up human visual intuition regarding the impact of each
+free parameter. Figure~\ref{fig:band3} shows one specific (and
+arbitrary) example of this. First, the top panel shows a
+$x$--$z$-plane slice through the three-dimensional IPD number density
+distribution for the third dust band, $B_3$. In this figure, the
+orange dot markes the Sun's position, while the green dot markes the
+observer's (or Earth's) position. Here it is worth noting that this
+component is azimuthally symmetric about the Sun, and the full 3D
+structure may therefore be visualized by rotating this figure about
+the vertical $z$-axis. In this space, it is quite straightforward to
+visualize the effect of each free parameter defined by
+Eq.~\eqref{eq:band}. For instance, the position of the inner radial
+cut-off can be changed by modifying $\delta_{r}$, while the angle
+between the $x$-axis and the peak densities may be changed through
+$\delta_{\zeta}$. If we modify the $x_0$ offset, the entire density
+field will shift left or right.
+
+The second panel in Fig.~\ref{fig:band3} shows the corresponding
+signal in Ecliptic coordinates at one single point in time after
+integrating the density field along each line-of-sight. The Sun's
+position is again marked by an orange dot, but in this case there is
+obviously no observer position, since this figure shows the sky as
+seen outwards from the observer. In this project 2D space, the
+observed structures appear significantly more difficult to visualize
+than in 3D space. For instance, while the density of the dust bands
+appear symmetric in 3D space, their apparent separation and width as
+seen from Earth vary significantly with Ecliptic longitude; they
+appear broader in directions that are closer to the Earth, and
+narrower where they are further away.
+
+The third panel shows the same feature, but now averaged over a whole
+year of observations and plotted in Galactic coordinates. This
+represents the signal seen in full-mission maps derived from
+DIRBE. Since the underlying IPD structure is azimuthally symmetric
+about the Sun, the Earth's movement throughout the year also
+symmetrizes the total co-added signal, and the dust bands once again
+again symmetric about the Ecliptic plane. However, some small-scale
+structures also appear because of small variations in the effective
+scanning path of the instrument from day to day; if an entire day's
+worth of observations were missing, for instance due to a period of
+excessive cosmic ray radiation, strong stripes would appear in this
+map.
+
+With the infrastructure for computing such full-mission maps ready at
+hand, we can study the impact of each free parameter in greater
+detail. As a specific example of this, the bottom panel in
+Fig.~\ref{fig:band3} shows the difference between the total signal
+obtained when changing the ascending node for Band~3 by 10\,\%
+relative to the base model. Intuitively, this corresponds to rotating
+the signal in the top figure slightly about the origin. Some parts of
+the bands will then appear closer to the Earth, while others will
+appear further away. Those regions then in turn appear either red or
+blue in the bottom figure. The resulting pattern is a unique
+signature for $\Omega$, and if similar structures are observed in the
+final ZL cleaned maps, then one should consider modifying this
+particular parameter in a future analysis.
+
+Similar figures are provided for all components and all parameters in
+Appendices~\ref{sec:zodi-comps} and \ref{sec:param-atlas}, and these
+are very useful for building up visual intuition regarding the K98
+model. Quickly scanning through the individual panels in
+Figs.~\ref{fig:atlas1} and \ref{fig:atlas2}, we can already now
+identify strong degeneracies that are likely to turn out problematic
+later. For instance, we see that $n_{0,\mathrm{C}}$,
+$\alpha_\mathrm{C}$, $n_{0,\mathrm{SR}}$, $T_0$, and $\delta$ are all
+dominated by a ring centered along the Ecliptic plane, and these are
+likely to interplay significantly. Furthermore, many of these
+parameters will obviously also couple significantly to a wide range of
+non-ZL type parameters when integrated into a global analysis
+framework, including the all-important CIB monopoles, such as
+$n_{0,\mathrm{C}}$, $\sigma_{z,\mathrm{SR}}$, and
+$\sigma_{\theta,\mathrm{TF}}$.
 
 
 \subsection{Optimizing model evaluations}\label{sect:optimization}
@@ -977,6 +1076,92 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
 \appendix
 \onecolumn
 
+\section{Component-wise zodiacal light maps and number density cross-sections}
+\label{sec:zodi-comps}
+
+% \noindent\begin{minipage}{\textwidth}
+In this Appendix, we present maps of visualizations of our best-fit ZL 
+light model. Such figures can help illustrate the physical properties 
+of the model and help validate how physical our models are. The ZL 
+component-wise maps, both the mission-averaged and the instantaneous maps 
+in~\ref{fig:mission-averaged-comp-maps} 
+and~\ref{fig:mission-averaged-inst-maps}, respectively, are compared to 
+the K98 model. The IPD number density visualization for the K98 model, 
+corresponding to Figure~\ref{fig:ipd-number-density} can be seen in 
+Figure~X in~\cite{San2022} .
+
+
+% \end{minipage}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figs/number_density.pdf}
+    \caption{Visualization of the IPD number density of the four fitted zodiacal components in our model. The number densities are shown as a cross-section of the Solar system in the xz-plane. \textit{(top left):} The smooth cloud. \textit{(top right):} Dust band 1. \textit{(bottom left):} Dust band 2. \textit{(bottom right):} Dust band 3. The gray dotted line represents the ecliptic plane and helps illustrate the variations in the components symmetry planes.}
+    \label{fig:ipd-number-density}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_0_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_0_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0_inst.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_1_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_1_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1_inst.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_2_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_2_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2_inst.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_3_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_3_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3_inst.pdf}%
+    }\\
+    \caption{Full-sky component-wise ZL maps (January 1, 2024) at $25\mu$m made with ZodiPy. 
+    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model. 
+    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
+    dust band 2; 4) dust band 3. The maps are in ecliptic coordinates, with the Sun marked as 
+    an orange circle.}
+    \label{fig:mission-averaged-inst-maps}
+\end{figure*}
+
+\begin{figure*}[hbt]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_0.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_0.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_1.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_1.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_2.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_2.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_3.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_3.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3.pdf}%
+    }\\
+    \caption{Mission-averaged component-wise ZL maps at $25\mu$m made with ZodiPy. 
+    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model.
+    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
+    dust band 2; 4) dust band 3. The maps are in galactic coordinates.}
+    \label{fig:mission-averaged-comp-maps}
+\end{figure*}
+
+\clearpage
+
 \section{Interplanetary dust parameter atlas}
 \label{sec:param-atlas}
 In this Appendix, we present an atlas of mission-averaged ZL parameter maps.
@@ -1095,91 +1280,6 @@ Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ w
     \label{fig:atlas2}
 \end{figure*}
 
-
-\clearpage
-\section{Component-wise zodiacal light maps and number density cross-sections}
-\label{sec:zodi-comps}
-
-% \noindent\begin{minipage}{\textwidth}
-In this Appendix, we present maps of visualizations of our best-fit ZL 
-light model. Such figures can help illustrate the physical properties 
-of the model and help validate how physical our models are. The ZL 
-component-wise maps, both the mission-averaged and the instantaneous maps 
-in~\ref{fig:mission-averaged-comp-maps} 
-and~\ref{fig:mission-averaged-inst-maps}, respectively, are compared to 
-the K98 model. The IPD number density visualization for the K98 model, 
-corresponding to Figure~\ref{fig:ipd-number-density} can be seen in 
-Figure~X in~\cite{San2022} .
-
-
-% \end{minipage}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=\textwidth]{figs/number_density.pdf}
-    \caption{Visualization of the IPD number density of the four fitted zodiacal components in our model. The number densities are shown as a cross-section of the Solar system in the xz-plane. \textit{(top left):} The smooth cloud. \textit{(top right):} Dust band 1. \textit{(bottom left):} Dust band 2. \textit{(bottom right):} Dust band 3. The gray dotted line represents the ecliptic plane and helps illustrate the variations in the components symmetry planes.}
-    \label{fig:ipd-number-density}
-\end{figure*}
-
-
-\begin{figure*}
-    \centering
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_0_inst.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_0_inst.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0_inst.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_1_inst.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_1_inst.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1_inst.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_2_inst.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_2_inst.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2_inst.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_3_inst.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/CG_3_inst.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3_inst.pdf}%
-    }\\
-    \caption{Full-sky component-wise ZL maps (January 1, 2024) at $25\mu$m made with ZodiPy. 
-    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model. 
-    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
-    dust band 2; 4) dust band 3. The maps are in ecliptic coordinates, with the Sun marked as 
-    an orange circle.}
-    \label{fig:mission-averaged-inst-maps}
-\end{figure*}
-
-\begin{figure*}[hbt]
-    \centering
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_0.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_0.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_1.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_1.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_1.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_2.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_2.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_2.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/comp_maps/K98_3.pdf}%
-    \includegraphics[height=1cm]{figs/comp_maps/DR2_3.pdf}%
-    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3.pdf}%
-    }\\
-    \caption{Mission-averaged component-wise ZL maps at $25\mu$m made with ZodiPy. 
-    \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model.
-    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
-    dust band 2; 4) dust band 3. The maps are in galactic coordinates.}
-    \label{fig:mission-averaged-comp-maps}
-\end{figure*}
 
 
 
