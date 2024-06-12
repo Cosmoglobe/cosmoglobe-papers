@@ -73,6 +73,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 \renewcommand{\t}[0]{\vec{t}}
 \newcommand{\A}[0]{\tens{A}}
 \newcommand{\B}[0]{\tens{B}}
+\newcommand{\G}[0]{\tens{G}}
 \newcommand{\Y}[0]{\tens{Y}}
 \newcommand{\n}[0]{\vec{n}}
 \newcommand{\red}[0]{\color{red}}
@@ -368,6 +369,7 @@ at 3\,AU, $\delta_{r_{\mathrm{B}_i}}$ is the inner radial cut-off, and
 $p$, $v$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
 
 \subsubsection{Circum-solar ring and Earth-trailing feature}
+\label{sec:ring}
 Finally, a circum-solar ring (denoted ``SR'') component is included in the
 model to represent dust that has accumulated in Earth's orbit due to
 gravitational effects ({\bf ADD REFERENCE}). This component also
@@ -464,8 +466,9 @@ when thermal emission is scattered away from the line-of-sight.
 \subsection{Model intuition}
 
 As described above, the K98 model has only $\mathcal{O}(10^2)$ free
-parameters. Clearly, this is in reality far too few to fully capture
-the true complex nature of ZL across many decades in
+parameters, which we collectively denote
+$\zeta_{\mathrm{z}}$. Clearly, this is in reality far too few to fully
+capture the true complex nature of ZL across many decades in
 wavelength. However, even with such a limited number of parameters,
 the model is still severely under-constrained when fitted to the DIRBE
 data, and the corresponding posterior distribution exhibits many
@@ -498,7 +501,7 @@ signal in Ecliptic coordinates at one single point in time after
 integrating the density field along each line-of-sight. The Sun's
 position is again marked by an orange dot, but in this case there is
 obviously no observer position, since this figure shows the sky as
-seen outwards from the observer. In this project 2D space, the
+seen outwards from the observer. In this projected 2D space, the
 observed structures appear significantly more difficult to visualize
 than in 3D space. For instance, while the density of the dust bands
 appear symmetric in 3D space, their apparent separation and width as
@@ -512,7 +515,7 @@ represents the signal seen in full-mission maps derived from
 DIRBE. Since the underlying IPD structure is azimuthally symmetric
 about the Sun, the Earth's movement throughout the year also
 symmetrizes the total co-added signal, and the dust bands once again
-again symmetric about the Ecliptic plane. However, some small-scale
+appear symmetric about the Ecliptic plane. However, some small-scale
 structures also appear because of small variations in the effective
 scanning path of the instrument from day to day; if an entire day's
 worth of observations were missing, for instance due to a period of
@@ -636,44 +639,320 @@ $N_\mathrm{side} = 512$. We find that this results in very similar
 $\chi^2$ values, while further reducing the number of ZL evaluations
 used in the sampling steps by a factor of 64. 
 
+
+
+\section{Methods}\label{sect:param-estimation}
+
+The main operational goal of this paper is to measure the free ZL
+parameters, $\zeta_{\mathrm{z}}$, using time-ordered data from the
+DIRBE instrument. However, these data contain many other physical
+effects in the form of both instrumental and astrophysical confusion
+\citep[e.g.,][]{hauser1998,arendt1998}. In order to estimate
+$\zeta_{\mathrm{z}}$ robustly, it is essential to account for all
+those other degrees of freedom at the same time. On the other hand,
+many of those parameters have only a limited signal-to-noise ratio
+with DIRBE data alone, and far stronger constraints will typically
+result from combining the DIRBE measurements with external
+data. Enabling such global multi-experiment analysis is a main goal of
+the \cosmoglobe\ framework. In this section, we briefly review the key
+ideas behind this approach, and we describe the generalizations that
+are required for ZL parameter estimation. For full details, we refer
+the interested reader to \citet{Watts2023,CG02_01}. However, we
+emphasize that the approach presented here is only a first step, and
+future work should aim at implementing faster and more robust
+algorithms.
+
+
+\subsection{Data model, posterior distribution, and Gibbs sampling}
+
+The first step in many Bayesian parameter estimation methods is to
+write down an explicit parametric data model. For \cosmoglobe\ DR2, we
+adopt the following model,
+\begin{align}
+	\label{eq:model}
+	\dv &=\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}} + \n,\\
+        &\equiv \s^{\mathrm{tot}} + \n,
+\end{align}
+where $\dv$ denote observed data; $\G$ denotes an overall calibration
+factor; $\P$ and $\B$ represent the instrumental pointing and beam,
+respectively; the sum over components $c$ represents the contribution
+from astrophysical components (thermal dust, free-free, starlight
+emission etc.), each described by an overall amplitude (which may be a
+pixelized map) and a mixing matrix, $\M$, which depends on some set of
+unknown SED parameters, $\beta$; and $\n$ denotes instrumental
+noise. We denote the set of all free parameters in Eq.~\ref{eq:model}
+by $\omega$, and for a full explicit definition of this parameter set,
+we refer the interested reader to \citet{CG02_01}.
+
+As far as this paper is concerned, the key term is
+$\s_{\mathrm{zodi}}$, which is nothing but Eq.~\eqref{eq:los}
+evaluated along the line-of-sight defined by the pointing $\P$. This
+term depends on $\zeta_{\mathrm{z}}$, and our task in this paper is to
+establish an approximation to the marginal posterior distribution,
+$P(\zeta_{\mathrm{z}}|\dv)$. One straightforward way of computing this
+marginal distribution is, perhaps somewhat surprisingly, to first
+consider the much bigger task of estimating the full joint posterior
+distribution, $P(\omega|\dv)$ --- which now includes billions of
+correlated parameters rather than just a hundred! The reason for why
+this a computationally more straightforwared problem is that the joint
+distribution has a well-defined and simple analytic expression that it
+is possible to sample from, while the marginal distribution does not;
+for early CMB applications of this two-stage approach, see
+\citet{jewell2004,wandelt2004,eriksen:2004}.
+
+
+In order for this to work, we have to assume that the instrumental
+noise, $\n=\dv-\s_{\mathrm{tot}}$, is Gaussian, and for most
+instruments that is an excellent approximation. In that case, we can
+write the likelihood, $\mathcal{L}(\omega) \equiv P(\dv|\omega)$, as
+\begin{equation}
+-2\ln\mathcal{L}(\omega) = (\dv-\s^{\mathrm{tot}}(\omega))^t
+  \N_{\mathrm{w}}^{-1}(\dv-\s^{\mathrm{tot}}(\omega)) \equiv \chi^2(\omega),
+\end{equation}
+and the posterior distribution is then defined by Bayes' theorem,
+\begin{equation}
+P(\omega\mid\dv) = \frac{P(\dv\mid\omega) P(\omega)}{P(\dv)} \propto
+\mathcal{L}(\omega) P(\omega).
+\end{equation}
+Here $P(\omega)$ is called the prior, which may be used to inject
+prior knowledge about given parameters, while $P(\dv)$ is called the
+evidence, which for our purposes is just a normalization constant.
+
+In order to map out this full joint posterior, we use a statistical
+method called Gibbs sampling \citep[e.g.,][]{geman:1984}, which allows
+us to draw samples iteratively by scanning through all conditional
+distributions, as opposed to drawing samples directly from the joint
+distribution. Sampling from $N$ conditional distributions, each
+defined by a simple analytical distribution, is typically much simpler
+than drawing from a single joint $N$-dimensional distribution that
+does not have a closed form analytical expression. In practice, for
+the \cosmoglobe\ DR2 analysis this translates into the following
+so-called Gibbs chain:
+\begin{alignat}{11}
+    \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
+    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+    &\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
+    \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\phantom{\xi_n} &
+    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+    &\,\a_{\mathrm{static}})\\
+    \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+    \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+    &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+    \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+    &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
+    \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static},
+\end{alignat}
+where $\leftarrow$ indicates the process of drawing a sample from the
+distribution on the right-hand side. Each sampling step in this chain
+is described by \citet{CG02_01} and references therein --- except for
+Eq.~\eqref{eq:gibbs_zodi}, which is the main topic of this paper.
+
+Based on the data model in Eq.~\ref{eq:model}, we can define the
+following residual
+\begin{equation}
+\r = \dv - (\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c +
+          \s_{\mathrm{static}}),
+\end{equation}
+and this should ideally only contain ZL and noise. As such, the
+assumed Gaussianity of the noise also defines the conditional
+distribution in Eq.~\eqref{eq:gibbs_zodi}, and we may write
+\begin{equation}
+  -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{\nu}
+  \left(\frac{\r_{\nu} -
+    \s_{\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \equiv
+  \chi^2 (\zeta_{\mathrm{z}}),
+  \label{eq:gibbs_chisq}
+\end{equation}
+where we have introduced multiple data frequency channels, denoted by
+$\nu$, and also for simplicity neglected the prior,
+$P(\zeta_{\mathrm{z}})$. In this framework, ZL parameter estimation is
+thus nothing but a traditional Gaussian $\chi^2$ sampling or
+optimization problem after all non-ZL contributions have been
+subtracted from the $\dv$. Precisely how we implement this operation
+in the current pipeline is described in Sect.~\ref{sec:nonlin}.
+
+So far we have silently skipped past one important term in
+Eq.~\eqref{eq:model}, namely $\s_{\mathrm{static}}$. This is described
+in detail by \citet{CG02_01}, and as far as the algorithms in the
+current paper are concerned, this is simply a fixed correction term
+that is always applied to the raw time-ordered data. However, its
+origin and impact are highly relevant for ZL fitting, and it is
+therefore worth briefly reviewing the salient points from the original
+analysis here.
+
 \begin{figure*}
     \centering
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
     \includegraphics[height=1cm]{figs/week/week_I_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
     \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
     }\\
     \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
     \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
     }\\
     \caption{Illustration of the basic sky maps involved in the zodiacal 
-    light fitting algorithms adopted by the DIRBE (\emph{left column}) 
-    and \Cosmoglobe\ (\emph{right column}) pipelines for one week of 
+    light fitting algorithms adopted by the DIRBE (\emph{right column}) 
+    and \Cosmoglobe\ (\emph{left column}) pipelines for one week of 
     $25\,\mu\mathrm{m}$ observations and adopting the K98 model. The 
     DIRBE pipeline used exclusively differences between weekly and 
     full-season maps, both for the observed signal, 
-    $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top left}), 
+    $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top right}), 
     and the zodiacal light model, 
-    $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle left}), 
+    $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle right}), 
     where brackets indicate full-survey averages. Correspondingly, the 
     final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ 
-    (\emph{bottom left}), and is by constrution only sensitive to 
+    (\emph{bottom right}), and is by constrution only sensitive to 
     time-variable signals. In contrast, the basic data element in 
-    \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top right}), 
+    \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top left}), 
     which is fitted with the full zodiacal light model, $Z_{\nu}$ 
-    (\emph{middle right}), both modelled in time-domain. The $\chi^2$ 
+    (\emph{middle left}), both modelled in time-domain. The $\chi^2$ 
     the minimizes minimize the total signal-minus-model residual, 
-    $I_{\nu}-Z_{\nu}$ (\emph{bottom right}). The main advantage of the 
+    $I_{\nu}-Z_{\nu}$ (\emph{bottom left}). The main advantage of the 
     DIRBE approach is insensitivity to stationary sky signals, in 
     particular thermal dust and CIB, while the main advantage of the 
     \Cosmoglobe\ approach is a much higher effective signal-to-noise 
     ratio, both to zodiacal light parameters and zero-levels.}
     \label{fig:week_vs_full}
 \end{figure*}
+
+As noted by \citet{hauser1998} and \citet{Kelsall1998}, the DIRBE TOD
+contain significant excess radiation that is not well described by the
+low-dimensional parametric K98 model. Shortly after these
+observations, \citet{leinert:1998} showed that some of this radiation
+appeared to be stationary in solar-centric coordinates; see their
+Figure~54. Such radiation can in principle be created through several
+different physical mechanisms. For instance, a yet unknown zodiacal
+component could create a signal that appears stationary in
+solar-centric coordinates, just like the circular-solar ring described
+in Sect.~\ref{sec:ring}, or it could also be caused by straylight
+contamination in the DIRBE optics. However, even though this radiation
+was first noted more than two decades ago, it was never mapped out
+systematically until now, as part of the current \cosmoglobe\ DR2
+analysis \citep{CG02_01}. For the time being, we choose to remain
+agnostic regarding the physical origin of this signal, and therefore,
+strictly speaking, the ZL model presented in the current paper only
+describes the parts of the total observed ZL that is attributable to
+the K98 parametrization. In the future, it is possible that the static
+component presented by \citet{CG02_01} should also be added to this
+model. However, before that is done, it is imperative to rule out the
+straylight hypothesis, and that will require both detailed modelling
+of the DIRBE instrument and joint analysis with other experiments,
+such as AKARI, IRAS, and \Planck\ HFI. Doing that is beyond the scope
+of the current \cosmoglobe\ data release, but it will certainly be a
+main topic for future work.
+
+
+\subsection{Comparison with K98 fitting algorithm}
+\label{sec:algorithm_comparison}
+
+Before describing the numerical implementation adopted for sampling
+from Eq.~\eqref{eq:gibbs_zodi} in this paper, it is worth first
+considering the more important fundamental differences between our
+approach and that adopted by the DIRBE team as described by
+\citet{Kelsall1998}. The first difference worth noting in this respect
+is that while our $\chi^2$ statistic is defined directly in terms of
+TOD, the K98 parameter estimation method rather work weekly maps. That
+is, the raw data are co-added week-by-week into pixelized maps, and
+these are fed into a corresponding pixel-based $\chi^2$ statistic that
+also accepts the ZL model in terms of pixelized maps. One important
+motivation for working with weekly maps is generally lower
+computational requirements, which was relatively more important two
+decades ago that it is today.
+
+A second important difference between the two algorithms --- and this
+is conceptually a far more important one -- is the fact that while our
+method makes active use of an explicit parametric data model for all
+non-ZL components, the K98 algorithm eliminates any contribution from
+non-ZL components directly by only considering differences between
+weekly maps and the corresponding full-mission average map in their
+$\chi^2$ statistic. That is, rather than optimizing the full $\chi^2$
+as defined in Eq.~\eqref{eq:gibbs_chisq}, their algorithm optimizes
+\begin{equation}
+  -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{i,\nu}
+  \left(\frac{\Delta\dv_{i,\nu} -
+    \Delta\s_{i,\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \equiv
+  \chi^2_{\mathrm{K98}} (\zeta_{\mathrm{z}}),
+  \label{eq:k98_chisq}
+\end{equation}
+where $i$ indicate week number, $\Delta \dv_{i,\nu} = \dv_{i,\nu} -
+\left<\dv_{i,\nu}\right>$, $\Delta \s_{i,\nu,\mathrm{zodi}} =
+\s_{i,\nu,\mathrm{zodi}} - \left<\s_{i,\nu,\mathrm{zodi}}\right>$, and brackets
+denote averaging over the full mission.
+
+Clearly, this statistic has a key philosophical advantage as compared
+to the full-signal statistic in Eq.~\eqref{eq:gibbs_chisq}: It does
+not require any assumptions regarding the astrophysical nature of a
+clearly complicated infrared sky. At least to first order, it is by
+construction safe against biases from foreground modelling
+errors. However, this bias immunity also comes at a massive cost in
+terms of statistical uncertainties, because it is not only immune to
+astrophysical bias, but it is also by construction blind to any
+stationary ZL signal --- and by far most of the actual ZL observed in
+the sky does indeed appear stationary on the sky.
+
+Figure~\ref{fig:week_vs_full} illustrates this difference. The top
+left panel shows the full intensity signal as analyzed in the
+\cosmoglobe\ algorithm for one single week of 25\,$\mu$m
+observations. The visual imprint is strongly dominated by the same ZL
+features as seen in Sect.~\ref{sec:model}, aligned with the Ecliptic
+plane. The right panel show the same after subtracting the
+full-mission mean; the characteristic cloud pattern has now turned
+into differential structures that are difficult to interpret
+visually. The middle row shows the same for the predicted ZL signal,
+and the bottom row shows the difference between the top and middle
+rows, which serves as the input to the $\chi^2$ evaluations.
+
+Several points are worth noting in these figures. First of all, we
+immediately note that the color scale is one order of magnitude lower
+in the right column than in the left column; this will translate
+directly into lower constraining power for the differential
+approach.
+
+Second, we see that the Galactic plane signal represents a strongly
+sub-dominant component in the total signal amplitude. Even relatively
+large errors made in the model assumptions of these will have a very
+small impact on the overall ZL estimates, and it is also
+straightforward to mitigate this effect further by masking out any
+samples that are close known bright Galactic sources; this is fully
+equivalent to what is done in the CMB field when estimating the CMB
+power spectrum.
+
+Third, as seen in the bottom panel, the $\chi^2_{\mathrm{K98}}
+(\zeta_{\mathrm{z}})$ aslo by construction entirely blind to the
+zero-level of the ZL model: The large relative monopole error between
+the data and the model seen in the bottom right panel is entirely
+suppressed in the bottom left panel, and there is by construction no
+way for the differential method to constrain the absolute level ZL
+monopole. On the one hand, such blindness may certainly be considered
+to be an algorithmic strength, as indeed argued by
+\citet{Kelsall1998}, given that one of the main goals of the entire
+DIRBE experiment was to precisely measure the CIB monopole spectrum
+\citep{hauser1998}. Nevertheless, the final derived CIB constraints do
+of course still depend directly on reconstructed ZL monopole, whatever
+it may be. Intuitively speaking, the differential method aims to
+measure the ZL monopole using derivatives alone. Whether that task is
+easier or harder than to establish a sufficiently accurate model of
+the Milky Way can only be determined by trying both methods, and
+comparing the results. In addition, it is also worth noting that
+derivative measurements in general are far more susceptible to
+systematic biases from any non-Galactic source than absolute intensity
+measurements. One important example in this respect is optical
+non-idealities.
+
+
+
+\subsection{Posterior sampling by non-linear optimization}
+\label{sec:nonlin}
+
 
 
 \begin{figure}
@@ -691,46 +970,6 @@ used in the sampling steps by a factor of 64.
     \label{fig:powell_T0}
 \end{figure}
 
-
-
-
-\section{Methods}\label{sect:param-estimation}
-
-\subsection{Bayesian analysis, posterior distribution, and Gibbs sampling}
-
-Estimating the ZL model parameters happens within the Bayesian end-to-end Commander3 framework. An explaination of the algorithms used to fit the full data and sky model, as well as instrumental parameters are described in detail in \cite{CG02_01}. In short, we use Gibbs sampling to map out the joint posterior distribution\citep{Galloway2023}, which allows us to draw samples iteratively from various conditional distributions rather than trying to draw directly from a large and complicated joint distribution. The following equations show each parameter sampled in this Cosmoglobe analysis in order
-\begin{alignat}{11}
-    \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
-    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-    &\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
-    \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\phantom{\xi_n} &
-    \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-    &\,\a_{\mathrm{static}})\\
-    \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-    \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-    &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-    \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-    &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
-    \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
-\end{alignat}
-Each of the sampling steps in the above Gibbs chain is described by \citet{CG02_01}
-and references therin. 
-
-For computational reasons it is sometimes necessary to violate the Gibbs rule,
-which is the case for the step in Equation~\ref{eq:gibbs_zodi}, which describes
-the sampling of the ZL parameters, denoted by $\zeta_\mathrm{z}$. The K98 ZL 
-model contains around 50 parameters to describe the three-dimensional IPD 
-distribution and another 30 or more to describe the thermal emission and 
-scattered sunlight source functions, many of which are heavily degenerate
-due to the difficulties of mapping a three-dimensional structure from a single
-data set. N of these parameters were fit to the DIRBE data, in the original DIRBE analysis while the rest were fixed to parameters motivated by studies of the interplanetary medium. In our analysis we have fit M total parameters. A visualization of the degeneracies and the way in which each ZL parameter impacts the final mission-averaged predicted ZL are seen in figures~\ref{fig:atlas1} and~\ref{fig:atlas2} in Appendix~\ref{sec:param-atlas}. This atlas of ZL parameters shows normalized maps of the effects of changing a single ZL parameter by $\pm 5\%$ while keeping the rest of the model fixed. The albedo and emissivity parameters are excluded from the atlas as these represent a direct scaling of the component maps and are degenerate with the $n_0$ maps.
-The posterior distribution of this complicated set of parameters exhibits a large number of local minima due to the above mentioned reasons. When experimenting we found that strict Gibbs sampling algorithm quickly became trapped. We have opted to instead 
-use a simple non-linear Powell algorithm that is initialized some random parameter distance away from the previous sample, and then searches for the local minimum. Powell's method is a function minimizer, which performs bi-directional searches along a parameter vector. This algorithm is able to escape local minima, but it comes at the cost of larger
-uncertainties than what would result from an ideal posterior mapper.
 
 
 The K98 model was obtained by fitting the model to a set of week-maps. 
@@ -762,7 +1001,7 @@ masks, corresponding to stellar light, ZL, and thermal dust-dominated
 channels, are shown in Figure~\ref{fig:zodi-procmask}.
 
 
-\subsection{Non-linear posterior maximization}
+
 
 The total number of free ZL model parameters in this analysis are N, 
 compared to the M parameters fit in K98. We have included a non-zero
@@ -785,6 +1024,9 @@ search, we output both the parameter values and the intermediate $\chi^2$
 values which lets us find the 95\% confidence interval in the search. This
 is used jointly with the uncertienties determined from the Gibbs chain.
 \textcolor{red}{Do this with Duncan}
+
+
+
 
 \subsection{Computational costs and optimization}
 
@@ -1349,3 +1591,17 @@ Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ w
 
 \end{document}
 %%%% End of aa.dem
+
+
+
+For computational reasons it is sometimes necessary to violate the Gibbs rule,
+which is the case for the step in Equation~\ref{eq:gibbs_zodi}, which describes
+the sampling of the ZL parameters, denoted by $\zeta_\mathrm{z}$. The K98 ZL 
+model contains around 50 parameters to describe the three-dimensional IPD 
+distribution and another 30 or more to describe the thermal emission and 
+scattered sunlight source functions, many of which are heavily degenerate
+due to the difficulties of mapping a three-dimensional structure from a single
+data set. N of these parameters were fit to the DIRBE data, in the original DIRBE analysis while the rest were fixed to parameters motivated by studies of the interplanetary medium. In our analysis we have fit M total parameters. A visualization of the degeneracies and the way in which each ZL parameter impacts the final mission-averaged predicted ZL are seen in figures~\ref{fig:atlas1} and~\ref{fig:atlas2} in Appendix~\ref{sec:param-atlas}. This atlas of ZL parameters shows normalized maps of the effects of changing a single ZL parameter by $\pm 5\%$ while keeping the rest of the model fixed. The albedo and emissivity parameters are excluded from the atlas as these represent a direct scaling of the component maps and are degenerate with the $n_0$ maps.
+The posterior distribution of this complicated set of parameters exhibits a large number of local minima due to the above mentioned reasons. When experimenting we found that strict Gibbs sampling algorithm quickly became trapped. We have opted to instead 
+use a simple non-linear Powell algorithm that is initialized some random parameter distance away from the previous sample, and then searches for the local minimum. Powell's method is a function minimizer, which performs bi-directional searches along a parameter vector. This algorithm is able to escape local minima, but it comes at the cost of larger
+uncertainties than what would result from an ideal posterior mapper.
