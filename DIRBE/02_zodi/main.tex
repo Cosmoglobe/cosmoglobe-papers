@@ -299,14 +299,13 @@ details of this model, we refer the interested reader to
 IPD in the zodiacal cloud is overall smooth and stable 
 \citep{Leinert1989}, and most of the dust may be accounted for by a 
 diffuse cloud-like component \citep{Kelsall1998}. The origin of IPD 
-is debris mainly from comets and asteroids, with potential additions 
-from dusty planets like Mars \citep{Jorgensen2021}, additions from 
+is debris mainly from comets \citep{Liou1995} and asteroids \citep{Dermott1984}, 
+with potential additions from dusty planets like Mars \citep{Jorgensen2021}, additions from 
 the Kupier belt \citep{Mann2009}, and interstellar dust passing 
-through the Solar system \citep{Robinson2013, Mann2009}. The relative contribution to the overall 
+through the Solar system \citep{Robinson2013}. The relative contribution to the overall 
 IPD density is not well known, but many models predict the main 
 source to be low-eccentricity Jupiter family comets that rapidy 
-disintegrate due to frequent trips through the inner Solar system 
-\citep{Robinson2013, Mann2009}.
+disintegrate due to frequent trips through the inner Solar system.
 However, fine structures within the zodiacal cloud exist as a result 
 of collisions and fragmentation in asteroids and gravitational 
 resonance in the orbit of planets 
@@ -577,16 +576,16 @@ degenerate with ZL parameters tied to the symmetry planes of the
 various zodiacal components which would introduce a similar seasonal 
 affect.
 
-\begin{figure}
-    \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}\\
-    \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
-    \caption{Errors induced by the ZL cache. (\textit{Top}:) Difference between two 
-    instantaneous view of the ZL 900\,km above Earth's north and south 
-    poles. (\textit{Bottom}:) Difference between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
-    separated by 2 hours. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
-    are masked in both maps.}
-    \label{fig:cache-error}
-\end{figure}
+% \begin{figure}
+%     \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}\\
+%     \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
+%     \caption{Errors induced by the ZL cache. (\textit{Top}:) Difference between two 
+%     instantaneous view of the ZL 900\,km above Earth's north and south 
+%     poles. (\textit{Bottom}:) Difference between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
+%     separated by 2 hours. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
+%     are masked in both maps.}
+%     \label{fig:cache-error}
+% \end{figure}
 
 
 
@@ -597,48 +596,50 @@ for the DIRBE data, which only comprise 18\,GB after compression. In
 principle, this could be done by brute-force for this particular
 experiment on modern computer clusters, but such a direct approach
 will clearly not be an option for similar analyses of \Planck\ HFI,
-AKARI and SPHEREx. Fortunately, several optimizations are available
-for signals that are smooth in both space and time that result in
-significant speed-ups at a very low accuracy penalty.
+AKARI and SPHEREx. 
 
-The first and perhaps most trivial optimization is to utilize a ZL
-cache coupled to a discrete pixelization. As described in
-Sect.~\ref{sect:data}, we employ a
-HEALPix\footnote{\url{http://healpix.sourceforge.io}} pixelization
-with $7\arcm\times7\arcm$ ($N_{\mathrm{side}}=512$; \citealp{healpix})
-in the current analysis, and all satellite pointings are discretized
-to this resolution; that is, we do not account for sub-pixel structure
-in the signal model. The cache takes advantage of this by reusing a
-previously computed ZL estimate for a given sky pixel when
-re-observing a HEALPix pixel within a small timeframe $\Delta t$
-\begin{equation}
- s_\mathrm{zodi}(p, t_i) = s_\mathrm{zodi}(p, t_j).
-\end{equation}
-This cache induces an error on the ZL estimate proportional to $\Delta
-t$, which comes from the changes to the observer position with respect
-to the zodiacal cloud within the $\Delta t$ timeframe. For reference,
-the structure of the ZL on the Ecliptic or Galactic sky maps moves by
-about $1^\circ$ a day as the Earth orbits the Sun. The top panel in
-Fig.~\ref{fig:cache-error} shows the difference between the exact
-instantanous calculation and one that is delayed by $\Delta t =
-2\,$hrs for the DIRBE 25\,${\mu}$m channel. The error is less than
-5\,kJy/sr, which about two orders of magnitude lower than the
-total ZL uncertainties. On average, caching reduces the total number
-of ZL model evaluations by a factor of $X$.
+% Fortunately, several optimizations are available
+% for signals that are smooth in both space and time that result in
+% significant speed-ups at a very low accuracy penalty.
 
-In addition to the positional change along Earth's orbit, it is
-important to note that COBE also orbits the Earth at an altitude of
-900\,km. The specific position of the observer is not taken into
-account when using the cache. The bottom panel in
-Fig.~\ref{fig:cache-error} shows the difference between two
-instantaneous full-sky views at 25 $\mu$m, one simulated from the
-North pole and the other from the South pole. The magnitude of this
-error is $\lesssim\,1$kJy/sr, which is also far below DIRBE's
-sensitivity.
+% The first and perhaps most trivial optimization is to utilize a ZL
+% cache coupled to a discrete pixelization. As described in
+% Sect.~\ref{sect:data}, we employ a
+% HEALPix\footnote{\url{http://healpix.sourceforge.io}} pixelization
+% with $7\arcm\times7\arcm$ ($N_{\mathrm{side}}=512$; \citealp{healpix})
+% in the current analysis, and all satellite pointings are discretized
+% to this resolution; that is, we do not account for sub-pixel structure
+% in the signal model. The cache takes advantage of this by reusing a
+% previously computed ZL estimate for a given sky pixel when
+% re-observing a HEALPix pixel within a small timeframe $\Delta t$
+% \begin{equation}
+%  s_\mathrm{zodi}(p, t_i) = s_\mathrm{zodi}(p, t_j).
+% \end{equation}
+% This cache induces an error on the ZL estimate proportional to $\Delta
+% t$, which comes from the changes to the observer position with respect
+% to the zodiacal cloud within the $\Delta t$ timeframe. For reference,
+% the structure of the ZL on the Ecliptic or Galactic sky maps moves by
+% about $1^\circ$ a day as the Earth orbits the Sun. The top panel in
+% Fig.~\ref{fig:cache-error} shows the difference between the exact
+% instantanous calculation and one that is delayed by $\Delta t =
+% 2\,$hrs for the DIRBE 25\,${\mu}$m channel. The error is less than
+% 5\,kJy/sr, which about two orders of magnitude lower than the
+% total ZL uncertainties. On average, caching reduces the total number
+% of ZL model evaluations by a factor of $X$.
+
+% In addition to the positional change along Earth's orbit, it is
+% important to note that COBE also orbits the Earth at an altitude of
+% 900\,km. The specific position of the observer is not taken into
+% account when using the cache. The bottom panel in
+% Fig.~\ref{fig:cache-error} shows the difference between two
+% instantaneous full-sky views at 25 $\mu$m, one simulated from the
+% North pole and the other from the South pole. The magnitude of this
+% error is $\lesssim\,1$kJy/sr, which is also far below DIRBE's
+% sensitivity.
 
 
-The smooth nature of the ZL can be exploited in more ways. When
-sampling parameters for the ZL model it is possible to include only a
+% The smooth nature of the ZL can be exploited in more ways. 
+When sampling parameters for the ZL model it is possible to include only a
 small fraction of the full dataset in each likelihood evaluation,
 simply because the signal-to-noise ratio of each sample is so high,
 and because the of the smooth ZL gradient of the ZL
@@ -657,12 +658,12 @@ out the same time scales, and this increases the overall modeling
 errors. Although the differences were generally small, we obtained
 slightly better fits by thinning rather than averaging.
 
-In addition, the smoothness of the ZL is exploited further during
-parameter estimation by defining the cache at a pixel resolution of
-$1^{\circ}$ ($N_\mathrm{side} = 64$), rather than the original
-$N_\mathrm{side} = 512$. We find that this results in very similar
-$\chi^2$ values, while further reducing the number of ZL evaluations
-used in the sampling steps by a factor of 64. 
+% In addition, the smoothness of the ZL is exploited further during
+% parameter estimation by defining the cache at a pixel resolution of
+% $1^{\circ}$ ($N_\mathrm{side} = 64$), rather than the original
+% $N_\mathrm{side} = 512$. We find that this results in very similar
+% $\chi^2$ values, while further reducing the number of ZL evaluations
+% used in the sampling steps by a factor of 64. 
 
 
 
@@ -1011,17 +1012,20 @@ The main problem
 \section{Data}\label{sect:data}
 
 \subsection{DIRBE Calibrated Individual Observations}
-
-\subsection{Masks}
-
-
+We use the publicly available DIRBE Calibrated Individual Observations (CIOs)
+in our analysis. These are a user-friendly pre-calibrated version of the TODs
+and come in the COBE Quadrilateral cube pixelization scheme. As part of the data proprocessing,
+we convert these to the corresponding HEALPix pixels and re-order them into a time-ordered format.
+For more details on the preprocessing of the DIRBE CIOs we refer to \cite{CG02_01}.
+A subsample of the CIOs for each DIRBE band as used in our analysis can be seen in Fig.~\ref{fig:tod_zodi}.
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figs/tod_zodi.pdf}
     \caption{}
     \label{fig:tod_zodi}
 \end{figure}
-
+    
+\subsection{Masks}
 
 \begin{figure}
     \centering
