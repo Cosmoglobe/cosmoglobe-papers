@@ -156,18 +156,18 @@ $\sim0.02~\mu$m, and a distinct variety of materials -- including so-called
 polycyclic aromatic hydrocarbons (PAH) -- on scales smaller than this.
 
 In the wavelength regime between $3000-100~\mu$ m, this model is described well
-as following a modified blackbody SED\footnote{The actual astrodust model is
-using a composite MBB which has a transition between 353 and 217 GHz}, that is,
-a SED with this behavior as a function of frequency:
+ by modified blackbody spectral energy density (SED)\footnote{The actual
+ astrodust model is made up of a composite MBB which has a transition between
+353 and 217 GHz}, that is a SED with the following behavior
 \begin{equation}
 s(\nu) \propto \nu^\beta B(\nu, T),
 \label{eq:mbb}
 \end{equation}
 
-where $B$ is the Planck law for a perfect blackbody, and $\beta$ is the
-spectral index. Typical temperatures of this blackbody in the diffuse ISM is
-around $\sim$ 20 K, meaning that the distribution typically peaks around
-150\,$\mu$ m ($\sim 2000$ GHz).
+where $\nu$ is the frequency, $B$ is the Planck law for a perfect blackbody,
+and $\beta$ is the spectral index. Typical temperatures of this blackbody in
+the diffuse ISM is around $\sim$ 20 K, meaning that the distribution typically
+peaks around 150\,$\mu$ m ($\sim 2000$ GHz).
 
 At lower wavelengths (2.5\,$\mu$m - 12\,$\mu$m), the astrodust+PAH model is
 mostly dominated by the nanoscale particle emission, and exhibits strong
@@ -321,29 +321,82 @@ underlying joint posterior.
 Since every step of the Gibbs sampling process assumes that all other
 parameters are ``given'', we can now treat a highly interconnected problem
 (i.e. sampling from the joint posterior of all parameters involved in our data
-model) as a highly modular one -- meaning that we can perform each ``sub-analysis'' without being concerned with the other parts of the problem. Hence, in this paper, we mainly focus on the three first components of Eq. (\ref{eq:skymodel}), and leave the other components for other papers. (TODO maybe actually cite those papers).
+model) as a highly modular one -- meaning that we can perform each
+``sub-analysis'' without being concerned with the other parts of the problem.
+Hence, in this paper, we mainly focus on the three first components of Eq.
+(\ref{eq:skymodel}), and leave the other components for other papers. (TODO
+maybe actually cite those papers).
 
 \subsubsection{Three-component dust model}
 As mentioned above, we here adopt a model for thermal dust that comprises three
 distinct components, represented by the first three terms of Eq.
-(\ref{eq:skymodel}). Generally, all three components are modelled as a
-continuous modified blackbody (Eq. (\ref{eq:mbb})) between 100 and 1050~GHz,
-i.e. below the DIRBE frequencies. 
+(\ref{eq:skymodel}). All three components are modelled as having a continuous
+modified blackbody behaviour between 100 and 1050~GHz, i.e. below the DIRBE
+frequencies, multiplied by an amplitude per pixel, which for two of the
+components is allowed to vary as a free parameter in the Gibbs chain, and for
+the last component is defined as full-sky template.
 
-Above 1050~GHz, the phenomenology of thermal dust gets more complicated
-(see sec. \ref{sec:current_dust}), and instead of adopting an explicitphysical
-model, we define a set of bins, each of which is chosen to roughly correspond
-to the width of DIRBE bands 3-10, as shown in Table \ref{tab:bins}.
+Since the phenomenology of thermal dust gets more complicated above 1050~GHz
+(see sec. \ref{sec:current_dust}), instead of adopting a model based on
+underlying physics, we define a set of bins, each of which is chosen to roughly
+correspond to the width of DIRBE bands 3-10, respectively, as shown in Table
+\ref{tab:bins}. Each of the bins is assigned an amplitude for each dust
+component, and the SED of that component for the frequencies encompassed by a
+given bin is given by the amplitude assigned to that bin\footnote{Only one of
+    the three components are allowed to have nonzero amplitudes at DIRBE band 3
+and 4 -- see below}. We do not define such bins for DIRBE bands 1 and 2, and we
+force the total dust SED to be zero at these bands, since the thermal dust
+emission is expected to be negligible at these frequenies.
 
+The first component we call ``nearby dust''. We define this component in order
+to properly utilize the available knowledge about nearby dust structure --
+several works, such as \citet{Dharmawardena:2024} and \citet{edenhofer:2024}
+use extinction data from catalogues such as Gaia to infer the dust structure
+out to 1-3~kpc. We define a template (see Section \ref{sec:data} for a detailed
+explanation of this template) which traces these nearby dust structures. The
+complete SED of this component is thus defined as
+\begin{equation}
+    \label{eq:nearby_dust}
+    s(\nu) = \begin{cases} a\t\nu^{\beta} B(\nu, T) & \nu \in [100,
+        1050~\text{GHz}] \\
+        a^i_{\textrm{bin}} & \nu \in [\nu_{\textrm{bin, start}}^i,
+        \nu_{\textrm{bin, end}}^i]
+            \end{cases},
+\end{equation}
+where $a$ is a scaling parameter, $\t$ is the nearby dust template, and the
+remaining parameters on the first line are the same as in Eq.~(\ref{eq:mbb}),
+and $\nu_{\textrm{bin, start}}^i$ and $\nu_{\textrm{bin, end}}^i$ are the start
+and end frequencies of bin $i$, respectively.
 
-Each of the three components is then defined as having a free amplitude per bin
-which defines its SED amplitude for that frequency range.\footnote{Only one of
-the three components are allowed to have nonzero amplitudes at band 3 and 4 --
-see below} For DIRBE bands 1 and 2 we force the dust amplitude to be zero,
-given that the thermal dust emission is expected to be negligible at these
-frequencies. 
+The two next components are not constrained spatially by templates; rather,
+their amplitudes are allowed to vary from pixel to pixel. We call these
+components ``cold'' and ``hot'' dust, respectively, and their SEDs can both be
+expressed as follows,
+\begin{equation}
+    \label{eq:coldhotdust}
+    s(\nu) = \begin{cases} \a\nu^{\beta} B(\nu, T) & \nu \in [100,
+        1050~\text{GHz}] \\
+        a^i_{\textrm{bin}} & \nu \in [\nu_{\textrm{bin, start}}^i,
+        \nu_{\textrm{bin, end}}^i]
+            \end{cases},
+\end{equation}
+where $\a$ is the vector of per-pixel amplitudes. The only difference between
+the two components is that SED amplitude of the hot dust component is allowed
+to be nonzero for bins 1 and 2 in Table \ref{tab:bins}, while the cold dust
+(and nearby dust) SEDs are
 
-The first component, here called ``cold dust''
+%There are thus two features which distinguishes the three dust components from
+%each other; first, whether the component has a freely varying amplitude per
+%pixel; and second, whether the component is allowed a nonzero SED contribution
+%at bins 7 and 8 in Table \ref{tab:bins}.
+%
+%The first component, here called ``cold dust'', is defined by a freely varying
+%amplitude at each pixel, but its SED is set to zero above bin 6. This
+%component, as the name suggest, is meant to trace dust in low-energy regions,
+%and since the PAH features, which are  at high frequencies are only expected to
+%contribute in DIRBE bands 3 and 4.
+%\begin{equation}
+%\end{equation}
 %As this paper is concerned with dust modelling in the infrared and microwave regimes, we will here focus on the part of the total data model that describes the dust emission at these wavelengths. We use a constrained three--component dust model to describe the dust emission from 100 GHz to 1.25\,$\mu$m. The model is binned spatially in HEALPix \nside 2048 maps, and the dust emission in each pixel is assumed to be described by the sum of the three components. Other types of emission, such as planetary dust and the CIB, are modelled in other ways, and they are all described in \citet{CG02_01}.
 
 %The SED of each of the three components is based on the astrodust+PAH model. Each component is given by an MBB term (Eq.~\eqref{eq:mbb}) which is used for frequencies below 1050 GHz. The temperature and spectral index of each component are varying from Gibbs sample to Gibbs sample but are spatially constant over the sky. Above 1050 GHz, we define a set of bins, each of which is chosen so that it roughly corresponds to the width of a DIRBE band, as shown in Table \ref{tab:bins}, and define the SED amplitude to be a single value for each bin; these SED amplitudes are treated as free variables (again, spatially constant) for each of the three components. Following the original DIRBE analysis, we have not defined tabulated SED bins in the wavelengths that would correspond to the 1 and 2 DIRBE bands -- this is both because the PAH emission which dominates at these wavelengths are not expected to have any peaks here.
