@@ -265,6 +265,12 @@ simulations. As an early application of this framework, \cite{San2022}
 demonstrated the removal of ZL from the DIRBE TOD with ZodiPy using the 
 K98 model.
 
+ZL is found to be polarized in the near-infrared in both the DIRBE and 
+CIBER data \citep{Takimoto2022,Takimoto2023}. We make no attempts at 
+modeling polarized ZL in this analysis, but a natural next step in this 
+analysis would be to include the polarization data from the 1.25, 2.2, 
+and 3.9 $\mu$m DIRBE bands.
+
 The rest of the paper is organized as follows. In
 Sect.~\ref{sect:zodi-model}, we introduce the K98 ZL model and discuss
 implementation and optimization aspects. Next, in 
@@ -447,11 +453,13 @@ light \citep{Kelsall1998}.
     panel}:) Observed instantaneous intensity plotted in Ecliptic
     coordinates, obtained by integrating the above figure along each
     line-of-sight. (\textit{Third row}:) Same as above, but plotted in
-  Galactic coordinates and averaged over a full year of
-  observations. (\textit{Fourth row}:) Difference between observed
+  Galactic coordinates and averaged over nearly a full year of
+  observations corresponding to the DIRBE scanning strategy. 
+  (\textit{Fourth row}:) Difference between observed
   intensities as defined in the third row after changing the value of
   the ascending node, $\Omega$, by 10\,\%. Similar plots for all
-  components and parameters are provided in Appendices~\ref{sec:zodi-comps} and \ref{sec:param-atlas}.}
+  components and parameters are provided in 
+  Appendices~\ref{sec:zodi-comps} and \ref{sec:param-atlas}.}
   \label{fig:band3}
 \end{figure}
 
@@ -520,8 +528,9 @@ seen from Earth vary significantly with Ecliptic longitude; they
 appear broader in directions that are closer to the Earth, and
 narrower where they are further away.
 
-The third panel shows the same feature, but now averaged over a whole
-year of observations and plotted in Galactic coordinates. This
+The third panel shows the same feature, but now averaged over nearly
+a whole year of observations, corresponding to the DIRBE scanning 
+strategy, and plotted in Galactic coordinates. This
 represents the signal seen in full-mission maps derived from
 DIRBE. Since the underlying IPD structure is azimuthally symmetric
 about the Sun, the Earth's movement throughout the year also
@@ -537,7 +546,7 @@ With the infrastructure for computing such full-mission maps ready at
 hand, we can study the impact of each free parameter in greater
 detail. As a specific example of this, the bottom panel in
 Fig.~\ref{fig:band3} shows the difference between the total signal
-obtained when changing the ascending node for Band~3 by 10\,\%
+obtained when changing the ascending node $\Omega$ for Band~3 by 10\,\%
 relative to the base model. Intuitively, this corresponds to rotating
 the signal in the top figure slightly about the origin. Some parts of
 the bands will then appear closer to the Earth, while others will
@@ -561,14 +570,19 @@ parameters will obviously also couple significantly to a wide range of
 non-ZL type parameters when integrated into a global analysis
 framework, including the all-important CIB monopoles, such as
 $n_{0,\mathrm{C}}$, $\sigma_{z,\mathrm{SR}}$, and
-$\sigma_{\theta,\mathrm{TF}}$.
+$\sigma_{\theta,\mathrm{TF}}$. Given that we only have a single year 
+worth of observations with DIRBE, it also difficult to rule out 
+potential drifts in the instrument gains $\G$ which could be 
+degenerate with ZL parameters tied to the symmetry planes of the 
+various zodiacal components which would introduce a similar seasonal 
+affect.
 
 \begin{figure}
     \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}\\
     \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
-    \caption{Errors induced by the ZL cache. \textit{(Top):} Difference between two 
+    \caption{Errors induced by the ZL cache. (\textit{Top}:) Difference between two 
     instantaneous view of the ZL 900\,km above Earth's north and south 
-    poles. \textit{(Bottom):} Difference between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
+    poles. (\textit{Bottom}:) Difference between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
     separated by 2 hours. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
     are masked in both maps.}
     \label{fig:cache-error}
@@ -906,9 +920,10 @@ clearly complicated infrared sky. At least to first order, it is by
 construction safe against biases from foreground modelling
 errors. However, this bias immunity also comes at a massive cost in
 terms of statistical uncertainties, because it is not only immune to
-astrophysical bias, but it is also by construction blind to any
-stationary ZL signal --- and by far most of the actual ZL observed in
-the sky does indeed appear stationary on the sky.
+astrophysical bias, but it is also by construction blind to the monpole 
+created when producing mission averaged maps, which can be as bright as 
+~20 MJy/sr at the 25$\mu$m channel ZL signal, meaning that a lot of 
+signal-to-noise is lost with this approach.
 
 Figure~\ref{fig:week_vs_full} illustrates this difference. The top
 left panel shows the full intensity signal as analyzed in the
