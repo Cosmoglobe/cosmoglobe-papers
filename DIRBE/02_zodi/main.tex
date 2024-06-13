@@ -73,7 +73,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 \renewcommand{\t}[0]{\vec{t}}
 \newcommand{\A}[0]{\tens{A}}
 \newcommand{\B}[0]{\tens{B}}
-\newcommand{\G}[0]{\tens{G}}
+\renewcommand{\G}[0]{\tens{G}}
 \newcommand{\Y}[0]{\tens{Y}}
 \newcommand{\n}[0]{\vec{n}}
 \newcommand{\red}[0]{\color{red}}
@@ -259,15 +259,18 @@ One of the most important generalizations required for application of
 \commanderthree\ to the infrared sky is the implementation of an
 accurate time-variable ZL model. In this paper we therefore implement
 support for the K98 model in \commanderthree, and we apply this to the
-time-domain DIRBE data. This new code is based ZodiPy \citep{San2024},
-which is an Astropy-affiliated Python package for ZL simulations. As
-an early application of this framework, \cite{San2022} demonstrated
-the removal of ZL from the DIRBE TOD with ZodiPy using the K98 model.
+time-domain DIRBE data. This new code implementation is based on ZodiPy 
+\citep{San2024}, which is an Astropy-affiliated Python package for ZL 
+simulations. As an early application of this framework, \cite{San2022} 
+demonstrated the removal of ZL from the DIRBE TOD with ZodiPy using the 
+K98 model.
 
 The rest of the paper is organized as follows. In
 Sect.~\ref{sect:zodi-model}, we introduce the K98 ZL model and discuss
-implementation and optimization aspects. Next, in
-Sect.~\ref{sect:data}, we describe the data used in the current
+implementation and optimization aspects. Next, in 
+Sect.~\ref{sect:param-estimation}, we describe the algorithms and methods
+used to fit the ZL parameters within the Cosmoglobe framework.
+In Sect.~\ref{sect:data}, we describe the data used in the current
 analysis, before summarizing the algorithms in
 Sect.~\ref{sect:param-estimation}. We present our updated ZL model and
 compare this with K98 in Sect.~\ref{sect:improved-model}. Finally, we
@@ -287,14 +290,21 @@ details of this model, we refer the interested reader to
 \citet{Kelsall1998}.
 
 \subsection{Parameterization of interplanetary dust}
-IPD in the zodiacal cloud is overall smooth and stable, and most of
-the dust may be accounted for by a diffuse cloud-like component
-\citep{Leinert1998}.  The majority of this dust stems from
-mass-shedding of various Jupiter family comets with low eccentricities
-and inclinations with respect to the Ecliptic. However, fine
-structures within the zodiacal cloud exist as a result of collisions
-and fragmentation in asteroids and gravitational resonance in the
-orbit of planets \citep{Low1984, Dermott1984, Dermott1994, Reach1997}.
+IPD in the zodiacal cloud is overall smooth and stable 
+\citep{Leinert1989}, and most of the dust may be accounted for by a 
+diffuse cloud-like component \citep{Kelsall1998}. The origin of IPD 
+is debris mainly from comets and asteroids, with potential additions 
+from dusty planets like Mars \citep{Jorgensen2021}, additions from 
+the Kupier belt \citep{Mann2009}, and interstellar dust passing 
+through the Solar system \citep{Robinson2013, Mann2009}. The relative contribution to the overall 
+IPD density is not well known, but many models predict the main 
+source to be low-eccentricity Jupiter family comets that rapidy 
+disintegrate due to frequent trips through the inner Solar system 
+\citep{Robinson2013, Mann2009}.
+However, fine structures within the zodiacal cloud exist as a result 
+of collisions and fragmentation in asteroids and gravitational 
+resonance in the orbit of planets 
+\citep{Low1984, Dermott1984, Dermott1994, Reach1997}.
 
 We model the IPD distribution as a combination of several zodiacal
 components, each described by a number density $n_c(x,y,z)$, where $c$
@@ -357,8 +367,9 @@ Next, three dust bands are included in the model to represent the
 observed shoulder-like structure in the IRAS scans across the ecliptic
 plane.  These bands appear at Ecliptic latitudes of $\pm \sim
 1.4^\circ$, $10^\circ$, and $15^\circ$, and are associated with the
-Themis, Koronis, and Eos asteroid families, respectively ({\bf ADD
-  CITATION}). Each dust band, indicated by $B_ii$, is modeled as
+a blend of the Themis and Koronis, the Eos, and the IO/Maria asteroid families, 
+respectively \citep{Reach1997}. Each dust band, indicated by $B_ii$, is 
+modeled as
 \begin{align}
     n_{\mathrm{B}_i}(x,y,z) &= \frac{3 n_{0, \mathrm{B}_i}}{r_{\mathrm{B}_i}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{p}v^{-1}\right] \\
     &\times\left\{1-\exp \left[-\left(\frac{r_{\mathrm{B}_i}}{\delta_{r_{\mathrm{B}_i}}}\right)^{20}\right]\right\},
@@ -372,7 +383,7 @@ $p$, $v$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
 \label{sec:ring}
 Finally, a circum-solar ring (denoted ``SR'') component is included in the
 model to represent dust that has accumulated in Earth's orbit due to
-gravitational effects ({\bf ADD REFERENCE}). This component also
+gravitational effects \citep{Dermott1994}. This component also
 includes an enhancement to the IPD distribution at Earth's wake, known
 as the ``Earth-trailing feature'' (denoted ``TF''). The ring component is modeled as
 \begin{align}
@@ -405,7 +416,7 @@ of a blackbody modified by an emissivity factor $E_{c, \lambda}$,
     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T),
 \end{equation}
 where $B_\lambda$ is the Planck function at a wavelength $\lambda$
-({\bf ADD REFERENCE}). A key parameter in this equation is the IPD
+\citep{Kelsall1998}. A key parameter in this equation is the IPD
 temperature $T$, which is assumed to fall off with radial distance $r$
 from the Sun as
 \begin{equation}
@@ -422,7 +433,7 @@ where $A_{c, \lambda}$ is the albedo (or reflectivity) of the IPD,
 $F_\lambda^\odot(r)$ the solar flux at a radial distance from the Sun,
 and $\Phi_\lambda(\Theta)$ is the so-called phase function for scattering angles
 $\Theta$, which describes the angular distribution of the scattered
-light ({\bf ADD REFERENCE}).
+light \citep{Kelsall1998}.
 
 \begin{figure}
   \includegraphics[width=0.95\columnwidth]{figs/band3_dens.pdf}\\
