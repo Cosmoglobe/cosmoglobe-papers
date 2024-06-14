@@ -180,7 +180,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR2. III. Improved modelling of zodiacal light emission in \textit{COBE}-DIRBE through Bayesian global analysis}}
+   \title{\bfseries{\Cosmoglobe\ DR2. III. Improved modelling of zodiacal light in \textit{COBE}-DIRBE through Bayesian global analysis}}
 
    \input{authors.tex}
 
@@ -195,7 +195,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 
 % write an abstract 
 
-   \abstract{We present an improved model of zodiacal light (ZL) emission for \textit{COBE}-DIRBE derived through global Bayesian analysis within \cosmoglobe\ Data Release~2 (DR2). The parametric form of the ZL model is identical to that introduced by Kelsall et al. (1998; K98), but the specific best-fit parameter values are rederived using the combination of DIRBE Calibrated Individual Observations (CIOs), \Planck\ HFI sky maps, and WISE and GAIA compact object catalogs. Furthermore, the ZL parameters are fitted jointly with astrophysical parameters, such as thermal dust and starlight emission, and the new model takes into account excess radiation that appears stationary in solar-centric coordinates as reported in a companion paper. The relative differences in predicted signals at 25$\,\mu\mathrm{m}$ between K98 and our new model are $\lesssim\,2\,\%$ in the Ecliptic plane, and $\lesssim\,5\,\%$ in the Ecliptic poles and along the asteroidal bands. The zero-level of the cleaned DR2 maps are lower than those of the legacy DIRBE Zodiacal light Subtracted Mission Average (ZSMA) maps by $\sim$\,10\,kJy/sr at 1.25--3.5\,$\mu\mathrm{m}$, which is comparable to the entire predicted contribution from high-redshift galaxies to the Cosmic Infrared Background (CIB) at the same wavelengths. The total rms's of each DR2 maps at wavelengths up to and including $60\,\mu\mathrm{m}$ are $\sim$\,30\,\% lower at high Galactic latitudes than the corresponding DIRBE ZSMA maps. The cleaned DR2 maps at 4.9 and 60\,$\mu\mathrm{m}$ are now for the first time visually dominated by Galactic signal at high latitudes rather than by ZL residuals. Even the 100$\,\mu\mathrm{m}$ channel, which has served as a cornerstone for Galactic studies for three decades, appears significantly cleaner in the current processing. Still, obvious ZL residuals can be seen even in several of the DR2 maps, and further work is required to mitigate these. Joint analysis with existing and future high-resolution full-sky surveys such as AKARI, IRAS, \Planck\ HFI, and SPHEREx will be essential both to break key degeneracies in the current model and to determine whether the reported solar-centric excess radiation has a ZL or instrumental origin. On the algorithmic side, more efficient methods for probing massively multi-peaked likelihoods should be explored and implemented. Thus, while the results presented in this paper do re-define the state-of-the-art for DIRBE modelling, it also only represents the first among many steps toward a future optimal Bayesian ZL model.
+   \abstract{We present an improved model of zodiacal light (ZL) for \textit{COBE}-DIRBE derived through global Bayesian analysis within \cosmoglobe\ Data Release~2 (DR2). The parametric form of the ZL model is identical to that introduced by Kelsall et al. (1998; K98), but the specific best-fit parameter values are rederived using the combination of DIRBE Calibrated Individual Observations (CIOs), \Planck\ HFI sky maps, and WISE and GAIA compact object catalogs. Furthermore, the ZL parameters are fitted jointly with astrophysical parameters, such as thermal dust and starlight emission, and the new model takes into account excess radiation that appears stationary in solar-centric coordinates as reported in a companion paper. The relative differences in predicted signals at 25$\,\mu\mathrm{m}$ between K98 and our new model are $\lesssim\,2\,\%$ in the Ecliptic plane, and $\lesssim\,5\,\%$ in the Ecliptic poles and along the asteroidal bands. The zero-level of the cleaned DR2 maps are lower than those of the legacy DIRBE Zodiacal light Subtracted Mission Average (ZSMA) maps by $\sim$\,10\,kJy/sr at 1.25--3.5\,$\mu\mathrm{m}$, which is comparable to the entire predicted contribution from high-redshift galaxies to the Cosmic Infrared Background (CIB) at the same wavelengths. The total rms's of each DR2 maps at wavelengths up to and including $60\,\mu\mathrm{m}$ are $\sim$\,30\,\% lower at high Galactic latitudes than the corresponding DIRBE ZSMA maps. The cleaned DR2 maps at 4.9 and 60\,$\mu\mathrm{m}$ are now for the first time visually dominated by Galactic signal at high latitudes rather than by ZL residuals. Even the 100$\,\mu\mathrm{m}$ channel, which has served as a cornerstone for Galactic studies for three decades, appears significantly cleaner in the current processing. Still, obvious ZL residuals can be seen even in several of the DR2 maps, and further work is required to mitigate these. Joint analysis with existing and future high-resolution full-sky surveys such as AKARI, IRAS, \Planck\ HFI, and SPHEREx will be essential both to break key degeneracies in the current model and to determine whether the reported solar-centric excess radiation has a ZL or instrumental origin. On the algorithmic side, more efficient methods for probing massively multi-peaked likelihoods should be explored and implemented. Thus, while the results presented in this paper do re-define the state-of-the-art for DIRBE modelling, it also only represents the first among many steps toward a future optimal Bayesian ZL model.
 }
 
    \keywords{Zodiacal dust, Interplanetary medium, Cosmology: cosmic background radiation}
@@ -1168,16 +1168,22 @@ particular posterior distribution.
 \section{Data}\label{sect:data}
 
 \subsection{DIRBE Calibrated Individual Observations}
-We use the publicly available DIRBE Calibrated Individual Observations (CIOs)
-in our analysis. These are a user-friendly pre-calibrated version of the TODs
-and come in the COBE Quadrilateral cube pixelization scheme. As part of the data proprocessing,
-we convert these to the corresponding HEALPix pixels and re-order them into a time-ordered format.
-For more details on the preprocessing of the DIRBE CIOs we refer to \cite{CG02_01}.
-A subsample of the CIOs for each DIRBE band as used in our analysis can be seen in Fig.~\ref{fig:tod_zodi}.
+We use the publicly available DIRBE Calibrated Individual Observations (CIO)
+in our analysis. These are a user-friendly pre-calibrated version of the raw TOD observed by DIRBE.
+The CIO are pixelized according to the COBE Quadrilateral cube projection. As part of the data proprocessing,
+we convert these to corresponding HEALPix pixel indicies and re-order them into a time-ordered format.
+For more details on the preprocessing of the DIRBE CIO we refer to \cite{CG02_01}. In the following, we will 
+refer to the pre-processed CIO as TODs.
+A subsample of the TOD for each DIRBE band as used in our analysis can be seen in Fig.~\ref{fig:tod_zodi}, 
+where we show data for one rotation of the spacecraft about its boresight (0.8 RPM). Within this rotation, 
+both the Galactic and Ecliptic planes are crossed twice. The the two outer-most bulges in the 1.25, 2.2, 3.5, 
+and 4.9 $\mu$m bands and the right bulge in the remaiining bands represent the Galactic plane crossings. The 
+sine-like wave in bands 4.9, 12, and 25 $\mu$m are the zodiacal light which peaks in the ecliptic plane. 
 \begin{figure}
     \centering
-    \includegraphics[width=\columnwidth]{figs/tod_zodi.pdf}
-    \caption{}
+    \includegraphics[width=\columnwidth]{figs/tod.pdf}
+    \caption{Subsample of the pre-processed TOD used in this analysis for all ten DIRBE bands. The timestreams
+    show one full rotation of the COBE satellite which includes two crossing of the Galactic and Ecliptic planes.}
     \label{fig:tod_zodi}
 \end{figure}
     
@@ -1546,6 +1552,11 @@ Figure~X in~\cite{San2022} .
 \begin{figure*}
     \centering
     \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_total_inst.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/CG_total_inst.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_total_inst.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
     \includegraphics[height=1cm]{figs/comp_maps/K98_0_inst.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/CG_0_inst.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_0_inst.pdf}%
@@ -1565,16 +1576,22 @@ Figure~X in~\cite{San2022} .
     \includegraphics[height=1cm]{figs/comp_maps/CG_3_inst.pdf}%
     \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_3_inst.pdf}%
     }\\
-    \caption{Full-sky component-wise ZL maps (January 1, 2024) at $25\mu$m made with ZodiPy. 
+    \caption{Full-sky total and component-wise ZL maps (January 1, 2024) at $25\mu$m made with ZodiPy. 
     \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model. 
-    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
-    dust band 2; 4) dust band 3. The maps are in ecliptic coordinates, with the Sun marked as 
+    Rows list the zodiacal components, from top to bottom, 1) total ZL emission, including the 
+    circum-solar ring and Earth-trailing feauture; 2) smooth cloud; 3) dust band 1; 4) 
+    dust band 2; 5) dust band 3. The maps are in ecliptic coordinates, with the Sun marked as 
     an orange circle.}
     \label{fig:mission-averaged-inst-maps}
 \end{figure*}
 
 \begin{figure*}[hbt]
     \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/comp_maps/K98_total.pdf}%
+    \includegraphics[height=1cm]{figs/comp_maps/DR2_total.pdf}%
+    \includegraphics[width=1cm,angle=90]{figs/comp_maps/cbar_total.pdf}%
+    }\\
     \resizebox{\textwidth}{!}{%
     \includegraphics[height=1cm]{figs/comp_maps/K98_0.pdf}%
     \includegraphics[height=1cm]{figs/comp_maps/DR2_0.pdf}%
@@ -1597,8 +1614,9 @@ Figure~X in~\cite{San2022} .
     }\\
     \caption{Mission-averaged component-wise ZL maps at $25\mu$m made with ZodiPy. 
     \textit{(left column:)} The K98 model. \textit{(right column:)} Best-fit Cosmoglobe ZL model.
-    Rows list the zodiacal components, from top to bottom, 1) smooth cloud; 2) dust band 1; 3) 
-    dust band 2; 4) dust band 3. The maps are in galactic coordinates.}
+    Rows list the zodiacal components, from top to bottom, 1) total ZL emission, including the 
+    circum-solar ring and Earth-trailing feauture; 2) smooth cloud; 3) dust band 1; 4) 
+    dust band 2; 5) dust band 3.. The maps are in galactic coordinates.}
     \label{fig:mission-averaged-comp-maps}
 \end{figure*}
 
