@@ -259,15 +259,24 @@ One of the most important generalizations required for application of
 \commanderthree\ to the infrared sky is the implementation of an
 accurate time-variable ZL model. In this paper we therefore implement
 support for the K98 model in \commanderthree, and we apply this to the
-time-domain DIRBE data. This new code is based ZodiPy \citep{San2024},
-which is an Astropy-affiliated Python package for ZL simulations. As
-an early application of this framework, \cite{San2022} demonstrated
-the removal of ZL from the DIRBE TOD with ZodiPy using the K98 model.
+time-domain DIRBE data. This new code implementation is based on ZodiPy 
+\citep{San2024}, which is an Astropy-affiliated Python package for ZL 
+simulations. As an early application of this framework, \cite{San2022} 
+demonstrated the removal of ZL from the DIRBE TOD with ZodiPy using the 
+K98 model.
+
+ZL is found to be polarized in the near-infrared in both the DIRBE and 
+CIBER data \citep{Takimoto2022,Takimoto2023}. We make no attempts at 
+modeling polarized ZL in this analysis, but a natural next step in this 
+analysis would be to include the polarization data from the 1.25, 2.2, 
+and 3.9 $\mu$m DIRBE bands.
 
 The rest of the paper is organized as follows. In
 Sect.~\ref{sect:zodi-model}, we introduce the K98 ZL model and discuss
-implementation and optimization aspects. Next, in
-Sect.~\ref{sect:data}, we describe the data used in the current
+implementation and optimization aspects. Next, in 
+Sect.~\ref{sect:param-estimation}, we describe the algorithms and methods
+used to fit the ZL parameters within the Cosmoglobe framework.
+In Sect.~\ref{sect:data}, we describe the data used in the current
 analysis, before summarizing the algorithms in
 Sect.~\ref{sect:param-estimation}. We present our updated ZL model and
 compare this with K98 in Sect.~\ref{sect:improved-model}. Finally, we
@@ -287,14 +296,20 @@ details of this model, we refer the interested reader to
 \citet{Kelsall1998}.
 
 \subsection{Parameterization of interplanetary dust}
-IPD in the zodiacal cloud is overall smooth and stable, and most of
-the dust may be accounted for by a diffuse cloud-like component
-\citep{Leinert1998}.  The majority of this dust stems from
-mass-shedding of various Jupiter family comets with low eccentricities
-and inclinations with respect to the Ecliptic. However, fine
-structures within the zodiacal cloud exist as a result of collisions
-and fragmentation in asteroids and gravitational resonance in the
-orbit of planets \citep{Low1984, Dermott1984, Dermott1994, Reach1997}.
+IPD in the zodiacal cloud is overall smooth and stable 
+\citep{Leinert1989}, and most of the dust may be accounted for by a 
+diffuse cloud-like component \citep{Kelsall1998}. The origin of IPD 
+is debris mainly from comets \citep{Liou1995} and asteroids \citep{Dermott1984}, 
+with potential additions from dusty planets like Mars \citep{Jorgensen2021}, additions from 
+the Kupier belt \citep{Mann2009}, and interstellar dust passing 
+through the Solar system \citep{Robinson2013}. The relative contribution to the overall 
+IPD density is not well known, but many models predict the main 
+source to be low-eccentricity Jupiter family comets that rapidy 
+disintegrate due to frequent trips through the inner Solar system.
+However, fine structures within the zodiacal cloud exist as a result 
+of collisions and fragmentation in asteroids and gravitational 
+resonance in the orbit of planets 
+\citep{Low1984, Dermott1984, Dermott1994, Reach1997}.
 
 We model the IPD distribution as a combination of several zodiacal
 components, each described by a number density $n_c(x,y,z)$, where $c$
@@ -357,8 +372,9 @@ Next, three dust bands are included in the model to represent the
 observed shoulder-like structure in the IRAS scans across the ecliptic
 plane.  These bands appear at Ecliptic latitudes of $\pm \sim
 1.4^\circ$, $10^\circ$, and $15^\circ$, and are associated with the
-Themis, Koronis, and Eos asteroid families, respectively ({\bf ADD
-  CITATION}). Each dust band, indicated by $B_ii$, is modeled as
+a blend of the Themis and Koronis, the Eos, and the IO/Maria asteroid families, 
+respectively \citep{Reach1997}. Each dust band, indicated by $B_ii$, is 
+modeled as
 \begin{align}
     n_{\mathrm{B}_i}(x,y,z) &= \frac{3 n_{0, \mathrm{B}_i}}{r_{\mathrm{B}_i}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{p}v^{-1}\right] \\
     &\times\left\{1-\exp \left[-\left(\frac{r_{\mathrm{B}_i}}{\delta_{r_{\mathrm{B}_i}}}\right)^{20}\right]\right\},
@@ -372,7 +388,7 @@ $p$, $v$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
 \label{sec:ring}
 Finally, a circum-solar ring (denoted ``SR'') component is included in the
 model to represent dust that has accumulated in Earth's orbit due to
-gravitational effects ({\bf ADD REFERENCE}). This component also
+gravitational effects \citep{Dermott1994}. This component also
 includes an enhancement to the IPD distribution at Earth's wake, known
 as the ``Earth-trailing feature'' (denoted ``TF''). The ring component is modeled as
 \begin{align}
@@ -405,7 +421,7 @@ of a blackbody modified by an emissivity factor $E_{c, \lambda}$,
     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T),
 \end{equation}
 where $B_\lambda$ is the Planck function at a wavelength $\lambda$
-({\bf ADD REFERENCE}). A key parameter in this equation is the IPD
+\citep{Kelsall1998}. A key parameter in this equation is the IPD
 temperature $T$, which is assumed to fall off with radial distance $r$
 from the Sun as
 \begin{equation}
@@ -422,7 +438,7 @@ where $A_{c, \lambda}$ is the albedo (or reflectivity) of the IPD,
 $F_\lambda^\odot(r)$ the solar flux at a radial distance from the Sun,
 and $\Phi_\lambda(\Theta)$ is the so-called phase function for scattering angles
 $\Theta$, which describes the angular distribution of the scattered
-light ({\bf ADD REFERENCE}).
+light \citep{Kelsall1998}.
 
 \begin{figure}
   \includegraphics[width=0.95\columnwidth]{figs/band3_dens.pdf}\\
@@ -436,11 +452,13 @@ light ({\bf ADD REFERENCE}).
     panel}:) Observed instantaneous intensity plotted in Ecliptic
     coordinates, obtained by integrating the above figure along each
     line-of-sight. (\textit{Third row}:) Same as above, but plotted in
-  Galactic coordinates and averaged over a full year of
-  observations. (\textit{Fourth row}:) Difference between observed
+  Galactic coordinates and averaged over nearly a full year of
+  observations corresponding to the DIRBE scanning strategy. 
+  (\textit{Fourth row}:) Difference between observed
   intensities as defined in the third row after changing the value of
   the ascending node, $\Omega$, by 10\,\%. Similar plots for all
-  components and parameters are provided in Appendices~\ref{sec:zodi-comps} and \ref{sec:param-atlas}.}
+  components and parameters are provided in 
+  Appendices~\ref{sec:zodi-comps} and \ref{sec:param-atlas}.}
   \label{fig:band3}
 \end{figure}
 
@@ -509,8 +527,9 @@ seen from Earth vary significantly with Ecliptic longitude; they
 appear broader in directions that are closer to the Earth, and
 narrower where they are further away.
 
-The third panel shows the same feature, but now averaged over a whole
-year of observations and plotted in Galactic coordinates. This
+The third panel shows the same feature, but now averaged over nearly
+a whole year of observations, corresponding to the DIRBE scanning 
+strategy, and plotted in Galactic coordinates. This
 represents the signal seen in full-mission maps derived from
 DIRBE. Since the underlying IPD structure is azimuthally symmetric
 about the Sun, the Earth's movement throughout the year also
@@ -526,7 +545,7 @@ With the infrastructure for computing such full-mission maps ready at
 hand, we can study the impact of each free parameter in greater
 detail. As a specific example of this, the bottom panel in
 Fig.~\ref{fig:band3} shows the difference between the total signal
-obtained when changing the ascending node for Band~3 by 10\,\%
+obtained when changing the ascending node $\Omega$ for Band~3 by 10\,\%
 relative to the base model. Intuitively, this corresponds to rotating
 the signal in the top figure slightly about the origin. Some parts of
 the bands will then appear closer to the Earth, while others will
@@ -550,18 +569,23 @@ parameters will obviously also couple significantly to a wide range of
 non-ZL type parameters when integrated into a global analysis
 framework, including the all-important CIB monopoles, such as
 $n_{0,\mathrm{C}}$, $\sigma_{z,\mathrm{SR}}$, and
-$\sigma_{\theta,\mathrm{TF}}$.
+$\sigma_{\theta,\mathrm{TF}}$. Given that we only have a single year 
+worth of observations with DIRBE, it also difficult to rule out 
+potential drifts in the instrument gains $\G$ which could be 
+degenerate with ZL parameters tied to the symmetry planes of the 
+various zodiacal components which would introduce a similar seasonal 
+affect.
 
-\begin{figure}
-    \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}\\
-    \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
-    \caption{Errors induced by the ZL cache. \textit{(Top):} Difference between two 
-    instantaneous view of the ZL 900\,km above Earth's north and south 
-    poles. \textit{(Bottom):} Difference between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
-    separated by 2 hours. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
-    are masked in both maps.}
-    \label{fig:cache-error}
-\end{figure}
+% \begin{figure}
+%     \includegraphics[width=\columnwidth]{figs/cache_error_delta_t.pdf}\\
+%     \includegraphics[width=\columnwidth]{figs/cache_error_z.pdf}
+%     \caption{Errors induced by the ZL cache. (\textit{Top}:) Difference between two 
+%     instantaneous view of the ZL 900\,km above Earth's north and south 
+%     poles. (\textit{Bottom}:) Difference between two instantaneous views of the ZL at $N_\mathrm{studies}=512$, 
+%     separated by 2 hours. Pixels with an angular separation $\leq 60^\circ$ from the Sun 
+%     are masked in both maps.}
+%     \label{fig:cache-error}
+% \end{figure}
 
 
 
@@ -572,47 +596,49 @@ for the DIRBE data, which only comprise 18\,GB after compression. In
 principle, this could be done by brute-force for this particular
 experiment on modern computer clusters, but such a direct approach
 will clearly not be an option for similar analyses of \Planck\ HFI,
-AKARI and SPHEREx. Fortunately, several optimizations are available
-for signals that are smooth in both space and time that result in
-significant speed-ups at a very low accuracy penalty.
+AKARI and SPHEREx. 
 
-The first and perhaps most trivial optimization is to utilize a ZL
-cache coupled to a discrete pixelization. As described in
-Sect.~\ref{sect:data}, we employ a
-HEALPix\footnote{\url{http://healpix.sourceforge.io}} pixelization
-with a $7\arcm\times7\arcm$ pixel size ($N_{\mathrm{side}}=512$; \citealp{healpix})
-in the current analysis, and all satellite pointings are discretized
-to this resolution; that is, we do not account for sub-pixel structure
-in the signal model. The cache takes advantage of this by reusing a
-previously computed ZL estimate for a given sky pixel when
-re-observing a HEALPix pixel within a small timeframe $\Delta t$
-\begin{equation}
- s_\mathrm{zodi}(p, t_i) = s_\mathrm{zodi}(p, t_j).
-\end{equation}
-This cache induces an error on the ZL estimate proportional to $\Delta
-t$, which comes from the changes to the observer position with respect
-to the zodiacal cloud within the $\Delta t$ timeframe. For reference,
-the structure of the ZL on the Ecliptic or Galactic sky maps moves by
-about $1^\circ$ a day as the Earth orbits the Sun. The top panel in
-Fig.~\ref{fig:cache-error} shows the difference between the exact
-instantanous calculation and one that is delayed by $\Delta t =
-2\,$hrs for the DIRBE 25\,${\mu}$m channel. The error is less than
-5\,kJy/sr, which about two orders of magnitude lower than the
-total ZL uncertainties. On average, caching reduces the total number
-of ZL model evaluations by a factor of $X$.
+% Fortunately, several optimizations are available
+% for signals that are smooth in both space and time that result in
+% significant speed-ups at a very low accuracy penalty.
 
-In addition to the positional change along Earth's orbit, it is
-important to note that COBE also orbits the Earth at an altitude of
-900\,km. The specific position of the observer is not taken into
-account when using the cache. The bottom panel in
-Fig.~\ref{fig:cache-error} shows the difference between two
-instantaneous full-sky views at 25 $\mu$m, one simulated from the
-North pole and the other from the South pole. The magnitude of this
-error is $\lesssim\,1$kJy/sr, which is also far below DIRBE's
-sensitivity.
+% The first and perhaps most trivial optimization is to utilize a ZL
+% cache coupled to a discrete pixelization. As described in
+% Sect.~\ref{sect:data}, we employ a
+% HEALPix\footnote{\url{http://healpix.sourceforge.io}} pixelization
+% with $7\arcm\times7\arcm$ ($N_{\mathrm{side}}=512$; \citealp{healpix})
+% in the current analysis, and all satellite pointings are discretized
+% to this resolution; that is, we do not account for sub-pixel structure
+% in the signal model. The cache takes advantage of this by reusing a
+% previously computed ZL estimate for a given sky pixel when
+% re-observing a HEALPix pixel within a small timeframe $\Delta t$
+% \begin{equation}
+%  s_\mathrm{zodi}(p, t_i) = s_\mathrm{zodi}(p, t_j).
+% \end{equation}
+% This cache induces an error on the ZL estimate proportional to $\Delta
+% t$, which comes from the changes to the observer position with respect
+% to the zodiacal cloud within the $\Delta t$ timeframe. For reference,
+% the structure of the ZL on the Ecliptic or Galactic sky maps moves by
+% about $1^\circ$ a day as the Earth orbits the Sun. The top panel in
+% Fig.~\ref{fig:cache-error} shows the difference between the exact
+% instantanous calculation and one that is delayed by $\Delta t =
+% 2\,$hrs for the DIRBE 25\,${\mu}$m channel. The error is less than
+% 5\,kJy/sr, which about two orders of magnitude lower than the
+% total ZL uncertainties. On average, caching reduces the total number
+% of ZL model evaluations by a factor of $X$.
 
-The smooth nature of the ZL can be exploited in more ways. When
-sampling parameters for the ZL model it is possible to include only a
+% In addition to the positional change along Earth's orbit, it is
+% important to note that COBE also orbits the Earth at an altitude of
+% 900\,km. The specific position of the observer is not taken into
+% account when using the cache. The bottom panel in
+% Fig.~\ref{fig:cache-error} shows the difference between two
+% instantaneous full-sky views at 25 $\mu$m, one simulated from the
+% North pole and the other from the South pole. The magnitude of this
+% error is $\lesssim\,1$kJy/sr, which is also far below DIRBE's
+% sensitivity.
+
+% The smooth nature of the ZL can be exploited in more ways. 
+When sampling parameters for the ZL model it is possible to include only a
 small fraction of the full dataset in each likelihood evaluation,
 simply because the signal-to-noise ratio of each sample is so high,
 and because the of the smooth ZL gradient of the ZL
@@ -631,14 +657,14 @@ out the same time scales, and this increases the overall modeling
 errors. Although the differences were generally small, we obtained
 slightly better fits by thinning rather than averaging.
 
-In addition, the smoothness of the ZL is exploited further during
-parameter estimation by defining the cache at a pixel resolution of
-$1^{\circ}$ ($N_\mathrm{side} = 64$), rather than the original
-$N_\mathrm{side} = 512$. We find that this results in very similar
-$\chi^2$ values, while further reducing the number of ZL evaluations
-used in the sampling steps by a factor of 64. 
+% In addition, the smoothness of the ZL is exploited further during
+% parameter estimation by defining the cache at a pixel resolution of
+% $1^{\circ}$ ($N_\mathrm{side} = 64$), rather than the original
+% $N_\mathrm{side} = 512$. We find that this results in very similar
+% $\chi^2$ values, while further reducing the number of ZL evaluations
+% used in the sampling steps by a factor of 64. 
 
-A final optimization step is introduced by dividing the parameters in
+A second optimization step is introduced by dividing the parameters in
 $\zeta_{\mathrm{z}}$ into a set of so-called sampling groups, and
 estimating the free parameters in each group separately. Specifically,
 it is worth noting that the overall signal-to-noise ratio for the ZL
@@ -916,9 +942,10 @@ clearly complicated infrared sky. At least to first order, it is by
 construction safe against biases from foreground modelling
 errors. However, this bias immunity also comes at a massive cost in
 terms of statistical uncertainties, because it is not only immune to
-astrophysical bias, but it is also by construction blind to any
-stationary ZL signal --- and by far most of the actual ZL observed in
-the sky does indeed appear stationary on the sky.
+astrophysical bias, but it is also by construction blind to the monpole 
+created when producing mission averaged maps, which can be as bright as 
+~20 MJy/sr at the 25$\mu$m channel ZL signal, meaning that a lot of 
+signal-to-noise is lost with this approach.
 
 Figure~\ref{fig:week_vs_full} illustrates this difference. The top
 left panel shows the full intensity signal as analyzed in the
@@ -1141,17 +1168,20 @@ particular posterior distribution.
 \section{Data}\label{sect:data}
 
 \subsection{DIRBE Calibrated Individual Observations}
-
-\subsection{Masks}
-
-
+We use the publicly available DIRBE Calibrated Individual Observations (CIOs)
+in our analysis. These are a user-friendly pre-calibrated version of the TODs
+and come in the COBE Quadrilateral cube pixelization scheme. As part of the data proprocessing,
+we convert these to the corresponding HEALPix pixels and re-order them into a time-ordered format.
+For more details on the preprocessing of the DIRBE CIOs we refer to \cite{CG02_01}.
+A subsample of the CIOs for each DIRBE band as used in our analysis can be seen in Fig.~\ref{fig:tod_zodi}.
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figs/tod_zodi.pdf}
     \caption{}
     \label{fig:tod_zodi}
 \end{figure}
-
+    
+\subsection{Masks}
 
 \begin{figure}
     \centering
