@@ -580,7 +580,7 @@ The first and perhaps most trivial optimization is to utilize a ZL
 cache coupled to a discrete pixelization. As described in
 Sect.~\ref{sect:data}, we employ a
 HEALPix\footnote{\url{http://healpix.sourceforge.io}} pixelization
-with $7\arcm\times7\arcm$ ($N_{\mathrm{side}}=512$; \citealp{healpix})
+with a $7\arcm\times7\arcm$ pixel size ($N_{\mathrm{side}}=512$; \citealp{healpix})
 in the current analysis, and all satellite pointings are discretized
 to this resolution; that is, we do not account for sub-pixel structure
 in the signal model. The cache takes advantage of this by reusing a
@@ -611,7 +611,6 @@ North pole and the other from the South pole. The magnitude of this
 error is $\lesssim\,1$kJy/sr, which is also far below DIRBE's
 sensitivity.
 
-
 The smooth nature of the ZL can be exploited in more ways. When
 sampling parameters for the ZL model it is possible to include only a
 small fraction of the full dataset in each likelihood evaluation,
@@ -639,6 +638,25 @@ $N_\mathrm{side} = 512$. We find that this results in very similar
 $\chi^2$ values, while further reducing the number of ZL evaluations
 used in the sampling steps by a factor of 64. 
 
+A final optimization step is introduced by dividing the parameters in
+$\zeta_{\mathrm{z}}$ into a set of so-called sampling groups, and
+estimating the free parameters in each group separately. Specifically,
+it is worth noting that the overall signal-to-noise ratio for the ZL
+component shape parameters, such as $\Omega_{\mathrm{C}}$ or $\delta$,
+is vastly dominated by the 12 and 25\,$\mu$m channels. At the same
+time, the emissivity and albedo for a given channel depends only that
+same channel, and it is therefore not necessary to process, say, the
+1.25\,$\mu$m TOD when estimating the 4.9\,$\mu$m albedo. In practice,
+we therefore first estimate all ZL shape parameters (and the
+corresponding emissivities, albedos and monopoles) using only the 12
+and 25\,$\mu$m channels, and then we estimate the emissivity, albedo,
+and monopole for each of the remaining channels separately --- but now
+conditionally on the shape parameters derived from 12 and
+25\,$\mu$m. The cost of this approach is slightly higher statistical
+uncertainties on the shape parameters, since the other channels could
+have contributed with some information for these parameters as well,
+but the gain is a computational speed-up of roughly one
+order-of-magnitude, and we consider this an excellent trade-off.
 
 
 \section{Methods}\label{sect:param-estimation}
@@ -664,6 +682,7 @@ algorithms.
 
 
 \subsection{Data model, posterior distribution, and Gibbs sampling}
+\label{sec:gibbs}
 
 The first step in many Bayesian parameter estimation methods is to
 write down an explicit parametric data model. For \cosmoglobe\ DR2, we
@@ -770,11 +789,14 @@ distribution in Eq.~\eqref{eq:gibbs_zodi}, and we may write
 \end{equation}
 where we have introduced multiple data frequency channels, denoted by
 $\nu$, and also for simplicity neglected the prior,
-$P(\zeta_{\mathrm{z}})$. In this framework, ZL parameter estimation is
-thus nothing but a traditional Gaussian $\chi^2$ sampling or
-optimization problem after all non-ZL contributions have been
-subtracted from the $\dv$. Precisely how we implement this operation
-in the current pipeline is described in Sect.~\ref{sec:nonlin}.
+$P(\zeta_{\mathrm{z}})$. We also define
+$\chi^2_{\mathrm{red}}=\chi^2/n_{\mathrm{TOD}}$, where
+$n_{\mathrm{TOD}}$ is the number of TOD samples included in the
+likelihood evaluation. In this framework, ZL parameter estimation is
+thus nothing but a traditional Gaussian $\chi^2$ optimization (or
+sampling) problem after all non-ZL contributions have been subtracted
+from the $\dv$. Precisely how we implement this operation in the
+current pipeline is described in Sect.~\ref{sec:nonlin}.
 
 So far we have silently skipped past one important term in
 Eq.~\eqref{eq:model}, namely $\s_{\mathrm{static}}$. This is described
@@ -854,28 +876,27 @@ main topic for future work.
 \subsection{Comparison with K98 fitting algorithm}
 \label{sec:algorithm_comparison}
 
-Before describing the numerical implementation adopted for sampling
-from Eq.~\eqref{eq:gibbs_zodi} in this paper, it is worth first
-considering the more important fundamental differences between our
-approach and that adopted by the DIRBE team as described by
+Before describing the practical numerical implementation used for
+sampling from Eq.~\eqref{eq:gibbs_zodi} in this paper, it is worth
+first considering the more important fundamental differences between
+our approach and that adopted by the DIRBE team as described by
 \citet{Kelsall1998}. The first difference worth noting in this respect
 is that while our $\chi^2$ statistic is defined directly in terms of
-TOD, the K98 parameter estimation method rather work weekly maps. That
+TOD, the K98 parameter estimation method works with weekly maps. That
 is, the raw data are co-added week-by-week into pixelized maps, and
-these are fed into a corresponding pixel-based $\chi^2$ statistic that
-also accepts the ZL model in terms of pixelized maps. One important
-motivation for working with weekly maps is generally lower
-computational requirements, which was relatively more important two
-decades ago that it is today.
+these are fed into a corresponding pixel-based $\chi^2$ statistic. One
+important motivation for working with weekly maps rather than single
+TOD samples is lower computational requirements, which was more
+important two decades ago that it is today.
 
 A second important difference between the two algorithms --- and this
 is conceptually a far more important one -- is the fact that while our
 method makes active use of an explicit parametric data model for all
-non-ZL components, the K98 algorithm eliminates any contribution from
-non-ZL components directly by only considering differences between
-weekly maps and the corresponding full-mission average map in their
-$\chi^2$ statistic. That is, rather than optimizing the full $\chi^2$
-as defined in Eq.~\eqref{eq:gibbs_chisq}, their algorithm optimizes
+non-ZL components, the K98 algorithm eliminates any contributions from
+non-ZL components by only considering differences between weekly maps
+and the corresponding full-mission average map in their $\chi^2$
+statistic. That is, rather than optimizing the full $\chi^2$ as
+defined in Eq.~\eqref{eq:gibbs_chisq}, their algorithm optimizes
 \begin{equation}
   -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{i,\nu}
   \left(\frac{\Delta\dv_{i,\nu} -
@@ -951,7 +972,78 @@ non-idealities.
 \subsection{Posterior sampling by non-linear optimization}
 \label{sec:nonlin}
 
-\begin{figure}
+
+To complete the algorithm in Sect.~\ref{sec:gibbs}, we still need to
+specify the details of the algorithm used to draw samples from
+Eq.~\eqref{eq:gibbs_zodi}. A broad range of Bayesian sampling methods
+can be envisioned used for this purpose, from simple
+Metropolis-Hastings (MH) accept-reject samplers via various
+incarnations of Hamiltonian samplers that exploit on derivative
+information. Indeed, our very first implementation employed a simple
+MH sampler with manually tuned step lengths, and this was used for
+early model exploration and code testing. However, this approach was
+quickly abandoned because it, after a short burn-in period, very
+quickly got stuck in a local minimum, and all subsequent proposed
+samples were rejected.
+
+As noted already in Sect.~\ref{sect:zodi-model}, the main challenge
+with the ZL posterior distribution is a large number of
+degeneracies. These translate into a highly structured posterior
+distribution with many local maxima, and it is generally difficult for
+most iterative non-linear optimization or MCMC methods to map out such
+parameter spaces efficiently.
+
+The original K98 analysis used a standard Levenberg-Marquardt
+algorithm to compute the best-fit model. This is a non-linear
+optimization algorithm that essentially interpolates between a
+Gauss-Newton and a gradient descent algorithm. As such, that analysis
+was also susceptible to getting trapped in a local minimum.
+
+In the current paper, we adopt a pragmatic approach to this problem
+that uses ideas from both the MH and non-linear optimization
+approaches. The non-linear optimization step is for now performed with
+a simple Powell search, which uses a series of bi-directional line
+searches along a set of conjugate directions. The only reason for
+choosing this method over, say, Levenberg-Marquardt was one of
+implementational ease; it does not require derivative information.
+
+The algorithm is defined as follows: We start by initializing all free
+ZL parameters at the K98 model, and run one Powell optimization to
+reach the nearest local poserior maximum. We then iterate through all
+non-ZL Gibbs steps, to obtain a new foreground and instrument model
+given the new ZL model. When returning to the ZL sampler, we add a
+Gaussian random fluctuation to each $\zeta_{\mathrm{z}}$ parameter,
+which for now is defined by an rms of 1\,\% of its original value. We
+then run a new Powell optimization to identify a new local ZL
+parameter maximum. This new model is then accepted or rejected based
+on the following Metropolis-like accept probability,
+\begin{equation}
+a = \mathrm{min}\left(e^{-\frac{1}{2}\frac{\chi^2_{\mathrm{red,new}}-\chi^2_\mathrm{red,old}}{\delta_{a}}},1\right),
+\label{eq:accept}
+\end{equation}
+where $\delta_a$ is a tunable parameter that determines the strictness
+of the rejection criterion. Explicitly, if a proposed
+$\zeta_{\mathrm{z}}$ has a lower $\chi_{\mathrm{red}}^2$ than the
+previous sample, it is always accepted; if it has a higher
+$\chi_{\mathrm{red}}^2$, it is accepted with probability $a$. We
+comment on the reason this definition uses $\chi^2_{\mathrm{red}}$
+rather than the absolute $\chi^2$ below, as well as how we set $a$.
+
+In practice, many adjustments have been made gradually over the course
+of many months and hundreds of short individual test runs to the
+\cosmoglobe\ DR2 data selection, analysis masks, and parametric data
+model. In each case, the new job has been restarted on the previous
+best-fit solution. This process of slow, gradual and continuously
+supervised improvements also serves as a safe-guard against unphysical
+local posterior maxima, and effectively adds a meta-layer of simulated
+annealing to the overall algorithm. Typically, the test runs were only
+run for a few full Gibbs iterations, as in one to ten full
+samples. Then, once the data and model configuration was considered
+sufficiently mature for production, a longer run with hundreds of
+samples distributed over multiple chains were produced.
+
+
+\begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
     \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single Gibbs chain. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
@@ -959,27 +1051,91 @@ non-idealities.
 \end{figure}
 
 
-\begin{figure}
+
+
+\begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
     \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
     \label{fig:powell_T0}
 \end{figure}
 
-Before concluding this section, we still need to specify the details
-of the algorithm used to draw samples from
-Eq.~\eqref{eq:gibbs_zodi}. A broad range of Bayesian sampling methods
-can be envisioned used for this purpose, from a simple
-Metropolis-Hastings (MH) accept-reject sampler to various incarnations
-of Hamiltonian samplers that exploit on derivative
-information. Indeed, our very first implementation was due to its
-implementational simplicity an MH sampler with manually tuned step
-lengths, and this was used for early model exploration and code
-testing. However, this approach was quickly abandoned because it,
-after a short burn-in period, got stuck in a local minimum, after
-which all proposed samples were rejected.
+The overall behaviour of this hybrid MCMC+optimization algorithm is
+illustrated in Fig.~\ref{fig:powell_chisq_iter}, which shows the
+$\chi^2$ obtained from the first $10^6$ Powell likelihood evaluations
+in one of the final production chains for the 12+25\,$\mu$m ZL
+sampling group. Each discrete jump corresponds to one new main Gibbs
+iteration, while the smooth descent between two jumps correspond to
+the Powell search. The dense black ``roof'' corresponds to a large
+number of very poor parameter estimates made within each Powell
+search. Only the very last point in each block is propagated forward
+to the rest of the Gibbs chain. Each likelihood evaluation takes about
+0.3\,sec wall-time on 128 cores, and the evaluations shown in this
+figure therefore correspond to about 10\,000 CPU-hrs.
 
-The main problem
+We see that the burn-in period appears to be roughly 20 main Gibbs
+iterations, or about 300\,000 likelihood evaluations, after which the
+chain appears reasonably stationary as measured in terms of
+$\chi^2$. As for any MCMC sampler, the chain scatters up and down in
+$\chi^2$ as it explores the overall parameter space, and sometimes
+worse models than the previous best-fit are accepted.
+
+Further intuition regarding this pseudo-MH algorithm and the
+underlying multi-peaked likelihood surface is provided in
+Fig.~\ref{fig:powell_T0}, which again shows $\chi^2_{\mathrm{red}}$
+for a large number of likelihood evaluations. However, this time this
+is plotted as a function of the overall temperature, $T_0$, and also
+plotted separately for nine individual main Gibbs samples; the sample
+numbers are color coded according to a rainbow scheme, such that
+redder colors are closer to the beginning of the Markov
+chain. Intuitively, the lower edge of each curve represents a snapshot
+of the local neighborhood around each likelihood minimum. We note that
+each such likelihood neighborhood is quite sharp, indicating that the
+optimization algorithm is traversing a rather narrow ``likelihood
+valley''. At the same time, different samples reach a different
+absolute minimum level that is not a smooth function of $T_0$; this is
+because of all the other parameters in $\zeta_{\mathrm{z}}$ that are
+effectively marginalized over in this figure. As far as burn-in and
+convergence is concerned, we see that the Markov chain moves
+systematically from its initial value at $T_0\sim273\,$K to
+$\sim$\,284\,K during the first 20 samples, and after that it moves
+randomly between 282 and 286\,K. In sum, this figure illustrates well
+the highly complex and multi-peaked likelihood surface that must be
+explored when sampling ZL parameters.
+
+As noted above, we define the accept/reject criterion in terms of a
+reduced $\chi^2_{\mathrm{red}}\equiv\chi^2/n_{\mathrm{TOD}}$, rather
+than the absolute $\chi^2$, as dictated by the traditional
+Metropolis-Hastings rule. The reason for this is illustrated in
+Fig.~\ref{fig:powell_chisq_iter}, as both the absolute and reduced
+$\chi^2$ are shown in the right and left $y$-axes. The point is simply
+that the main uncertainties in these evaluations is not white
+instrumental noise, but rather model errors and residual
+systematics. As far as overall goodness-of-fit is concerned, all
+models that are derived in the post-burn-in phase appears visually
+equally good, despite the fact that the absolute $\chi^2$ varies with
+$\mathcal{O}(10^5)$ from model to model. This quantity is therefore a
+very poor measure for overall acceptability. In contrast, the reduced
+$\chi^2$ varies with $\mathcal{O}(10^{-3})$ from sample to sample, and
+that is a much more meaningful measure for overall
+goodness-of-fit. For now, we conservatively set $\delta_a = 0.1$, and
+the accept probability in Eq.~\eqref{eq:accept} is then primarily a
+safe-guard against accepting pathologically poor models that lie
+outside the range seen in Fig.~\ref{fig:powell_chisq_iter}. 
+
+It is important to stress that this algorithm --- because of the
+random jump proposal rule, the subsequent non-linear optimization
+phase, and the accept rule based on a reduced $\chi^2$--- does not
+formally satisfy the mathematical demands to a Monte Carlo Markov
+Chain sampler in terms of ergodicity or reversibility. It is therefore
+not guaranteed to converge to the true posterior distribution, even in
+the limit of an infinite number of samples. Rather, this algorithm is
+essentially simply a pragmatic solution that allow the previous strict
+$\chi^2$ optimization algorithm used by \citet{Kelsall1998} to evade
+local posterior maxima, and explore larger regions of parameter space
+without getting trapped. Significant additional algorithm development
+efforts should be invested in establishing efficient methods for this
+particular posterior distribution.
 
 
 \section{Data}\label{sect:data}
