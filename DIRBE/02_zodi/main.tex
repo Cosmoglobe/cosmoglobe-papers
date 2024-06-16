@@ -1172,7 +1172,6 @@ without getting trapped. Significant additional algorithm development
 efforts should be invested in establishing efficient methods for this
 particular posterior distribution.
 
-
 \section{Data}\label{sect:data}
 
 \subsection{DIRBE Calibrated Individual Observations}
@@ -1309,14 +1308,106 @@ masking.
 
 
 \section{Results}\label{sect:improved-model}
-Here we present our best-fit ZL model from having run Commander3 for six independant
-Markov Chains for N samples. Our best-fit parameters for the geometrical IPD, emissivities 
-and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
-and~\ref{table:zodi-params-spectral}, where they are compared to the values in the K98 model.
-\input{ipd_param_table.tex}
+We are now finally ready to present our new ZL model that is obtained
+by analyzing the data summarized in Sect.~\ref{sect:data} with the
+algorithm outlined in Sect.~\ref{sect:param-estimation}. We have
+produced a total of 378 full Gibbs samples, distributed over six
+Markov chain, and we remove the first 25 samples from each chain as
+burn-in, leaving a total of 228 samples for final analysis. In total,
+544 computing cores ran for 16 days to produce this sample set, for a
+total cost of about 200k CPU-hrs.
 
 \subsection{Markov chains}
 
+We start our presentation with a visual inspection of the individual
+Markov chains for each ZL parameter in $\zeta_{\mathrm{z}}$, and these
+are shown for the general ZL shape parameters in
+Fig.~\ref{fig:trace-ipd} and for the amplitude (emissivity and albedo)
+parameters in Fig.~\ref{fig:trace-emissivity-albedo}. The gray regions
+indicate the discarded burn-in.
+
+Many interesting features may be identified in this plots. Starting
+with the shape parameters for the dominant cloud component shown in
+the leftmost column in Fig.~\ref{fig:trace-ipd}, we see that many
+parameters do appear to drift significantly during the first 20
+samples or so, but after that, they appear mostly stationary.  we also
+see that the mixing between different chains is notably slower than
+what is common for most Monte Carlo methods discussed in the
+literature, and this indicates rather long correlation lengths. Future
+algorithm development work should most certainly aim at decreasing
+these correlations lengths through better sampling algorithms, as well
+as to reduce the cost per Monte Carlo sample, such that longer Markov
+chains can be produced. Still, even with the currently available
+limited sample set, it does appear possible to derive sensible
+estimates of both the posterior mean and standard deviation for most
+parameters. 
+
+Some parameters appear pathological, however, for instance
+$p_{\mathrm{B1}}$, which only explores a very narrow parameter region
+near $p_{\mathrm{B1}}\lesssim 4$. In this case, it is worth noting
+that Band~1 has a relatively low S/N overall, and this particular
+parameter, which quantifies the slope of the band, has an even lower
+S/N. It has therefore drifted to its upper hard prior of
+$p_{\mathrm{B1}}< 4$, apparently attempting to compensate for some
+other effect in the data. In retrospect, this parameter should perhaps
+have been fixed at an IRAS-derived value, similar to what was done in
+the K98 analysis. For this first \cosmoglobe\ DR2 analysis, however,
+an important aim was to explore the full data model as freely as
+possible, to understand what the DIRBE data themselves prefer. A
+future joint analysis between DIRBE and IRAS should hopefully lead to
+better-determined parameters for the asteriodal bands without the need
+for fixed priors. It is also worth recalling that most of the
+parameters shown in Fig.~\ref{fig:trace-ipd} are constrained only by
+the 12 and 25$\,\mu$m channels, and including more channels in the
+shape parameter ZL sampling group may reduce some of these
+degeneracies further.
+
+\input{ipd_param_table.tex}
+
+
+Moving on the emissivity and albedo parameters shown in
+Fig.~\ref{fig:trace-emissivity-albedo}, we see much of the same
+quantiative behaviour, with a significant drift during the first
+25~samples, and generally long correlation lengths. Indeed, for the
+140 and 240\,$\mu$m channels the correlation lengths are extremely
+long, and each chain only simply appears to fall down into a local
+$\chi^2$ after intialization, and then explore a very small region
+around that initial point. Indeed, for these channels we also observe
+a number of apparent phase transitions, in which the Markov chains
+suddenly move from one stationary state to another. This behaviour is
+another manifestation of the complex multi-peaked ZL likelihood
+surface discussed in Sect.~\ref{sec:nonlin}: Because of the
+combination of a very low absolute ZL signal-to-noise ratio of the
+far-infrared DIRBE channels with strong diffuse Galactic thermal dust
+emission, there are strong degeneracies between the
+$\zeta_{\mathrm{z}}$ and the Galactic model, and those are explored
+rather inefficiently with the current Gibbs sampler. A future
+implementation of this framework could consider fitting an overall
+parametric function for the ZL SED that is smooth in wavelength,
+rather than free amplitudes at each channel such that these low S/N
+channels are supported by the stronger ZL channels in the mid-infrared
+regime. At the same time, it is also important to stress that the same
+low signal-to-noise ratios that make it difficult to estimate the
+precise values of $\zeta_{\mathrm{z}}$ for these values, also make the
+very same values less important as far as cosmological or Galactic
+science is concerned; intuitively speaking, the ZL emission at these
+wavelenghts is simply very faint, and therefore it is also less
+important.
+
+Figure~\ref{fig:correlations} shows the Pearson correlation
+coefficient between pairs of parameters in $\zeta_{\mathrm{z}}$,
+evaluated directly from the post-burn-in Gibbs sample set. This plot
+is highly structured, and this is yet another illustration of the
+complex ZL likelihood. Particularly strong are the correlations
+between the reference temperature, $T_0$, and the emissivity and
+albedo parameters, $E_i$ and $A_i$. As already noted above, fitting a
+smooth parametric ZL SED function rather than individual amplitude
+factors at each channel should be beneficial in many ways; both in
+terms of physical interpretation, but also in terms of overall
+sampling efficiency in a Gibbs sampler. We also see that many of the
+shape parameters involving the two first asteroidal bands are strongly
+correlated, and joint analysis with high-resolution experiments such
+as IRAS and AKARI should be highly beneficial in constraining these.
 
 
 \subsection{Updated ZL model and goodness-of-fit}
