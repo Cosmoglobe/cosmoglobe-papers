@@ -1130,6 +1130,14 @@ randomly between 282 and 286\,K. In sum, this figure illustrates well
 the highly complex and multi-peaked likelihood surface that must be
 explored when sampling ZL parameters.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/tod.pdf}
+    \caption{Subsample of the pre-processed TOD used in this analysis for all ten DIRBE bands. The timestreams
+    show one full rotation of the COBE satellite which includes two crossing of the Galactic and Ecliptic planes.}
+    \label{fig:tod_zodi}
+\end{figure}
+
 As noted above, we define the accept/reject criterion in terms of a
 reduced $\chi^2_{\mathrm{red}}\equiv\chi^2/n_{\mathrm{TOD}}$, rather
 than the absolute $\chi^2$, as dictated by the traditional
@@ -1168,25 +1176,67 @@ particular posterior distribution.
 \section{Data}\label{sect:data}
 
 \subsection{DIRBE Calibrated Individual Observations}
-We use the publicly available DIRBE Calibrated Individual Observations (CIO)
-in our analysis. These are a user-friendly pre-calibrated version of the raw TOD observed by DIRBE.
-The CIO are pixelized according to the COBE Quadrilateral cube projection. As part of the data proprocessing,
-we convert these to corresponding HEALPix pixel indicies and re-order them into a time-ordered format.
-For more details on the preprocessing of the DIRBE CIO we refer to \cite{CG02_01}. In the following, we will 
-refer to the pre-processed CIO as TODs.
-A subsample of the TOD for each DIRBE band as used in our analysis can be seen in Fig.~\ref{fig:tod_zodi}, 
-where we show data for one rotation of the spacecraft about its boresight (0.8 RPM). Within this rotation, 
-both the Galactic and Ecliptic planes are crossed twice. The the two outer-most bulges in the 1.25, 2.2, 3.5, 
-and 4.9 $\mu$m bands and the right bulge in the remaiining bands represent the Galactic plane crossings. The 
-sine-like wave in bands 4.9, 12, and 25 $\mu$m are the zodiacal light which peaks in the ecliptic plane. 
-\begin{figure}
-    \centering
-    \includegraphics[width=\columnwidth]{figs/tod.pdf}
-    \caption{Subsample of the pre-processed TOD used in this analysis for all ten DIRBE bands. The timestreams
-    show one full rotation of the COBE satellite which includes two crossing of the Galactic and Ecliptic planes.}
-    \label{fig:tod_zodi}
-\end{figure}
-    
+The main data set used in the \cosmoglobe\ DR2 analysis is the
+publicly available DIRBE Calibrated Individual Observations
+(CIO). These are a user-friendly pre-calibrated version of the raw TOD
+observed by DIRBE. The CIO are pixelized according to the COBE
+Quadrilateral cube projection. As part of the data proprocessing, we
+convert these to corresponding HEALPix pixel indicies and re-order
+them into a time-ordered format. For full details on the preprocessing
+of the DIRBE CIO we refer to \cite{CG02_01}.
+
+In the following, we will refer to the pre-processed CIO as TODs.  A
+subsample of the TOD for each DIRBE band as used in our analysis can
+be seen in Fig.~\ref{fig:tod_zodi}, where we show data for one
+rotation of the spacecraft about its boresight (0.8\,RPM). Within this
+rotation, both the Galactic and Ecliptic planes are crossed twice. The
+the two outer-most bulges in the 1.25, 2.2, 3.5, and 4.9 $\mu$m bands
+and the right bulge in the remaining bands represent the Galactic
+plane crossings. The sine-like waves in bands 4.9, 12, and 25\,$\mu$m
+are due to the ZL emission which peaks in the Ecliptic plane.
+
+\subsection{Ancillary data}
+
+As summarized by Eq.~\eqref{eq:model}, the \cosmoglobe\ DR2 data model
+includes a wide range of both astrophysical and instrumental
+parameters. The DIRBE CIOs are clearly not able to constrain this
+model very well on their own, and we therefore include three
+additional key datasets. For full details, see
+\citet{CG02_01,CG02_03,CG02_04,CG02_05}.
+
+The first ancillary data set is a set of six \Planck\ HFI PR4 maps
+between 100 and 857\,GHz. We preprocess each of these by subtracting
+the \Planck\ PR3 \commander\ CMB temperature anisotropy map
+\citep{planck2014-a12} and the best-fit \cosmoglobe\ DR1 CMB dipole
+\citep{Watts2023}; the \Planck\ PR3 GNILC CIB fluctuation maps between
+353 and 857\,GHz \citep{gnilc_cib}; and the nominal \Planck\ PR4 model
+for time-independent ZL emission \citep{npipe}. Each map is processed
+at its native HEALPix resolution of $N_{\mathrm{side}}=2048$. The main
+purpose of including \Planck\ HFI is to constrain the morphology of
+Galactic thermal dust emission.
+
+The second ancillary data set is the AllWISE
+\citep{wright:2010,allwise_ES} compact object catalog at
+3.5$\,\mathrm{mu}$m (denoted W1), which comprise more than
+747\,million sources. As described by \citet{CG02_04}, the amplitudes
+of the $\sim$\,70\,000 brightest of these sources are fitted
+source-by-source within the current \commander\ DR2 Gibbs sampler,
+while the rest are co-added into a single diffuse model.
+
+The third ancillary data set is GAIA DR2. We attempt to match each
+source in the AllWISE catalog with GAIA DR2, and for those that have a
+positive match as a star in that catalog (which is more than 90\,\%),
+we record the effective temperature, $T_0$, metallicity,
+$[\mathrm{M}/\mathrm{H}]$, and gravitational acceleration,
+$\mathrm{log}\,g$; these values are then used to identify the
+appropriate theoretical stellar SED as provided by the PHOENIX stellar
+model library \citep{husser:2013}. This spectrum is then convolved
+with the response function of each DIRBE band between 1.25 and
+25\,$\mu$, and normalized to unity at 1.25\,$\mu$m; only one overall
+free amplitude is fitted per star in the current analysis. Together,
+the AllWISE and GAIA data provide a state-of-the-art model of
+starlight emission in the near- and mid-infrared regime.
+
 \subsection{Masks}
 
 \begin{figure}
@@ -1198,19 +1248,6 @@ sine-like wave in bands 4.9, 12, and 25 $\mu$m are the zodiacal light which peak
     240 $\mathrm{\mu m}$ band.}
     \label{fig:zodi-procmask}
 \end{figure}
-
-
-
-
-
-\section{Results}\label{sect:improved-model}
-Here we present our best-fit ZL model from having run Commander3 for six independant
-Markov Chains for N samples. Our best-fit parameters for the geometrical IPD, emissivities 
-and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
-and~\ref{table:zodi-params-spectral}, where they are compared to the values in the K98 model.
-\input{ipd_param_table.tex}
-
-\subsection{Markov chains}
 
 \begin{figure*}
     \centering
@@ -1225,6 +1262,61 @@ and~\ref{table:zodi-params-spectral}, where they are compared to the values in t
     \caption{Trace plot of all geometrical interplanetary dust paramteres for six independant Markov chains.}
     \label{fig:trace-emissivity-albedo}
 \end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=1\textwidth]{figs/zodi_correlations.png}
+    \caption{Correlations between a selection of the ZL $\zeta_{\mathrm{z}}$ parameters.}
+    \label{fig:correlations}
+\end{figure*}
+
+As discussed in Sect.~\ref{sec:algorithm_comparison}, the
+\cosmoglobe\ DR2 parameter estimation algorithm considers the full
+intensity measured by DIRBE when fitting $\zeta_{\mathrm{z}}$, as
+opposed to only considering differences between weekly and
+full-mission maps as \citet{Kelsall1998} did. In order to minimize the
+risk of confusion from Galactic thermal dust and starlight emission,
+it is useful to define a confidence mask for each channel that
+identifies region with a high S/N for ZE, and low S/N for Galactic
+signals.
+
+For the three channels between 1.25 and 3.5\,$\mu$m, which are
+strongly dominated by starlight emission, we generate the ZL
+confidence mask by thresholding the bright compact source model
+evaluated at 1.25\,$\mu$m at 20\,kJy/sr. In addition, to remove
+diffuse thermal dust emission, we remove all observations with an
+absolute Galactic latitude $|b|<45^{\circ}$. The resulting mask is
+shown in blue in Fig.~\ref{fig:zodi-procmask}, and leaves 18\,\% of
+the sky available for analysis.
+
+For wavelengths longer than and equal to 60\,$\mu$m, the starlight
+emission is negligible, and the Galactic signal is instead dominated
+by thermal dust emission. At these channels, we therefore instead use
+the sum of the three thermal dust component maps as the main Galactic
+tracer. For instance, at 100$\,\mu$m we threshold this map at
+3\,MJy/sr. In addition, we also remove any pixels for which the
+absolute data-minus-model residual exceeds a given threshold, which
+for the 100$\,\mu$m channel was set to 0.8\,MJy/sr. The orange and
+green pixels in Fig.~\ref{fig:zodi-procmask} shows the final masks for
+the 25 and 240\,$\mu$m channels, which leaves 81 and 52\,\% of the sky
+available for analysis, respectively.
+
+For the intermediate channels between 4.9 and 25\,$\,\mu$m, we
+threshold on both diffuse and starlight emission. In all cases, we
+overlay the final masks on the data-minus-model residual map, and
+verify by eye that no obvious bright Galactic residuals remain after
+masking. 
+
+
+\section{Results}\label{sect:improved-model}
+Here we present our best-fit ZL model from having run Commander3 for six independant
+Markov Chains for N samples. Our best-fit parameters for the geometrical IPD, emissivities 
+and albedo parameters are listed in tables~\ref{table:zodi-params-geo} 
+and~\ref{table:zodi-params-spectral}, where they are compared to the values in the K98 model.
+\input{ipd_param_table.tex}
+
+\subsection{Markov chains}
+
 
 
 \subsection{Updated ZL model and goodness-of-fit}
@@ -1498,17 +1590,31 @@ subtracted maps with our model, and column three shows the DIRBE ZSMA.
 
 
 \begin{acknowledgements}
- The current work has received funding from the European
-  Union’s Horizon 2020 research and innovation programme under grant
-  agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
-  \textsc{bits2cosmology}). Some of the results in this paper have been 
-  derived using the HEALPix \citep{Gorski2005} package.
-  We acknowledge the use of the Legacy Archive for Microwave Background 
-  Data
-  Analysis (LAMBDA), part of the High Energy Astrophysics Science
-  Archive Center
-  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science 
-  Division at the NASA Goddard Space Flight Center.  
+  We thank Tony Banday, Johannes Eskilt, Dale Fixsen, Ken Ganga, Paul
+  Goldsmith, Sven Wedemeyer, and Janet Weiland for useful suggestions
+  and guidance.  The current work has received funding from the
+  European Union’s Horizon 2020 research and innovation programme
+  under grant agreement numbers 819478 (ERC; \textsc{Cosmoglobe}),
+  772253 (ERC; \textsc{bits2cosmology}), and 101007633 (MSCA;
+  \textsc{CMBInflate}).  Some of the results in this paper have been
+  derived using healpy \citep{Zonca2019} and the HEALPix
+  \citep{healpix} package.  We acknowledge the use of the Legacy
+  Archive for Microwave Background Data Analysis (LAMBDA), part of the
+  High Energy Astrophysics Science Archive Center
+  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science
+  Division at the NASA Goddard Space Flight Center. This publication
+  makes use of data products from the Wide-field Infrared Survey
+  Explorer, which is a joint project of the University of California,
+  Los Angeles, and the Jet Propulsion Laboratory/California Institute
+  of Technology, funded by the National Aeronautics and Space
+  Administration. This work has made use of data from the European
+  Space Agency (ESA) mission {\it Gaia}
+  (\url{https://www.cosmos.esa.int/gaia}), processed by the {\it Gaia}
+  Data Processing and Analysis Consortium (DPAC,
+  \url{https://www.cosmos.esa.int/web/gaia/dpac/consortium}). Funding
+  for the DPAC has been provided by national institutions, in
+  particular the institutions participating in the {\it Gaia}
+  Multilateral Agreement.
 \end{acknowledgements}
 
 
