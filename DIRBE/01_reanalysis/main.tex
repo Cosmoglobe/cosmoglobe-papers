@@ -357,6 +357,7 @@ goodness-of-fit as 240\,$\mu$m, but in this case we fit a
 strong degeneracy with respect to this component. In total, we denote
 the sum of all noise parameters by $\xi_{\mathrm{n}}$.
 
+
 \subsubsection{Sky model}
 
 For the sky signal defined implicitly by the sum in
@@ -481,6 +482,13 @@ each star to the four highest DIRBE frequency bands between 1.25 and
 4.9\,$\mu$m; we also account for star emission in the 12 and
 25\,$\mu$m bands, but these bands are not used for the actual fit. A
 total of 717\,000 stars are included in the fit.
+
+\begin{figure*}
+  \centering
+   	\includegraphics[width=0.95\textwidth]{figs/tod.pdf}
+  	\caption{Time-ordered data segment of each DIRBE band (1-10) from top to bottom.}
+	\label{fig: cios}
+\end{figure*}
 
 The remaining 53\,000 WISE sources that do not have a \GAIA\
 counterpart are assumed to be of extra-galactic origin, and we fit
@@ -643,10 +651,17 @@ basis for the code developed here, which now is a set of native
 framework, including a dramatically improved best-fit model with
 respect to K98, is presented by \citet{CG02_02}.
 
-\section{Data}
-\label{sec:data}
+\section{Diffuse Infrared Background Experiment}
+\label{sec:dirbe}
 
-\input{summary_table.tex}
+\begin{figure*}
+	\centering
+	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
+	\caption{DIRBE optics module. The optical design includes two field stops, one of which is square, to reduce straylight contamination. Reproduced from \cite{magner87}.
+	}
+	\label{fig:optics_model}
+\end{figure*}
+
 
 \begin{figure}
   \centering
@@ -681,13 +696,6 @@ All bands observe the same $0\fdg7\times0\fdg7$  field simultaneously, with smal
 %	\label{fig:optics}
 %\end{figure}
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
-	\caption{DIRBE optics module. The optical design includes two field stops, one of which is square, to reduce straylight contamination. Reproduced from \cite{magner87}.
-	}
-	\label{fig:optics_model}
-\end{figure*}
 
 The different detector technology for each band accounts for the different performances and systematics found in each of the bands. \citet{silverberg93} in particular highlights the Ge:Ga photoconductors' response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
 
@@ -707,8 +715,13 @@ pixelization (resolution 9, pixel size 21\arcm) and the CADE\footnote{Centre d'A
 
 %Instead of using the raw time-ordered data, the DIRBE team recommends using the CIOs, which can be though of as a user friendly version of the TODs. The CIOs consist of 1/8th second calibrated observations ordered after pixel numbers. The CIOs were created pre-HEALPix era, and all three experiments aboard \COBE used the Quadrilateralized Spherical Cube pixelization (QUADCUBE) scheme which is an approximately equal-area projection where each pixel lie on one of four cube faces. The DIRBE team did provide us with a script which converts these QUADCUBE pixels into ecliptic longitue and latitude coordinates.
 
-\subsection{DIRBE TOD preprocessing}
-\label{sec:tod}
+\subsection{Pointing, beam and bandpass response}
+
+
+
+
+\subsection{Data selection and masking}
+%\label{sec:tod}
 
 In order to produce maps with full multipole support, we analyze the CIOs directly and convert the pointing into 6\farcm9 $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered CIOs.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from pixel CIO pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in a Python preprocessing script.\footnote{\url{https://github.com/MetinSa/quadcube}}
 
@@ -725,22 +738,25 @@ The planet flags are not present in the CIOs, and are regenerated beforehand. Us
 %\subsection{Publicly available DIRBE products}
 
 
-\begin{figure*}
+
+%\subsection{Data selection and masking}
+
+\begin{figure}
   \centering
-   	\includegraphics[width=\textwidth]{figs/tod.pdf}
-  	\caption{Time-ordered data segment of each DIRBE band (1-10) from top to bottom.}
-	\label{fig: cios}
-\end{figure*}
+  \includegraphics[width=\columnwidth]{figs/mask_proc_calib.pdf}
+  \caption{Processing masks use in the analysis.}
+  \label{fig:masks}
+\end{figure}
 
 
 
 
-\subsection{Ancillary data sets}
+\section{Ancillary data sets}
 
 As demonstrated by the success of the \bp\ and \cosmoglobe\ projects, the use of complementary datasets with different angular resolution, frequency coverage, and observation strategies, can greatly improve the quality of low-level data processing. In this work, we use \Planck\ High Frequency Instrument, \WISE, \GAIA, and \COBE-FIRAS to better constrain our sky model and characterize the DIRBE data.
 
 
-\subsubsection{\Planck\ HFI}
+\subsection{\Planck\ HFI}
 
 
 The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
@@ -753,7 +769,7 @@ At the same time, CIB fluctuations with a similar SED to the Milky Way have been
 Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
 We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
 
-\subsubsection{\GAIA\ and \WISE}
+\subsection{\GAIA\ and \WISE}
 
 In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \cite{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky,
 
@@ -764,36 +780,31 @@ Within the Galactic plane, there are many stars per single DIRBE pixel. In order
 
 
 
-\subsubsection{\COBE-FIRAS}
+\subsection{\COBE-FIRAS}
 
 The \COBE-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}. Due to the observation strategy, there are non-negligible correlations between nearby frequencies, and smearing along the scanning direction, corresponding to an effectively nonsymmetric beam.
 
-The dense frequency spacing of the FIRAS data makes it ideal for determining the continuum behavior of sky emission and allows for identification of emission lines \citep{bennet:1992}.
+The dense frequency spacing of the FIRAS data makes it ideal for determining the continuum behavior of sky emission and allows for identification of emission lines \citep{bennett:1992}.
 
 
-\section{Data selection and goodness-of-fit}
-\label{sec:data_selection}
+%\section{Data selection and goodness-of-fit}
+%\label{sec:data_selection}
 
-\subsection{Baseline data selection}
+%\subsection{Baseline data selection}
 
-\subsection{Mask definitions}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figs/mask_proc_calib.pdf}
-  \caption{Processing masks use in the analysis.}
-  \label{fig:masks}
-\end{figure}
+%\subsection{Mask definitions}
 
 
-\subsubsection{Galactic masks}
 
-\subsubsection{Solar-centered residual masks}
+%\subsubsection{Galactic masks}
 
-\subsection{Goodness-of-fit statistics}
+%\subsubsection{Solar-centered residual masks}
 
-\subsection{Summary of included data}
+%\subsection{Goodness-of-fit statistics}
 
+%\subsection{Summary of included data}
+
+\section{Excess radiation model}
 
 \begin{figure*}
   \centering
@@ -813,103 +824,37 @@ The dense frequency spacing of the FIRAS data makes it ideal for determining the
 
 
 
+
+
 \clearpage
-\section{Low-level posterior distributions}
-\label{sec:posteriors}
+\section{Markov chains, burn-in and convergence}
+\label{sec:chains}
 
 \begin{figure*}
-	\centering
-	\includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_01_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_02_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_03_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_04_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}
-	\caption{}
-	\label{fig:freqmaps1_4}
+    \centering
+    \includegraphics[width=0.975\textwidth]{figs/total_trace.pdf}
+    \caption{Trace plots.}
+    \label{fig:trace}
 \end{figure*}
 
 \begin{figure*}
-	\centering
-	\includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_05_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_06_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_07_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}
-	\caption{}
-	\label{fig:freqmaps5_7}
+    \centering
+    \includegraphics[width=1\textwidth]{figs/correlation_matrix.pdf}
+    \caption{Correlations between a selection of all parameters.}
+    \label{fig:correlations}
 \end{figure*}
 
-\begin{figure*}
-	\centering
-        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_08_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_09_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_10_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}
-	\caption{}
-	\label{fig:freqmaps8_10}
-\end{figure*}
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_01_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_01_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_01_n256.pdf}\\
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_02_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_02_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_02_n256.pdf}\\
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_03_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_03_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_03_n256.pdf}\\
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_04_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_04_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_04_n256.pdf}\\
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_05_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_05_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_05_n256.pdf}\\
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_06_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_06_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_06_n256.pdf}\\
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_07_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_07_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_07_n256.pdf}\\
-	\includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_08_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_08_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_08_n256.pdf}\\
-        \includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_09_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_09_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_09_n256.pdf}\\
-        \includegraphics[width=0.23\linewidth]{figs/CG_DIRBE_10_I_n0256_DR2.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/DIRBE_ZSMA_10_1_256.pdf}
-        \includegraphics[width=0.23\linewidth]{figs/diff_CG_DIRBE_ZSMA_10_n256.pdf}\\
-	\caption{Comparison of \Cosmoglobe\ DR2 (\emph{left column}) and legacy DIRBE (\emph{middle column}) zodiacal light subtracted mission average maps. Difference maps are shown in the rightmost column. Full maps are plotted with a non-linear and strictly positive color range, while difference maps are plotted with a linear and symmetric color range.   }
-	\label{fig:freqmaps_cg_vs_dirbe}
-\end{figure*}
-
-%\begin{figure*}
-%	\centering
-%	\includegraphics[width=\linewidth]{figs/diff_grid.png}
-	% Figure to make this script is currently in /mn/stornext/d5/data/duncanwa/DIRBE/plots/diff_grid.py
-%	\caption{Cosmoglobe, DIRBE ZSMA official maps, their difference, and the internal halfmission splits for Cosmoglobe.}
-%	\label{fig:diff_grid}
-%\end{figure*}
-
+\section{Noise estimation and goodness-of-fit}
 
 \subsection{Instrumental noise}
 
-\subsection{Calibration}
-
-\subsection{Beam characterization}
-
-\subsection{Excess radiation model}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\columnwidth]{figs/sigma0_bands.pdf}
 	\caption{Sigma0 for each band}
 	\label{fig:sigma0}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{figs/sigma0_trace.pdf}
-	\caption{Sigma0 for scan 100}
-	\label{fig:sigma0_band8}
 \end{figure}
 
 \begin{figure}
@@ -952,16 +897,86 @@ The dense frequency spacing of the FIRAS data makes it ideal for determining the
   % script to make these are in /mn/stornext/u3/metins/dirbe/DR2/plot_maps.py (cosmoglobe_analysis_plotter.plot_ncorr_maps(sample=19))
 	\centering
 	\includegraphics{figs/ncorr_10_c0001_000022.pdf}
+  %\vspace{-1cm}
+        %\includegraphics{figs/ncorr_09_c0001_000022.pdf}
   \vspace{-1cm}
-  
-	\includegraphics{figs/ncorr_09_c0001_000022.pdf}
-  \vspace{-0.2cm}
   
 	\includegraphics[width=0.5\columnwidth]{figs/ncorr_cbar_c0001_000019.pdf}
 
-	\caption{Correlated noise maps (inverse-variance-weighted of half-mission splits) for bands 9 and 10. The other bands are not clean enought for correlated noise fitting.}
+	\caption{Correlated noise sample for the 240$\,\mu$m channel.}
 	\label{fig:ncorr}
 \end{figure}
+
+
+\subsection{Goodness-of-fit}
+
+       
+       \begin{figure*}
+       	\centering
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_10a_c0001_000022.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_09a_c0001_000022.pdf}\\
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_08a_c0001_000022.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_07a_c0001_000022.pdf}\\
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_06a_c0001_000022.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_05a_c0001_000022.pdf}\\       
+        \includegraphics[width=0.39\linewidth]{figs/res_maps/res_04a_c0001_000022.pdf}         
+        \includegraphics[width=0.39\linewidth]{figs/res_maps/res_03a_c0001_000022.pdf}\\
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_02a_c0001_000022.pdf}
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_01a_c0001_000022.pdf}       
+       	\caption{Data-minus-model residual maps for each band. The color scales are $\pm 0.05$ (MJy/sr) for bands 1-5, $\pm 0.5$ for bands 5-7, and $\pm 2.5$ for bands 8-10.}
+       	\label{fig:res}
+       \end{figure*}
+
+       \begin{figure*}
+       	\centering
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_10a_c0001_000022.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_09a_c0001_000022.pdf}\\
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_08a_c0001_000022.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_07a_c0001_000022.pdf}\\
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_06a_c0001_000022.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_05a_c0001_000022.pdf}\\       
+        \includegraphics[width=0.39\linewidth]{figs/res_maps/res_04a_c0001_000022.pdf}         
+        \includegraphics[width=0.39\linewidth]{figs/res_maps/res_03a_c0001_000022.pdf}\\
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_02a_c0001_000022.pdf}
+       	\includegraphics[width=0.39\linewidth]{figs/res_maps/res_01a_c0001_000022.pdf}       
+       	\caption{Half-mission difference maps for each channel.}
+       	\label{fig:hmhd}
+       \end{figure*}
+       
+
+       \begin{figure}
+       	\centering
+       	\includegraphics{figs/chisq_total.pdf}
+       	\includegraphics{figs/chisq_total_cbar.pdf}
+       	\caption{Pixel-space reduced normalized $\chi^2$.}
+       	\label{fig:chisq}
+       \end{figure}
+
+       \begin{figure}
+	 \centering
+	 \includegraphics[width=\columnwidth]{figs/cls_lowl_BP8_v5.pdf}
+	 \caption{Half-mission half-difference angular power spectra for each DIRBE channel. The dashed lines show the power spectrum computed from one white noise realization.}
+	 \label{fig:hmhd_powspec}
+       \end{figure}
+
+
+
+%\begin{figure*}
+%	\centering
+%	\includegraphics[width=\linewidth]{figs/diff_grid.png}
+	% Figure to make this script is currently in /mn/stornext/d5/data/duncanwa/DIRBE/plots/diff_grid.py
+%	\caption{Cosmoglobe, DIRBE ZSMA official maps, their difference, and the internal halfmission splits for Cosmoglobe.}
+%	\label{fig:diff_grid}
+%\end{figure*}
+
+
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=\columnwidth]{figs/sigma0_trace.pdf}
+%	\caption{Sigma0 for scan 100}
+%	\label{fig:sigma0_band8}
+%\end{figure}
+
 
 %\begin{figure*}
 
@@ -1000,16 +1015,105 @@ The dense frequency spacing of the FIRAS data makes it ideal for determining the
 %    \label{fig:freq_maps}
 %\end{figure*}
 
+\clearpage
 \section{Frequency maps}
 \label{sec:maps}
 
 \subsection{ZSMA frequency maps}
 
-\subsection{Residual maps}
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_01_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
+        \includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_02_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
+        \includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_03_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
+        \includegraphics[width=0.58\linewidth]{figs/CG_DIRBE_04_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}
+	\caption{}
+	\label{fig:freqmaps1_4}
+\end{figure*}
 
-\subsection{Half-mission difference maps}
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_05_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
+        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_06_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
+        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_07_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}
+	\caption{}
+	\label{fig:freqmaps5_7}
+\end{figure*}
 
-\subsection{Comparison with official DIRBE products}
+\begin{figure*}
+	\centering
+        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_08_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
+        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_09_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}\\
+        \includegraphics[width=0.73\linewidth]{figs/CG_DIRBE_10_n0512_DR2_I_MEAN_w18_n512_cb_c-afmhot.pdf}
+	\caption{}
+	\label{fig:freqmaps8_10}
+\end{figure*}
+
+
+\input{summary_table.tex}
+
+
+
+
+
+\clearpage
+\section{Comparison with official DIRBE products}
+
+\subsection{ZSMA maps}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_01_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_01_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_01_n256.pdf}\\
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_02_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_02_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_02_n256.pdf}\\
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_03_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_03_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_03_n256.pdf}\\
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_04_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_04_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_04_n256.pdf}\\
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_05_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_05_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_05_n256.pdf}
+	\caption{Comparison of \Cosmoglobe\ DR2 (\emph{left column}) and legacy DIRBE (\emph{middle column}) zodiacal light subtracted mission average maps for the 1.25--12$\,\mu$m channels. Difference maps are shown in the rightmost column. Full maps are plotted with a non-linear and strictly positive color range, while difference maps are plotted with a linear and symmetric color range.   }
+	\label{fig:freqmaps_cg_vs_dirbe1}
+\end{figure*}
+
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_06_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_06_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_06_n256.pdf}\\
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_07_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_07_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_07_n256.pdf}\\
+	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_08_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_08_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_08_n256.pdf}\\
+        \includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_09_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_09_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_09_n256.pdf}\\
+        \includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_10_I_n0256_DR2.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_10_1_256.pdf}
+        \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_10_n256.pdf}\\
+	\caption{Same as Fig.~\ref{fig:freqmaps_cg_vs_dirbe1}, but for the 25--240$\,\mu$m channels.}
+	\label{fig:freqmaps_cg_vs_dirbe2}
+\end{figure*}
+
+\clearpage
+\subsection{Angular power spectra}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{figs/cls_lowl_BP8_v5.pdf}
+	\caption{Comparison of angular power spectra computed from the DIRBE and DR2 ZSMA maps.}
+	\label{fig:powspec}
+\end{figure}
+
 
 
 
@@ -1103,49 +1207,6 @@ The dense frequency spacing of the FIRAS data makes it ideal for determining the
 %       %\subsection{Goodness-of-fit and residual maps}
 %       
 %       
-%       \begin{figure}
-%       	\centering
-%       	\includegraphics{figs/chisq_total.pdf}
-%       	\includegraphics{figs/chisq_total_cbar.pdf}
-%       	\caption{Pixel-space reduced normalized $\chi^2$.}
-%       	\label{fig:chisq}
-%       \end{figure}
-%       
-%       \begin{figure}
-%       	\centering
-%       	\includegraphics{figs/res_maps/res_10a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_10b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%       
-%       	\includegraphics{figs/res_maps/res_09a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_09b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%       
-%       	\includegraphics{figs/res_maps/res_08a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_08b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%       
-%       	\includegraphics{figs/res_maps/res_07a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_07b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%       
-%       	\includegraphics{figs/res_maps/res_06a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_06b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%       
-%       	\includegraphics{figs/res_maps/res_05a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_05b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%         
-%         \includegraphics{figs/res_maps/res_04a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_04b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%         
-%         \includegraphics{figs/res_maps/res_03a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_03b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}  
-%       
-%       	\includegraphics{figs/res_maps/res_02a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_02b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%       
-%       	\includegraphics{figs/res_maps/res_01a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_01b_c0001_000022.pdf}
-%         \vspace*{-0.85cm}
-%       
-%       	\caption{Cosmoglobe halfmission split residuals for each band. The color scales are $\pm 0.05$ (MJy/sr) for bands 1-5, $\pm 0.5$ for bands 5-7, and $\pm 2.5$ for bands 8-10.}
-%       	\label{fig:res}
-%       \end{figure}
 %       
 %       \clearpage
 %       \subsection{Preliminary CIB constraints}
