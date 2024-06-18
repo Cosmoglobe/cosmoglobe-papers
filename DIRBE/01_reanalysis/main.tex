@@ -63,6 +63,7 @@
 \def\GAIA{\ensuremath{\textit{Gaia}}}
 \def\gaia{\ensuremath{\textit{Gaia}}}
 \def\Gaia{\ensuremath{\textit{Gaia}}}
+\def\WISE{\ensuremath{\textrm{WISE}}}
 
 \newcommand{\CII}{\ensuremath{\textsc{C\,ii}}}
 
@@ -665,78 +666,63 @@ respect to K98, is presented by \citet{CG02_02}.
 
 \subsection{The DIRBE instrument}
 
-\textit{Duncan: write about the beams. We need nside 512, because nside 256 undersamples}
-
 The Diffuse InfraRed Background Explorer (DIRBE) was one of three experiments on the Cosmic Background Explorer (\COBE) satellite \citep{boggess92}. DIRBE was designed to characterize the infrared sky from $1\,\mathrm{\mu m}$ to $240\,\mathrm{\mu m}$, with the sensitivity required to characterize thermal dust emission, zodiacal emission, and to detect the Cosmic Infrared Background (CIB). Many of the design considerations were specifically made for achieving this scientific goal, as emphasized by \citet{silverberg93}. The DIRBE experiment was limited by its cryogenic requirement, using 600 L of superfluid \element[ ][4]{He}, cooling the instrument to 1.6 K.
+The DIRBE central bandpasses, given in terms of central frequency and central wavelength, are given in Table \ref{tab:summary}, and the full bandpass responses as reported in \citet{cobe_exsupp} are shown in Fig.~\ref{fig:bandpass}.
 
 
-The DIRBE optical design included several design solutions for calibration and stray light reduction. Straylight reduction was prioritized in the design, largely because of the difficulty in distinguishing this systematic effect from a true diffuse background. In particular, there are several straylight stops to reduce sidelobe contamination, mainly in the form of a square beam, as can be seen in Fig.~\ref{fig:optics}. In addition to the straylight reduction, DIRBE alternates observations between the sky and an internal calibration source that chops between the two light sources at a rate of 32 Hz.
+The DIRBE optical design included several design solutions for calibration and stray light reduction. Straylight reduction was prioritized in the design, largely because of the difficulty in distinguishing this systematic effect from a true diffuse background. In particular, there are several straylight stops to reduce sidelobe contamination, mainly in the form of a square beam, as can be seen in Fig.~\ref{fig:optics_model}. In addition to the straylight reduction, DIRBE alternates observations between the sky and an internal calibration source that chops between the two light sources at a rate of 32 Hz.
 All bands observe the same $0\fdg7\times0\fdg7$  field simultaneously, with small adjustments of the beam centroids depending on the location of the detectors. The light is divided using beam splitters to split the light into various detector assemblies. Detectors 1--3 were polarization-sensitive, with light parallel and perpendicular to the scan direction being detected. Because of the DIRBE scan strategy, there is poor polarization angle coverage across the sky.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figs/cobeslide04.jpg}
-	\caption{DIRBE optical design, courtesy of NASA/\COBE\ Science Team.
-	}
-	\label{fig:optics}
-\end{figure}
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=\linewidth]{figs/cobeslide04.jpg}
+%	\caption{DIRBE optical design, courtesy of NASA/\COBE\ Science Team.
+%	}
+%	\label{fig:optics}
+%\end{figure}
 
 \begin{figure*}
 	\centering
 	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
-	\caption{DIRBE optics module, reproduced from \cite{magner87}.
+	\caption{DIRBE optics module. The optical design includes two field stops, one of which is square, to reduce straylight contamination. Reproduced from \cite{magner87}.
 	}
 	\label{fig:optics_model}
 \end{figure*}
 
-Discussion about the instrument, picture of the focal plane, etc.
+The different detector technology for each band accounts for the different performances and systematics found in each of the bands. \citet{silverberg93} in particular highlights the Ge:Ga photoconductors' response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
 
-The different detector technology for each band, summarized in Table \ref{tab:detectors}, accounts for the different performances and systematics found in each of hte bands. \citet{silverberg93} in particular highlighted the Ge:Ga photoconductors' response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
+The symmetrized beam, shown in the top panel of Fig.~\ref{fig:beams}, resembles a tophat with a slow falloff. The harmonic-space representation of the beam is therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$. For a band-limited signal to be represented fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully represented in harmonic space, a requirement for the \commanderthree\ multi-resolution component separation, the pixelization scheme must have support up to $\ell\lesssim1500$. The legacy DIRBE maps have pixel size of 21\arcm, insufficient for harmonic space analysis.
+Both the legacy maps in Quadcube\footnote{
+	Quadrilateralized Spherical Cube \url{https://lambda.gsfc.nasa.gov/product/cobe/skymap\_info\_new.html}
+}
+pixelization (resolution 9, pixel size 21\arcm) and the CADE\footnote{Centre d'Analyse de Données Etendues, \url{http://cade.irap.omp.eu/dokuwiki/doku.php?id=dirbe}} reprojection into HEALPix ($N_\mathrm{side}=256$, pixel size 13\farcm7) do not have the required support over the full multipole range. 
 
 
-Some of the optical design choices cause issues for modern reprocessing. Of particular note is the square straylight reduction, which has an instantaneous square beam. The symmetrized beam, shown in the top panel of Fig.~\ref{fig:beams}, resembles a tophat with a slow falloff. The harmonic-space representation of the beam is therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$. For a band-limited signal to be represented fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully represented in harmonic space, the pixelization scheme must have support up to $\ell\lesssim1500$. Both the original QUADCube maps (res 5, pixel size bla) and the CADE reprojection into HEALPix ($N_\mathrm{side}=256$, pixel size bla), do not have the required support over the full multipole range. In order to represent the harmonic space information fully in HEALPix, an $N_\mathrm{side}=512$ map is the lowest possible resolution. Put another way, the maximum resolution spherical harmonic space depends not just on the size of the beam itself, but the size of the beam's features that must be resolved.
+%Some of the optical design choices cause issues for modern reprocessing. Of particular note is the square straylight reduction, which has an instantaneous square beam. The symmetrized beam, shown in the top panel of Fig.~\ref{fig:beams}, resembles a tophat with a slow falloff. The harmonic-space representation of the beam is therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$. For a band-limited signal to be represented fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully represented in harmonic space, the pixelization scheme must have support up to $\ell\lesssim1500$. Both the original QUADCube maps (res 5, pixel size bla) and the CADE reprojection into HEALPix ($N_\mathrm{side}=256$, pixel size bla), do not have the required support over the full multipole range. In order to represent the harmonic space information fully in HEALPix, an $N_\mathrm{side}=512$ map is the lowest possible resolution. Put another way, the maximum resolution spherical harmonic space depends not just on the size of the beam itself, but the size of the beam's features that must be resolved.
 
 % \input{detector_table.tex}
 
 
-See also \citet{cobe_exsupp}.
+%See also \citet{cobe_exsupp}.
 
-Instead of using the raw time-ordered data, the DIRBE team recommends using the CIOs, which can be though of as a user friendly version of the TODs. The CIOs consist of 1/8th second calibrated observations ordered after pixel numbers. The CIOs were created pre-HEALPix era, and all three experiments aboard \COBE used the Quadrilateralized Spherical Cube pixelization (QUADCUBE) scheme which is an approximately equal-area projection where each pixel lie on one of four cube faces. The DIRBE team did provide us with a script which converts these QUADCUBE pixels into ecliptic longitue and latitude coordinates.
+%Instead of using the raw time-ordered data, the DIRBE team recommends using the CIOs, which can be though of as a user friendly version of the TODs. The CIOs consist of 1/8th second calibrated observations ordered after pixel numbers. The CIOs were created pre-HEALPix era, and all three experiments aboard \COBE used the Quadrilateralized Spherical Cube pixelization (QUADCUBE) scheme which is an approximately equal-area projection where each pixel lie on one of four cube faces. The DIRBE team did provide us with a script which converts these QUADCUBE pixels into ecliptic longitue and latitude coordinates.
+
 \subsection{DIRBE TOD preprocessing}
 \label{sec:tod}
+
+In order to produce maps with full multipole support, we analyze the CIOs directly and convert the pointing into 6\farcm9 $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered CIOs.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from pixel CIO pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in a Python preprocessing script.\footnote{\url{https://github.com/MetinSa/quadcube}}
+
+The delivered CIOs are organized into 285 single-day files, with the datapoints ordered by Quadcube pixel index. The primary processing step was converting the pointing into $N_\mathrm{side}=512$ pixels using the \texttt{quadcube} package. The data are sampled at 8\,Hz and labeled by time index in seconds since January 1, 1981 00:00 UTC. Because the data are pre-calibrated and bad data are already removed, there are some gaps in the data, which we fill manually with an appropriate flag. Additional flags, such as excess noise, orbit and attitude errors, and presence of the South Atlantic Anomaly, are additionally extracted. In total, the data are placed in one hdf5 file per band, following the format enumerated in \citet{bp03}.
+The planet flags are not present in the CIOs, and are regenerated beforehand. Using the radii as defined in Table~\ref{tab:planet_flags}, we mark data points within the pointing of each pixel. Note that this is not strictly optimal due to the non-circular beam shape, and can be optimized in future analyses.
+
+\input{planet_flag_table.tex}
+
 %\subsubsection{DIRBE Calibrated Individual Observations (CIOs)}
 %\subsubsection{Quadrilateralized Spherical Cube to HEALPix conversion}
 %\subsubsection{Time reordering}
 %\subsubsection{Gap-filling}
 %\subsubsection{Regenerating planet flags}
 %\subsection{Publicly available DIRBE products}
-
-
- \begin{table}
-\caption{DIRBE Band labels}              % title of Table
-\label{table:1}      % is used to refer this table in the text
-\centering                                      % used for centering table
-\begin{tabular}{c r r}          % centered columns (2 columns)
-\hline\hline                        % inserts double horizontal lines
-Spectral Band & Wavelength 
-	& Frequency \\    % table heading
- & (microns) & (THz) \\
-\hline                                   % inserts single horizontal line
-	1 & 1.25  & 240.83\\      % inserting body of the table
-	2 & 2.2   & 136.27\\
-	3 & 3.5   & 85.65\\
-	4 & 4.9   & 61.12\\
-	5 & 12    & 24.98\\
-	6 & 25    & 11.99\\
-	7 & 60    & 5.00 \\
-	8 & 100   & 3.00 \\
-	9 & 140   & 2.14 \\
-	10 & 240  & 1.25\\
-\hline                                             %inserts single line
-\end{tabular}
-\end{table}
-
-
 
 
 \begin{figure*}
@@ -751,13 +737,38 @@ Spectral Band & Wavelength
 
 \subsection{Ancillary data sets}
 
-\subsubsection{Planck HFI}
+As demonstrated by the success of the \bp\ and \cosmoglobe\ projects, the use of complementary datasets with different angular resolution, frequency coverage, and observation strategies, can greatly improve the quality of low-level data processing. In this work, we use \Planck\ High Frequency Instrument, \WISE, \GAIA, and \COBE-FIRAS to better constrain our sky model and characterize the DIRBE data.
 
-\subsubsection{WISE and \GAIA}
+
+\subsubsection{\Planck\ HFI}
+
+
+The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+
+In addition to its complementary observation strategy, \Planck's frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered \Planck\ maps have had an estimate of the zodiacal emission modeled using the 3D model derived by K98 with varying emissivities per component. While this technically is redundant information that could contaminate this joint analysis, the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work.
+
+
+At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the DIRBE range. In order to avoid this, we remove the GNILC estimate of the CIB from the HFI maps before including them in our analysis.
+
+Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
+We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
+
+\subsubsection{\GAIA\ and \WISE}
+
+In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \cite{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky,
+
+Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to use the leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 3122 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source.
+
+
+Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all \WISE\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the \gaia\ catalog. The SED's as derived by \gaia\ are then averaged over and used to scale the entire template. Within the Gibbs chain, this is sampled a total scaling parameter, with a fixed map and relative amplitudes between different frequencies. For a full description of the star model, see the work in companion paper \citet{CG02_04}.
+
+
 
 \subsubsection{\COBE-FIRAS}
 
-\textit{Duncan will write this section too}
+The \COBE-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}. Due to the observation strategy, there are non-negligible correlations between nearby frequencies, and smearing along the scanning direction, corresponding to an effectively nonsymmetric beam.
+
+The dense frequency spacing of the FIRAS data makes it ideal for determining the continuum behavior of sky emission and allows for identification of emission lines \citep{bennet:1992}.
 
 
 \section{Data selection and goodness-of-fit}
@@ -885,6 +896,8 @@ Spectral Band & Wavelength
 
 \subsection{Beam characterization}
 
+\subsection{Excess radiation model}
+
 \begin{figure}
 	\centering
 	\includegraphics[width=\columnwidth]{figs/sigma0_bands.pdf}
@@ -1000,172 +1013,172 @@ Spectral Band & Wavelength
 
 
 
-\clearpage
-\section{\Cosmoglobe\ Data Release 2}
-\label{sec:astrophysics}
-
-\subsection{Frequency maps}
-
-\subsection{Zodiacal light emission}
-
-\clearpage
-\subsection{Galactic emission}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.49\linewidth]{figs/CG_dust_v05_I_MEAN_w12_n2048_cb_c-sunburst.pdf}
-        \includegraphics[width=0.49\linewidth]{figs/CG_CO_tot_v05_I_MEAN_w12_n1024_cb_c-afmhot.pdf}\\
-        \includegraphics[width=0.49\linewidth]{figs/CG_freefree_v05_I_MEAN_w12_n1024_cb_c-freeze.pdf}
-        \includegraphics[width=0.49\linewidth]{figs/CG_stars_n0512_v06_I_MEAN_w12_n512_cb_c-afmhot.pdf}\\
-	\caption{}
-	\label{fig:fg_amp}
-\end{figure*}
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_10a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_10a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_10a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_10a_v01.pdf}\\
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_09a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_09a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_09a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_09a_v01.pdf}\\
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_08a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_08a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_08a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_08a_v01.pdf}\\
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_07a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_07a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_07a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_07a_v01.pdf}\\
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_06a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_06a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_06a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_06a_v01.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_06a_v01.pdf}\\  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_05a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_05a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_05a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_05a_v01.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_05a_v01.pdf}\\
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_04a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_04a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_04a_v01.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_04a_v01.pdf}\\  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_03a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_03a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_03a_v01.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_03a_v01.pdf}\\  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_02a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_02a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_02a_v01.pdf}  
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_02a_v01.pdf}\\
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_01a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_01a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_01a_v01.pdf}
-  \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_01a_v01.pdf}\\
-  \includegraphics[width=0.50\linewidth]{figs/colourbar_MJysr.pdf}
-  \caption{Comparison between the raw DIRBE data and the various fitted components for one single Gibbs sample. Columns show, from left to right, 1) the time-ordered DIRBE data co-added into pixelized maps; 2) zodiacal light emission; 3) thermal dust emission; 4) star emission; and 5) data-minus-model residual emission. Rows show individual frequency channels. Missing entries corresponds to components that are forced to zero in the model. Note that all panels are plotted with the same color scale in units of MJy/sr, and can be directly compared.}
-  \label{fig:comp_vs_freq}
-\end{figure*}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=\textwidth]{figs/all_fgs.pdf}
-	\caption{Summary of all foregrounds.}
-	\label{fig:SED_overview}
-\end{figure*}
-
-
-\clearpage
-%\subsection{Goodness-of-fit and residual maps}
-
-
-\begin{figure}
-	\centering
-	\includegraphics{figs/chisq_total.pdf}
-	\includegraphics{figs/chisq_total_cbar.pdf}
-	\caption{Pixel-space reduced normalized $\chi^2$.}
-	\label{fig:chisq}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics{figs/res_maps/res_10a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_10b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/res_maps/res_09a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_09b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/res_maps/res_08a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_08b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/res_maps/res_07a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_07b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/res_maps/res_06a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_06b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/res_maps/res_05a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_05b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-  
-  \includegraphics{figs/res_maps/res_04a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_04b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-  
-  \includegraphics{figs/res_maps/res_03a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_03b_c0001_000022.pdf}
-  \vspace*{-0.85cm}  
-
-	\includegraphics{figs/res_maps/res_02a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_02b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-
-	\includegraphics{figs/res_maps/res_01a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_01b_c0001_000022.pdf}
-  \vspace*{-0.85cm}
-
-	\caption{Cosmoglobe halfmission split residuals for each band. The color scales are $\pm 0.05$ (MJy/sr) for bands 1-5, $\pm 0.5$ for bands 5-7, and $\pm 2.5$ for bands 8-10.}
-	\label{fig:res}
-\end{figure}
-
-\clearpage
-\subsection{Preliminary CIB constraints}
-
-
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figs/CIB_THz.pdf}
-	\caption{CIB monopole}
-	\label{fig:CIB_mono}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{figs/cross_8.png}
-	\caption{Power spectrum}
-	\label{fig:CIB_spectrum}
-\end{figure}
-
-
-
-%\clearpage
-%\section{Future directions}
-%Most of the data from the DIRBE experiment is publicly available on the LAMBDA page along with a explanetory supplement which describes how to use it.
-
-
-\section{The infrared \Cosmoglobe\ sky model}
-\label{sec:maps}
-
-\subsection{Astrophysical component decomposition}
-
-\subsection{Outstanding issues and future directions}
+%       \clearpage
+%       \section{\Cosmoglobe\ Data Release 2}
+%       \label{sec:astrophysics}
+%       
+%       \subsection{Frequency maps}
+%       
+%       \subsection{Zodiacal light emission}
+%       
+%       \clearpage
+%       \subsection{Galactic emission}
+%       
+%       \begin{figure*}
+%       	\centering
+%       	\includegraphics[width=0.49\linewidth]{figs/CG_dust_v05_I_MEAN_w12_n2048_cb_c-sunburst.pdf}
+%               \includegraphics[width=0.49\linewidth]{figs/CG_CO_tot_v05_I_MEAN_w12_n1024_cb_c-afmhot.pdf}\\
+%               \includegraphics[width=0.49\linewidth]{figs/CG_freefree_v05_I_MEAN_w12_n1024_cb_c-freeze.pdf}
+%               \includegraphics[width=0.49\linewidth]{figs/CG_stars_n0512_v06_I_MEAN_w12_n512_cb_c-afmhot.pdf}\\
+%       	\caption{}
+%       	\label{fig:fg_amp}
+%       \end{figure*}
+%       
+%       \begin{figure*}
+%         \centering
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_10a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_10a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_10a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_10a_v01.pdf}\\
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_09a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_09a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_09a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_09a_v01.pdf}\\
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_08a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_08a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_08a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_08a_v01.pdf}\\
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_07a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_07a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_07a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_07a_v01.pdf}\\
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_06a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_06a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_06a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_06a_v01.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_06a_v01.pdf}\\  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_05a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_05a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_dusttot_05a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_05a_v01.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_05a_v01.pdf}\\
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_04a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_04a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_04a_v01.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_04a_v01.pdf}\\  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_03a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_03a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_03a_v01.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_03a_v01.pdf}\\  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_02a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_02a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_02a_v01.pdf}  
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_02a_v01.pdf}\\
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_mapzodi_01a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_zodi_01a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_white_nobar.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_stars_01a_v01.pdf}
+%         \includegraphics[width=0.19\linewidth]{figs/compfreq_todres_01a_v01.pdf}\\
+%         \includegraphics[width=0.50\linewidth]{figs/colourbar_MJysr.pdf}
+%         \caption{Comparison between the raw DIRBE data and the various fitted components for one single Gibbs sample. Columns show, from left to right, 1) the time-ordered DIRBE data co-added into pixelized maps; 2) zodiacal light emission; 3) thermal dust emission; 4) star emission; and 5) data-minus-model residual emission. Rows show individual frequency channels. Missing entries corresponds to components that are forced to zero in the model. Note that all panels are plotted with the same color scale in units of MJy/sr, and can be directly compared.}
+%         \label{fig:comp_vs_freq}
+%       \end{figure*}
+%       
+%       \begin{figure*}
+%       	\centering
+%       	\includegraphics[width=\textwidth]{figs/all_fgs.pdf}
+%       	\caption{Summary of all foregrounds.}
+%       	\label{fig:SED_overview}
+%       \end{figure*}
+%       
+%       
+%       \clearpage
+%       %\subsection{Goodness-of-fit and residual maps}
+%       
+%       
+%       \begin{figure}
+%       	\centering
+%       	\includegraphics{figs/chisq_total.pdf}
+%       	\includegraphics{figs/chisq_total_cbar.pdf}
+%       	\caption{Pixel-space reduced normalized $\chi^2$.}
+%       	\label{fig:chisq}
+%       \end{figure}
+%       
+%       \begin{figure}
+%       	\centering
+%       	\includegraphics{figs/res_maps/res_10a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_10b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%       
+%       	\includegraphics{figs/res_maps/res_09a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_09b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%       
+%       	\includegraphics{figs/res_maps/res_08a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_08b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%       
+%       	\includegraphics{figs/res_maps/res_07a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_07b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%       
+%       	\includegraphics{figs/res_maps/res_06a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_06b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%       
+%       	\includegraphics{figs/res_maps/res_05a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_05b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%         
+%         \includegraphics{figs/res_maps/res_04a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_04b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%         
+%         \includegraphics{figs/res_maps/res_03a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_03b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}  
+%       
+%       	\includegraphics{figs/res_maps/res_02a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_02b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%       
+%       	\includegraphics{figs/res_maps/res_01a_c0001_000022.pdf}\includegraphics{figs/res_maps/res_01b_c0001_000022.pdf}
+%         \vspace*{-0.85cm}
+%       
+%       	\caption{Cosmoglobe halfmission split residuals for each band. The color scales are $\pm 0.05$ (MJy/sr) for bands 1-5, $\pm 0.5$ for bands 5-7, and $\pm 2.5$ for bands 8-10.}
+%       	\label{fig:res}
+%       \end{figure}
+%       
+%       \clearpage
+%       \subsection{Preliminary CIB constraints}
+%       
+%       
+%       
+%       \begin{figure}
+%       	\centering
+%       	\includegraphics[width=\linewidth]{figs/CIB_THz.pdf}
+%       	\caption{CIB monopole}
+%       	\label{fig:CIB_mono}
+%       \end{figure}
+%       
+%       \begin{figure}
+%       	\centering
+%       	\includegraphics[width=\linewidth]{figs/cross_8.png}
+%       	\caption{Power spectrum}
+%       	\label{fig:CIB_spectrum}
+%       \end{figure}
+%       
+%       
+%       
+%       %\clearpage
+%       %\section{Future directions}
+%       %Most of the data from the DIRBE experiment is publicly available on the LAMBDA page along with a explanetory supplement which describes how to use it.
+%       
+%       
+%       \section{The infrared \Cosmoglobe\ sky model}
+%       \label{sec:maps}
+%       
+%       \subsection{Astrophysical component decomposition}
+%       
+%       \subsection{Outstanding issues and future directions}
 
 
 \clearpage
@@ -1200,6 +1213,7 @@ Data Processing and Analysis Consortium (DPAC,
 \url{https://www.cosmos.esa.int/web/gaia/dpac/consortium}). Funding for the DPAC
 has been provided by national institutions, in particular the institutions
 participating in the {\it Gaia} Multilateral Agreement.
+	We acknowledge the use of data provided by the Centre d'Analyse de Données Etendues (CADE), a service of IRAP-UPS/CNRS (http://cade.irap.omp.eu, \citealt{paradis:2012}). 
 \end{acknowledgements}
 
 
