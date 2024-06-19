@@ -370,8 +370,8 @@ where $\beta$, $\gamma$ and $\mu$ are shape parameters.
 \subsubsection{Dust bands}
 Next, three dust bands are included in the model to represent the
 observed shoulder-like structure in the IRAS scans across the ecliptic
-plane.  These bands appear at Ecliptic latitudes of $\pm \sim
-1.4^\circ$, $10^\circ$, and $15^\circ$, and are associated with
+plane.  These bands appear at Ecliptic latitudes of approimately
+$\pm1.4^\circ$, $\pm10^\circ$, and $\pm15^\circ$, and are associated with
 a blend of the Themis and Koronis, the Eos, and the IO/Maria asteroid families, 
 respectively \citep{Reach1997}. Each dust band, indicated by $B_i$, is 
 modeled as
@@ -390,7 +390,7 @@ Finally, a circum-solar ring (denoted ``SR'') component is included in the
 model to represent dust that has accumulated in Earth's orbit due to
 gravitational effects \citep{Dermott1994}. This component also
 includes an enhancement to the IPD distribution at Earth's wake, known
-as the ``Earth-trailing feature'' (denoted ``TF''). The ring component is modeled as
+as the ``Earth-trailing feature'' (denoted ``TF''). The composite ring component (denoted ``R'') is then modeled as
 \begin{align}
     n_\mathrm{R}(x, y, z, \theta)&=n_{0, \mathrm{SR}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{SR}}\right)^2}{\sigma_{R,\mathrm{SR}} ^2}-\frac{\left| Z_\mathrm{R} \right|}{\sigma_{Z, \mathrm{SR}}}\right],\\
    &+ n_{0, \mathrm{TF}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0,
@@ -416,7 +416,11 @@ infrared detector is defined by an intensity, $I_{\nu}$, typically
 measured in units of MJy$\,\mathrm{sr}^{-1}$ or
 nW$\,\mathrm{m}^{-2}\,\mathrm{sr}^{-1}$. The connection between the
 number density and this thermal emission is modeled in terms
-of a blackbody modified by an emissivity factor $E_{c, \lambda}$,
+of a blackbody modified by an emissivity factor $E_{c,
+  \lambda}$,\footnote{In these expressions, $\lambda$ denotes
+wavelength channel, and may be referred interchangeably to both the physical
+wavelength and the DIRBE channel ID, e.g., channel 1 correponds to
+1.25\,$\mu$m; see \citet{hauser1998} for a full definition. }
 \begin{equation}
     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T),
 \end{equation}
@@ -481,6 +485,12 @@ Eqs.~\eqref{eq:los} and~\eqref{eq:I_tot} differ by a factor (1 -
 $A_{c, \lambda}$). This factor represents the extinction that occurs
 when thermal emission is scattered away from the line-of-sight.
 
+Following \citet{kelsall1998}, and due to their low signal-to-noise
+ratios, we fit only one overall albedo for each high-frequency
+channel, as well as only one common emissivity for all three
+asteroidal bands. However, unlike the original K98 model, we do allow
+a non-zero albedo for the 4.9\,$\mu$m.
+
 \subsection{Model intuition}
 
 As described above, the K98 model has only $\mathcal{O}(10^2)$ free
@@ -523,9 +533,10 @@ seen outwards from the observer. In this projected 2D space, the
 observed structures appear significantly more difficult to visualize
 than in 3D space. For instance, while the density of the dust bands
 appear symmetric in 3D space, their apparent separation and width as
-seen from Earth vary significantly with Ecliptic longitude; they
-appear broader in directions that are closer to the Earth, and
-narrower where they are further away.
+seen from Earth vary significantly with Ecliptic longitude, as seen in
+the second panel; they appear narrower when looking towards the Sun,
+where the bands are physically further away from the Earth, and
+broader closeby.
 
 The third panel shows the same feature, but now averaged over nearly
 a whole year of observations, corresponding to the DIRBE scanning 
@@ -565,11 +576,11 @@ later. For instance, we see that $n_{0,\mathrm{C}}$,
 $\alpha_\mathrm{C}$, $n_{0,\mathrm{SR}}$, $T_0$, and $\delta$ are all
 dominated by a ring centered along the Ecliptic plane, and these are
 likely to interplay significantly. Furthermore, many of these
-parameters will obviously also couple significantly to a wide range of
-non-ZL type parameters when integrated into a global analysis
-framework, including the all-important CIB monopoles, such as
-$n_{0,\mathrm{C}}$, $\sigma_{z,\mathrm{SR}}$, and
-$\sigma_{\theta,\mathrm{TF}}$. 
+parameters, such as $n_{0,\mathrm{C}}$, $\sigma_{z,\mathrm{SR}}$, and
+$\sigma_{\theta,\mathrm{TF}}$, will obviously also couple
+significantly to a wide range of non-ZL type parameters when
+integrated into a global analysis framework, including the
+all-important CIB monopoles.
 
 
 % Given that we only have a single year 
@@ -701,7 +712,7 @@ many of those parameters have only a limited signal-to-noise ratio
 with DIRBE data alone, and far stronger constraints will typically
 result from combining the DIRBE measurements with external
 data. Enabling such global multi-experiment analysis is a main goal of
-the \cosmoglobe\ framework. In this section, we briefly review the key
+the \cosmoglobe\ framework \citep{bp05}. In this section, we briefly review the key
 ideas behind this approach, and we describe the generalizations that
 are required for ZL parameter estimation. For full details, we refer
 the interested reader to \citet{Watts2023,CG02_01}. However, we
@@ -729,9 +740,18 @@ from astrophysical components (thermal dust, free-free, starlight
 emission etc.), each described by an overall amplitude (which may be a
 pixelized map) and a mixing matrix, $\M$, which depends on some set of
 unknown SED parameters, $\beta$; and $\n$ denotes instrumental
-noise. We denote the set of all free parameters in Eq.~\eqref{eq:model}
-by $\omega$, and for a full explicit definition of this parameter set,
-we refer the interested reader to \citet{CG02_01}.
+noise. We further define $\a_{\mathrm{sky}}$ and
+$\beta_{\mathrm{sky}}$ to be the set of all astrophysical component
+amplitudes and spectral parameters, and $\xi_{\mathrm{n}}$ to be the
+set of all free instrumental noise parameters. We also define
+$\a_{\mathrm{static}}$ by
+$\s_{\mathrm{static}}=\P_{\mathrm{sol}}\a_{\mathrm{static}}$, where
+$\P_{\mathrm{sol}}$ is the pointing in solar-centric
+coordinates. Finally, we denote the set of all free parameters in
+Eq.~\eqref{eq:model} by $\omega$, and for a full explicit definition
+of this parameter set, we refer the interested reader to
+\citet{CG02_01}. Details regarding the foreground model are provided
+by \citet{CG02_04,CG02_05}.
 
 As far as this paper is concerned, the key term is
 $\s_{\mathrm{zodi}}$, which is nothing but Eq.~\eqref{eq:los}
@@ -742,7 +762,7 @@ $P(\zeta_{\mathrm{z}}|\dv)$. One straightforward way of computing this
 marginal distribution is, perhaps somewhat surprisingly, to first
 consider the much bigger task of estimating the full joint posterior
 distribution, $P(\omega|\dv)$ --- which now includes billions of
-correlated parameters rather than just a hundred! The reason this is a 
+correlated parameters rather than just a hundred. The reason this is a 
 more straightforward problem, computationally speaking, is that
 that the joint distribution has a well-defined and simple analytic expression that it
 is possible to sample from, while the marginal distribution does not;
@@ -871,7 +891,8 @@ analysis here.
     DIRBE approach is insensitivity to stationary sky signals, in 
     particular thermal dust and CIB, while the main advantage of the 
     \Cosmoglobe\ approach is a much higher effective signal-to-noise 
-    ratio, both to ZL parameters and zero-levels.}
+    ratio, both to ZL parameters and zero-levels, as seen by comparing
+    the two bottom panels.}
     \label{fig:week_vs_full}
 \end{figure*}
 
@@ -901,10 +922,14 @@ such as AKARI, IRAS, and \Planck\ HFI. Doing that is beyond the scope
 of the current \cosmoglobe\ data release, but it will certainly be a
 main topic for future work. 
 
-Since we are not dealing with the excess static emission at this moment, we have chosen to keep the
-near-earth circum-solar ring and Earth-trailing components fixed to the K98 values. Attempting to fit these could 
-prove to be difficult due to the channel-to-channel varying excess stationary emission. 
-
+Related to this, we also note that the circum-solar ring and trailing
+feature discussed in Sect.~\ref{sec:ring} are completely degenerate
+with a general pixelized static component in solar-centric
+coordinates, and it is therefore not possible to fit these and the
+excess radiation component simultaneously. For this reason, we fix the
+circum-solar ring and trailing feature parameters at their K98 values,
+and note that these will have to be revisited once a physical model
+for the excess radiation has been established.
 
 
 \subsection{Comparison with K98 fitting algorithm}
@@ -931,13 +956,13 @@ non-ZL components by only considering differences between weekly maps
 and the corresponding full-mission average map in their $\chi^2$
 statistic. That is, rather than optimizing the full $\chi^2$ as
 defined in Eq.~\eqref{eq:gibbs_chisq}, their algorithm optimizes
-\begin{equation}
-  -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{i,\nu}
+\begin{align}
+  -2\ln P_{\mathrm{K98}}(\zeta_{\mathrm{z}}|\dv, \ldots) &= \sum_{i,\nu}
   \left(\frac{\Delta\dv_{i,\nu} -
-    \Delta\s_{i,\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \equiv
+    \Delta\s_{i,\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \\&\equiv
   \chi^2_{\mathrm{K98}} (\zeta_{\mathrm{z}}),
   \label{eq:k98_chisq}
-\end{equation}
+\end{align}
 where $i$ indicate week number, $\Delta \dv_{i,\nu} = \dv_{i,\nu} -
 \left<\dv_{i,\nu}\right>$, $\Delta \s_{i,\nu,\mathrm{zodi}} =
 \s_{i,\nu,\mathrm{zodi}} - \left<\s_{i,\nu,\mathrm{zodi}}\right>$, and brackets
@@ -968,7 +993,7 @@ and the bottom row shows the difference between the top and middle
 rows, which serves as the input to the $\chi^2$ evaluations.
 
 Several points are worth noting in these figures. First of all, we
-immediately note that the color scale is one order of magnitude lower
+immediately note that the color scale is one order of magnitude narrower
 in the right column than in the left column; this will translate
 directly into lower constraining power for the differential
 approach.
@@ -1061,8 +1086,8 @@ of the rejection criterion. Explicitly, if a proposed
 $\zeta_{\mathrm{z}}$ has a lower $\chi_{\mathrm{red}}^2$ than the
 previous sample, it is always accepted; if it has a higher
 $\chi_{\mathrm{red}}^2$, it is accepted with probability $a$. We
-comment on the reason this definition uses $\chi^2_{\mathrm{red}}$
-rather than the absolute $\chi^2$ below, as well as how we set $a$.
+comment below on the reason this definition uses $\chi^2_{\mathrm{red}}$
+rather than the absolute $\chi^2$, as well as how we set $a$.
 
 In practice, many adjustments have been made gradually over the course
 of many months and hundreds of short individual test runs to the
@@ -1119,24 +1144,24 @@ Further intuition regarding this pseudo-MH algorithm and the
 underlying multi-peaked likelihood surface is provided in
 Fig.~\ref{fig:powell_T0}, which again shows $\chi^2_{\mathrm{red}}$
 for a large number of likelihood evaluations. However, this time this
-is plotted as a function of the overall temperature, $T_0$, and also
-plotted separately for nine individual main Gibbs samples; the sample
-numbers are color coded according to a rainbow scheme, such that
-redder colors are closer to the beginning of the Markov
-chain. Intuitively, the lower edge of each curve represents a snapshot
-of the local neighborhood around each likelihood minimum. We note that
-each such likelihood neighborhood is quite sharp, indicating that the
-optimization algorithm is traversing a rather narrow ``likelihood
-valley''. At the same time, different samples reach a different
-absolute minimum level that is not a smooth function of $T_0$; this is
-because of all the other parameters in $\zeta_{\mathrm{z}}$ that are
-effectively marginalized over in this figure. As far as burn-in and
-convergence is concerned, we see that the Markov chain moves
-systematically from its initial value at $T_0\sim273\,$K to
-$\sim$\,284\,K during the first 20 samples, and after that it moves
-randomly between 282 and 286\,K. In sum, this figure illustrates well
-the highly complex and multi-peaked likelihood surface that must be
-explored when sampling ZL parameters.
+is plotted as a function of the overall reference temperature of the
+IPD cloud, $T_0$, and also plotted separately for nine individual main
+Gibbs samples; the sample numbers are color coded according to a
+rainbow scheme, such that redder colors are closer to the beginning of
+the Markov chain. Intuitively, the lower edge of each curve represents
+a snapshot of the local neighborhood around each likelihood
+minimum. We note that each such likelihood neighborhood is quite
+sharp, indicating that the optimization algorithm is traversing a
+rather narrow ``likelihood valley''. At the same time, different
+samples reach a different absolute minimum level that is not a smooth
+function of $T_0$; this is because of all the other parameters in
+$\zeta_{\mathrm{z}}$ that are effectively marginalized over in this
+figure. As far as burn-in and convergence is concerned, we see that
+the Markov chain moves systematically from its initial value at
+$T_0\sim273\,$K to $\sim$\,284\,K during the first 20 samples, and
+after that it moves randomly between 282 and 286\,K. In sum, this
+figure illustrates well the highly complex and multi-peaked likelihood
+surface that must be explored when sampling ZL parameters.
 
 \begin{figure}
     \centering
@@ -1239,34 +1264,31 @@ applied to the two longest wavelengths. Other  features that could be handled in
 \input{ipd_param_table.tex}
 
 
-Additional data is removed from the analysis in order to account for
-the excess static emission in solar-centric coordinates discussed by
-\citet{CG02_01}, and briefly reviewed in this paper in
-Sect.~\ref{sec:gibbs}. In short, \citet{CG02_01} defines a set of
-masks in solar-centric coordinates for each frequency channel between
-1.25 and 100\,$\mu$m, and removes any time sample that is excluded by
-these masks from further analysis. This approach plays exactly the
-same role as the solar elongation cut used by the DIRBE team to
-produce their final ZSMA maps, but provides much better precision in
-terms of removing specific systematic features.
+In addition, to minimize the impact of the excess radiation component,
+\citet{CG02_01} define a set of masks in solar-centric coordinates for
+each frequency channel between 1.25 and 100\,$\mu$m, and any TOD
+sample that is excluded by these masks is removed from further
+analysis. This approach plays exactly the same role as the solar
+elongation cut used by the DIRBE team to produce their final ZSMA
+maps, but provides much better precision in terms of removing specific
+systematic features.
 
 In the following, we will refer to the pre-processed CIO as TODs.  A
 subsample of the TOD for each DIRBE band as used in our analysis can
 be seen in Fig.~\ref{fig:tod_zodi}, where we show data for one
-rotation of the spacecraft about its boresight (0.8\,RPM). Within this
-rotation, both the Galactic and Ecliptic planes are crossed twice. The
-two outer-most bulges in the 1.25, 2.2, 3.5, and 4.9 $\mu$m bands
-and the right bulge in the remaining bands represent the Galactic
-plane crossings. The sine-like waves in bands 4.9, 12, and 25\,$\mu$m
+rotation of the spacecraft about its boresight. Within this rotation,
+both the Galactic and Ecliptic planes are crossed twice. The two peaks
+at around 30\,sec and 1\,min 45\,sec correspond to the Galactic plane
+crossings, while the sine-like waves in bands 4.9, 12, and 25\,$\mu$m
 are due to the ZL emission which peaks in the Ecliptic plane.
 
 In order to trace seasonal ZL modelling errors, we divide the TOD for
 each DIRBE channel into two, corresponding to the first and second
 half of the full survey. All ZL parameters are fitted jointly and
 simultaneously using all data, but the resulting ZL cleaned TOD are
-binned separately into two independent half-mission maps, and the
-the corresponding residuals therefore provide information about
-seasonal ZL variations not captured by the model.
+binned separately into two independent half-mission maps, and the the
+corresponding half-mission difference maps therefore provide
+information about seasonal ZL variations not captured by the model.
 
 \subsection{Ancillary data}
 
@@ -1310,9 +1332,13 @@ free amplitude is fitted per star in the current analysis. Together,
 the AllWISE and GAIA data provide a state-of-the-art model of
 starlight emission in the near- and mid-infrared regime.
 
+Finally, a selection of COBE/FIRAS \citep{mather:1994} sky maps are
+also included in the analysis for monitoring purposes,
+but they do not contribute with constraining power in the current
+analysis \citep{CG02_01}.
+
 \subsection{Masks}
 \label{sec:masks}
-
 
 As discussed in Sect.~\ref{sec:algorithm_comparison}, the
 \cosmoglobe\ DR2 parameter estimation algorithm considers the full
@@ -1327,11 +1353,10 @@ signals.
 For the three channels between 1.25 and 3.5\,$\mu$m, which are
 strongly dominated by starlight emission, we generate the ZL
 confidence mask by thresholding the bright compact source model
-evaluated at 1.25\,$\mu$m at 20\,kJy/sr. In addition, to remove
-diffuse thermal dust emission, we remove all observations with an
-absolute Galactic latitude $|b|<45^{\circ}$. The resulting mask is
-shown in blue in Fig.~\ref{fig:zodi-procmask}, and leaves 18\,\% of
-the sky available for analysis.
+evaluated at 1.25\,$\mu$m at 20\,kJy/sr. In addition we remove all
+observations with an absolute Galactic latitude $|b|<45^{\circ}$. The
+resulting mask is shown in blue in Fig.~\ref{fig:zodi-procmask}, and
+leaves 18\,\% of the sky available for analysis.
 
 For wavelengths longer than and equal to 60\,$\mu$m, the starlight
 emission is negligible, and the Galactic signal is instead dominated
@@ -1375,11 +1400,11 @@ Note that we are not attempting to fit the geometrical parameters of dust band 3
 Through out our many attempts, we found that we were unable to constrain the signal in this particular dust band with the DIRBE data alone, 
 as the band would completely disperse.
 
-Many interesting features may be identified in this plots. Starting
+Many interesting features may be identified in these plots. Starting
 with the shape parameters for the dominant cloud component shown in
 the leftmost column in Fig.~\ref{fig:trace-ipd}, we see that many
 parameters do appear to drift significantly during the first 20
-samples or so, but after that, they appear mostly stationary.  we also
+samples or so, but after that, they appear more stationary. We also
 see that the mixing between different chains is notably slower than
 what is common for most Monte Carlo methods discussed in the
 literature, and this indicates rather long correlation lengths. Future
@@ -1439,18 +1464,21 @@ precise values of $\zeta_{\mathrm{z}}$ for these values, also make the
 very same values less important as far as cosmological or Galactic
 science is concerned; intuitively speaking, the ZL emission at these
 wavelengths is simply very faint, and therefore it is also less
-important.
+important. In addition, we note that only the sum over all ZL
+components matters for cosmological analysis, not each individual
+component, and internal degeneracies are therefore of lower overall
+concern.
 
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figs/zodi_intensity.pdf}
-    \caption{Simulated ZL intensity on January 1, 2024 as a function of wavelength from the best-fit 
-    \cosmoglobe\ ZL model, made with ZodiPy. The ZL SED is directional 
-    and seasonal due to temperature variations along independent line-of-sights and variations in IPD composition. 
-    The black curve shows the mean sky intensity in a HEALPix map with resolution
-    $N_\mathrm{side}= 64$ where pixels with an angular separation of less than
-    $60^\circ$ are masked out. The colored dashed lines represent the ZL 
-    intensity
+    \caption{(\textit{Top panel}:) Instantaneous ZL intensity
+      predicted by the DR2 (solid lines) and DIRBE (dashed lines)
+      models, as a function of wavelength. Colors show
+      three different positions on the sky, and the black curves show
+      the full-sky average. (\textit{Bottom}:) Fractional difference
+      between the DR2 and DIRBE models, evaluated from the results
+      shown in the top panel.
     }
     \label{fig:zodi-intensity}
 \end{figure}
@@ -1475,8 +1503,10 @@ as IRAS and AKARI \citep{akari, akari2} should be highly beneficial in constrain
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figs/zodi_reldiff.pdf}
-    \caption{Relative fractional difference in the mission-averaged ZL simulations at 25$\mu$m 
-    using the K98 model and our best-fit ZL model. A best-fit monopole has been removed from the difference map prior to dividing by the  DIRBE signal.}
+    \caption{Relative fractional difference in the mission-averaged ZL
+      simulations at 25\,$\mu$m using the DIRBE K98 model and our best-fit ZL
+      model. A best-fit monopole has been removed from the difference
+      map prior to dividing by the DIRBE signal.}
     \label{fig:reldiff}
 \end{figure}
 
@@ -1484,24 +1514,23 @@ To estimate the marginal posterior distribution for each ZL parameter
 individually, we compute the mean and standard deviation of all
 post-burn-in samples. The resulting values for the shape parameters
 are tabulated in the third column of
-Table~\ref{table:zodi-params-geo}, while the amplitude
-parameters are provided in
-Table~\ref{table:zodi-params-source}. For comparison, the
-corresponding values from the K98 model are listed in the second
+Table~\ref{table:zodi-params-geo}, while the amplitude parameters are
+provided in Table~\ref{table:zodi-params-source}. For comparison, the
+corresponding values from \citet{kelsall1998} are listed in the second
 column in each table. The fourth and final column lists the uniform
-priors imposed on each parameter.
+priors imposed on each parameter in the DR2 analysis.
 
-In general, we see that the differences between the new DR2 and the
-old K98 models for many parameters vary significantly more than predicted
-by the reported statistical uncertainties. For instance, the density
-of the dominant cloud parameter is about 25\,\% lower in the DR2 model
-than in K98, and measured in units of the K98 uncertainty, this
-correspond to more than a $40\,\sigma$ discrepancy. However, we also
-see that the DR2 uncertainty for this parameter is six times larger
-than the K98 uncertainty, which reduces the tension to $7\,\sigma$. At
-the same time, we also notice that the amplitude of the first band is
-13 times higher in the DR2 model than in the K98 model, and this
-accounts for a significant fraction of the lower cloud intensity.
+In general, we see that the differences between DR2 and K98 vary for
+many parameters more than predicted by the reported statistical
+uncertainties. For instance, the density of the dominant cloud
+parameter is about 25\,\% lower in the DR2 model than in K98, and
+measured in units of the K98 uncertainty, this correspond to more than
+a $40\,\sigma$ discrepancy. However, we also see that the DR2
+uncertainty for this parameter is six times larger than the K98
+uncertainty, which reduces the tension to $7\,\sigma$. At the same
+time, we also notice that the amplitude of the first band is 13 times
+higher in the DR2 model than in the K98 model, and this accounts for a
+significant fraction of the lower cloud intensity.
 
 \begin{figure*}[t]
     \centering
@@ -1535,7 +1564,14 @@ accounts for a significant fraction of the lower cloud intensity.
     \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10a.pdf}%
     \includegraphics[width=0.22\linewidth]{figs/compare_zodi_res/cosmoglobe_res_10b.pdf}%
     \includegraphics[width=23mm,angle=90]{figs/compare_zodi_res/cbar_10.pdf}%
-    \caption{Half-mission split residual maps for each channel. All bands between 1.25 and 100$\,\mu$m have been smoothed with a $15\arcm$ Gaussian kernel, and the 140 and 240\,$\mu$m channels have been smoothed with a $30\arcm$ FWHM kernel. The gray regions represent unobserved pixels in the half-mission splits.}
+    \caption{Half-mission data-minus-signal residual maps for each
+      channel. The two columns within each wavelength section
+      correspond to the first (HM1) and second (HM2) half-mission
+      maps, respectively. All bands between 1.25 and 100$\,\mu$m have
+      been smoothed with a $15\arcm$ Gaussian kernel, and the 140 and
+      240\,$\mu$m channels have been smoothed with a $30\arcm$ FWHM
+      kernel. The gray regions represent unobserved pixels in the
+      half-mission splits.}
     \label{fig:half-mission-res2}
 \end{figure*}
 
@@ -1660,15 +1696,15 @@ Figure~\ref{fig:mission-averaged-comp-maps} in
 Appendix~\ref{sec:zodi-comps} compares the mission-averaged ZL maps
 for both models per component. Here we see visually that the DR2 cloud
 is fainter than the K98 cloud, while all of the bands are brighter. It
-is particularly interesting to note structure of the first asteroidal
-band, which in the K98 model is very faint indeed. In the DR2 model,
+is particularly interesting to note the structure of the first
+asteroidal band, which in K98 is very faint indeed. In the DR2 model,
 this component has instead turned into a broad band aligned with the
 Ecliptic plane, apparently located close to the Earth at its nearest
-point. It is then interesting to compare this new model to the alternative
-model presented by \citet{Robinson2013}, where they replace the K98
-parametrization with a fan-plus-comet composite. At a purely visual
-level, our $B_1$ component appears to play a similar role as their
-so-called ``broad band'' (bb) component.
+point. It is then interesting to compare this new model to the
+alternative model presented by \citet{Robinson2013}, where they
+replace the K98 parametrization with a fan-plus-comet composite. At a
+purely visual level, our $B_1$ component appears to play a similar
+role as their so-called ``broad band'' (bb) component.
 
 Figure~\ref{fig:zodi-intensity} compares the predicted ZL intensity
 as a function of wavelength for three different positions on the sky
@@ -1684,7 +1720,7 @@ as a function of position on the sky for the 25\,$\mu$m channel only,
 and after subtracting the best-fit monopole from the difference to
 probe spatially varying differences. In this channel, for which the ZL
 emission is the brightest and therefore degeneracies are the least
-important, the K98 and \cosmoglobe\ DR2 models agree to better than
+problematic, the K98 and \cosmoglobe\ DR2 models agree to better than
 5\,\% over the full sky, and better than 2\,\% in most of the Ecliptic
 plane. These differences are very similar in magnitude to the
 residuals reported by \citet{Kelsall1998} in the original DIRBE
@@ -1818,13 +1854,13 @@ the reduced $\chi^2$ is 2.6, which indicates that the white noise rms
 accounts for about 60\,\% of the total variation seen in the residual
 TOD; the rest is most naturally explained in terms of ZL modelling
 errors. However, in this respect it is worth noting that our estimates
-of the white noise level, as reported by \citet{CG02_01},
+of the noise level, as reported by \citet{CG02_01}, are
 significantly lower than those used for previous ZL analysis with
 DIRBE observations. For instance, \citet{Robinson2013} adopted
 uncertainties of 0.80 and 0.93\,MJy/sr per sample at 12 and
 25$\,\mu$m, respectively, which are 8 and 5 times larger than our
 estimates. Despite assuming such large uncertainties, they obtained a
-reduced $\chi^2$ of 1.30 with their extended model. In contrast, we
+reduced $\chi^2$ of 1.30 with their extended model. In contrast, if we
 had adopted the same white noise estimates, we would have obtained a
 reduced $\chi^2$ of $\sim0.4$, which immediately would suggest
 significant noise rms over-estimation. In other words, the current
@@ -1853,7 +1889,7 @@ A primary goal of the parametric ZL model presented here is to
 establish a set of zodiacal light subtracted mission averaged (ZSMA)
 frequency maps for each DIRBE channel that can be used for
 cosmological and astrophysical analysis. These maps are simply derived
-by subtracting the ZL component only from the TOD, and bin the rest
+by subtracting the ZL component from the TOD, and bin the rest
 into pixelized sky maps.
 
 Figures~\ref{fig:dr2-zsma-compare1} and \ref{fig:dr2-zsma-compare2}
@@ -1882,7 +1918,7 @@ signal at high latitudes rather than by ZL residuals.
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figs/zodi_rms_ratio_DIRBE_DR2_v2.pdf}
-    \caption{RMS ratio between \cosmoglobe\ DR2 and DIRBE ZSMA,
+    \caption{RMS ratio between the \cosmoglobe\ DR2 and DIRBE ZSMA maps,
       $\sigma_{\mathrm{DR2}}/\sigma_\mathrm{DIRBE}$, as evaluated
       outside the DR2 analysis masks.}
     \label{fig:zsma_rms}
@@ -1902,20 +1938,20 @@ of \citet{finke2022} is plotted as a dotted line. First, we note that
 the difference is defined as DIRBE-minus-DR2, and this is always
 positive. In other words, the new analysis appears to have removed
 more ZL than the legacy DIRBE analysis. In fact, the measured monopole
-difference is actually also higher than the CIB monopole spectrum
-itself, suggesting that the modifications are in fact $\mathcal{O}(1)$
-or larger as measured relatively to the main science target of DIRBE;
-at 12$\,\mu$m, the difference is almost two orders of magnitude. For
-further discussion regarding the scientific implications of these
-differences in terms of the CIB monopole, we refer the interested
-reader to \citet{CG02_03}.
+difference is actually also higher than the theoretical CIB monopole
+spectrum itself, suggesting that the modifications are in fact
+$\mathcal{O}(1)$ or larger as measured relatively to the main science
+target of DIRBE; at 12$\,\mu$m, the difference is almost two orders of
+magnitude. For further discussion regarding the scientific
+implications of these differences in terms of the CIB monopole, we
+refer the interested reader to \citet{CG02_03}.
 
 Figure~\ref{fig:zsma_rms} shows the results from a similar
 calculations, but this time in the form of the rms ratio of the ZSMA
 maps evaluated outside the same masks. Here we see that the DR2 maps
 have $\sim$\,30\,\% lower rms than the legacy DIRBE maps, which once
-again indicates that more ZL emission has been removed from these
-the new maps.
+again indicates that more ZL emission has been removed from the
+new maps.
 
 
 %\begin{figure*}
@@ -1984,23 +2020,22 @@ with these data. Still, even with more data there are likely to be
 several degeneracies present that are difficult to predict in
 advance. Implementing better and faster sampling algorithms should
 therefore be a high-priority topic for future work, for instance using
-ideas from simulated annealing and/or Hamiltonian sampler.
+ideas from simulated annealing and/or Hamiltonian sampling.
 
-In addition, it is of course by no means obvious that a
-low-dimensional 3D model such as K98 with only $\mathcal{O}(10^2)$
-free parameters can describe such a rich and dynamical system as ZL to
-the required precision for next-generation cosmology. Future work
-should therefore also consider conceptual generalizations of the
-entire framework. One step in this direction was taken by
-\citet{Robinson2013}, who introduced a different set of basis
-components than K98; indeed, the new fit presented in this paper
-appears to have moved toward that model within the K98 framework. More
-drastic approaches would be to consider perturbative Taylor expansion
-models around the existing components, or even fully voxelized 3D
-models. Obviously, these would be highly degenerate when using only
-near-Earth observations, but perhaps combination with data from solar
-system probes such as Juno or New Horizons, new insights may be
-gained.
+In addition, it is by no means obvious that a low-dimensional 3D model
+such as K98 with only $\mathcal{O}(10^2)$ free parameters can describe
+such a rich and dynamical system as ZL to the required precision for
+next-generation cosmology. Future work should therefore also consider
+conceptual generalizations of the entire framework. One step in this
+direction was taken by \citet{Robinson2013}, who introduced a
+different set of basis components than K98; indeed, the new fit
+presented in this paper appears to have moved toward that model within
+the K98 framework. More drastic approaches would be to consider
+perturbative Taylor expansion models around the existing components,
+or even fully voxelized 3D models. Obviously, these would be highly
+degenerate when using only near-Earth observations, but perhaps
+in combination with data from solar system probes such as Juno or New
+Horizons, new insights may be gained.
 
 In conclusion, it is clear that the ZL model presented in this paper
 suffers from many shortcomings of both modelling and algorithmic
@@ -2026,7 +2061,7 @@ algorithmic breakthroughs initially developed for the CMB field.
   772253 (ERC; \textsc{bits2cosmology}), and 101007633 (MSCA;
   \textsc{CMBInflate}).  Some of the results in this paper have been
   derived using healpy \citep{Zonca2019} and the HEALPix
-  \citep{healpix} package.  We acknowledge the use of the Legacy
+  \citep{healpix} packages.  We acknowledge the use of the Legacy
   Archive for Microwave Background Data Analysis (LAMBDA), part of the
   High Energy Astrophysics Science Archive Center
   (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science
