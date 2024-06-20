@@ -221,7 +221,7 @@ The rest of the paper is organized as follows. In Sect.~\ref{sec:global_modellin
 \label{sec:global_modelling}
 
 The use of Bayesian sampling methods have become widespread in the CMB
-community during the last few decades for at least two important
+community \citep[e.g.,][]{cosmomc,planck2014-a12,planck2016-l06,bp01,watts2023_dr1} during the last few decades for at least two important
 reasons. First, for any analysis task that may be phrased in terms of
 a classical parameter estimation problem with measured data $\dv$ and a
 model with some set of unknown parameters $\omega$, the posterior
@@ -233,7 +233,7 @@ efficient Monte Carlo sampling methods and the exponential growth of
 computing power took place until very recently, far more complex
 models can be mapped out today than was possible only one or two
 decades ago. As a particularly relevant case in point for the current
-paper is \commander, which is a Gibbs sampler designed to perform
+paper is \commander\ \citep{eriksen:2004,seljebotn:2019,bp03}, which is a Gibbs sampler designed to perform
 end-to-end analysis with time-ordered data. While the primary
 motivation for developing this machinery until today has been
 CMB-oriented applications, we show in the following that the same
@@ -245,7 +245,7 @@ global model that includes both microwave and infrared wavelengths.
 \label{sec:datamodel}
 
 The first step in any parametric Bayesian analysis is simply to write
-down a model for the data in question, and the quality of the final
+down a model for the data in question. Obviously, the quality of the final
 results depends sensitively on the accuracy and completeness of this
 model, which must be monitored through detailed goodness-of-fit
 statistics, typically in the form of residual and $\chi^2$
@@ -258,16 +258,21 @@ that has involved hundreds of trial runs, starting from a model very
 similar to that described by the official DIRBE and \Planck\ teams,
 but then gradually generalized with new parameters.
 
-As described in Sect.~\ref{sec:data}, we will in the current analysis
+As described in Sect.~\ref{sec:dirbe}, we will in the current analysis
 focus on the so-called DIRBE Calibrated Individual Observations
-(CIOs), as opposed to raw uncalibrated TOD, primarily because these
-are the only ones that are publicly available at the current time, but
-also because they are easier to work with than the raw uncalibrated
-TOD. However, we note that this immediate implies that there are
+(CIOs). Ideally, the optimal approach would in principle have been
+start from raw uncalibrated TOD, but those are unfortunately not
+publicly available. In addition, the CIO are easier to work with,
+since they have been cleaned from low-level instrumental effects. On
+the other hand, we note that this immediately implies that there are
 important degrees of freedom, in particular with respect to gain and
-zero-level determination, that relies directly on the official
-analysis, and that may need to be revisited at a later stage. We will
-in the following refer to the DIRBE CIOs simply as ``TOD''.
+zero-level determination, that rely directly on the official analysis,
+and that may need to be revisited at a later stage. On the other hand,
+the main residuals that emerge at the end of the current analysis
+still appear to be dominated by astrophysical confusion rather than
+gain errors, and moving on to uncalibrated TOD is therefore not yet a
+top priority. We will in the following refer to the DIRBE CIOs simply
+as ``TOD''.
 
 \subsubsection{TOD model}
 
@@ -275,8 +280,8 @@ We adopt the following high-level parametric data model for the DIRBE
 TOD,
 \begin{align}
 	\label{eq:model}
-	\dv &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
-          \s_{\mathrm{static}}\right] + \n^\mathrm{corr} + \n^\mathrm w,\\
+	\dv &=\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}} + \n^\mathrm{corr} + \n^\mathrm w,\\
         &\equiv \s^{\mathrm{tot}} + \n^{\mathrm{w}}
 \end{align}
 where $\dv$ denotes a stacked vector of all DIRBE TOD for all
@@ -292,70 +297,81 @@ frequency to an observed frequency for each component, taking into the
 bandpass of each detector; $\s_{\mathrm{zodi}}$ represents zodiacal
 light emission from components that appear time-variable as seen from
 Earth (e.g., the zodiacal cloud and asteroidal bands);
-$\s^{\mathrm{static}}$ represents any signal that appears stationary
-with respect to the Earth-Sun system (e.g., the so-called zodiacal
-circumsolar ring and Earth-trailing feature, but also potential far
-sidelobe contamination from the Sun); $\n^{\mathrm{corr}}$ represents
+$\s^{\mathrm{static}}$ represents an excess signal that appears stationary
+with respect to the Earth-Sun system, discussed further in Sect.~\ref{sec:excess}; $\n^{\mathrm{corr}}$ represents
 correlated instrumental noise (which for now is only fitted for the
 lowest DIRBE frequency channel); and $\n^{\mathrm{w}}$ denotes white
 instrumental noise. We also define $\s^{\mathrm{tot}}$ to be the sum
 of all terms in data model except the white noise.
 
-For the gain, $\G$, we only fit a single overall multiplicative value for each
-frequency band, and only at a few channels for which we have a good calibrator;
-in practice, that is only channels between 100 and 240\,$\mu$m, which have
-previously been noted to be in moderate tension with FIRAS \citep{fixsen1997}.
-For all other channels, we rely on the DIRBE team's original calibration.
+As we work with calibrated TOD, we set $\G=\mathrm{I}$ for now, but
+note that this effective prior should be relaxed in future work, for
+instance by using COBE/FIRAS data as a calibration source in the
+overlap frequency range between FIRAS and DIRBE. Similarly, both the
+pointing $\P$ and the beam operator $\B$ are provided by the DIRBE
+team, and we do not account for any uncertainties in these. However,
+we do note that the DIRBE beams have an intrinsically square shape,
+while our current beam convolution implementation only supports
+azimuthally symmetric beams. This will necessary lead to a residual
+that should ideally be accounted for through full beam integration,
+for instance using a Conviqt-style algorithm
+\citep{prezeau2010,keihanen2012}; this is left for future
+work. Similar remarks apply to bandpass definitions as well; for now,
+we neglect the uncertainty in the bandpass profiles provided by the
+DIRBE team. For further details regarding the pointing, beam and
+bandpasses, see Sect.~\ref{sec:dirbe}.
 
-Both the pointing $\P$ and the beam operator $\B$ are provided by the
-DIRBE team, and we do not account for any uncertainties or free
-parameters in these. However, we do note that the DIRBE beams have an
-intrinsically square shape, while our current beam convolution
-implementation only supports azimuthally symmetric beams. This will
-necessary lead to a residual that should ideally be accounted for
-through full integration, for instance using a Conviqt-style
-algorithm \citep{prezeau2010,keihanen2012}; this is left for future work. Similar remarks apply to
-bandpass definitions as well; for now, we neglect the uncertainty in the bandpass
-profiles provided by the DIRBE team. For
-further details regarding the pointing, beam and bandpasses, see
-Sect.~\ref{sec:data}.
+The sky model is described in detail by \citet{CG02_04,CG02_04}, and
+reviewed briefly in Sect.~\ref{sec:skymodel}. We define the set of all
+linear sky component amplitude parameters as $\a_{\mathrm{sky}}$ and
+the set of all spectral parameters as $\beta_{\mathrm{sky}}$ in the
+following.
 
-The sky model is described in detail in the next section. However, we
-will refer to the set of all linear sky component amplitude parameters
-as $\a_{\mathrm{sky}}$ and the set of all spectral parameters as
-$\beta_{\mathrm{sky}}$ in the following.
-
-For the dynamic component of the zodiacal light emission, we fit a
+Our model for zodiacal light emission, $\s_{\mathrm{zodi}}$, is
+described by \citet{CG02_02}, and the overall framework follows
+closely that introduced by \citet{Kelsall1998} (denoted ``K98'' in the
+following) for the original DIRBE analysis. Specifically, we fit a
 limited number of shape parameters per interplanetary dust component,
-in addition to linear emissivity and albedo parameters. In total,
+such as a smooth cloud and asteroidal bands, in addition to linear
+emissivity and albedo parameters for each frequency channel. In total,
 there are 69 free parameters in this model, and these are collectively
-denoted $\zeta_{\mathrm{z}}$. In addition, the static components are
-described by $\s_{\mathrm{static}}$, and modelled in terms of one sky
-map per frequency. We denote these simply as $\a_{\mathrm{static}}$,
-such that $\s_{\mathrm{static}} = \P\a_{\mathrm{static}}$.
+denoted $\zeta_{\mathrm{z}}$.
 
-We assume that the instrumental noise is piecewise stationary, and we
-model it with an uncorrelated zero-mean Gaussian distribution with a
-free standard deviation per sample, $\sigma_{\mathrm{n}}$ for all
-channels except 240\,$\mu$m. The stationarity period is assumed to be
-24~hours, and the data are correspondingly processed in segments. For
-the 240\,$\mu$m channel alone, we include a correlated noise term, and
-we assume that the time-domain noise power spectrum may be described
-by a standard $1/f$ profile on the form $P(f) = \sigma_{\mathrm{n}}^2
+The term denoted $\s_{\mathrm{static}}$ has not been included in
+previous DIRBE analyses, but is rather an important novel feature
+presented in the current paper. We will return to its physical
+interpretation in Sect.~\ref{sec:excess}, but note for now that it
+represents excess radiation in the DIRBE channels between 4.9 and
+100$\,\mu$m not accounted for in the K98 model. In practice, this is
+implemented in terms of a pixelized map, $\a_{\mathrm{static}}$, in
+solar-centric coordinates, such that $\s_{\mathrm{static},\nu} =
+\P_{\mathrm{sol},\nu}\a_{\mathrm{static},\nu}$, where
+$\P_{\mathrm{sol},\nu}$ is the pointing matrix rotated into a
+coordinate system where the Sun is always at coordinates
+$(l,b)=(0^{\circ},0^{\circ})$, and the Ecliptic plane is aligned with
+the equator. The amplitude map, $\a_{\mathrm{static},\nu}$ ,is fitted
+independently for each frequency channel.
+
+Next, we assume that the instrumental noise is piecewise stationary,
+and we model it with an uncorrelated zero-mean Gaussian distribution
+with a free standard deviation per sample, $\sigma_{\mathrm{n}}$ for
+all channels except 240\,$\mu$m. The stationarity period is assumed to
+be 24~hours, and the data are correspondingly processed in segments of
+this length. For the 240\,$\mu$m channel we additionally include a
+correlated noise term.  We assume that the time-domain noise power
+spectrum of this component may be described by a standard $1/f$
+profile on the form $P(f) = \sigma_{\mathrm{n}}^2
 (1+(f/f_{\mathrm{knee}})^{\alpha})$, where the slope $\alpha$ and knee
 frequency $f_{\mathrm{knee}}$ are fitted independently in each data
 segment. Ideally, we would like to include this component in all
 frequencies. However, we find that the current sky model does not yet
-represent a sufficiently good fit at any channel with a wavelength
-shorter than or equal to 100\,$\mu$m. In principle, we could have
-included it for the 140\,$\mu$m channel, which has similar excellent
-goodness-of-fit as 240\,$\mu$m, but in this case we fit a
-\CII\ component per pixel, and $\n_{\mathrm{corr}}$ then introduces a
-strong degeneracy with respect to this component. In total, we denote
-the sum of all noise parameters by $\xi_{\mathrm{n}}$.
+represent a sufficiently good fit at any of the other channels. In
+total, we denote the sum of all noise parameters by
+$\xi_{\mathrm{n}}$.
 
 
 \subsubsection{Sky model}
+\label{sec:skymodel}
 
 For the sky signal defined implicitly by the sum in
 Eq.~\eqref{eq:model}, we adopt the following model in units of
