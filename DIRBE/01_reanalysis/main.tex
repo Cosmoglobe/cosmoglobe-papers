@@ -21,6 +21,7 @@
 \usepackage{natbib}
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{txfonts}
 \usepackage{xcolor}
@@ -164,7 +165,6 @@
 
 \begin{document} 
 
-
    \title{\bfseries{\Cosmoglobe\ DR2. I. Global Bayesian analysis of \COBE-DIRBE }}
 
    \input{authors.tex}
@@ -245,9 +245,9 @@ global model that includes both microwave and infrared wavelengths.
 \label{sec:datamodel}
 
 The first step in any parametric Bayesian analysis is simply to write
-down a model for the data in question. Obviously, the quality of the final
-results depends sensitively on the accuracy and completeness of this
-model, which must be monitored through detailed goodness-of-fit
+down a model for the data in question. Obviously, the quality of the
+final results depends sensitively on the accuracy and completeness of
+this model, which must be monitored through detailed goodness-of-fit
 statistics, typically in the form of residual and $\chi^2$
 measures. In practice, an initial model is typically established based
 on a pre-existing knowledge about both the astrophysical sky and
@@ -256,7 +256,13 @@ the residuals are consistent with instrumental noise. The model
 described in this section represents the product of such a process
 that has involved hundreds of trial runs, starting from a model very
 similar to that described by the official DIRBE and \Planck\ teams,
-but then gradually generalized with new parameters.
+but then gradually generalized with new parameters. In particular, the
+current analysis follows closely in the footsteps of the
+\BP\ \citep{bp01} and \cosmoglobe\ DR1 \citep{watts2023_dr1}, which
+implemented the first version of this algorithm, and applied it to
+\Planck\ LFI and \WMAP, respectively. We refer the interested reader
+to those papers (and references therein) for complete algorithmic
+details.
 
 As described in Sect.~\ref{sec:dirbe}, we will in the current analysis
 focus on the so-called DIRBE Calibrated Individual Observations
@@ -373,36 +379,39 @@ $\xi_{\mathrm{n}}$.
 \subsubsection{Sky model}
 \label{sec:skymodel}
 
-For the sky signal defined implicitly by the sum in
-Eq.~\eqref{eq:model}, we adopt the following model in units of
-brightness temperature and frequency,\footnote{Due to its CMB-oriented
-origin, \commander\ uses brightness temperature and frequency units
-for internal calculations, rather than flux density and wavelength
-units which would be more natural for DIRBE. This has, however, no
-actual effect on the final results, but only requires appropriate unit
-conversions to be applied during input and output operations. }
+The sky signal defined implicitly by the sum in Eq.~\eqref{eq:model}
+is defined by \citet{CG02_04,CG02_05}, and reads as follows in units
+of brightness temperature and frequency,\footnote{Due to its
+CMB-oriented origin, \commander\ uses brightness temperature and
+frequency units for internal calculations, rather than flux density
+and wavelength units which would be more natural for DIRBE. This has,
+however, no actual effect on the final results, but only requires
+appropriate unit conversions to be applied during input and output
+operations. }
 \begin{alignat}{4}
   \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
-  &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
-  && \textrm{(Cold dust)}\label{eq:skymodel}\\
-  + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
+  &\M_{\mathrm{mbb}}(\bcold,\Tcold, q_i;\nuzerocold,\{\Delta\nu_i\})\vec{a}_{\mathrm{cold}}
+  && \textrm{(Cold dust)}\\ %\label{eq:skymodel}\\
+  + &\M_{\mathrm{mbb}}(\bhot,\Thot, q_i;\nuzerohot,\{\Delta\nu_i\})
   \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\nonumber \\
-  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
+  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,q_i;\nuzeronear,\{\Delta\nu_i\}) \t_{\mathrm{near}}
   a_{\nu} && \textrm{(Nearby dust)} \nonumber \\
   + &\left(\frac{\nuzeroff}{\nu}\right)^2
   \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
   \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \nonumber\\
   + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
   h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
-	+ &\delta(\nu-\nu_{0,\CII}) \a_{\CII}
-  h^{\CII}_{\nu} && \CII\nonumber \\
+	+ &\delta(\nu-\nu_{0,\CII}) \t_{\CII}
+  h^{\CII}_{\nu} && (\CII) \\
   + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
-  f_{\GAIA,j} a_{\mathrm{s},j}, &\quad&
-  \textrm{(Stars)} \nonumber\\
+  f_{\mathrm{GAIA},j} a_{\mathrm{s},j}, &\quad&
+  \textrm{(Bright stars)} \nonumber\\
+  + &U_{\mathrm{mJy}} \t_{\mathrm{GAIA,fs}}\, a_{\mathrm{fs},\nu}, &\quad&
+  \textrm{(Faint stars)} \nonumber\\  
     + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
   M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
-  T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
-  a_{\mathrm{e},j} && \textrm{(FIR sources)}\nonumber\\
+  T_{\mathrm{e},j})
+  a_{\mathrm{e},j} && \textrm{(Sources)}\nonumber\\
   + &m_{\nu} && \textrm{(Monopole)}. \nonumber
 \end{alignat}
 In this expression, we have defined a special function of the form
@@ -414,56 +423,62 @@ In this expression, we have defined a special function of the form
   \frac{\e^{h\nu_0/\kB T}-1}{\e^{h\nu/\kB T}-1} & \nu \notin \Delta\nu_i
     \end{cases}       
 \end{equation}
-which represents a generalized modified blackbody function. In
-addition to the usual emissivity index and temperature, $\beta$ and
+which represents a generalized modified blackbody function. However,
+in addition to the usual emissivity index and temperature, $\beta$ and
 $T$, this function takes a set of constant values, $q_i$, and
 corresponding frequency ranges $\Delta\nu_i$. If the requested
 frequency happens to lie in any one of $\Delta\nu_i$, then $q_i$ is
 returned; otherwise the default is to return the standard modified
-blackbody spectrum. Also, if a given amplitude is denoted by $\a$, it
-is fitted freely to the current data, while if it is denoted by $\t$,
-it is fixed to an external template.
+blackbody spectrum. Another point to note in the above equation is
+that if a given amplitude is denoted by $\a$, then it is fitted freely
+to the current data; if it is denoted by $\t$, it is fixed to an
+external template.
 
-As indicated by Eq.~\eqref{eq:skymodel}, we fit a three-component
+As indicated by the above sky model, we fit a novel three-component
 generalized modified blackbody model to account for thermal dust
-emission across the combined DIRBE and \Planck\ HFI frequency
-range. The three components correspond to cold dust, hot dust, and
-nearby dust, respectively. All three are modeled with spatially
-constant spectral indices, but only the cold and hot component
-amplitudes are fitted pixel-by-pixel; the amplitude of the nearby
-component is fixed to a \GAIA-based template covering distances up to
-1.25\,kpc produced by \citep{edenhofer:2024}. 
-This model only has two degrees of freedom per pixel, in addition
-to less than 30 spatially constant SED parameters. This is an
-extremely economical model of thermal dust emission, considering the
-fact that it describes the entire combined frequency range covered by
-both \Planck\ HFI and DIRBE, from 100\,GHz to 1\,$\mu$m.
+emission across the combined DIRBE and \Planck\ HFI frequency range;
+for full details, see \citet{CG02_05}. The three components correspond
+to cold dust, hot dust, and nearby dust emission, respectively. All
+three are modeled with spatially constant spectral parameters, and
+only the cold and hot component amplitudes are fitted pixel-by-pixel;
+the amplitude of the nearby component is fixed to the \GAIA-based dust
+extinction template covering distances up to 1.25\,kpc produced by
+\citep{edenhofer:2024}.  As such, this dust model has in fact only two
+degrees of freedom per pixel, in addition to fewer than 30 spatially
+constant SED parameters. This is an extremely economical model of
+thermal dust emission, considering the fact that it describes the
+entire combined frequency range covered by both \Planck\ HFI and
+DIRBE, from 100\,GHz to 1\,$\mu$m.
 
 To account for free-free emission, we adopt the model presented by
 \citet{planck2014-a11}, both in terms of spatial distribution and
-spectrum. The SED is essentially defined by the Gaunt factor,
-$g_{\mathrm{ff}}(\nu; T_e)$ \citep{dickinson:2003,draine:2011}, which corresponds to a shift in the
-spectral index of about $-0.14$ in the CMB frequency range; however,
-at the very high DIRBE frequencies of up to 300\,THz, it takes on
-significantly more extreme values, and this should at least provide
-greater sensitivity to the electron temperature, $T_e$. For now,
-however, we adopt the $T_e$ distribution presented by
-\citet{planck2014-a11} as given, and aim to revisit this in future work.
+spectrum. The SED of this component is defined by the Gaunt factor,
+$g_{\mathrm{ff}}(\nu; T_e)$ \citep{dickinson:2003,draine:2011}, which
+corresponds to a shift in the spectral index of about $-0.14$ in the
+CMB frequency range; however, at the very high DIRBE frequencies of up
+to 300\,THz, it takes on significantly more extreme values, and this
+should at least in principle provide greater sensitivity to the
+electron temperature, $T_e$. For now, however, we adopt the $T_e$
+distribution presented by \citet{planck2014-a11} as given, and will
+rather attempt to actually fit $T_e$ in future work.
 
 The next component corresponds CO line emission, produced by
 transitions between two quantized angular momentum eigenstates in the
 CO molecule. The resulting emission forms effectively a ladder in
-frequency space in multiples of 115.27\,GHz, and \COBE-FIRAS identified
-emission all the way up to 922\,GHz, but with low sensitivity and
-angular resolution. In contrast, \Planck\ produced high-resolution
-maps with high sensitivity of the $J$=1$\leftarrow$0, 2$\leftarrow$1,
-and 3$\leftarrow$2 transitions, which contributed to the HFI\,100,
-217, and 353\,GHz frequency maps, but was unable to identify CO
-emission at higher frequencies due to strong thermal dust emission. In
-the current work, we adopt the \citet{dame:2001} CO
+frequency space in multiples of 115.27\,GHz, and \COBE-FIRAS
+identified emission all the way up to 922\,GHz, albeit with low
+sensitivity and angular resolution. In contrast, \Planck\ produced
+high-resolution maps with high sensitivity of the $J$=1$\leftarrow$0,
+2$\leftarrow$1, and 3$\leftarrow$2 transitions, which contributed to
+the HFI\,100, 217, and 353\,GHz frequency maps, but was unable to
+identify CO emission at higher frequencies due to strong thermal dust
+emission. In the current work, we adopt the \citet{dame:2001} CO
 $J$=1$\leftarrow$0 map as a fixed tracer for all variations of CO
-emission, and only fit a single amplitude $h_{\nu,i}$ to each band
-which has a CO contribution, including \Planck\ 545 and 857\,GHz.
+emission, and we also adopt the line ratios, $h_{\nu,i}$, presented by
+\citet{planck2014-a12} for the 100, 217, and 353\,GHz \Planck\
+channels. As far as the current analysis is concerned, the CO
+component is thus a fixed correction applied to the relevant
+\Planck\ bands.
 
 Similarly, the fourth component corresponds to \CII\ line emission,
 which has a rest frequency of 1900\,GHz. As such, it only affects the
@@ -475,26 +490,29 @@ FIRAS channels to monitor the overall reconstruction
 quality. The result is a novel \CII\ map with an angular resolution of
 about $1^{\circ}$ FWHM.
 
-The fifth component correspond to starlight emission, which is
-relevant in the frequency range between 1 and 25\,$\mu$m. In this
-case, we first extract a baseline star catalog by thresholding the
-AllWISE 3.5\,$\mu$m catalog at magnitude 8, resulting in a set of about
+The fifth and sixth components correspond to starlight emission, which
+is relevant in the frequency range between 1 and 25\,$\mu$m; for full
+details regarding this model, see \citet{CG02_04}. For these, we first
+extract a baseline star catalog by thresholding the AllWISE
+3.5\,$\mu$m catalog at magnitude 8, resulting in a set of about
 770\,000 sources.\footnote{We have tried different thresholds, and
 found that magnitude 8 provides a good compromise; magnitude 6 results
 in obviously missing sources, while magnitude 10 leads to too many
 unconstrained sources.} For each of these, we search the \GAIA\ DR2
-catalog, and if this returns a fit within 20~arcsec, we identify the
-object as a star, and store the best-fit temperature $T_\mathrm{s}$,
-surface gravity $g$, and metallicity $[\mathrm{M}/\mathrm{H}]$ as
-determined by \GAIA. These are then used to estimate the best-fit SED
-using the PHOENIX spectrum grid \citep{husser:2013}, which is convolved with the
-bandpass and beam profile of each DIRBE channel. The resulting
-bandpass- and beam-convolved SED is denoted $f_{\GAIA,j}$,
-which is unique for each star. We then fit one overall amplitude for
-each star to the four highest DIRBE frequency bands between 1.25 and
-4.9\,$\mu$m; we also account for star emission in the 12 and
-25\,$\mu$m bands, but these bands are not used for the actual fit. A
-total of 717\,000 stars are included in the fit.
+catalog, and if this returns a positive star identification within a
+radius of 20~arcsec, we record the object, and store the best-fit
+temperature $T_\mathrm{s}$, surface gravity $g$, and metallicity
+$[\mathrm{M}/\mathrm{H}]$ as determined by \GAIA. These are then used
+to estimate the best-fit SED using the PHOENIX spectrum grid
+\citep{husser:2013}, which is convolved with the bandpass and beam
+profile of each DIRBE channel. The resulting bandpass- and
+beam-convolved SED is denoted $f_{\GAIA,j}$, which is unique for each
+star. We then fit one overall amplitude for each star to the four
+highest DIRBE frequency bands between 1.25 and 4.9\,$\mu$m; we also
+account for star emission in the 12 and 25\,$\mu$m bands, but these
+bands are not used for the actual fit. A total of 717\,000 stars are
+included in the fit of individual stars; these are denoted as ``bright
+stars'' in the sky model.
 
 \begin{figure*}
   \centering
@@ -503,37 +521,46 @@ total of 717\,000 stars are included in the fit.
 	\label{fig: cios}
 \end{figure*}
 
-The remaining 53\,000 WISE sources that do not have a \GAIA\
-counterpart are assumed to be of extra-galactic origin, and we fit
-these with a modified blackbody spectrum across the same frequency
-range, as described in the eigth line in
-Eq.~\eqref{eq:skymodel}. Algorithmically speaking, this component is
-otherwise identical to the star component.
+The remaining 53\,000 bright WISE sources that do not have a
+\GAIA\ counterpart are assumed to be of extra-galactic origin, and we
+fit these with a modified blackbody spectrum across the same frequency
+range, as described by the line marked by ``Sources'' in the sky
+model. Algorithmically speaking, this component is otherwise identical
+to the star component.
 
-The ninth and final component is simply a monopole per frequency. For
+However, the AllWISE catalog itself contains a total of about 747
+millions sources, and it is impossible to fit all of these with DIRBE
+without introducing massive degeneracies. We therefore instead co-add
+the rest of the AllWISE sources into a diffuse background map of faint
+sources under the assumption that their mean SED is equal to the
+average of the bright sources that actually are fitted as part of the
+algorithm. Together, these three source components comprise an
+unprecended deep model for compact objects in DIRBE that has only
+become possible due to WISE and GAIA.
+
+The tenth and final component is simply a monopole per frequency. For
 DIRBE and FIRAS, this should ideally describe the CIB spectrum, but it
 is also sensitive to zodiacal light and Galactic residuals. For
 \Planck, the monopoles account for the arbitrary zero-levels present
-in the \Planck\ PR4 maps.
+in the \Planck\ PR4 maps. 
 
 Finally, it is worth noting that there is no CMB component present in
 the current sky model, even though it applies to the \Planck\ HFI as
 well as DIRBE. Since the main focus in the current work is DIRBE, we
-have chosen to pre-subtract the CMB component (including the solar CMB
+have chosen to pre-subtract any CMB component (including the solar CMB
 dipole and relativistic quadrupole corrections) from each frequency
 map. Similarly, we neglect the impact of synchrotron emission,
 anomalous microwave emission, the Sunyaev-Zeldovich effect, and other
 smaller contributions; these will instead be included in a future
-analysis that also has HFI as a main target.
+analysis that also has HFI as a main science target.
 
 \subsubsection{Posterior distribution}
 
-In principle, all quantities in Eq.~\ref{eq:model} (except $\dv$),
-whether they are of instrumental or astrophysical origin, are
-associated with free parameters and uncertainties that must be
-estimated from the data themselves. We collectively call the full set
-of free parameters by $\omega =
-\{\G,\xi_{\mathrm{n}},
+In principle, all quantities on the right-hand side of
+Eq.~\ref{eq:model} are associated with free parameters and
+uncertainties that should be estimated from the data, whether they are
+of astrophysical or instrumental origin. We define the full set of
+free parameters as $\omega = \{\G,\xi_{\mathrm{n}},
 \beta_{\mathrm{sky}},\a_{\mathrm{sky}},\zeta_{\mathrm{z}},\a_{\mathrm{static}}\}$,
 and our goal is now to derive an explicit expression for the global
 posterior distribution, $P(\omega\mid\dv)$. This is most easily done
@@ -571,7 +598,7 @@ instance free-free and carbon monoxide line emission, we adopt
 existing spatial templates as delta function priors on the spatial
 morphology, and only fit overall free amplitudes in the current
 analysis. For full details regarding the use of priors for a given
-component, see the respective specialized paper.
+component, we refer the interested reader to \citet{CG02_04,CG02_05}.
 
 \subsection{Gibbs sampling with \commanderthree}
 
@@ -586,33 +613,31 @@ parameters. Mapping out this distribution is therefore highly
 non-trivial.
 
 So far, the only algorithm that has been demonstrated in practice to
-work well on such complex end-to-end analysis problems is Gibbs
-sampling, which is a special case of the Metropolis-Hastings Monte
-Carlo sampling algorithm. The defining feature of this algorithm is
-that it loops over all free parameters (which may be divided into
-groups), and draws a sample from each conditional
-distribution. Returning to the defining data model in
-Eqs.~\eqref{eq:model}--\eqref{eq:skymodel}, and noting that the set
-of free parameters is $\omega = \{\G,\xi_{\mathrm{n}},
+work well on such complex end-to-end analysis problems
+\citep{bp01,watts2023_dr1} is Gibbs sampling
+\citep[e.g.,][]{geman:1984}, which is a special case of the
+Metropolis-Hastings Monte Carlo sampling algorithm. The defining
+feature of this algorithm is that it loops over all free parameters
+(which may be divided into groups), and draws a sample from each
+conditional distribution. Returning to the defining data model in
+Eq.~\eqref{eq:model}, and recalling that the set of
+free parameters is $\omega = \{\xi_{\mathrm{n}},
 \beta_{\mathrm{sky}},\a_{\mathrm{sky}},\zeta_{\mathrm{z}},\a_{\mathrm{static}}\}$,
 we can immediately write down a corresponding Gibbs sampling chain of
 the following form:
-\begin{alignat}{11}
-\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}}&)\label{eq:gibbs_G}\\
-\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
+\begin{alignat}{10}
+\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
 \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
 &\,\a_{\mathrm{static}}&)\\
-\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
 \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
 \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
 &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
 \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
 &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
-\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
 \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&).\label{eq:gibbs_static}
 \end{alignat}
 Here, the symbol $\leftarrow$ indicates drawing a sample from the
@@ -648,21 +673,44 @@ While by far most of the code infrastructure required to process the
 DIRBE TOD already exists, several of these steps and models discussed
 above require slight modifications in order to work efficiently in a
 production environment. In particular, efficient diffuse foreground
-sampling for DIRBE -- and the closely connected gain sampler -- are
-described by \citet{CG02_05}; the novel starlight model and sampler
-are described by \citet{CG02_04}; and the \CII\ sampler is described
-by \citet{CG02_06}. 
+sampling for DIRBE is described by \citet{CG02_05} and the novel
+starlight model and sampler are described by \citet{CG02_04}.
 
-The two last sampling steps summarized in Eqs.~\eqref{eq:gibbs_zodi}
-and \eqref{eq:gibbs_static}, however, did until the current work not
-have support in the existing \commander\ implementation, and had to be
-developed from scratch. An early step towards goal this was described
-by \citet{san:2022}, who reimplemented the default DIRBE zodiacal
-light model (K98; \citealp{kelsall1998}) in Python. This served as the
-basis for the code developed here, which now is a set of native
-\commander\ modules written in Fortran. The full details of the new
-framework, including a dramatically improved best-fit model with
-respect to K98, is presented by \citet{CG02_02}.
+The ZL sampling step described by Eq.~\eqref{eq:gibbs_zodi}, however,
+did not have support in the existing \commander\ implementation until
+the current work, and had to be developed from scratch. An early step
+towards goal this was described by \citet{san:2022}, who reimplemented
+the default DIRBE zodiacal light model (K98; \citealp{kelsall1998}) in
+Python. This served as the basis for the code developed here, which
+now is a set of native \commander\ modules written in Fortran. The
+full details of the new zodiacal light estimation framework, including
+a significantly improved best-fit model with respect to K98, is
+presented by \citet{CG02_02}.
+
+Similarly, the sampling step for the static component amplitude,
+$\a_{\mathrm{static}}$, also had to be developed from scratch for the
+current work. However, in constrast to the ZL sampler, which required
+a non-trivial amount of coding effort, the algorithm for
+$\a_{\mathrm{static}}$ is very straight-forward. Based on the data
+model in Eq.~\eqref{eq:model}, we first compute a residual that
+removes all components except $\s_{\mathrm{s}}$,
+\begin{equation}
+  \r_{\mathrm{static}} = \dv - \left[\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} 
+    + \n^\mathrm{corr}\right],
+\end{equation}
+and we then bin this time-ordered residual in solar-centric coordinates
+according the usual map-making equation for Gaussian noise
+\citep[e.g.,][]{tegmark_mapmaking}. Explicitly, the appropriate
+Gibbs sample is given by (see, e.g., Appendix~A in \citealp{bp01})
+\begin{equation}
+(\P_{\mathrm{sol}}^t\N_{\mathrm{wn}}^{-1}\P_{\mathrm{sol}})\a_{\mathrm{static}} 
+  = \P_{\mathrm{sol}}^t\N_{\mathrm{wn}}^{-1}\r_{\mathrm{static}} + \P_{\mathrm{sol}}^t\N_{\mathrm{wn}}^{-\frac{1}{2}}\omega,
+\end{equation}
+where $\omega\sim N(0,1)$ is a vector of standard Gaussian
+variates. Since the white noise component by definition is
+uncorrelated, this equation may be solved trivially pixel-by-pixel.
+
+
 
 \section{Diffuse Infrared Background Experiment}
 \label{sec:dirbe}
