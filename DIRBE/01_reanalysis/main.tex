@@ -612,6 +612,14 @@ essentially every single data point, such as the zodiacal light shape
 parameters. Mapping out this distribution is therefore highly
 non-trivial.
 
+\begin{figure*}
+	\centering
+	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
+	\caption{DIRBE optics module. The optical design includes two field stops, one of which is square, to reduce straylight contamination. Reproduced from \cite{magner87}.
+	}
+	\label{fig:optics_model}
+\end{figure*}
+
 So far, the only algorithm that has been demonstrated in practice to
 work well on such complex end-to-end analysis problems
 \citep{bp01,watts2023_dr1} is Gibbs sampling
@@ -669,6 +677,8 @@ with full noise propagation efficiently with Gibbs sampling; and
 \citet{bp13} describe how to sample from intensity foregrounds
 posteriors. 
 
+\input{planet_flag_table.tex}
+
 While by far most of the code infrastructure required to process the
 DIRBE TOD already exists, several of these steps and models discussed
 above require slight modifications in order to work efficiently in a
@@ -715,13 +725,6 @@ uncorrelated, this equation may be solved trivially pixel-by-pixel.
 \section{Diffuse Infrared Background Experiment}
 \label{sec:dirbe}
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
-	\caption{DIRBE optics module. The optical design includes two field stops, one of which is square, to reduce straylight contamination. Reproduced from \cite{magner87}.
-	}
-	\label{fig:optics_model}
-\end{figure*}
 
 
 \begin{figure}
@@ -738,6 +741,7 @@ uncorrelated, this equation may be solved trivially pixel-by-pixel.
   \caption{Bandpass response functions for each DIRBE channel, plotted as a function of frequency.}
   \label{fig:bandpass}
 \end{figure}
+
 
 
 \subsection{The DIRBE instrument}
@@ -763,6 +767,15 @@ Both the original maps in Quadcube\footnote{
 pixelization (resolution 9, pixel size 21\arcm) and the CADE\footnote{Centre d'Analyse de Données Etendues, \url{http://cade.irap.omp.eu/dokuwiki/doku.php?id=dirbe}} reprojection into HEALPix ($N_\mathrm{side}=256$, pixel size 13\farcm7) do not have the required support over the full multipole range. 
 
 
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figs/mask_01.pdf}
+  \includegraphics[width=\columnwidth]{figs/mask_06.pdf}
+  \includegraphics[width=\columnwidth]{figs/mask_10.pdf}
+  \caption{Processing masks use in the analysis. Green regions correspond to the general TOD processing masks, and the blue regions correspond to the zodiacal emission masks.}
+  \label{fig:masks}
+\end{figure}
+
 
 The DIRBE central bandpasses, given in terms of central frequency and central wavelength, are given in Table \ref{tab:summary}, and the full bandpass responses as reported in \citet{cobe_exsupp} are shown in Fig.~\ref{fig:bandpass}.
 The different detector technology for each band accounts for the different performances and systematics found in each of the bands. \citet{silverberg93} in particular highlights the Ge:Ga photoconductors' response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
@@ -775,7 +788,6 @@ In order to produce maps with full multipole support, we analyze the CIOs direct
 The delivered CIOs are organized into 285 single-day files, with the datapoints ordered by Quadcube pixel index. The primary processing step was converting the pointing into $N_\mathrm{side}=512$ pixels using the \texttt{quadcube} package. The data are sampled at 8\,Hz and labeled by time index in seconds since January 1, 1981 00:00 UTC. Because the data are pre-calibrated and bad data are already removed, there are some gaps in the data, which we fill manually with an appropriate flag. Additional flags, such as excess noise, orbit and attitude errors, and presence of the South Atlantic Anomaly, are additionally extracted. In total, the data are placed in one hdf5 file per band, following the format enumerated in \citet{bp03}.
 The planet flags are not present in the CIOs, and are regenerated beforehand. Using the radii as defined in Table~\ref{tab:planet_flags}, we mark data points within the pointing of each pixel. Note that this is not strictly optimal due to the non-circular beam shape, and can be optimized in future analyses.
 
-\input{planet_flag_table.tex}
 
 %\subsubsection{DIRBE Calibrated Individual Observations (CIOs)}
 %\subsubsection{Quadrilateralized Spherical Cube to HEALPix conversion}
@@ -836,14 +848,6 @@ The dense frequency spacing of the FIRAS data makes it ideal for determining the
 
 \subsection{Mask definitions}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figs/mask_01.pdf}
-  \includegraphics[width=\columnwidth]{figs/mask_06.pdf}
-  \includegraphics[width=\columnwidth]{figs/mask_10.pdf}
-  \caption{Processing masks use in the analysis. Green regions correspond to the general TOD processing masks, and the blue regions correspond to the zodiacal emission masks.}
-  \label{fig:masks}
-\end{figure}
 
 In order to model the TODs accurately, we make use of processing masks depending on the band and component being modeled. In particular, estimating the instrumental noise properties and the zodiacal emission require a sufficiently accurate model, which can be easily biased in regions of excessively high emission.
 
