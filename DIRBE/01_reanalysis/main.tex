@@ -781,7 +781,7 @@ The DIRBE central bandpasses, given in terms of central frequency and central wa
 The different detector technology for each band accounts for the different performances and systematics found in each of the bands. \citet{silverberg93} in particular highlights the Ge:Ga photoconductors' response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
 
 \subsection{Data selection and masking}
-%\label{sec:tod}
+\label{sec:data_selection}
 
 In order to produce maps with full multipole support, we analyze the CIOs directly and convert the pointing into 6\farcm9 $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered CIOs.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from pixel CIO pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in a Python preprocessing script.\footnote{\url{https://github.com/MetinSa/quadcube}}
 
@@ -863,8 +863,6 @@ Conversely, at very long and very short wavelengths, a more aggressive Galactic 
 %\subsection{Summary of included data}
 
 
-\clearpage
-
 \section{Markov chains, burn-in and convergence}
 \label{sec:chains}
 
@@ -890,8 +888,15 @@ We can approximately map out the correlations between parameters by computing a 
 \section{Noise estimation and goodness-of-fit}
 \label{sec:noise_gof}
 
-\subsection{Instrumental noise}
+We now turn our attention to aggregate posterior statistics, typically
+in the form of posterior mean and rms estimates for each sampled
+quantity, and we start with noise estimation and overall
+goodness-of-fit statistics. The algorithms used in the current
+analysis to estimate the instrumental noise parameters are identical
+to those described by \citet{bp06} as applied to \Planck\ LFI, and we
+refer the interested reader there for further details.
 
+\subsection{Instrumental noise}
 
 \begin{figure}
 	\centering
@@ -902,84 +907,52 @@ We can approximately map out the correlations between parameters by computing a 
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_10.pdf}       
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_09.pdf}\\
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_08.pdf}       
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_07.pdf}\\
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_06.pdf}       
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_05.pdf}\\       
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_04.pdf}         
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_03.pdf}\\
-  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_02.pdf}
   \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_01.pdf}       
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_02.pdf}\\
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_03.pdf}
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_04.pdf}\\       
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_05.pdf}       
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_06.pdf}\\       
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_07.pdf}
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_08.pdf}\\       
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_09.pdf}
+  \includegraphics[width=0.39\linewidth]{figs/rms_maps/rms_10.pdf}       
 	\caption{White noise rms maps for each DIRBE channel. All maps are in units of $\mathrm{MJy\,sr^{-1}}$.}
   \label{fig:sigma0_map}
 \end{figure*}
 
-
-\begin{figure}
-  % script to make these are in /mn/stornext/u3/metins/dirbe/DR2/plot_maps.py (cosmoglobe_analysis_plotter.plot_ncorr_maps(sample=19))
-	\centering
-  
-	\includegraphics[width=\columnwidth]{figs/ncorr_240a.pdf}
-
-	\caption{Correlated noise sample for the first half-mission of the 240$\,\mu$m channel.}
-	\label{fig:ncorr}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{figs/ncorr_powerspec.pdf}
-	\caption{Correlated noise angular power spectrum for the 240$\,\mu$m channel.
-	\textbf{Needs to be updated}}
-	\label{fig:ncorrpowspec}
-\end{figure}
-
-
-\subsection{Goodness-of-fit}
-
-
-
-       
        \begin{figure*}
        	\centering
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_10_todres_3deg_v1.pdf}       
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_09_todres_3deg_v1.pdf}\\
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_08_todres_v1.pdf}       
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_07_todres_v1.pdf}\\
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_06_todres_v1.pdf}       
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_05_todres_v1.pdf}\\       
-        \includegraphics[width=0.39\linewidth]{figs/dirbe_04_todres_v1.pdf}         
-        \includegraphics[width=0.39\linewidth]{figs/dirbe_03_todres_v1.pdf}\\
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_02_todres_v1.pdf}
        	\includegraphics[width=0.39\linewidth]{figs/dirbe_01_todres_v1.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_02_todres_v1.pdf}\\
+        \includegraphics[width=0.39\linewidth]{figs/dirbe_03_todres_v1.pdf}
+        \includegraphics[width=0.39\linewidth]{figs/dirbe_04_todres_v1.pdf}\\         
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_05_todres_v1.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_06_todres_v1.pdf}\\       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_07_todres_v1.pdf}
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_08_todres_v1.pdf}\\       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_09_todres_3deg_v1.pdf}
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_10_todres_3deg_v1.pdf}       
        	\caption{Data-minus-model residual maps for each band. The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
        	\label{fig:res}
        \end{figure*}
 
        \begin{figure*}
        	\centering
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_10_hmhd_3deg_v1.pdf}       
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_09_hmhd_3deg_v1.pdf}\\
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_08_hmhd_v1.pdf}       
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_07_hmhd_v1.pdf}\\
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_06_hmhd_v1.pdf}       
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_05_hmhd_v1.pdf}\\       
-        \includegraphics[width=0.39\linewidth]{figs/dirbe_04_hmhd_v1.pdf}         
-        \includegraphics[width=0.39\linewidth]{figs/dirbe_03_hmhd_v1.pdf}\\
-       	\includegraphics[width=0.39\linewidth]{figs/dirbe_02_hmhd_v1.pdf}
        	\includegraphics[width=0.39\linewidth]{figs/dirbe_01_hmhd_v1.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_02_hmhd_v1.pdf}\\
+        \includegraphics[width=0.39\linewidth]{figs/dirbe_03_hmhd_v1.pdf}
+        \includegraphics[width=0.39\linewidth]{figs/dirbe_04_hmhd_v1.pdf}\\         
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_05_hmhd_v1.pdf}       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_06_hmhd_v1.pdf}\\       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_07_hmhd_v1.pdf}
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_08_hmhd_v1.pdf}\\       
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_09_hmhd_3deg_v1.pdf}
+       	\includegraphics[width=0.39\linewidth]{figs/dirbe_10_hmhd_3deg_v1.pdf}       
        	\caption{Half-mission half-difference maps for each channel. The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
        	\label{fig:hmhd}
        \end{figure*}
        
-
-       \begin{figure}
-       	\centering
-       	\includegraphics[width=\linewidth]{figs/chisq_CG02_c1.pdf}
-       	\caption{Pixel-space reduced normalized $\chi^2$ in units of $\sigma$. The number of degrees-of-freedom per pixel is here assumed to be 103, which is the sum of the number of observations per $N_{\mathrm{side}}=512$ pixel minus the number of freely fitted Galactic components. }
-       	\label{fig:chisq}
-       \end{figure}
 
        \begin{figure}
 	 \centering
@@ -988,7 +961,213 @@ We can approximately map out the correlations between parameters by computing a 
 	 \label{fig:hmhd_powspec}
        \end{figure}
 
+       \begin{figure}
+       	\centering
+       	\includegraphics[width=\linewidth]{figs/chisq_CG02_c1.pdf}
+       	\caption{Pixel-space reduced normalized $\chi^2$ in units of $\sigma$. The number of degrees-of-freedom per pixel is here assumed to be 103, which is the sum of the number of observations per $N_{\mathrm{side}}=512$ pixel minus the number of freely fitted Galactic components. }
+       	\label{fig:chisq}
+       \end{figure}
 
+
+
+As defined in Sect.~\ref{sec:datamodel}, $\xi_{\mathrm{n}}$ denotes
+the set of all instrumental noise parameters in our data model, and
+for all channels except 240$\,\mu$m this simply consist of a white
+noise rms per TOD sample, $\sigma_0$, which is assumed to be constant
+within each 24\,hr data segment. The corresponding posterior mean is
+plotted as a function of observing day in Fig.~\ref{fig:sigma0}. Gaps
+in each curve indicate observations that have been excluded from the
+analysis, either due to the original DIRBE data quality flags or our
+additional exclusion of the last two or four weeks of observations;
+see Sect.~\ref{sec:data_selection}.
+
+Several interesting features may be seen in this figure. Starting with
+the 1.25$\,mu$m channel as shown in the top panel, we notice an
+average increase by about 3\,\% from the beginning to the end of the
+survey. This increase is however not increasing uniformly, but rather
+exhibits systematic variations as a function of time. Similar features
+are observed for all the four shortest wavelength bands, both in terms
+of absolute amplitude and general behaviour. Perhaps the most natural
+explanation for such behaviour are changes in the thermal environment
+of the DIRBE detectors, for instance due to varying levels of
+radiation from the Sun or the Earth. As demonstrated by \citet{bp06}
+within \BP\ analysis by correlating $\sigma_0$ with house-keeping
+focal plane thermometer measurements, this was the case for
+\Planck\ LFI. Unfortunately, we have not yet been able to locate
+similar publicly available house-keeping information for DIRBE.
+
+
+       
+In contrast, the 25$\,\mu$m channel exhibits a qualitatively different
+behaviour. In this case, $\sigma_0$ appears to jump between two
+different stationary states that are separated by 5\,\% in
+amplitude. At one level, this generall behaviour appears structurally
+similar to a phenomenon called ``popcorn'' or ``random telegraph''
+noise, which was also observed in several \Planck\ detectors, in which
+the noise level jumps between two discrete and well-defined
+levels. However, the behaviour seen in Fig.~\ref{fig:sigma0} appears
+more systematic than what is usually observed for popcorn noise, with
+a very well-defined period of about 2 weeks. This time scale could
+possibly suggest that the Moon plays a role in this behaviour, which
+has an rotation period relative to the Earth of about 4~weeks.
+
+Moving on, the 60$\,\mu$m channel exhibits much larger drifts than any
+of the others, and changes by almost 50\,\% from the beginning to the
+end of the survey. We also see a clear change in the level of
+variations between scans as a function of the survey, with much
+stronger variations in the first third of the mission. In contrast,
+the 100\,$\mu$m channel appears much more stable, and is in fact
+structurally quite similar to the short wavelength channels.
+
+Finally, the 140 and 240$\,\mu$m channels behave yet again differently
+from the other eight, with a very stable plateau during the first half
+of the mission, but with a clear increase around Day 180. These two
+channels, however, are internally very similar, and individual
+features and spikes can be traced very accurately between the two. In
+this respect, it is worth recalling the instrument layout shown in
+Fig.~\ref{fig:optics_model}, where we see that these two channels are
+co-located in the optical path, separated from the others. It is
+therefore plausible that these two detectors experience a different
+thermal environment than the others.
+
+While Fig.~\ref{fig:sigma_0} shows the white noise level in
+time-domain, Fig.~\ref{fig:sigma0_map} shows the corresponding noise
+rms as a function of position on the sky after accounting of the
+number of observations per pixel. Starting once again with the
+1.25$\,\mu$m channel, the smooth underlying variations that appear
+nearly symmetric with respect to the Ecliptic poles are simply due to
+the DIRBE scanning strategy, which effectively observe the Ecliptic
+poles more often than the Ecliptic plane. The sharp band of higher
+values along the Ecliptic plane is however not due to the scanning
+strategy as such, but rather by the DIRBE quality flags which removes
+near-planet observations. The 2.2 and 3.5$\,\mu$ channels shows very
+similar behaviour.
+
+In general, the patterns seen in the 4.9--100$\,\mu$m channels also
+appear broadly similar. However, in this case we can also see regions
+with higher noise levels near the Ecliptic poles and south of the
+Galactic center. These are primarily due to the excess radiation masks
+defined in Sect.~\ref{sec:excess}, which removes a significant
+fraction of the overall data, and affects some parts of the sky more
+than others, depending on the specific orientation of the satellite at
+any given time with respect to the Sun.
+
+Finally, the most noticeable feature for the 140 and 240$\,\mu$m
+channels is an overall noise level that is almost two orders of
+magnitude higher than for the others. This is due to the different
+detector technology used for these two channels \citep{hauser1998}.
+
+
+%\begin{figure}
+%  % script to make these are in /mn/stornext/u3/metins/dirbe/DR2/plot_maps.py (cosmoglobe_analysis_plotter.plot_ncorr_maps(sample=19))
+%	\centering
+  
+%	\includegraphics[width=\columnwidth]{figs/ncorr_240a.pdf}
+
+%	\caption{Correlated noise sample for the first half-mission of the 240$\,\mu$m channel.}
+%	\label{fig:ncorr}
+%\end{figure}
+
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=\columnwidth]{figs/ncorr_powerspec.pdf}
+%	\caption{Correlated noise angular power spectrum for the 240$\,\mu$m channel.
+%	\textbf{Needs to be updated}}
+%	\label{fig:ncorrpowspec}
+%\end{figure}
+
+
+\subsection{Goodness-of-fit}
+
+With basic noise statistics in hand, we are ready to consider the
+overall goodness-of-fit of the model. The first such quality measure
+we consider are simply the data-minus-model residual maps for each
+wavelength band, and these are shown in Fig.~\ref{fig:res}. Starting
+from the top, we first note that the color scale range spans
+50\,kJy/sr, while the natural plotting scale for the full sky signal
+of this channel is typically 10\,MJy/sr. As such, the model accounts
+for about 99\,\% of the total sky signal at high Galactic
+latitudes. The same holds true for most other channels as well.
+
+The dominant residual at short wavelengths is obviously due to
+residual starlight emission. At 1.25$\,\mu$m the starlight emission is
+slightly over-subtracted, while at 2.2\,$\mu$m it is slightly
+under-subtracted. In this respect it is important to note that the
+starlight model presented by \citet{CG02_04} is based on the WISE
+catalog, which includes about 747 million sources. While this is a
+large number, it is still much lower than the total number of stars in
+the Milky Way, which is about 100\,billions. The completeness of the
+WISE catalog is, however, much higher at high Galactic latitudes than
+in the central bulge, and it is therefore not surprising that the
+model is not statistically adequate at low Galactic latitudes. 
+       
+In general, only very faint ZL residuals are seen in the two
+shortest wavelength bands. In order to suppress these further, it is
+worth considering fitting the albedo of the asteroidal bands
+independently from the cloud; however, the signal-to-noise ratio of
+the bands at these wavelengths is very low, and there is a significant
+risk of introducing strong degeneracies with the starlight model by
+doing so.
+
+Significantly stronger ZL residuals are seen in the 3.5--60$\,\mu$m
+channels, but still at the sub-percent level of the total
+intensity. The asteroidal bands are particularly noteworth at
+25$\,\mu$m. In order to improve on these, higher angular resolution
+would be extremely useful, and a future joint analysis with IRAS
+and/or AKARI should prove useful in reducing these residuals further.
+
+Between 60 and 140$\,\mu$m, the dominant residuals are clearly due to
+Galactic dust emission, and to improve on these, a more detailed
+thermal dust modell should be established. In this respect, it is
+worth recalling that we currently only fit two degrees of freedom per
+pixel for thermal dust emission from 100\,GHz to 1.25$\,\mu$m, and
+there are therefore massive opportunities for refining the current
+model without compromising the overall signal-to-noise ratio and
+introducing uncontrollable degeneracies. Natural next steps are to
+allow for spatial variations in the spectral parameters for each
+thermal dust component, as well as to sub-divide the nearby dust
+component into more local clouds \citep{CG02_05}.
+
+Next, Fig.~\ref{fig:hmhd} shows half-mission half-difference (HMHD)
+maps for each channel. These maps quantify seasonal variations in the
+overall residuals, and put strong limits both on errors in the assumed
+DIRBE-based calibration and in the overall ZL model. In particular, we
+note that the Galactic plane is only barely visible in any of these
+channels, and that indicates the DIRBE calibration is accurate to much
+better than 1\,\% throughout the entire mission. Rather, the dominant
+spatial structures in these maps appear to be zodiacal in nature, with
+patterns matching those expected from convolving the ZL model with the
+DIRBE scanning strategy.
+
+Figure~\ref{fig:hmhd_powspec} shows the angular power spectra computed
+from each of the HMHD maps as blue curves, compared with a single
+white noise realization, plotted as red curves. At low multipoles, we
+see that the amplitude of the excess residuals typically are two
+orders of magnitude higher than the white noise level, which indicates
+that the current residuals are about one order of magnitude larger
+than white noise in pixel space. Above $\ell\gtrsim100$ this
+discrepancy falls smoothly to about unity due to the DIRBE
+beam. Indeed, for the 1.25--3.5 and 140-240$\,\mu$m channels, the
+agreement between the observed residual and the white noise model is
+excellent. However, for the intermediate channels between
+4.9--100$\,\mu$m channel there is a discrepancy of about a factor of
+two, and the origin of this is still under investigation.
+
+Finally, Fig.~\ref{fig:chisq} shows the total reduced and normalized
+$\chi^2$ as a function of pixel on the sky in units of $\sigma$; for
+an exact definition, see \citet{bp10}. The number of degrees of
+freedom per pixel is here assumed to be 103, which equals the total
+number of measured pixels in the data set per $N_{\mathrm{side}}=512$
+pixel (which is not equal to the number of data channels, because the
+\Planck\ bands have higher resolution than DIRBE) minus the number of
+diffuse components. In this figure, we clearly see both the Galactic
+and ZL residuals, as discussed above. However, there are also large
+extended regions for which the goodness-of-fit is within the expected
+range of $\pm2\sigma$. This is a strong testament to the overall
+quality of the data model defined by Eq.~\eqref{eq:model}. For
+cosmological analyses of these data, the $\chi^2$ map in
+Fig.~\ref{fig:chisq} serves as a useful starting point for mask
+definitions. 
 
 %\begin{figure*}
 %	\centering
@@ -1061,7 +1240,6 @@ We can approximately map out the correlations between parameters by computing a 
   \label{fig:solarmaps}
 \end{figure*}
 
-\clearpage
 \section{Excess radiation model}
 \label{sec:excess}
 
@@ -1318,7 +1496,7 @@ rms maps of the final ZSMA maps. Indeed, as we will see in the next
 section, $\a_{\mathrm{static}}$ appears to represent the dominant
 source of uncertainty in the final \cosmoglobe\ DR2 ZSMA maps.
 
-
+\clearpage
 \section{Frequency maps}
 \label{sec:maps}
 
