@@ -213,9 +213,9 @@ This line of work was subsequently generalized by \citet{watts2023_dr1} to perfo
 
 The current paper is the first of a series of papers in which we perform a similar analysis for the \COBE-DIRBE data, collectively referred to as \cosmoglobe\ Data Release~2 (DR2). This work represents a major step forward in the \Cosmoglobe\ program by expanding the modelled frequency range by three orders of magnitude, and it is a first step towards merging the microwave and infrared fields into one joint effort. The reasons for considering \COBE-DIRBE in this first step, as opposed to \AKARI, \IRAS, or WISE, are two-fold. First and foremost, DIRBE has excellent systematics properties, both in terms of absolute calibration and zero-level determination, thermal stability, and in terms of a highly inter-connected scanning strategy. At the same time, both its data volume and angular resolution are relatively modest, and this makes the computational load and debug cycle very manageable. Overall, DIRBE is an ideal dataset for generalizing the previous CMB-oriented model and computer code into the infrared regime.
 
-At the same time, the fundamental challenges faced by DIRBE are very similar to those faced by any other infrared experiment. In particular, the single most challenging aspect is the zodiacal light (ZL) emission. This is thermal emission and scattered sunlight from interplanetary dust (IPD) grains. The main difficulty when dealing with zodiacal emission contamination in infrared data is that the observed emission is highly dependent on the position of the observer, and as such, it cannot be modeled like a static foreground, as for instance Galactic foregrounds are treated in the CMB community. Rather, the state-of-the-art method to remove zodiacal emission from timestreams today is to use a three-dimensional interplanetary dust model which describes the distribution of interplanetary dust within the solar system, and perform line-of-sight integration for every single time step. The IPD model most widely used today is the so-called K98 model \citep{kelsall1998} produced by the DIRBE team, or variants thereof \citep[e.g.,][]{planck2013-pip88}. In a companion paper, \citet{CG02_02} present a major step forward in terms of ZL modelling for the DIRBE experiment, as a key component of the current \cosmoglobe\ analysis. This progress is enabled by three main components. First, the usage of external data from \Planck, WISE, and GAIA breaks key degeneracies between the ZL and the Galactic parameters. Second, by fitting all parameters jointly with a modern Monte Carlo sampler allows the remaining degeneracies to be explored more efficiently than before. Third and finally, the current analysis characterizes and mitigates a source of excess radiation observed in the mid-infrared DIRBE channels that appears static in solar-centric coordinates. This radiation was noted already by \citet{leinert:1998}, but no corrections have until now been implemented and applied to the DIRBE data. The net result is a greatly improved ZL model that should be of great utility to the entire infrared community.
+At the same time, the fundamental challenges faced by DIRBE are very similar to those faced by any other infrared experiment. In particular, the single most challenging aspect is the zodiacal light (ZL) emission. This is thermal emission and scattered sunlight from interplanetary dust (IPD) grains. The main difficulty when dealing with zodiacal emission contamination in infrared data is that the observed emission is highly dependent on the position of the observer, and as such, it cannot be modeled like a static foreground, as for instance Galactic foregrounds are treated in the CMB community. Rather, the state-of-the-art method to remove zodiacal emission from timestreams today is to use a three-dimensional interplanetary dust model which describes the distribution of interplanetary dust within the solar system, and perform line-of-sight integration for every single time step. The IPD model most widely used today is the so-called K98 model \citep{kelsall1998} produced by the DIRBE team, or variants thereof \citep[e.g.,][]{planck2013-pip88}. In a companion paper, \citet{CG02_02} present a major step forward in terms of ZL modelling for the DIRBE experiment, as a key component of the current \cosmoglobe\ analysis. This progress is enabled by three main components. First, the usage of external data from \Planck, WISE, and \GAIA\ breaks key degeneracies between the ZL and the Galactic parameters. Second, by fitting all parameters jointly with a modern Monte Carlo sampler allows the remaining degeneracies to be explored more efficiently than before. Third and finally, the current analysis characterizes and mitigates a source of excess radiation observed in the mid-infrared DIRBE channels that appears static in solar-centric coordinates. This radiation was noted already by \citet{leinert:1998}, but no corrections have until now been implemented and applied to the DIRBE data. The net result is a greatly improved ZL model that should be of great utility to the entire infrared community.
 
-These improvements also lead to better cosmological and astrophyscal interpretation with the DIRBE data. For example, as part of the current data release \citet{CG02_03} derive unprecedently tight constraints on the CIB monopole spectrum with DIRBE data, while \citet{CG02_05} present a new three-component model of thermal dust emission in the Milky Way that will be of great interest for the CMB community in the search for primordial gravitational waves. Similarly, \citet{CG02_04} construct a new starlight model for DIRBE by combining WISE and \GAIA\ data, that allow for better cleaning of the wavelength channels between 1.25 and 25$\,\mu$m than ever before. Another striking demonstration of the power of joint multi-experiment analysis is presented by \citet{CG02_06}, who derives a full-sky map of ionized carbon (\CII) by combining spatial information in the DIRBE 140\,$\mu$m channel with spectral measurements from the COBE/FIRAS instrument. While many issues still remain to be solved even after the current analysis, we argue that the products presented in the following redefines the standard for full infrared sky modelling, and the most of the methods described in the following are likely to be of direct use for the wide range of other infrared experiments, including \AKARI, \IRAS, and WISE. All products and computer codes are made publicly available\footnote{\url{https://github.com/Cosmoglobe/}} under an Open Source license.
+These improvements also lead to better cosmological and astrophyscal interpretation with the DIRBE data. For example, as part of the current data release \citet{CG02_03} derive unprecedently tight constraints on the CIB monopole spectrum with DIRBE data, while \citet{CG02_05} present a new three-component model of thermal dust emission in the Milky Way that will be of great interest for the CMB community in the search for primordial gravitational waves. Similarly, \citet{CG02_04} construct a new starlight model for DIRBE by combining WISE and \GAIA\ data, that allow for better cleaning of the wavelength channels between 1.25 and 25$\,\mu$m than ever before. Another striking demonstration of the power of joint multi-experiment analysis is presented by \citet{CG02_06}, who derives a full-sky map of ionized carbon (\CII) by combining spatial information in the DIRBE 140\,$\mu$m channel with spectral measurements from the \COBE-FIRAS instrument. While many issues still remain to be solved even after the current analysis, we argue that the products presented in the following redefines the standard for full infrared sky modelling, and the most of the methods described in the following are likely to be of direct use for the wide range of other infrared experiments, including \AKARI, \IRAS, and WISE. All products and computer codes are made publicly available\footnote{\url{https://github.com/Cosmoglobe/}} under an Open Source license.
 
 The rest of the paper is organized as follows. In Sect.~\ref{sec:global_modelling} we review the \cosmoglobe\ data model and algorithms, and we discuss the extensions needed for DIRBE analysis. In Sect.~\ref{sec:dirbe} we give an overview of the DIRBE instrument and data, as well as any preprocessing and data selection we apply to these, and in Sect.~\ref{sec:ancillary} we summarize the ancillary data sets used in the current processing. The actual results derived through this analysis are summarized in the next four sections: Sect.~\ref{sec:chains} discusses the basic Markov chains produced by the algorithm in terms of burn-in and convergence, while Sect.~\ref{sec:noise_gof} focuses on instrumental noise estimation and overall goodness-of-fit. In Sect.~\ref{sec:excess} we provide the first systematic characterization of excess radiation for all DIRBE channels, and in Sect.~\ref{sec:maps} we present and characterize the new \cosmoglobe\ DR2 ZSMA maps. Finally, we conclude and discuss avenues for future work in Sect.~\ref{sec:conclusions}. 
 
@@ -314,7 +314,7 @@ of all terms in data model except the white noise.
 
 As we work with calibrated TOD, we set $\G=\mathrm{I}$ for now, but
 note that this effective prior should be relaxed in future work, for
-instance by using COBE/FIRAS data as a calibration source in the
+instance by using \COBE-FIRAS data as a calibration source in the
 overlap frequency range between FIRAS and DIRBE. Similarly, both the
 pointing $\P$ and the beam operator $\B$ are provided by the DIRBE
 team, and we do not account for any uncertainties in these. However,
@@ -329,7 +329,7 @@ we neglect the uncertainty in the bandpass profiles provided by the
 DIRBE team. For further details regarding the pointing, beam and
 bandpasses, see Sect.~\ref{sec:dirbe}.
 
-The sky model is described in detail by \citet{CG02_04,CG02_05}, and
+The sky model is described in detail by \citet{CG02_04} and \citet{CG02_05}, and
 reviewed briefly in Sect.~\ref{sec:skymodel}. We define the set of all
 linear sky component amplitude parameters as $\a_{\mathrm{sky}}$ and
 the set of all spectral parameters as $\beta_{\mathrm{sky}}$ in the
@@ -357,7 +357,7 @@ solar-centric coordinates, such that $\s_{\mathrm{static},\nu} =
 $\P_{\mathrm{sol},\nu}$ is the pointing matrix rotated into a
 coordinate system where the Sun is always at coordinates
 $(l,b)=(0^{\circ},0^{\circ})$, and the Ecliptic plane is aligned with
-the equator. The amplitude map, $\a_{\mathrm{static},\nu}$ ,is fitted
+the equator. The amplitude map, $\a_{\mathrm{static},\nu}$, is fitted
 independently for each frequency channel.
 
 Next, we assume that the instrumental noise is piecewise stationary,
@@ -382,7 +382,7 @@ $\xi_{\mathrm{n}}$.
 \label{sec:skymodel}
 
 The sky signal defined implicitly by the sum in Eq.~\eqref{eq:model}
-is defined by \citet{CG02_04,CG02_05}, and reads as follows in units
+is defined by \citet{CG02_04} and \citet{CG02_05}, and reads as follows in units
 of brightness temperature and frequency,\footnote{Due to its
 CMB-oriented origin, \commander\ uses brightness temperature and
 frequency units for internal calculations, rather than flux density
@@ -406,9 +406,9 @@ operations. }
 	+ &\delta(\nu-\nu_{0,\CII}) \t_{\CII}
   h^{\CII}_{\nu} && (\CII) \nonumber\\
   + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
-  f_{\mathrm{GAIA},j} a_{\mathrm{s},j}, &\quad&
+  f_{\GAIA,j} a_{\mathrm{s},j}, &\quad&
   \textrm{(Bright stars)} \nonumber\\
-  + &U_{\mathrm{mJy}} \t_{\mathrm{GAIA,fs}}\, a_{\mathrm{fs},\nu}, &\quad&
+  + &U_{\mathrm{mJy}} \t_{\gaia,\mathrm{fs}}\, a_{\mathrm{fs},\nu}, &\quad&
   \textrm{(Faint stars)} \nonumber\\  
     + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
   M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
@@ -445,7 +445,7 @@ three are modeled with spatially constant spectral parameters, and
 only the cold and hot component amplitudes are fitted pixel-by-pixel;
 the amplitude of the nearby component is fixed to the \GAIA-based dust
 extinction template covering distances up to 1.25\,kpc produced by
-\citep{edenhofer:2024}.  As such, this dust model has in fact only two
+\citet{edenhofer:2024}.  As such, this dust model has in fact only two
 degrees of freedom per pixel, in addition to fewer than 30 spatially
 constant SED parameters. This is an extremely economical model of
 thermal dust emission, considering the fact that it describes the
@@ -538,7 +538,7 @@ sources under the assumption that their mean SED is equal to the
 average of the bright sources that actually are fitted as part of the
 algorithm. Together, these three source components comprise an
 unprecended deep model for compact objects in DIRBE that has only
-become possible due to WISE and GAIA.
+become possible due to WISE and \GAIA.
 
 The tenth and final component is simply a monopole per frequency. For
 DIRBE and FIRAS, this should ideally describe the CIB spectrum, but it
@@ -786,7 +786,7 @@ The different detector technology for each band accounts for the different perfo
 \subsection{Data selection and masking}
 \label{sec:data_selection}
 
-In order to produce maps with full multipole support, we analyze the CIOs directly and convert the pointing into 6\farcm9 $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered CIOs.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from pixel CIO pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in a Python preprocessing script.\footnote{\url{https://github.com/MetinSa/quadcube}}
+In order to produce maps with full multipole support, we analyze the CIOs directly and convert the pointing into 6\farcm9 $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered CIOs.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from pixel CIO pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in the Python preprocessing script \texttt{quadcube}.\footnote{\url{https://github.com/MetinSa/quadcube}}
 
 The delivered CIOs are organized into 285 single-day files, with the datapoints ordered by Quadcube pixel index. The primary processing step was converting the pointing into $N_\mathrm{side}=512$ pixels using the \texttt{quadcube} package. The data are sampled at 8\,Hz and labeled by time index in seconds since January 1, 1981 00:00 UTC. Because the data are pre-calibrated and bad data are already removed, there are some gaps in the data, which we fill manually with an appropriate flag. Additional flags, such as excess noise, orbit and attitude errors, and presence of the South Atlantic Anomaly, are additionally extracted. In total, the data are placed in one hdf5 file per band, following the format enumerated in \citet{bp03}.
 The planet flags are not present in the CIOs, and are regenerated beforehand. Using the radii as defined in Table~\ref{tab:planet_flags}, we mark data points within the pointing of each pixel. Note that this is not strictly optimal due to the non-circular beam shape, and can be optimized in future analyses.
@@ -826,7 +826,7 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 
 \subsection{\GAIA\ and \WISE}
 
-In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \cite{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky,
+In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a complete survey of all stars that are detectable within the DIRBE bands.
 
 Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to use the leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 3122 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source.
 
