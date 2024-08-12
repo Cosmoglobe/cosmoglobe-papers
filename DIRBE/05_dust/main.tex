@@ -66,6 +66,13 @@
 \def\Cosmoglobe{\textsc{Cosmoglobe}}
 \def\Planck{\textit{Planck}}
 \def\WMAP{\textit{WMAP}}
+\def\COBE{\textit{COBE}}
+\def\GAIA{\textit{Gaia}}
+\def\gaia{\textit{Gaia}}
+\def\Gaia{\textit{Gaia}}
+\def\WISE{WISE}
+\def\AKARI{\textit{{AKARI}}}
+\def\IRAS{\textit{{IRAS}}}
 \def\nside{$N_{\mathrm{side}}$}
 \newcommand{\cii}{\ensuremath{\mathsc {C\ ii}}}
 \def\Commander{\texttt{Commander} }
@@ -197,9 +204,9 @@ series of high-resolution (\nside 256) extinction maps using data from GAIA and
 MORE HERE ON WHAM ETC
 
 \subsection{The \Cosmoglobe DR2 analysis}
-The current paper is part of the \Cosmoglobe DR2 suite, meaning that our dust
+The current paper is part of the \Cosmoglobe\ DR2 suite, meaning that our dust
 modelling is one part of a larger global Bayesian end-to-end analysis. In the
-\Cosmoglobe framework, the standard modus operandi is to begin with an explicit
+\Cosmoglobe\ framework, the standard modus operandi is to begin with an explicit
 parametric model incorporating all known aspects of the dataset with which we
 are working -- including both instrumental effects as well as a physical model
 of what is being observed. For instance, the DIRBE time-ordered data (TOD) used
@@ -226,34 +233,37 @@ are treated in \citet{CG02_02} and \citet{CG02_03}, and what concerns us in the
 present work is the first of the three terms, which we can write out more
 explicitly as follows:
 
-\begin{alignat}{4}
+\begin{equation}
+\label{eq:skymodel}
+\begin{aligned}
   \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
   &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
-  && \textrm{(Cold dust)}\label{eq:skymodel}\\
+  && \textrm{(Cold dust)} \\
   + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
-  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\nonumber \\
+  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\\
   + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
-  a_{\nu} && \textrm{(Nearby dust)} \nonumber \\
+  a_{\nu} && \textrm{(Nearby dust)} \\
   + &\left(\frac{\nuzeroff}{\nu}\right)^2
   \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
-  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \nonumber\\
+  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
   + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
-  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
+  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\\
   + &\delta(\nu-\nu_{0,\cii}) \a_{\cii}
-	h^{\cii}_{\nu} && (\cii)\nonumber \\
+	h^{\cii}_{\nu} && (\cii)\\
   + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
   f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
-  \textrm{(Bright stars)} \nonumber\\
+  \textrm{(Bright stars)} \\
   + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
-  \textrm{(Faint stars)} \nonumber\\  
+  \textrm{(Faint stars)} \\  
     + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
   M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
   T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
-  a_{\mathrm{e},j} && \textrm{(FIR sources)}\nonumber\\
-  + &m_{\nu} && \textrm{(Monopole)}. \nonumber
-\end{alignat}
+  a_{\mathrm{e},j} && \textrm{(FIR sources)}\\
+  + &m_{\nu} && \textrm{(Monopole)}. 
+\end{aligned}
+\end{equation}
 
-As it stands, this is as ``complete'' of a model we currently can write down
+As it stands, this is as ``complete'' of a static model we currently can write down
 for the frequency domain we are dealing with in this paper. The first three
 terms is the complete model of thermal dust, which is the main focus of this
 work, and will be elaborated on below. The fourth term models the free-free
@@ -284,7 +294,7 @@ function.
 
 The number of parameters involved in our model (Eq. \ref{eq:model}) is of the
 order of millions, making sampling from the likelihood function a non-trivial
-task. The \Cosmoglobe framework is based on the \Commander software
+task. The \Cosmoglobe\ framework is based on the \Commander software
 \citep{eriksen:2004,seljebotn:2019,bp03}, which maps out the posterior
 parameter distribution through a process called \emph{Gibbs sampling}
 \citep[e.g.,][]{geman:1984}, a Monte-Carlo method based on sequentially
@@ -295,10 +305,33 @@ parameters involved, this set will represent a proper sample from the joint
 distribution. Applied to Eq. \ref{eq:model}, we get a sequence of operations as
 follows:
 
-\begin{alignat}{11}
+%\begin{equation}
+%\begin{alignat}{11}
+%\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
+%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%&\,\a_{\mathrm{static}})\\ \nonumber
+%\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
+%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%&\,\a_{\mathrm{static}})\\ \nonumber
+%\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
+%\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+%&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
+%\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+%&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\ \nonumber
+%\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
+%\end{alignat}
+%\end{equation}
+
+\begin{equation}
+    \label{eq:gibbschain}
+\begin{aligned}
 \G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
 \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
+&\,\a_{\mathrm{static}})\\
 \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
 \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
 &\,\a_{\mathrm{static}})\\
@@ -309,10 +342,12 @@ follows:
 &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
 \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
 \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
+&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\
 \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
-\end{alignat}
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})
+\end{aligned}
+\end{equation}
+
 Here, the symbol $\leftarrow$ indicates the operation of drawing a sample from
 the distribution on the right-hand side. After some burn-in period, the
 resulting joint parameter sets will correspond to samples drawn from the true
@@ -325,7 +360,7 @@ model) as a highly modular one -- meaning that we can perform each
 ``sub-analysis'' without being concerned with the other parts of the problem.
 Hence, in this paper, we mainly focus on the three first components of Eq.
 (\ref{eq:skymodel}), and leave the other components for other papers. (TODO
-maybe actually cite those papers).
+maybe actually cite those papers)
 
 \subsubsection{Three-component dust model}
 As mentioned above, we here adopt a model for thermal dust that comprises three
@@ -382,8 +417,9 @@ expressed as follows,
 \end{equation}
 where $\a$ is the vector of per-pixel amplitudes. The only difference between
 the two components is that SED amplitude of the hot dust component is allowed
-to be nonzero for bins 1 and 2 in Table \ref{tab:bins}, while the cold dust
-(and nearby dust) SEDs are
+to be nonzero for bins 7 and 8 (DIRBE bands 3 and 4), while the cold dust
+(as well as the nearby dust) SEDs are only allowed to be nonzero for bins 1-6 (DIRBE bands 10 through 5).
+
 
 %There are thus two features which distinguishes the three dust components from
 %each other; first, whether the component has a freely varying amplitude per
@@ -419,11 +455,40 @@ to be nonzero for bins 1 and 2 in Table \ref{tab:bins}, while the cold dust
     \end{tabular}
 \end{table*}
 
-\clearpage
 \section{Data}
 \label{sec:data}
-As mentioned, the two main data sets used for this analysis is the DIRBE and \Planck HFI data REFERENCE, and we describe these below.
+This paper concerns itself with a subset of the total global analysis which is
+described more fully in \cite{CG02_01}; namely, the part of the analysis that
+models the three thermal dust components. Describing the data that goes into
+this part of the analysis is two-tiered, in the sense that there may be (and in
+this case, is) data that is used in the total global analysis which is not
+directly used for fitting the dust models, and then there is data that
+\emph{is} directly used for this purpose. However, even the data that is not
+directly used to fit our dust models still affect the total analysis by
+affecting the overall data model fit (eq.~\ref{eq:skymodel}).
+
+Below, we first describe the data that directly impacts the dust fitting --
+namely, the DIRBE and \Planck\ HFI data -- before describing the ancillary data
+that is used in the global the analysis. All of the data used is described in
+more detail in \cite{CG02_01}, and we refer the interested reader to that
+paper.
+
 \subsection{DIRBE}
+The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
+CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
+measured the sky from $1\,\mathrm{\mu m}$ to $240\,\mathrm{\mu m}$. In this
+analysis, we have converted the original DIRBE CIO (Calibrated Individual
+Observations), whose pointing information is given in terms of Quadcube pixels
+with a resolution of 20\arcs\ into a HEALPix \nside=512 pixelation, giving an
+approximate resolution of 7\arcm. Following the nomenclature of \cite{CG02_01},
+we refer to the DIRBE CIOs as ``time-ordered data'' (TOD). Including DIRBE TOD
+in the analysis in this way allows us to target the zodiacal light
+\citep{CG02_02}, which, as mentioned above, must be analysed as a time-varying
+component on the sky, in contrast to other astrophysical components.
+
+The use of DIRBE data also allows a full exploration of the scales relevant for
+interstellar dust modelling: As mentioned above, 
+
 
 \subsection{Planck HFI}
 \clearpage
