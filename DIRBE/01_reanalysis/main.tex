@@ -297,7 +297,7 @@ n_{\mathrm{tod}}$ diagonal matrix with an overall constant gain
 calibration factor per frequency channel; $\P$ denotes a satellite
 pointing matrix, which we define in Galactic coordinates; $\B$ denotes
 an instrumental beam (or point spread function) convolution operator;
-the sum runs over $\n_{\mathrm{comp}}$ astrophysical components, each
+the sum runs over $n_{\mathrm{comp}}$ astrophysical components, each
 with a free amplitude $\a_c$ at some reference frequency and a mixing
 matrix $\M_c$ which defines the effective scaling from the reference
 frequency to an observed frequency for each component, taking into the
@@ -311,7 +311,7 @@ lowest DIRBE frequency channel); and $\n^{\mathrm{w}}$ denotes white
 instrumental noise. We also define $\s^{\mathrm{tot}}$ to be the sum
 of all terms in data model except the white noise.
 
-As we work with calibrated TOD, we set $\G=\mathrm{I}$ for now, but
+As we work with calibrated TOD, we set $\G=\tens{I}$ for now, but
 note that this effective prior should be relaxed in future work, for
 instance by using \COBE-FIRAS data as a calibration source in the
 overlap frequency range between FIRAS and DIRBE. Similarly, both the
@@ -321,7 +321,7 @@ we do note that the DIRBE beams have an intrinsically square shape,
 while our current beam convolution implementation only supports
 azimuthally symmetric beams. This will necessary lead to a residual
 that should ideally be accounted for through full beam integration,
-for instance using a Conviqt-style algorithm
+for instance using a \texttt{conviqt}-style algorithm
 \citep{prezeau2010,keihanen2012}; this is left for future
 work. Similar remarks apply to bandpass definitions as well; for now,
 we neglect the uncertainty in the bandpass profiles provided by the
@@ -530,7 +530,7 @@ model. Algorithmically speaking, this component is otherwise identical
 to the star component.
 
 However, the AllWISE catalog itself contains a total of about 747
-millions sources, and it is impossible to fit all of these with DIRBE
+million sources, making it impossible to fit all of these with DIRBE
 without introducing massive degeneracies. We therefore instead co-add
 the rest of the AllWISE sources into a diffuse background map of faint
 sources under the assumption that their mean SED is equal to the
@@ -550,7 +550,8 @@ the current sky model, even though it applies to the \Planck\ HFI as
 well as DIRBE. Since the main focus in the current work is DIRBE, we
 have chosen to pre-subtract any CMB component (including the solar CMB
 dipole and relativistic quadrupole corrections) from each frequency
-map. Similarly, we neglect the impact of synchrotron emission,
+map. For this, we use the PR3 \commander\ CMB maps \citep{planck2016-l04}.
+Similarly, we neglect the impact of synchrotron emission,
 anomalous microwave emission, the Sunyaev-Zeldovich effect, and other
 smaller contributions; these will instead be included in a future
 analysis that also has HFI as a main science target.
@@ -818,7 +819,7 @@ The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed 
 In addition to its complementary observation strategy, \Planck's frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered \Planck\ maps have had an estimate of the zodiacal emission modeled using the 3D model derived by K98 with varying emissivities per component. While this technically is redundant information that could contaminate this joint analysis, the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work.
 
 
-At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the DIRBE range. In order to avoid this, we remove the GNILC estimate of the CIB from the HFI maps before including them in our analysis.
+At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the DIRBE range. In order to avoid this, we remove the GNILC \citep{planck2016-XLVIII} estimate of the CIB from the HFI maps before including them in our analysis.
 
 Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
 We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
@@ -837,7 +838,7 @@ Within the Galactic plane, there are many stars per single DIRBE pixel. In order
 \subsection{\COBE-FIRAS}
 
 The \COBE-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}. 
-FIRAS's primary goal was the characterization of the CMB blackbody spectrum \citep{mather:1994}, which motivated much of the experiment's design choices. In particular, its angular resolution of $7^\circ$ was chosen due to its focus on monopole characterization, while still allowing for foreground mitigation. Notably, the calibration for DIRBE and FIRAS were performed independently, although they have been compared explicitly by \citet{fixsen1997}. The possibility of improving the $140$ and $240\,\mathrm{\mu m}$ bands has already been noted as a source of discrepancy. The possibility of joint determination of gain and zodiacal emission using both of these datasets will be explored in future work.
+FIRAS's primary goal was the characterization of the CMB blackbody spectrum \citep{mather:1994}, which motivated much of the experiment's design choices. In particular, its angular resolution of $7^\circ$ was chosen due to its focus on monopole characterization, while still allowing for foreground mitigation. Notably, the calibration for DIRBE and FIRAS were performed independently, although they have been compared explicitly by \citet{fixsen1997}. The possibility of improving the $140$ and $240\,\mathrm{\mu m}$ bands has already been noted to reduce the discrepancy between the two experiments. The possibility of joint determination of gain and zodiacal emission using both of these datasets will be explored in future work.
 
 \begin{figure*}
     \centering
@@ -890,7 +891,7 @@ Conversely, at very long and very short wavelengths, a more aggressive Galactic 
 With the model in hand, we run \commanderthree\ on the data. We find that an average Gibbs iteration takes approximatly 250\,CPU-hrs, excluding initialization time. In order to ensure proper sampling of the full distribution, we run six independent \commanderthree\ runs initialized with their own random seeds. As of writing, each chain has 179, 170, 100, 102, 100, and 104 samples, giving a total of 755 samples.
 
 
-In order to assess burnin and convergence, we plot a range of parameters from the Gibbs chain in Fig.~\ref{fig:trace}. Included in this figure are the sampled monopoles, zodiacal dust albedos and emissivities, and instrumental parameters, including the estimated white noise in bands 1 and 10, and the correlated noise parameters $f_\mathrm{knee}$ and $\alpha$ for band 10. From this figure, it is clear that thhere is a large amount of burnin in bands 1--3, concluding at approximately sample 50.  At the same time, there is still drift within the emissivity and albedos. However, since the monopoles are stable beyond this point, this is mainly due to degeneracies within the zodiacal model itself. This is explored in full detail in \citet{CG02_02}.
+In order to assess burnin and convergence, we plot a range of parameters from the Gibbs chain in Fig.~\ref{fig:trace}. Included in this figure are the sampled monopoles, zodiacal dust albedos and emissivities, and instrumental parameters, including the estimated white noise in bands 1 and 10, and the correlated noise parameters $f_\mathrm{knee}$ and $\alpha$ for band 10. From this figure, it is clear that there is a large amount of burnin in bands 1--3, concluding at approximately sample 50.  At the same time, there is still drift within the emissivity and albedos. However, since the monopoles are stable beyond this point, this is mainly due to degeneracies within the zodiacal model itself. This is explored in full detail in \citet{CG02_02}.
 
 In practice, only every other Gibbs sample is independent, due to the dedicated solving for best-fit zodiacal dust parameters within each independent chain. Discarding the burnin and every other sample, we obtain a total of 233 independent Gibbs samples. Due to the extended burn-in of the zodiacal parameters, this chain cannot yet be considered fully converged, but because of the stability of the monopoles and frequency maps, we are able to present a preliminary analysis here. 
 
@@ -2032,8 +2033,3 @@ At the same time, this work demonstrates the need for more external data with co
 \bibliography{../../common/CG_bibliography,../../common/Planck_bib}
 \end{document}
 %%%% End of aa.dem
-
-
-
-
-In this analysis, we describe how the DIRBE Calibrated Individual Observations (CIO), which are publicly available on NASA LAMBDA, was integrated into the \Cosmoglobe framework and used them to extend the \Cosmoglobe sky model from 857 GHz all the way to the optical at 1.25 microns. We may also have made the first ever maps of the CIB, made a three-dimensional dust and PAH model, detected Free-free emission at near terahertz frequencies, made maps of the stars, and more cool stuff.
