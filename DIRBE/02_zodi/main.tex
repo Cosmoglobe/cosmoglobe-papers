@@ -1102,7 +1102,7 @@ samples distributed over multiple chains were produced.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
-    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single Gibbs chain. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
+    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single pre-production Gibbs chain, showning the burn-in phase. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
     \label{fig:powell_chisq_iter}
 \end{figure}
 
@@ -1112,22 +1112,24 @@ samples distributed over multiple chains were produced.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
-    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
+    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$ for the same run as shown in Fig.~\ref{fig:powell_chisq_iter}. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
     \label{fig:powell_T0}
 \end{figure}
 
 The overall behaviour of this hybrid MCMC+optimization algorithm is
 illustrated in Fig.~\ref{fig:powell_chisq_iter}, which shows the
 $\chi^2$ obtained from the first $10^6$ Powell likelihood evaluations
-in one of the final production chains for the 12+25\,$\mu$m ZL
-sampling group. Each discrete jump corresponds to one new main Gibbs
-iteration, while the smooth descent between two jumps correspond to
-the Powell search. The dense black ``roof'' corresponds to a large
-number of very poor parameter estimates made within each Powell
-search. Only the very last point in each block is propagated forward
-to the rest of the Gibbs chain. Each likelihood evaluation takes about
-0.3\,sec wall-time on 128 cores, and the evaluations shown in this
-figure therefore correspond to about 10\,000 CPU-hrs.
+in the penultimate analysis run for the 12+25\,$\mu$m ZL sampling
+group; we show the penultimate chain here rather than the final
+production run to illustrate the burn-in phase. Each discrete jump
+corresponds to one new main Gibbs iteration, while the smooth descent
+between two jumps correspond to the Powell search. The dense black
+``roof'' corresponds to a large number of very poor parameter
+estimates made within each Powell search. Only the very last point in
+each block is propagated forward to the rest of the Gibbs chain. Each
+likelihood evaluation takes about 0.3\,sec wall-time on 128 cores, and
+the evaluations shown in this figure therefore correspond to about
+10\,000 CPU-hrs.
 
 We see that the burn-in period appears to be roughly 20 main Gibbs
 iterations, or about 300\,000 likelihood evaluations, after which the
@@ -1710,7 +1712,7 @@ foregrounds, and instrumental noise.
 
 \begin{table}
 \newdimen\tblskip \tblskip=5pt
-\caption{Reduced goodness-of-fit ($\chi_\mathrm{red}^2$) values along with the number of TOD samples used to fit the ZL parameters and the instrument white noise rms per 8\,Hz sample for each DIRBE channel. Note that the 12 and 25$\,\mu$m channels are analyzed jointly, and $N_{\mathrm{samp}}$ and $\chi^2_{\mathrm{red}}$ correspond to the union of the two.}
+\caption{Reduced goodness-of-fit ($\chi_\mathrm{red}^2$) values for one arbitrarily selected Gibbs sample, along with the number of TOD samples used to fit the ZL parameters and the instrument white noise rms per 8\,Hz sample for each DIRBE channel. Note that the 12 and 25$\,\mu$m channels are analyzed jointly, and $N_{\mathrm{samp}}$ and $\chi^2_{\mathrm{red}}$ correspond to the union of the two.}
 \label{tab:chisq}
 \vskip -4mm
 \footnotesize
@@ -1734,16 +1736,16 @@ foregrounds, and instrumental noise.
 \noalign{\doubleline}
 \omit\sc $\lambda$ ($\mu\mathrm{m}$)\hfil& N_{\mathrm{samp}} (10^3) & \sigma_{0} [\mathrm{MJy/sr}] & \chi^2_{\mathrm{red}} \cr
 \noalign{\vskip 3pt\hrule\vskip 5pt}
-*1.25   & *70 & *0.031 & 0.756 \cr 
-*2.2    & *51 & *0.031 & 0.770 \cr 
-*3.5    & *51 & *0.026 & 1.019 \cr 
-*4.9    & *99 & *0.029 & 1.150 \cr 
-*12     & 225 & *0.102 & 2.649 \cr
+*1.25   & *61 & *0.031 & 0.72 \cr 
+*2.2    & *43 & *0.031 & 0.79 \cr 
+*3.5    & *42 & *0.026 & 0.95 \cr 
+*4.9    & 145 & *0.029 & 1.20 \cr 
+*12     & 244 & *0.102 & 3.03 \cr
 *25     & \cdots & *0.190 & \cdots \cr 
-*60     & *97 & *0.322 & 1.501 \cr 
-100     & *85 & *0.381 & 1.415 \cr 
-140     & 187 & 32.1*  & 1.015 \cr 
-240     & 177 & 18.3*  & 1.024 \cr 
+*60     & 120 & *0.322 & 1.62 \cr 
+100     & 116 & *0.381 & 1.54 \cr 
+140     & 180 & 32.1*  & 1.02 \cr 
+240     & 170 & 18.3*  & 1.03 \cr
 \noalign{\vskip 5pt\hrule\vskip 5pt}}}
   \endPlancktable
 %  \tablenote {{\rm a}} Mission average TOD noise rms per 8\,Hz sample.\par
