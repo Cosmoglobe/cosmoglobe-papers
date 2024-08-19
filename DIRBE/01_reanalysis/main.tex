@@ -180,7 +180,7 @@
 
    \date{\today} 
    
-   \abstract{We present the first global Bayesian analysis of the time-ordered Diffuse Infrared Background Experiment (DIRBE) data within the \Cosmoglobe\ framework, building on the same methodology that has previously been successfully applied to \Planck\ LFI and \WMAP. These data are analysed jointly with \COBE-FIRAS, \GAIA, \Planck\ HFI, and WISE observations, which allows for a more accurate instrumental and astrophysical characterization than possible through single-experiment analysis only. This paper provides an overview of the analysis pipeline and main results, and we present and characterize a new set of zodiacal light subtracted mission average (ZSMA) DIRBE maps spanning the wavelength range between 1.25 and 240\,$\mu$m. A key novel aspect of this processing is the characterization and removal of excess radiation between 4.9 and 100$\,\mu$m that appears static in solar-centric coordinates. The new DR2 ZSMA maps have several notable advantages with respect to the previously available maps, including 1) lower zodiacal light (and possibly straylight) residuals; 2) better determined zero-levels; 3) natively HEALPix tesselated maps with a $7\arcm$ pixel size; 4) nearly white noise at pixel scales; and 5) a more complete and accurate noise characterization established through the combination of Markov Chain Monte Carlo samples and half-mission maps. In addition, because the model has been simultaneously fitted with both DIRBE and HFI data, this is the first consistent unification of the infrared and CMB wavelength ranges into one global sky model covering 100\,GHz to 1\,$\mu$m. However, we do note that even though the new maps are improved with respect to the official maps, and should be preferred for most future analysis that require DIRBE sky maps, they still exhibit non-negligible zodiacal light residuals between 12 and 60$\,\mu$m. Further improvements should be made through joint analysis with complementry infrared experiments such \IRAS, \AKARI, WISE and SPHEREx, and thereby release the full combined potential of all these powerful infrared observatories. 
+   \abstract{We present the first global Bayesian analysis of the time-ordered Diffuse Infrared Background Experiment (DIRBE) data within the \Cosmoglobe\ framework, building on the same methodology that has previously been successfully applied to \Planck\ LFI and \WMAP. These data are analysed jointly with \COBE-FIRAS, \GAIA, \Planck\ HFI, and WISE observations, which allows for a more accurate instrumental and astrophysical characterization than possible through single-experiment analysis only. This paper provides an overview of the analysis pipeline and main results, and we present and characterize a new set of zodiacal light subtracted mission average (ZSMA) DIRBE maps spanning the wavelength range between 1.25 and 240\,$\mu$m. A key novel aspect of this processing is the characterization and removal of excess radiation between 4.9 and 60$\,\mu$m that appears static in solar-centric coordinates. The new DR2 ZSMA maps have several notable advantages with respect to the previously available maps, including 1) lower zodiacal light (and possibly straylight) residuals; 2) better determined zero-levels; 3) natively HEALPix tesselated maps with a $7\arcm$ pixel size; 4) nearly white noise at pixel scales; and 5) a more complete and accurate noise characterization established through the combination of Markov Chain Monte Carlo samples and half-mission maps. In addition, because the model has been simultaneously fitted with both DIRBE and HFI data, this is the first consistent unification of the infrared and CMB wavelength ranges into one global sky model covering 100\,GHz to 1\,$\mu$m. However, we do note that even though the new maps are improved with respect to the official maps, and should be preferred for most future analyses that require DIRBE sky maps, they still exhibit non-negligible zodiacal light residuals between 12 and 60$\,\mu$m. Further improvements should be made through joint analysis with complementry infrared experiments such \IRAS, \AKARI, WISE and SPHEREx, and thereby release the full combined potential of all these powerful infrared observatories. 
    }
 
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
@@ -342,7 +342,7 @@ following) for the original DIRBE analysis. Specifically, we fit a
 limited number of shape parameters per interplanetary dust component,
 such as a smooth cloud and asteroidal bands, in addition to linear
 emissivity and albedo parameters for each frequency channel. In total,
-there are 69 free parameters in this model, and these are collectively
+there are 64 free parameters in this model, and these are collectively
 denoted $\zeta_{\mathrm{z}}$.
 
 The term denoted $\s_{\mathrm{static}}$ has not been included in
@@ -350,7 +350,7 @@ previous DIRBE analyses, but is rather an important novel feature
 presented in the current paper. We will return to its physical
 interpretation in Sect.~\ref{sec:excess}, but note for now that it
 models excess radiation in the DIRBE channels between 4.9 and
-100$\,\mu$m not accounted for in the K98 model. In practice, this is
+60$\,\mu$m not accounted for in the K98 model. In practice, this is
 implemented in terms of a pixelized map, $\a_{\mathrm{static}}$, in
 solar-centric coordinates, such that $\s_{\mathrm{static},\nu} =
 \P_{\mathrm{sol},\nu}\a_{\mathrm{static},\nu}$, where
@@ -413,7 +413,7 @@ operations. }
     + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
   M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
   T_{\mathrm{e},j})
-  a_{\mathrm{e},j} && \textrm{(Exgal. Sources)}\nonumber\\
+  a_{\mathrm{e},j} && \textrm{(FIR sources)}\nonumber\\
   + &m_{\nu} && \textrm{(Monopole)}. \nonumber
 \end{alignat}
 In this expression, we have defined a special function of the form
@@ -497,7 +497,7 @@ is relevant in the frequency range between 1 and 25\,$\mu$m; for full
 details regarding this model, see \citet{CG02_04}. For these, we first
 extract a baseline star catalog by thresholding the AllWISE
 3.5\,$\mu$m catalog at magnitude 8, resulting in a set of about
-770\,000 sources.\footnote{We have tried different thresholds, and
+783\,000 sources.\footnote{We have tried different thresholds, and
 found that magnitude 8 provides a good compromise; magnitude 6 results
 in obviously missing sources, while magnitude 10 leads to too many
 unconstrained sources.} For each of these, we search the \GAIA\ DR2
@@ -523,19 +523,19 @@ stars'' in the sky model.
 	\label{fig: cios}
 \end{figure*}
 
-The remaining 3\,000 bright WISE sources that do not have a
-\GAIA\ counterpart are assumed to be of extra-galactic origin, and we
-fit these with a modified blackbody spectrum across the same frequency
-range, as described by the line marked by ``Exgal. Sources'' in the sky
-model. Algorithmically speaking, this component is otherwise identical
-to the star component.
+The remaining 66\,000 bright WISE sources that do not have a
+\GAIA\ counterpart are fitted with a standard modified blackbody
+spectrum across the same frequency range, as described by the line
+marked by ``FIR sources'' in the sky model. Algorithmically speaking,
+this component is identical to the bright star component, except for
+the parametric form of the SED.
 
-However, the AllWISE catalog itself contains a total of about 747
-million sources, making it impossible to fit all of these with DIRBE
-without introducing massive degeneracies. We therefore instead co-add
-the rest of the AllWISE sources into a diffuse background map of faint
-sources under the assumption that their mean SED is equal to the
-average of the bright sources that actually are fitted as part of the
+The AllWISE catalog itself contains a total of about 747 million
+sources, making it impossible to fit all of these with DIRBE without
+introducing massive degeneracies. We therefore instead co-add the rest
+of the AllWISE sources into a diffuse background map of faint sources
+under the assumption that their mean SED is equal to the average of
+the bright sources that actually are fitted as part of the
 algorithm. Together, these three source components comprise an
 unprecedented deep model for compact objects in DIRBE that has only
 become possible due to WISE and \GAIA.
@@ -560,7 +560,7 @@ analysis that also has HFI as a main science target.
 \subsubsection{Posterior distribution}
 
 In principle, all quantities on the right-hand side of
-Eq.~\ref{eq:model} are associated with free parameters and
+Eq.~\eqref{eq:model} are associated with free parameters and
 uncertainties that should be estimated from the data, whether they are
 of astrophysical or instrumental origin. We define the full set of
 free parameters as $\omega = \{\G,\xi_{\mathrm{n}},
@@ -608,10 +608,11 @@ component, we refer the interested reader to \citet{CG02_04} and \citet{CG02_05}
 As described in Sect.~\ref{sec:datamodel}, the current data model
 contains millions of strongly correlated parameters, ranging from
 affecting individual time samples (such as the correlated noise,
-$\n_{\mathrm{}}$) to describing the astrophysical signal in a few
-pixels (such as the cold dust amplitude $\a_{\mathrm{c}}$ or star
-amplitude $\a_{\mathrm{s}}$), to simultaneously affecting
-essentially every single data point, such as the zodiacal light shape
+$\n_{\mathrm{corr}}$) to describing the astrophysical signal in the
+form of a pixelized map (such as the cold dust amplitude
+$\a_{\mathrm{c}}$) or a catalog (such as the bright star amplitude
+$\a_{\mathrm{s}}$), to simultaneously affecting essentially every
+single data point, such as the zodiacal light shape
 parameters. Mapping out this distribution is therefore highly
 non-trivial.
 
@@ -815,10 +816,10 @@ All bands observe the same $0\fdg7\times0\fdg7$  field simultaneously, with smal
 \end{figure}
 
 The symmetrized beam, shown in the top panel of Fig.~\ref{fig:beams}, resembles a tophat with a slow falloff. The harmonic-space representation of the beam is therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$. For a band-limited signal to be characterized fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully characterized in harmonic space, a requirement for the \commanderthree\ multi-resolution component separation, the pixelization scheme must have support up to $\ell\lesssim1500$. The original DIRBE maps have pixel size of 21\arcm, insufficient for harmonic space analysis.
-Both the original maps in Quadcube\footnote{
+Neither the original maps in Quadcube\footnote{
 	Quadrilateralized Spherical Cube \url{https://lambda.gsfc.nasa.gov/product/cobe/skymap\_info\_new.html}
 }
-pixelization (resolution 9, pixel size 21\arcm) and the CADE\footnote{Centre d'Analyse de Données Etendues, \url{http://cade.irap.omp.eu/dokuwiki/doku.php?id=dirbe}} reprojection into HEALPix ($N_\mathrm{side}=256$, pixel size 13\farcm7) do not have the required support over the full multipole range. 
+pixelization (resolution 9, pixel size 21\arcm) nor the CADE\footnote{Centre d'Analyse de Données Etendues, \url{http://cade.irap.omp.eu/dokuwiki/doku.php?id=dirbe}} reprojection into HEALPix ($N_\mathrm{side}=256$, pixel size 13\farcm7) have the required support over the full multipole range. 
 
 
 \begin{figure}
@@ -879,8 +880,7 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 
 In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a complete survey of all stars that are detectable within the DIRBE bands.
 
-Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 3122 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source.
-
+Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 66\,217 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source.
 
 Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all \WISE\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the \gaia\ catalog. The SED's as derived by \gaia\ are then averaged over and used to scale the entire template. Within the Gibbs chain, this is sampled with a total scaling parameter, with a fixed map and relative amplitudes between different frequencies. For a full description of the star model, see the work in companion paper \citet{CG02_04}.
 
@@ -1117,7 +1117,7 @@ strategy as such, but rather by the DIRBE quality flags which removes
 near-planet observations. The 2.2 and 3.5$\,\mu$m channels show very
 similar behaviour.
 
-In general, the patterns seen in the 4.9--100$\,\mu$m channels also
+In general, the patterns seen in the 4.9--60$\,\mu$m channels also
 appear broadly similar. However, in this case we can also see regions
 with higher noise levels near the Ecliptic poles and south of the
 Galactic center. These are primarily due to the excess radiation masks
@@ -1240,7 +1240,7 @@ discrepancy falls smoothly to about unity due to the DIRBE
 beam. Indeed, for the 1.25to 3.5 and 14 to 240$\,\mu$m channels, the
 agreement between the observed residual and the white noise model is
 excellent. However, for the intermediate channels between
-4.9 to 100$\,\mu$m  there is a discrepancy of about a factor of
+4.9 to 60$\,\mu$m  there is a discrepancy of about a factor of
 two, and the origin of this is still under investigation.
 
 Finally, Fig.~\ref{fig:chisq} shows the total reduced and normalized
@@ -1469,7 +1469,7 @@ particular in the $3.5\,\mu$m channel.
 
 
 However, this general picture appears quite different at the
-intermediate wavelengths between 4.9 and 100$\,\mu$m. For each of
+intermediate wavelengths between 4.9 and 60$\,\mu$m. For each of
 these, an excess radiation is measured with very high signal-to-noise
 ratio. The most striking example is the 25\,$\mu$m channel, for which
 the instrumental noise is fully sub-dominant.
