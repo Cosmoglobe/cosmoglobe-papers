@@ -102,19 +102,12 @@ Many full-sky datasets exist which measure the emissions from pointsources in ou
 
 In this paper, part of the larger Cosmoglobe DR2 results paper suite, we discuss the modelling of compact objects as part of our larger full sky astrophysical model. Section \ref{sec:models} discusses this modelling in a larger Bayesian context. Section \ref{sec:results} shows the astrophysical results of the work by presenting a unified star model and its associated errors. Section \ref{sec:consistency} then shows the consistency between our results and other work in this area. Finally, we conclude in Section \ref{sec:conclusions}, discussing the impacts of this work and offering some avenues for future research.
 
-GAIA sed plot as a function of changing catalogue parameters
-
-high level schematic diagram for intuition somehow of gaia, wise, beam and commander fit
-
-
 \section{Compact Object modelling in a Bayesian context}
 \label{sec:models}
 
 In this work, we break the compact objects into three categories as follows: 1) Bright (> Mag 8 in the WISE 3.4 $\,\mu$m) objects with SEDs measured by Gaia (hereafter 'stars'), described in section \ref{sec:starmodel}, 2) Bright objects without SED information (hereafter 'extragalactic sources'), described in section \ref{sec:extragalacticmodel}, and 3) a diffuse background of dim objects (hereafter 'diffuse'), described in section \ref{sec:diffusemodel}.
 
-
-
-Figure \ref{fig:starcount} shows the total number of stars and extragalactic objects in each pixel at nside=512. There are a total of 717454 stars supplemented with 3122 extragalactic sources over the full sky, but, as is expected, they are primarily clustered in the galactic plane. The majority of the sky contains 0-1 sources/pixel, making it well behaved. In the galactic plane, we have degeneracy between sources, which leads to instability in the individual star parameters, but the overall estimate of pointsource emission is quite stable, as shown in section \ref{sec:results}.
+Figure \ref{fig:starcount} shows the total number of stars and extragalactic objects in each pixel at nside=512. There are a total of 717454 stars supplemented with 66217 extragalactic sources over the full sky, but, as is expected, they are primarily clustered in the galactic plane. The majority of the sky contains 0-1 sources/pixel, making it well behaved. In the bottom panel, we see the number of sources included in the diffuse template per pixel, which contains the vast majority of the (faint) sources. In the galactic plane, we have degeneracy between sources, which leads to instability in the individual star parameters, but the overall estimate of pointsource emission is quite stable, as shown in section \ref{sec:results}. An overview of this processing is shown in figure \ref{fig:diagram}.
 
 \begin{figure}
   \centering
@@ -124,11 +117,18 @@ Figure \ref{fig:starcount} shows the total number of stars and extragalactic obj
   \label{fig:starcount}
 \end{figure}
 
+\begin{figure*}
+  \centering
+  \includegraphics[width=\textwidth]{figs/diagram/dirbe_diagram.pdf}\\
+  \caption{Schematic diagram of the commander handling of compact objects in DIRBE. Red ovals are input data, and the blue boxes are the three classes of sources described in this paper. }
+  \label{fig:diagram}
+\end{figure*}
+
 \subsection{Stars}
 
 \label{sec:starmodel}
 
-For each star we extract estimates of the effective temperature, $T_{\mathrm{eff}}$, the gravitational acceleration, $\log g$, and the metallicity, $[M/H]$, from the GAIA DR2 database \citep{gaiaCat}, and use those to identify a best-fit spectral energy density (SED) from the PHOENIX starlight database. The distributions of these parameters for the stars we select are shown in figure \ref{fig:gaiacat}.
+For each star we extract estimates of the effective temperature, $T_{\mathrm{eff}}$, the gravitational acceleration, $\log g$, and the metallicity, $[M/H]$, from the GAIA DR2 database \citep{gaiaCat}, and use those to identify a best-fit spectral energy density (SED) from the PHOENIX starlight database. The distributions of these parameters for the stars we select are shown in figure \ref{fig:gaiacat}. One complication is that the PHOENIX catalog only has data up to $T_{\mathrm{eff}} = 12000$K, which means that the 1.1\% of sources with higher temperatures use the data at 12000K. This could lead to an issue with the SEDs of these hottest stars, but the overall amplitudes are fit per star so this should capture the majority of the effect.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{figs/gaia/t_eff.pdf}
@@ -137,6 +137,15 @@ For each star we extract estimates of the effective temperature, $T_{\mathrm{eff
   \caption{Histograms of the three star parameters (effective temperature, gravity and metalicity) that are used by the PHOENIX database to determine the star SEDs, for the 717454 stars used in this analysis.}
   \label{fig:gaiacat}
 \end{figure}
+
+The effects of these varying parameters on the star SEDs was examined in figure \ref{fig:catalogueSEDs}. Although these effects are likely well known in the stellar astronomy community, we show them here for Cosmologists who do not have an intuition for them. Here, we select a star with $T_{\mathrm{eff}}= 4600$K, $\log g = 3.5$ and $[M/H]= 0.0$ as our reference star, being close to the mean of our sample. We then vary each of the three parameters slightly, holding the others constant and plot the results. The effective temperature is perhaps not surprisingly the dominant effect on the SED. The inset plot shows a 125X zoom of the curve, which shows the much smaller contributions from varying $\log g$ and $[M/H]$. A simpler model of star parameters in the fa-infrared could perhaps neglect these other two parameters entirely and produce SEDs based purely on $T_{\mathrm{eff}}$, but we made a conservative choice to include them in the analysis regardless. 
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{figs/gaia/star_cat.pdf}
+  \caption{Star flux as a function of wavelength in microns. The black curve shows our selected reference star with $T_{\mathrm{eff}}= 4600$K, $\log g = 3.5$ and $[M/H]= 0.0$. In red, we show the effects of varying $T_{\mathrm{eff}}$ by 1000K. In the 125X zoom in on the right we can see the effects of varying $\log g$ and $[M/H]$ by 0.5 each on a small subsection of the main SED.}
+  \label{fig:catalogueSEDs}
+\end{figure}
+
 
 The full Bayesian data mode is shown in \cite{CG02_01}, and includes the star component $s_{stars}(p, \lambda_j)$, the star emissions as a function of pixel $p$ and frequency $\lambda_j$ for a band $j$. Equation \ref{eq:datamodel} shows the data model for the star component that we describe in this paper
 
@@ -378,11 +387,51 @@ The four regions are shown in Figure \ref{fig:regions}, left to right. We plot t
 %  \label{fig:masks}
 %\end{figure}
 
-Diffuse stars vs. point sources? 
+%Consistancy with WISE - maybe compare with a single WISE tile? I think the tile is probably too small for a useful comparison, and stitching together a mozaic is too complicated
 
-Consistancy with WISE
+\subsection{Extragalactic Sources?}
 
-Types of objects, classification?
+Throughout the paper, we have called this third class of bright sources that do not match against the PHOENIX database 'Extragalactic Sources', mostly as a easy placeholder name. Our processing is agnostic towards the properties of these sources, but we can investigate these sources by matching them against other datasets. We take the brightest 10 sources in the DIRBE 01 band, as well as 10 other randomly selected sources of the 66217 total Extragalactic sources, and look them up in the SIMBAD and VizieR query services, to try and get a sense of the classifications of these sources in other databases. The results are presented in table \ref{tab:exgal}
+
+\begin{table*}
+    \centering
+    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
+    \begin{tabular}{l c c c c c c}
+    \hline
+    \hline
+     Source & $l$ & $b$ & $A_{01}$ & Closest Source ID & $\Delta r$ & Type \\ 
+     & ($^{\circ}$) & ($^{\circ}$) & ($MJy/sr$) & & arcsec &  \\
+    
+     \hline
+     1 \rule{0pt}{2ex} & 351.9704125 & 15.0283456 & 5.5e7 & Gaia DR2 6045630776564826368 & 0.06 & * \\
+     2 & 199.8356081 & -8.9441731 & 4.1e7 & AllWISE	J055518.95+072220.3 & 0 & * \\
+	 3 & 351.9530993 & 15.0907774 & 4.1e7 & hstID S8EN231745 & 0.03 & * \\
+     4 & 272.6454448 & -39.2993937 & 3.5e7 & hstID S142070633 & 1.2 & -\\
+	 5 & 35.4981111 & 27.8346354 & 3.4e7 & smssj 171432.09+142210.3 & 0.1 & *\\ 
+	 6 & 199.8147839 & -8.9865315 & 3.1e7 & hstID N9I5116496 & 0.01 & *\\ 
+	 7 & 35.5711862 &  27.8015838 & 2.9e7 & hstID N3VM068511 & 0.01 & * \\
+	 8 & 199.7876699 & -8.95733 & 2.8e7 & hstID N9I5116403 & 0.3 & * \\ 
+	 9 & 272.6886702 & -39.2990179 & 2.8e7 & AllWISE	J043704.88-620608.5  & 0 & -\\ 
+	 10 & 162.589672 & 4.5659631 & 2.7e7 & hstID NCAJ155129 & 0.3 & *\\ 
+	 11 & 126.1198789 & -6.7182005 & 4.6e4 & HD 236669 & 0.4 & Spectroscopic Binary\\ 
+	 12 & 299.4450772 & 9.1375463 & 4.6e4 & HD 108499 & 0.1 & Spectroscopic Binary\\ 
+	 13 & 68.9824082 & 2.3513923 & 4.1e1 & IRAS 19534+3241 & 0.3 & Long-Period Variable\\
+	 14 & 302.5540338 &  10.4364408 & 1.9e4 & IRAS 12461-5209 & 1.3 & Long Period Variable Candidate\\
+	 15 & 56.880426 & -4.1490367 & 2.6e4 & V* RW Sge  & 0.17 & Mira Variable \\
+	 16 & 83.0349529 & 49.6974707 & 4.3e4 & HD 234253 & 0.4 & Star\\
+	 17 & 5.0227382 & -1.3647462 & 4.6e2 & IRAS 17592-2517 & 0.3 & Mira Variable\\ 
+	 18 & 317.0822654 & -3.6514087 & 1.0e5 & IRAS 14569-6242 & 0.4 & Long period variable candidate \\
+	 19 & 187.0517906 & -4.2756129 & 1.0e6 &  	V* Y Tau & 0.3 & Carbon Star\\
+	 20 & 15.0006061 & 0.0186549 & 2.1e5 & 2MASS 18174772-1553381 & 0.38 & - \\
+     \hline
+    \end{tabular}
+    \caption{Description of 20 extragalactic sources, the 10 brightest and 10 randomly selected ones. The bright sources are almost entirely found within the boundaries of other very bright sources in the optical (denoted with type *), so their brightnesses may be influenced by this confusion. Those with types listed as a dash have no catalogue information about their classifications.}
+    \label{tab:exgal}
+\end{table*}
+
+The majority of the bright sources are within the saturation radii of other very bright sources, as seen in the optical, and so their lack of stellar parameters from Gaia (and potentially their amplitudes) are likely related to that. The dimmer objects are a range of irregular star types, which may also explain the lack of data from Gaia. Overall, it seems like 'Extragalactic Sources' is likely a misnomer, and this class of object is more likely to be poorly modelled stars within our own galaxy.
+
+Gaia DR2 notes two limitations in their approach that may explain the makeup of these additional sources. Firstly, "All sources are treated as single stars," which could explain why so many binary objects are not fit successfully. Further down the list, they note that "...[in] crowded regions ... the integrated photometry is sometimes compromised ... As the two Gaia fields-of-view are projected onto a common focal plane, sources can overlap even in low density regions." \citep{gaiaClassification} This second limitation may explain the population of bright sources with no spectral data that are found within very bright objects and clusters.
 
 \subsection{Beam Estimation}
 
