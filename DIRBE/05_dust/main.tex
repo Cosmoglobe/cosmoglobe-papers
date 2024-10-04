@@ -371,17 +371,30 @@ frequencies, multiplied by an amplitude per pixel, which for two of the
 components is allowed to vary as a free parameter in the Gibbs chain, and for
 the last component is defined as full-sky template.
 
-Since the phenomenology of thermal dust gets more complicated above 1050~GHz
-(see sec. \ref{sec:current_dust}), instead of adopting a model based on
-underlying physics, we define a set of bins, each of which is chosen to roughly
-correspond to the width of DIRBE bands 3-10, respectively, as shown in Table
-\ref{tab:bins}. Each of the bins is assigned an amplitude for each dust
-component, and the SED of that component for the frequencies encompassed by a
-given bin is given by the amplitude assigned to that bin\footnote{Only one of
-    the three components are allowed to have nonzero amplitudes at DIRBE band 3
-and 4 -- see below}. We do not define such bins for DIRBE bands 1 and 2, and we
-force the total dust SED to be zero at these bands, since the thermal dust
-emission is expected to be negligible at these frequenies.
+The spectral parameters -- that is, $\beta$ and $T$ in Eq. (\ref{eq:mbb}) -- of
+this model are set to be constant across the sky for each of the three
+components. Thus, each of the component has a different spectral parameter pair
+than the others, but it is not allowed to vary spatially.
+
+For the frequencies covered by DIRBE bands 3-10, we extend this model in the
+following way: We define a set of SED bins, each of which is chosen to
+correspond to the width of the DIRBE bands, as shown in table \ref{tab:bins}.
+Each of these bins are associated with a free parameter for that dust
+component; namely, the amplitude of the SED in that bin. In other words, the
+SED for a given component for a given SED bin is a constant, but the exact
+value of this constant is allowed to vary in the Gibbs chain.
+
+%Since the phenomenology of thermal dust gets more complicated above 1050~GHz
+%(see sec. \ref{sec:current_dust}), instead of adopting a model based on
+%underlying physics, we define a set of bins, each of which is chosen to roughly
+%correspond to the width of DIRBE bands 3-10, respectively, as shown in Table
+%\ref{tab:bins}. Each of the bins is assigned an amplitude for each dust
+%component, and the SED of that component for the frequencies encompassed by a
+%given bin is given by the amplitude assigned to that bin\footnote{Only one of
+%    the three components are allowed to have nonzero amplitudes at DIRBE band 3
+%and 4 -- see below}. We do not define such bins for DIRBE bands 1 and 2, and we
+%force the total dust SED to be zero at these bands, since the thermal dust
+%emission is expected to be negligible at these frequenies.
 
 The first component we call ``nearby dust''. We define this component in order
 to properly utilize the available knowledge about nearby dust structure --
@@ -394,7 +407,7 @@ complete SED of this component is thus defined as
     \label{eq:nearby_dust}
     s(\nu) = \begin{cases} a\t\nu^{\beta} B(\nu, T) & \nu \in [100,
         1050~\text{GHz}] \\
-        a^i_{\textrm{bin}} & \nu \in [\nu_{\textrm{bin, start}}^i,
+        a^i_{\textrm{bin}}\t & \nu \in [\nu_{\textrm{bin, start}}^i,
         \nu_{\textrm{bin, end}}^i]
             \end{cases},
 \end{equation}
@@ -418,24 +431,18 @@ expressed as follows,
 where $\a$ is the vector of per-pixel amplitudes. The only difference between
 the two components is that SED amplitude of the hot dust component is allowed
 to be nonzero for bins 7 and 8 (DIRBE bands 3 and 4), while the cold dust
-(as well as the nearby dust) SEDs are only allowed to be nonzero for bins 1-6 (DIRBE bands 10 through 5).
+(as well as the nearby dust) SEDs are only allowed to be nonzero for bins 1-6
+(DIRBE bands 10 through 5).
 
+With this model, we are effectively operating with roughly two degrees of
+freedom per pixel -- namely, the hot and cold dust amplitudes. The rest of the
+parameters are all spatially constant, and so adds just fractional degrees of
+freedom to the total dust model.
 
-%There are thus two features which distinguishes the three dust components from
-%each other; first, whether the component has a freely varying amplitude per
-%pixel; and second, whether the component is allowed a nonzero SED contribution
-%at bins 7 and 8 in Table \ref{tab:bins}.
-%
-%The first component, here called ``cold dust'', is defined by a freely varying
-%amplitude at each pixel, but its SED is set to zero above bin 6. This
-%component, as the name suggest, is meant to trace dust in low-energy regions,
-%and since the PAH features, which are  at high frequencies are only expected to
-%contribute in DIRBE bands 3 and 4.
-%\begin{equation}
-%\end{equation}
-%As this paper is concerned with dust modelling in the infrared and microwave regimes, we will here focus on the part of the total data model that describes the dust emission at these wavelengths. We use a constrained three--component dust model to describe the dust emission from 100 GHz to 1.25\,$\mu$m. The model is binned spatially in HEALPix \nside 2048 maps, and the dust emission in each pixel is assumed to be described by the sum of the three components. Other types of emission, such as planetary dust and the CIB, are modelled in other ways, and they are all described in \citet{CG02_01}.
-
-%The SED of each of the three components is based on the astrodust+PAH model. Each component is given by an MBB term (Eq.~\eqref{eq:mbb}) which is used for frequencies below 1050 GHz. The temperature and spectral index of each component are varying from Gibbs sample to Gibbs sample but are spatially constant over the sky. Above 1050 GHz, we define a set of bins, each of which is chosen so that it roughly corresponds to the width of a DIRBE band, as shown in Table \ref{tab:bins}, and define the SED amplitude to be a single value for each bin; these SED amplitudes are treated as free variables (again, spatially constant) for each of the three components. Following the original DIRBE analysis, we have not defined tabulated SED bins in the wavelengths that would correspond to the 1 and 2 DIRBE bands -- this is both because the PAH emission which dominates at these wavelengths are not expected to have any peaks here.
+We emphasize that this model is mostly phenomenological, and we are already
+planning several improvements to the model to be published in the future.
+However, already with this relatively crude model the results are of sufficient
+interest for the community that we think it worthwhile to report.
 
 \begin{table*}
     \centering
@@ -476,21 +483,40 @@ paper.
 \subsection{DIRBE}
 The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
 CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
-measured the sky from $1\,\mathrm{\mu m}$ to $240\,\mathrm{\mu m}$. In this
-analysis, we have converted the original DIRBE CIO (Calibrated Individual
-Observations), whose pointing information is given in terms of Quadcube pixels
-with a resolution of 20\arcs\ into a HEALPix \nside=512 pixelation, giving an
-approximate resolution of 7\arcm. Following the nomenclature of \cite{CG02_01},
-we refer to the DIRBE CIOs as ``time-ordered data'' (TOD). Including DIRBE TOD
-in the analysis in this way allows us to target the zodiacal light
-\citep{CG02_02}, which, as mentioned above, must be analysed as a time-varying
-component on the sky, in contrast to other astrophysical components.
+measured the sky in ten frequency bands from $1\,\mathrm{\mu m}$ to
+$240\,\mathrm{\mu m}$. In this analysis, we have converted the original DIRBE
+CIO (Calibrated Individual Observations), whose pointing information is given
+in terms of Quadcube pixels with a resolution of 20\arcs\ into a HEALPix
+\nside=512 pixelation, giving an approximate resolution of 7\arcm. Following
+the nomenclature of \cite{CG02_01}, we refer to the DIRBE CIOs as
+``time-ordered data'' (TOD). Including DIRBE TOD in the analysis in this way
+allows us to target the zodiacal light \citep{CG02_02}, which, as mentioned
+above, must be analysed as a time-varying component on the sky, in contrast to
+other astrophysical components.
 
-The use of DIRBE data also allows a full exploration of the scales relevant for
-interstellar dust modelling: As mentioned above, 
-
+The use of DIRBE data also allows a fuller exploration of the scales relevant
+for interstellar dust modelling; in particular, we are able to capture the
+``bump'' and falling off of the thermal dust SEDs. 
 
 \subsection{Planck HFI}
+The \Planck High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed
+the sky in six frequency channels from 100 GHz to 857 GHz, with the primary
+purpose being characterizing temperature fluctuations in the CMB to
+unprecedentedly small scales. As it also was able to target the far-infrared
+sky, it is able to shed light on the dust component in this frequency range,
+and more generally for the analysis of which this paper is a part, is able to
+also characterize the CIB fluctuations
+\citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+
+The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+
+In addition to its complementary observation strategy, \Planck's frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered \Planck\ maps have had an estimate of the zodiacal emission modeled using the 3D model derived by K98 with varying emissivities per component. While this technically is redundant information that could contaminate this joint analysis, the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work.
+
+At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the DIRBE range. In order to avoid this, we remove the GNILC \citep{planck2016-XLVIII} estimate of the CIB from the HFI maps before including them in our analysis.
+
+Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
+We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
+
 \clearpage
 \section{Results}
 %\begin{figure}
@@ -582,10 +608,6 @@ In Figs. \ref{fig:hot_dust}, \ref{fig:cold_dust} and \ref{fig:nearby_dust}, we s
 \end{figure*}
 
 
-
-
-\clearpage
-\section{Astrophysical results}
 
        \begin{figure*}
          \centering
