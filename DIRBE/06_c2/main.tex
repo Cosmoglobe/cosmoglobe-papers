@@ -57,6 +57,59 @@
 \def\Cosmoglobe{\textsc{Cosmoglobe}}
 \def\Planck{\textit{Planck}}
 \def\WMAP{\textit{WMAP}}
+\def\COBE{\textit{COBE}}
+\def\GAIA{\textit{Gaia}}
+\def\gaia{\textit{Gaia}}
+\def\Gaia{\textit{Gaia}}
+\def\WISE{WISE}
+\def\AKARI{\textit{{AKARI}}}
+\def\nside{$N_{\mathrm{side}}$}
+\renewcommand{\P}[0]{\tens{P}}
+\newcommand{\G}[0]{\tens{G}}
+\newcommand{\B}[0]{\tens{B}}
+\renewcommand{\a}[0]{\vec{a}}
+\newcommand{\n}[0]{\vec{n}}
+\renewcommand{\t}[0]{\vec{t}}
+\newcommand{\dv}[0]{\vec{d}}
+\newcommand{\s}[0]{\vec{s}}
+\newcommand{\M}[0]{\tens{M}}
+\newcommand{\cii}{\ensuremath{\mathsc {C\ ii}}}
+
+\def\Tcmb{\ifmmode T_\mathrm{CMB}\else $T_{\mathrm{CMB}}$\fi}
+\def\Tcold{\ifmmode T_\mathrm{c}\else $T_{\mathrm{c}}$\fi}
+\def\Thot{\ifmmode T_\mathrm{h}\else $T_{\mathrm{h}}$\fi}
+\def\Tnear{\ifmmode T_\mathrm{n}\else $T_{\mathrm{n}}$\fi}
+\def\scmb{\ifmmode s_\mathrm{CMB}\else $s_{\mathrm{CMB}}$\fi}
+\def\squad{\ifmmode s_\mathrm{quad}\else $s_{\mathrm{quad}}$\fi}
+\def\ssynch{\ifmmode s_\mathrm{s}\else $s_\mathrm{s}$\fi}
+\def\sdust{\ifmmode s_\mathrm{d}\else $s_{\mathrm{d}}$\fi}
+\def\ssdust{\ifmmode s_\mathrm{sd}\else $s_{\mathrm{sd}}$\fi}
+\def\same{\ifmmode s_\mathrm{AME}\else $s_{\mathrm{AME}}$\fi}
+\def\ssrc{\ifmmode s_\mathrm{src}\else $s_{\mathrm{src}}$\fi}
+\def\sco{\ifmmode s_\mathrm{CO}\else $s_{\mathrm{CO}}$\fi}
+\def\sff{\ifmmode s_\mathrm{ff}\else $s_{\mathrm{ff}}$\fi}
+\def\gff{\ifmmode g_\mathrm{ff}\else $g_{\mathrm{ff}}$\fi}
+\def\fsynch{\ifmmode f_\mathrm{s}\else $f_{\mathrm{s}}$\fi}
+\def\fsd{\ifmmode f_\mathrm{sd}\else $f_{\mathrm{sd}}$\fi}
+\def\fame{\ifmmode f_\mathrm{AME}\else $f_{\mathrm{AME}}$\fi}
+\def\alphasrc{\ifmmode \alpha_\mathrm{src}\else $\alpha_{\mathrm{src}}$\fi}
+\def\bcold{\ifmmode \beta_\mathrm{c}\else $\beta_{\mathrm{c}}$\fi}
+\def\bhot{\ifmmode \beta_\mathrm{h}\else $\beta_{\mathrm{h}}$\fi}
+\def\bnear{\ifmmode \beta_\mathrm{n}\else $\beta_{\mathrm{n}}$\fi}
+\def\bsynch{\ifmmode \beta_\mathrm{s}\else $\beta_{\mathrm{s}}$\fi} 
+\def\bsun{\ifmmode \beta_\mathrm{sun}\else $\beta_{\mathrm{sun}}$\fi} 
+\def\nuzeros{\ifmmode \nu_{0,\mathrm{s}}\else $\nu_{0,\mathrm{s}}$\fi} 
+\def\nuzeroff{\ifmmode \nu_{0,\mathrm{ff}}\else $\nu_{0,\mathrm{ff}}$\fi} 
+\def\nuzerocold{\ifmmode \nu_{0,\mathrm{c}}\else $\nu_{0,\mathrm{c}}$\fi}
+\def\nuzerohot{\ifmmode \nu_{0,\mathrm{h}}\else $\nu_{0,\mathrm{h}}$\fi}
+\def\nuzeronear{\ifmmode \nu_{0,\mathrm{n}}\else $\nu_{0,\mathrm{n}}$\fi} 
+\def\nuzeroame{\ifmmode \nu_{0,\mathrm{AME}}\else $\nu_{0,\mathrm{AME}}$\fi} 
+\def\nuzerosd{\ifmmode \nu_{0,\mathrm{}}\else $\nu_{0,\mathrm{sd}}$\fi} 
+\def\nuzerosrc{\ifmmode \nu_{0,\mathrm{src}}\else $\nu_{0,\mathrm{src}}$\fi} 
+\def\nup{\ifmmode \nu_{\mathrm{p}}\else $\nu_{\mathrm{p}}$\fi} 
+\def\alphasd{\ifmmode \alpha_{\mathrm{sd}}\else $\alpha_{\mathrm{sd}}$\fi} 
+\def\Te{\ifmmode T_{\mathrm{e}}\else $T_{\mathrm{e}}$\fi} 
+\def\kB{\ifmmode k_\mathrm{B}\else $k_{\mathrm{B}}$\fi} 
 
 
 \begin{document} 
@@ -90,11 +143,81 @@
 Stars are really important!
 
 \clearpage
-\section{Star modelling in a Bayesian context}
+\section{The \Cosmoglobe\ DR2 analysis}
+The current paper is part of the \Cosmoglobe\ DR2 suite, meaning that the $C_II$ modelling is part of a larger global Bayesian end-to-end analysis. In the \Cosmoglobe\ framework, we begin with a an explicit parametric model incorporating all known aspects of the relevant data, including both instrumental effects as well as a physical model of the sky that we observe. For the DIRBE time-ordered data (TOD) used in the DR2 analysis, the parametrization is as follows:
+\begin{align}
+	\label{eq:model}
+    \dv_{\mathrm{dirbe}} &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}}\right] + \n \\
+                         & \equiv \s^{\mathrm{tot}} + \n \nonumber,
+\end{align}
 
+where $\dv$ is the stacked TODs, $\G$ is an overall gain factor, $\P$ is the
+pointing matrix which projects the physical sky onto a $n_{\mathrm{tod}}$-sized
+space, $\B$ is the instrumental beam convolution operator, and $\n$ is the
+instrumental noise. The physical sky is represented by the next three terms:
+first, a sum over sky components that can be modelled as constant at every
+point in time (in galactic coordinates) -- the sum is over a HEALPix map of
+amplitudes for each sky component ($\a_c$) multiplied by a mixing matrix which
+extrapolates the given component to the frequencies observed; secondly, there
+is a term representing the zodiacal emission, which cannot be treated as a time
+constant; finally there is a term representing a component that is static in
+solar coordinates, which may either be related to the DIRBE sidelobes, or be
+geniune excess radiation originating in the Solar System. These two last terms
+are treated in \citet{CG02_02} and \citet{CG02_03}, and in this paper we are more concerned with the first of the three terms, which can be written more explicitly as follows:
+\begin{equation}
+\label{eq:skymodel}
+\begin{aligned}
+  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
+  &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
+  && \textrm{(Cold dust)} \\
+  + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
+  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\\
+  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
+  a_{\nu} && \textrm{(Nearby dust)} \\
+  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
+  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\\
+  + &\delta(\nu-\nu_{0,\cii}) \a_{\cii}
+	h^{\cii}_{\nu} && (\cii)\\
+  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
+  \textrm{(Bright stars)} \\
+  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
+  \textrm{(Faint stars)} \\  
+    + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
+  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
+  T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
+  a_{\mathrm{e},j} && \textrm{(FIR sources)}\\
+  + &m_{\nu} && \textrm{(Monopole)}. 
+\end{aligned}
+\end{equation}
+
+As it stands, this is as ``complete'' of a static model we currently can write down
+for the frequency domain treated in this paper. The first three
+terms represent the total thermal dust model, which is the subject of \citet{CG02_05}.
+The fourth term models the free-free dust component, which is expected to
+contribute moderately at all relevant frequencies without becoming a dominant
+term. The next term describes the CO line emission, which is here treated as a
+fixed template based on the \citet{dame:2001} CO $J$=$1\rightarrow 0$ map as a
+fixed tracer for all CO emission, and use the line ratios $h_{\nu, i}$
+presented by \citet{planck2014-a12} for modelling the CO at the 100, 217 and
+353 GHz \Planck\ channels.
+
+The other line emission term is the \cii\ line emission term, which is the main
+subject of the current paper. Since the rest frequency of \cii\ is 1900 GHz, it
+is only present in the DIRBE 140 $\mu m$ band, in addition to certain FIRAS
+bands (WHICH???). The exact modelling of this component will be explicated in
+detail further down (WHERE??)
+
+The three point source terms which follow the \cii\ term are all treated in
+\citet{CG02_04}. Finally, the final term represents the monopole at each
+frequency, which is treated in \citet{CG02_03}.
 
 \clearpage
-\section{Impact of starlight on DIRBE observations}
+\section{Modelling the \cii\ component}
 
 %\begin{figure}
 %  \centering
@@ -107,8 +230,37 @@ Stars are really important!
 
 \clearpage
 \section{Data selection and cleaning}
+The general description of the data used in the DR2 analysis is detailed in
+\citet{CG02_01}. An important feature of a global analysis like the one this
+paper is based on is that although there is data involved in the analysis that
+does not directly impact the object of study (in this case, the \cii\
+component), all the data does in one way or another impact the overall sky
+model, which in turn affects the quality of the \cii\ component fit.
 
+We will here first describe the data that directly impacts the \cii\ fit,
+before describing the rest of the data used in the total analysis.
 
+\subsection{DIRBE 140 $\mu m$}
+The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
+CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
+measured the sky in ten frequency bands from $1\,\mathrm{\mu m}$ to
+$240\,\mathrm{\mu m}$. In the \Cosmoglobe\ DR2 analysis, we have converted the
+original DIRBE CIO (Calibrated Individual Observations), whose pointing
+information is given in terms of Quadcube pixels with a resolution of 20\arcs
+into a HEALPix \nside=512 pixelation, giving an approximate resolution of
+7\arcm. Following the nomenclature of \citet{CG02_01}, we refer to the DIRBE
+CIOs as ``time-ordered data'' (TOD).
+
+In the current paper, the DIRBE wavelength band of most interest is the 140
+$\mu$m one (from here on called band 9 keeping with DIRBE terminology); the
+\cii\ line has a rest frequency of 1900 GHz (158 $\mu$m), which is close to the peak of the band 9 bandpass response curve (see Fig. \ref{fig:140_bp}).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figures/dirbe_09_bandpass_vs_cii.pdf}
+    \caption{The DIRBE 140 $\mu$ m bandpass profile. The orange vertical line marks the rest frequency of the \cii\ line.}
+    \label{fig:140_bp}
+\end{figure}
 \clearpage
 \section{Astrophysical results}
 
@@ -145,6 +297,6 @@ Stars are really important!
 %
 
 \bibliographystyle{aa}
-\bibliography{references}
+\bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
 \end{document}
 %%%% End of aa.dem
