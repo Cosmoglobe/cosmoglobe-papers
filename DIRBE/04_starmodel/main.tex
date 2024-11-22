@@ -39,15 +39,13 @@
 
 \usepackage{placeins}
 \usepackage{multicol}
-\usepackage[export]{adjustbox}
-%\usepackage[breaklinks,colorlinks,citecolor=blue]{hyperref}
+\usepackage[export]{adjustbox}\usepackage[breaklinks,colorlinks,citecolor=blue]{hyperref}
 \bibpunct{(}{)}{;}{a}{}{,}
 \usepackage[switch]{lineno}
 \definecolor{linkcolor}{rgb}{0.6,0,0}
 \definecolor{citecolor}{rgb}{0,0,0.75}
 \definecolor{urlcolor}{rgb}{0.12,0.46,0.7}
-\usepackage[breaklinks, colorlinks, urlcolor=urlcolor,
-    linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
+%\usepackage[breaklinks, colorlinks, urlcolor=urlcolor,linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 \hypersetup{linktocpage}
 \usepackage{bold-extra}
 \usepackage{tabularx, booktabs}
@@ -165,7 +163,7 @@ f_{\mathrm{GAIA}} = B_i(p, \lambda_j) E_i(\lambda_j),
 
 which is the beam-convolved SED taken from the PHOENIX catalogue.
 
-Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the GAIA data and the PHOENIX starlight database, and the beam $B$ is fixed for each detector, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star. We include a star component in DIRBE bands 01-06 (1.25 - 25 $\mu$m), as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
+Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the GAIA data and the PHOENIX starlight database, as discussed in section \ref{sec:phoenix}, and the beam $B$ is fixed for each detector, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star. We include a star component in DIRBE bands 01-06 (1.25 - 25 $\mu$m), as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
 
 To sample the star amplitudes $a_i$ we attempt to minimize the residual in each band for each source $i$, which can be expressed as a linear minimization problem, analogous to the mapmaking equation
 
@@ -193,6 +191,42 @@ a_i = \frac{Y_i}{X_i} + \frac{1}{\sqrt{X_i}} N_i(0,1),
 \end{equation}
 
 where $N_i(0,1)$ is a sample drawn from a unit Gaussian with 0 mean.
+
+\subsubsection{The PHOENIX Database}
+\label{sec:phoenix}
+
+To build the best SED model for each stellar source given the parameters retrieved from GAIA, we do some post-processing of the spectra provided by the PHOENIX database to better match the measured values. PHOENIX provides spectra in finite resolution bins, as summarized in table \ref{tab:phoenix}, whereas the parameters estimated from the GAIA data have arbitrary precision. Instead of simply selecting the closest spectrum to each star, we take a linear combination of the nearest 6 spectra, weighted by distance from the measured value, as given by 
+
+\begin{align}
+s &= \frac{1}{3}\bigg[\frac{s_{T-} (T_{+} - T) + s_{T+} (T - T_{-})}{T_{+} - T_{-}} \nonumber \\ 
+&+ \frac{s_{g-} (g_{+} - g) + s_{g+} (g - g_{-})}{g_{+} - g_{-}} \nonumber \\
+&+ \frac{s_{M-} (M_{+} - M) + s_{M+} (M - M_{-})}{M_{+} - M_{-}}\bigg].
+\end{align}
+
+Here, $s$ is a spectra, and we have used $T$, $g$ and $M$ as short forms for $T_{\mathrm{eff}}$, $\log g$ and $[M/H]$. The subscripts + and - correspond to the closest reference value above and below the measured value (for example 0.0 and 0.5 if $\log g=$0.315). 
+
+The second complicating factor is that the updated release of the catalogue\footnote{https://www.astro.uni-jena.de/Users/theory/for2285-phoenix/grid.php} contains only a subset of the files in the original catalogue, although they are believed to be more accurate. This means that for stars in the extended parameter range, most importantly those with $\log g<$3.0, we must calculate their spectra using the older files. 
+
+There, we run into the limitation that the older files are only defined to $\lambda=5.5\mu$m, compared to the newer files which go to $\lambda=50\mu$m. Amplitude estimates for these stars in the $12\mu$m and $25\mu$m bands must therefore be determined by first, computing the spectra with the old PHOENIX files and the new PHOENIX files, using the closest endpoint ($\log g$=3.0 in the most common case). Then, we compare the amplitudes in bands 3 and 4 ($3.5\mu$m and $4.9\mu$m), which gives us a ratio between the old spectra with the correct parameter range and the new spectra with the full wavelength coverage. Finally, we apply this scale factor to the points in bands 5 and 6 to obtain approximate amplitudes for those stars at longer wavelengths, based on the constant scaling shown in fig \ref{fig:logg_ratio}.
+
+\begin{table}
+    \centering
+    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
+    \begin{tabular}{l c c c c c }
+    \hline
+    \hline
+     Param & Step Size & \multicolumn{2}{c}{Old} & \multicolumn{2}{c}{Updated}\\ 
+     & & Min & Max & Min & Max\\
+    \hline
+    \hline
+    $T_{\mathrm{eff}}$ (K) & 50-100K & 2300K & 12000K & 3000K & 11900K\\
+    $\log g$ & 0.5 & 0.0 & 6.0 & 3.0 & 5.0 \\
+    $[M/H]$ & 0.5 & -4.0 & 1.0 & -2.0 & 1.0 \\
+     \hline
+    \end{tabular}
+    \caption{Parameters of spectra provided by the PHONEIX starlight database, both for the original and updated spectra.}
+    \label{tab:phoenix}
+\end{table}
 
 \subsection{Extra Pointsources}
 
@@ -351,7 +385,7 @@ After the official DIRBE analysis, \cite{DIRBE2mass}, following \cite{gorjian} u
           &  & & & \cite{DIRBE2mass} & CG & \cite{DIRBE2mass} & CG  & \cite{DIRBE2mass} & CG\\
     \hline
     \hline
-    \multicolumn{8}{c}{1.25$\mu$m}\\
+    \multicolumn{10}{c}{1.25$\mu$m}\\
     \hline
      1 \rule{0pt}{2ex} & 127.3 & 63.8 & 1.5 & 31.56 & 12.6 & 3.08 & 32.4 & 34.64 & 45.0\\
      2 & 107.7 & 57.7 & 2.0 & 42.72 & 14.8 & 3.62 & 40.4 & 45.34 & 55.2\\
@@ -497,7 +531,7 @@ Figure \ref{fig:sed} shows the full sky average star SED derived from this work,
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth]{figs/sed/cg_spec.pdf}
-  \caption{Components of the infrared temperature sky from 1$\mu$m to 1m wavelengths. The approximate contribution from stars is shown in yellow, and the observing bands from various experiments are indicated by the vertical lines.}
+  \caption{Components of the infrared temperature sky from 1$\mu$m to 1m1 wavelengths. The approximate contribution from stars is shown in yellow, and the observing bands from various experiments are indicated by the vertical lines.}
   \label{fig:sed}
 \end{figure*}
 
