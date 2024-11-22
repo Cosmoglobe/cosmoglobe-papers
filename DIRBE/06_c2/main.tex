@@ -148,7 +148,7 @@ Stars are really important!
 
 \clearpage
 
-% This is not super valid since the cii analysis is standalone
+% This is not valid since the cii analysis is standalone
 %\section{The \Cosmoglobe\ DR2 analysis}
 %The current paper is part of the \Cosmoglobe\ DR2 suite, meaning that the $C_II$ modelling is part of a larger global Bayesian end-to-end analysis. In the \Cosmoglobe\ framework, we begin with a an explicit parametric model incorporating all known aspects of the relevant data, including both instrumental effects as well as a physical model of the sky that we observe. For the DIRBE time-ordered data (TOD) used in the DR2 analysis, the parametrization is as follows:
 %\begin{align}
@@ -289,10 +289,136 @@ Stars are really important!
 %maybe actually cite those papers)
 
 
+\section{Methodology}
+This paper is part of the \Cosmoglobe\ DR2 analysis, and we use the same
+end-to-end framework as described in \citep{CG02_01}. This framework is based
+on the theory of Gibbs sampling, wherein a joint probablity distribution can be
+sampled from by sampling from all of its conditional distribution; that is,
+given a joint distribution $P(\mathrm{a}, \mathrm{b}, \mathrm{c}, ...)$ we can
+sample from this indirectly by sampling from the distributions
+\begin{equation}
+    \begin{aligned}
+P(\mathrm{a} \mid \mathrm{b}, \mathrm{c}, ...) \\
+P(\mathrm{b} \mid \mathrm{a}, \mathrm{c}, ...) \\
+P(\mathrm{c} \mid \mathrm{a}, \mathrm{b}, ...) \\
+\cdots
+\end{aligned}
+\end{equation}
+in sequence. Considered together, this sequence of samples will, according to
+the theory of Gibbs sampling, be a sample from the original joint distribution.
+
+In the \Cosmoglobe\ context, the joint probability distribution function we
+sample from is the Bayesian \emph{posterior} distribution
+\begin{equation}
+    P(\mathbf{\theta} | \mathbf{d}) =
+    \frac{P(\mathbf{d}|\mathbf{\theta})P(\mathbf{\theta})}{P(\mathbf{d})},
+\end{equation}
+where $\theta$ represents all parameters characterizing both the sky we are
+observing as well as the instruments observing that sky, and $\mathbf{d}$
+represents the data we have gathered using those instruments.
+
+The parameters represented by $\theta$ will depend on both which wavelengths of
+the sky we are observing, which instruments we are using, and at which
+``aggregate'' level we are using the data from those instruments (i.e. whether
+they are raw data or already processed in some way). The \Cosmoglobe\ DR2
+analysis is, as an example, using raw time ordered data (TOD) from the DIRBE
+bands (described further in section \ref{sec:dataselection}), and a general
+data model for these bands can be written
+\begin{align}
+	\label{eq:model}
+    \dv_{\mathrm{dirbe}} &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}}\right] + \n \\
+                         & \equiv \s^{\mathrm{tot}} + \n \nonumber,
+\end{align}
+where $\dv$ is the stacked TODs, $\G$ is an overall gain factor, $\P$ is the
+pointing matrix which projects the physical sky onto a $n_{\mathrm{tod}}$-sized
+space, $\B$ is the instrumental beam convolution operator, and $\n$ is the
+instrumental noise. The physical sky is represented by the next three terms:
+first, a sum over sky components that can be modelled as constant at every
+point in time (in galactic coordinates) -- the sum is over a HEALPix map of
+amplitudes for each sky component ($\a_c$) multiplied by a mixing matrix which
+extrapolates the given component to the frequencies observed; secondly, there
+is a term representing the zodiacal emission, which cannot be treated as
+constant in time; finally there is a term representing a component that is
+static in solar coordinates, which may either be related to the DIRBE
+sidelobes, or be geniune excess radiation originating in the Solar System.
+
+For the general DR2 analysis, the first term in the parenthesis on the right
+hand side may be written more explicitly as follows:
+\begin{equation}
+\label{eq:skymodel}
+\begin{aligned}
+  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
+  &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
+  && \textrm{(Cold dust)} \\
+  + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
+  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\\
+  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
+  a_{\nu} && \textrm{(Nearby dust)} \\
+  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
+  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\\
+  + &\delta(\nu-\nu_{0,\cii}) \a_{\cii}
+	h^{\cii}_{\nu} && (\cii)\\
+  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
+  \textrm{(Bright stars)} \\
+  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
+  \textrm{(Faint stars)} \\  
+    + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
+  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
+  T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
+  a_{\mathrm{e},j} && \textrm{(FIR sources)}\\
+  + &m_{\nu} && \textrm{(Monopole)}. 
+\end{aligned}
+\end{equation}
+These terms represent the known static components that contribute to the 1-10
+DIRBE bands, and describe, in order, the thermal dust component (first three
+terms), the free-free component, the CO component, the \cii\ component, three
+point source terms, and and overall band monopole term.
+
+The \commanderthree\ software \citep{eriksen:2004,seljebotn:2019,bp03} is what
+actually performs the Gibbs sampling describes above, and another way to
+describe this kind of analysis is as a global \emph{iterative} analysis, where
+we allow the sky model to inform the instrument parameter classification, and
+then in turn allow the updated instrument information to inform the sky model,
+and so on. This process is repeated hundreds of times, and each iteration
+yields a new sample from the posterior distribution of the data model
+parameters given the observed data.
+
+In the main DR2 paper \citep{CG02_01}, a comprehensive analysis of all ten
+DIRBE bands is carried out, combined with data from FIRAS, star catalogue data
+from GAIA and WISE, as well as \Planck\ \hfi\ frequency maps. In this paper,
+however, we are performing a more focused and limited analysis, the main
+difference being that we here only use the 9th DIRBE band (central wavelength
+140 $\mu$m), and certain FIRAS bands (described in section
+\ref{sec:dataselection}), in addition to the \Planck\ \hfi\ data.
+
+The reason for this focused analysis is the very limited extend to which the
+\cii\ component affects the other sky components: Any changes in the \cii\
+component will only affect the channels observing at approximately 1900 GHz,
+and the only other components present at these frequencies are the thermal dust
+and zodiacal light components. Thus, we here operate with a greatly simplified
+static sky model compared to Eq. (\ref{eq:skymodel}), where we only keep the
+thermal dust and \cii\ terms. We also keep the $\s_{zodi}$ term from Eq.
+\ref{eq:model}, but we allow only the overall emissivity of this component to
+be a free parameter, with the rest of the model being fixed to the model from
+\citet{CG02_02}.
+
 \clearpage
-\section{Modelling the \cii\ component}
+\section{The sky model}
+Here, we describe the treatment of the sky components that are included in the
+analysis in further detail.
+
+\label{sec:skymodel}
+\subsection{\cii}
 The galactic CII emission originates in star forming regions in the
-galaxy, and is thus used as a tracer for such regions. In Fig. \ref{fig:cii_firas} we display the CII map as measured by the COBE-FIRAS experiment\citep{fixsen:1994,mather:1999}, and as evi
+galaxy, and is thus used as a tracer for such regions. In Fig.
+\ref{fig:cii_firas} we display the CII map as measured by the COBE-FIRAS
+experiment\citep{fixsen:1994,mather:1999}, which shows the large-scale
+morphology of this component in the Milky Way.
 
 \begin{figure}
     \centering
@@ -302,10 +428,31 @@ galaxy, and is thus used as a tracer for such regions. In Fig. \ref{fig:cii_fira
 \end{figure}
 
 The \cii\ line emission component has a rest frequency of 1900 GHz, and as such
-is expected to be present in the 140 $\mu$m band out of all the DIRBE bands.
+is expected to be present in the 140 $\mu$m 9th band out of all the DIRBE bands. In
+this work, we model the \cii\ emission as an amplitude map defined on a HEALPix
+\citep{HEALPIX} \nside$=512$ grid. For each band at which the \cii\ component
+is expected to contribute (in this analysis, the DIRBE 09a and 09b bands, as
+well as the FIRAS bands between 1809 and 2081 GHz), we model the \cii\
+contribution as
+\begin{equation}
+    \mathbf{C}_{\mathrm{band}} = \mathbf{C}_{\mathrm{ref}} \cdot
+    r_{\mathrm{band}},
+\end{equation}
+where $\mathbf{C}_{\mathrm{ref}}$ is the reference \cii\ amplitude map, and
+$r_{\mathrm{band}}$ is a band-specific line ratio, measuring the relative
+contribution of \cii\ to that specific band.
+
+
+\subsection{Thermal dust}
+The thermal dust emission modelled in the same way as in the DR2 thermal dust
+analysis paper \citep{CG02_05}, which models the dust using three components,
+each of which is 
+\subsection{Zodiacal light}
 
 \clearpage
 \section{Data selection and cleaning}
+\label{sec:dataselection}
+
 The general description of the data used in the DR2 analysis is detailed in
 \citet{CG02_01}. An important feature of a global analysis like the one this
 paper is based on is that although there is data involved in the analysis that
@@ -317,7 +464,7 @@ We will here first describe the data that directly impacts the \cii\ fit,
 before describing the rest of the data used in the total analysis.
 
 \subsection{DIRBE 140 $\mu$m}
-The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
+The Diffuse InfraRed Explorer (DIRBE), whose main goal was the mapping out of the
 CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
 measured the sky in ten frequency bands from $1\,\mathrm{\mu}$m to
 $240\,\mathrm{\mu}$m. In the \Cosmoglobe\ DR2 analysis, we have converted the
@@ -335,19 +482,43 @@ peak of the band 9 bandpass response curve (see Fig. \ref{fig:140_bp}).
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{figures/dirbe_09_bandpass_vs_cii.pdf}
-    \caption{The DIRBE 140 $\mu$m bandpass profile. The orange vertical line marks the rest frequency of the \cii\ line.}
+    \caption{The DIRBE band 9 (140 $\mu$m) bandpass profile. The orange
+             vertical line marks the rest frequency of the \cii\ line. TODO:
+            make 09a and 09b here}
     \label{fig:140_bp}
 \end{figure}
 
 \subsection{FIRAS}
-The \COBE-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}. 
+The \COBE-FIRAS experiment was an absolutely calibrated differential Michelson
+Fourier transform interferometer that observed the full sky from
+68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution
+\citep{fixsen:1994,mather:1999}. 
 
-Although the main goal of FIRAS was the characterization of the CMB blackbody spectrum \citep{mather:1994}, it is also a very important dataset in the determination of emission lines such as \cii, because of its high resolution in frequency space.
+Although the main goal of FIRAS was the characterization of the CMB blackbody
+spectrum \citep{mather:1994}, it is also a very important dataset in the
+determination of emission lines such as \cii, because of its high resolution in
+frequency space.
 
-In the DR2 analysis, we are using only a subset of the FIRAS frequency bands, listed in \citet{CG02_01}; their usage serves two main purposes: First, since FIRAS was absolutely calibrator, it is an important check on the calibration of other data sets -- here, we use it to contribute to the calibration of the \hfi\ bands, as well as the 100, 140 and 240 $\mu$m DIRBE bands. Second, as mentioned above, the high frequency resolution of DIRBE means that it is effective in constraining the \cii\ line: By comparing the observed sky at DIRBE band 9 with the FIRAS data roughly around this wavelength, we can see what part of the band 9 radiation which is coming from \cii\ line emission. Thus, the most important FIRAS bands for the present paper are the ones between 1809-2081 GHz, which are used for the \cii\ constraints, as well as the 2135 GHz one, which is used to assist in the calibration of DIRBE band 9, which in turn provides a check on the overall scaling of the resulting \cii\ maps.
+In the DR2 analysis, we are using only a subset of the FIRAS frequency bands,
+listed in \citet{CG02_01}; their usage serves two main purposes: First, since
+FIRAS was absolutely calibrator, it is an important check on the calibration of
+other data sets -- here, we use it to contribute to the calibration of the
+\hfi\ bands, as well as the 100, 140 and 240 $\mu$m DIRBE bands. Second, as
+mentioned above, the high frequency resolution of DIRBE means that it is
+effective in constraining the \cii\ line: By comparing the observed sky at
+DIRBE band 9 with the FIRAS data roughly around this wavelength, we can see
+what part of the band 9 radiation which is coming from \cii\ line emission.
+Thus, the most important FIRAS bands for the present paper are the ones between
+1809-2081 GHz, which are used for the \cii\ constraints, as well as the 2135
+GHz one, which is used to assist in the calibration of DIRBE band 9, which in
+turn provides a check on the overall scaling of the resulting \cii\ maps.
 
 \subsection{Other data sets}
-As mentioned above, the global analysis of which this paper is a part includes several data sets in order to help constrain the sky model at the frequencies we are considering. In addition to the DIRBE and FIRAS bands not directly impacting this paper, there are two other data sets which are used, which will briefly be mentioned here.
+As mentioned above, the global analysis of which this paper is a part includes
+several data sets in order to help constrain the sky model at the frequencies
+we are considering. In addition to the DIRBE and FIRAS bands not directly
+impacting this paper, there are two other data sets which are used, which will
+briefly be mentioned here.
 
 \subsubsection{\Planck\ HFI}
 The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed
@@ -381,7 +552,8 @@ The mean Cosmoglobe DR2 \cii\ map is shown in Fig. \ref{fig:cii_mean}, and the
 standard deviation in Fig. \ref{fig:cii_std}. The \CII\ amplitude maps exhibit
 good mixing behavior, as evidenced in Fig. \ref{fig:traceplots_cii_amps}, where
 we show the traceplots of the amplitudes of three randomly selected pixels. We
-also show typical residuals from a sample in the end of the chain (sample 700) in Figs. \ref{fig:firas_1904_res} and \ref{fig:firas_1890_res}.
+also show typical residuals from a sample in the end of the chain (sample 700)
+in Figs. \ref{fig:firas_1904_res} and \ref{fig:firas_1890_res}.
 
 We show the 09 DIRBE band gain traceplots in \ref{fig:traceplots_cii_gains},
 and the traceplots of the 09 DIRBE band + 1904 FIRAS band \cii\ line ratios. As
