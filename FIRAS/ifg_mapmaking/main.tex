@@ -182,11 +182,16 @@
    
    \abstract{Sometimes a mapmaker is worth a whole paper.}
 
+%    \keywords{DTF matrix}
+
+	\textbf{Keywords:} DTF matrix
+
    \maketitle
 
 %\setcounter{tocdepth}{2}
 %\tableofcontents
    
+
 % INTRODUCTION
 %-------------------------------------------------------------------
 \section{Introduction}
@@ -264,7 +269,57 @@ Where this idea can really help is with the averaging; 4--12 IFG's are averaged 
 This can create some blurring in the scanning direction, and potentially splitting in regions with high gradients. It is not clear to me yet how this was avoided in the original FIRAS pipeline.
 
 
+\section{Regarding the Fourier transformations}
 
+Everything useful about the Fourier transform, the DTF and specifically the real DTF: \href{https://www.dspguide.com/ch8/1.htm}{here}.
+
+\subsection{Matrix Inversion Method}
+
+So we want to start with the simplest case, where we are able to start from
+\begin{equation}
+	d = Pm + n,
+\end{equation}
+and through the maximum likelihood method get to
+\begin{equation}
+	P^T N^{-1}P \hat m = p^T N^{-1}d
+\end{equation}
+and simply invert the left hand side to get
+\begin{equation}
+	\hat m = (P^T N^{-1}P)^{-1}P^T N^{-1}d.
+\end{equation}
+
+Now, it's important to define $P$, which, for starters, will simply be the DFT matrix, which we will call $W$. Also, let's go even simpler and say that simply
+\begin{equation}
+	m = P^{-1}d.
+\end{equation}
+
+Now, what is $P^{-1}$? \href{https://www.youtube.com/watch?v=Er-FcErLXrQ}{This guy} explains it pretty well.
+
+A Fourier transform is defined as 
+\begin{equation}
+	\tilde x[k] = \sum_{n=0}^{N-1} e^{-j\frac{2\pi kn}{N}} x[n],
+\end{equation}
+which shows that the DFT matrix operator can be writen as
+\begin{equation}
+	W_{kn} = e^{-j\frac{2\pi kn}{N}},
+\end{equation}
+where we $W_{kn}$ is the $k$th element of the $n$th row of $W$. $j$ is of course the imaginary unit (DSP engineers... it was always gonna have to come to them).
+
+The inverse Fourier transform is defined as
+\begin{equation}
+	x[n]=\frac{1}{N} \sum_{n=0}^{N-1} \tilde x[k] e^{+j\frac{2\pi kn}{N}},
+\end{equation}
+which then similarly defines the inverse DFT matrix as
+\begin{equation}
+	W^{-1}_{nk} = \frac{1}{N} e^{+j\frac{2\pi kn}{N}},
+\end{equation}
+which we can relate to the DFT matrix via matrix operations:
+\begin{align}
+	W^{-1}_{nk} &= \frac{1}{N} (e^{-j\frac{2\pi kn}{N}})^*\\
+	&= \frac{1}{N} (W)^*_{nk}\\
+	&= \frac{1}{N} (W^{*^T})_{kn},
+\end{align}
+which is just the hermitian conjugate, perfect!
 
 %-------------------------------------------------------------
 %                                       Table with references 
