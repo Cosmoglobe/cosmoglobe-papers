@@ -51,6 +51,10 @@
 \hypersetup{linktocpage}
 \usepackage{bold-extra}
 
+\usepackage{subcaption} % for subfigures
+% new command for to dos
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
 \input{Planck}
 
 % Custom definitions
@@ -321,6 +325,93 @@ which we can relate to the DFT matrix via matrix operations:
 \end{align}
 which is just the hermitian conjugate, perfect!
 
+\subsection{The curse of using Fourier transforms on real-valued input}
+
+This would be perfect and very easy if we were using complex-valued input, where the full $N$ points of the transform are relevant.
+However, our signal is real-valued, and carrying around a copy of the transform is not very useful and only gives way to more calculations.
+One would think that we could build a real DFT matrix (i.e. a matrix operator that is equivalent to the real Fourier transform).
+As such, we need to build a matrix that is $N/2+1$ by $N$, which, of course, is not square, and therefore we lose the nice unitary (up to a normalization factor) properties of the DFT matrix.
+Still, we can try to work it out on the same principle that the inverse operator is the same as the transpose operator (up to a normalization factor) and see what happens.
+This is probably the questionable assumption that I'm making.
+
+So, this is how we define the real DFT matrix:
+\begin{align}
+	&\omega = e^{-2\pi i / N}\\
+	&W^r_{\nu_i x_i} = \omega^{\nu_i x_i},
+\end{align}
+and this matrix works on the real-valued input as expected, the same as using the numpy.fft.rfft function.
+
+We can also visualise what the operators look like in Figure \ref{fig:dft}.
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}{.45\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{Figures/dft.png}
+	  \caption{Square DFT.}
+	  \label{fig:dft-square}
+	\end{subfigure}
+	\begin{subfigure}{.45\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{Figures/dft_non_square.png}
+	  \caption{Non-square DFT.}
+	  \label{fig:dft-non-square}
+	\end{subfigure}
+	\caption{Visual representations of the forward matrix operators.}
+	\label{fig:dft}
+\end{figure}
+
+Now we need the inverse operator, which then needs to be $N$ by $N/2+1$.
+If the assumption that the transpose matrix is the inverse operator holds, then building the inverse operator from the definition of the inverse Fourier transform should work.
+The closest I have been able to come up with is the following definition:
+\begin{align}
+	&\omega = e^{2\pi i / N}\\
+	&W^{r^{-1}}_{x_i \nu_i} = \frac{1}{N/2 +1} (\omega^{\nu_i x_i} - 1).
+\end{align}
+
+The matrix operators are shown in Figure \ref{fig:idft}.
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{Figures/idft.png}
+		\caption{Square inverse DFT.}
+		\label{fig:idft-square}
+	\end{subfigure}
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{Figures/idft_non_square.png}
+		\caption{Non-square inverse DFT.}
+		\label{fig:idft-non-square}
+	\end{subfigure}
+	\caption{Visual representations of the inverse matrix operators.}
+	\label{fig:idft}
+\end{figure}
+
+Nothing seems obviously wrong with the non-square version of the operator.
+However, Figure \ref{fig:problems} shows what the matrix multiplication of the forward and inverse operators ($W^{r^{-1}}W^r$) looks like (which we expect to be the identity matrix) and the close-up of the difference between the original real-valued input and the output after putting it through our built non-square DFT and inverse DFT operators.
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}{.45\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{Figures/multiplied.png}
+	  \caption{Multiplication of the forward and inverse operators.}
+	  \label{fig:problems-multiplication}
+	\end{subfigure}
+	\begin{subfigure}{.45\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{Figures/bumps.png}
+	  \caption{Close-up of the difference between the original and the output.}
+	  \label{fig:problems-closeup}
+	\end{subfigure}
+	\caption{Visual representations of the problems with the non-square inverse DFT.}
+	\label{fig:problems}
+\end{figure}
+
+I also tried simply taking the hermitian conjugate of the DFT matrix instead of building the inverse DFT matrix "from scratch" and that seems to wield the same results.
+
 \section{Mapmaking for FTS}
 
 When looking at each individual interferogram (and therefore only looking at one pixel), there is a fairly simple matrix formulation of the maximum likelihood mapmaking equation, which which relates the spatial distance in the instrument $x$ with sky frequency $\nu$ and reads
@@ -338,7 +429,22 @@ Now in order to be able to treat pixel correlations, we need to put the two toge
 \begin{equation}
 	(P^T_{\nu p;\nu}F^T_{\nu;xt} N^{-1}_{xt;xt} F_{xt;\nu}P_{\nu p;t})m_p = P^T_{\nu p;\nu}F^T_{\nu;xt} N^{-1}_{xt;xt}d_{xt}.
 \end{equation}
- 
+
+\subsection{Revised data model and corresponding ML mapmaking equation}
+
+After speaking to Sigurd, he came up (somewhat independently) with the following data model:
+\begin{equation}
+	d_i = P_i F T_i m + n,
+\end{equation}
+where $i$ for the FIRAS case would correspond to temperature bins. And the corresponding ML mapmaking equation would then be:
+\begin{equation}
+	\hat m = \left(\sum_i T_i^T F^T P_i^T N^{-1} P_i F T \right)^{-1} \sum_i T_i^T F^T P^T N^{-1} d_i,
+\end{equation}
+where $F$ here should be cosine transforms.
+
+We spoke about it after and mentioned that it actually might make more sense to add the ICAL (and others) back in when the data is in IFG space, which then even can ignore these temperature bins.
+This would probably mean that we need to do all other low-level IFG processing before entering this "pipeline" too, like removing the transient reponse from the  onboard digital filters, etc.
+
 %-------------------------------------------------------------
 %                                       Table with references 
 %-------------------------------------------------------------
