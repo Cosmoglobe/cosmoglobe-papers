@@ -8,37 +8,47 @@ import quadcube
 import matplotlib.pyplot as plt
 
 
-template = '/mn/stornext/d16/cmbco/bp/mathew/commander3/wiseDiffuse/diffuse_star_template_DIRBE01_smoothe.fits'
+template = '/mn/stornext/d23/cmbco/dirbe/data/diffuse_star_template_DIRBE01_combined_x2000.fits'
 
-residuals = '/mn/stornext/d5/data/duncanwa/DIRBE/release_tests/v1.01/DR2/goodness/'
+residuals = '/mn/stornext/d5/data/duncanwa/DIRBE/release_tests/DR2_v2/goodness/'
 
 map_in = hp.read_map(template)
 
-map_in *= 2000
+#map_in *= 2000
 
-chains_dir = '/mn/stornext/d16/cmbco/cg/dirbe/DR2_v1.00/'
+chains_dir = '/mn/stornext/d23/cmbco/dirbe/DR2_v2.00/'
 
-chains = ['chains_v1.00_c01', 'chains_v1.00_c02', 'chains_v1.00_c03', 'chains_v1.00_c04','chains_v1.00_c05','chains_v1.00_c06']
+chains = ['chains_prod4_c1', 'chains_prod4_c2']#, 'chains_v1.00_c03', 'chains_v1.00_c04','chains_v1.00_c05','chains_v1.00_c06']
 
 burn_in = 6
-num_samps = 16
+num_samps = 206
 
 count = 0
-scale = 0
+scale = [0*10]
 
 for chain in chains:
     cf = h5py.File(chains_dir + chain + '/chain_c0001.h5')
     for samp in range(burn_in, num_samps, 2):
         count +=1
-        scale += cf['/' + str(samp).zfill(6) + '/stars2/x_scale'][()]
+        scale += cf['/' + str(samp).zfill(6) + '/stars_diff/SED'][()][:,2]
         
 scale = scale/count
 
-map_in *= scale
+print(np.flip(scale))
 
-cg.plot(map_in, cmap='Oranges', unit='MJy/sr', min=0, max=2, rlabel='DIRBE 01', llabel='S_{diffuse}')
+map_in *= scale[9]
 
-plt.savefig('diffuse_stars.pdf')
+print(max(map_in))
+
+cg.plot(map_in, cmap='Oranges', unit='MJy/sr', min=1, max=10000, rlabel='DIRBE 01', llabel='S_{diffuse}', norm='log')
+
+plt.savefig('diffuse_stars_log.pdf', bbox_inches='tight')
+
+cg.plot(map_in, cmap='Oranges', unit='MJy/sr', min=1, max=7, rlabel='DIRBE 01', llabel='S_{diffuse}')
+
+plt.savefig('diffuse_stars.pdf', bbox_inches='tight')
+
+
 
 #4096*pix9 + 85*16 + 5
 
@@ -69,18 +79,16 @@ cg.plot(binned_map, cmap='Oranges', unit='MJy/sr', min=0, max=2, rlabel='DIRBE 0
 
 diff = map_128 - binned_map
 
-plt.savefig('dirbe_template.pdf')
+plt.savefig('dirbe_template.pdf', bbox_inches='tight')
 plt.figure()
 
 cg.plot(diff, cmap='Oranges', unit='MJy/sr', min=-1, max=1, rlabel='DIRBE 01', llabel='S_{diffuse} - S_{fsm}')
 
-plt.savefig('diffuse_diff.pdf')
+plt.savefig('diffuse_diff.pdf', bbox_inches='tight')
 
 plt.figure()
 
-res1a = hp.read_map(residuals + 'CG_res_01a_I_n512_0arcmin_DR2.fits')
-res1b = hp.read_map(residuals + 'CG_res_01b_I_n512_0arcmin_DR2.fits')
+res1 = hp.read_map(residuals + 'CG_res_01_I_n512_0arcmin_DR2_v2.fits')
 
-avgres = (res1a + res1b)/2
-cg.plot(avgres, unit='MJy/sr', min=-0.1, max=0.1, rlabel='DIRBE 01', llabel='Res')
-plt.savefig('band01_res.pdf')
+cg.plot(res1, unit='MJy/sr', min=-0.1, max=0.1, rlabel='DIRBE 01', llabel='Res')
+plt.savefig('band01_res.pdf', bbox_inches='tight')
