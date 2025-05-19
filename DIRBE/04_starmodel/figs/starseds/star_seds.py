@@ -64,7 +64,7 @@ for i, band in enumerate(dirbe_bands):
 
     bin_data = np.append(bin_data1, bin_data2)
 
-    bin_data[bin_data < 0] = np.nan
+    bin_data = bin_data[bin_data > 0]
 
     print(np.shape(bin_data), bin_data[0], bin_data[3000])
 
