@@ -416,7 +416,7 @@ I also tried simply taking the hermitian conjugate of the DFT matrix instead of 
 
 When looking at each individual interferogram (and therefore only looking at one pixel), there is a fairly simple matrix formulation of the maximum likelihood mapmaking equation, which which relates the spatial distance in the instrument $x$ with sky frequency $\nu$ and reads
 \begin{equation}
-	(F^T_{\nu; x} N^{-1}_{x;x} F_{x;\nu}) m_\nu = P^T_{\nu; x} N^{-1}_{x;x} d_x,
+	(F^T_{\nu; x} N^{-1}_{x;x} F_{x;\nu}) m_\nu = F^T_{\nu; x} N^{-1}_{x;x} d_x,
 \end{equation}
 where ; in the index separates the two dimensions of the matrix.
 
@@ -444,6 +444,36 @@ where $F$ here should be cosine transforms.
 
 We spoke about it after and mentioned that it actually might make more sense to add the ICAL (and others) back in when the data is in IFG space, which then even can ignore these temperature bins.
 This would probably mean that we need to do all other low-level IFG processing before entering this "pipeline" too, like removing the transient reponse from the  onboard digital filters, etc.
+
+\subsection{Mapmaking without taking into account frequency correlations}
+
+For the sake of starting with something simple, we will assume that we have white noise and no frequency correlations (which is not true, the current noise estimate (without taking into account frequency correlations) for FIRAS is shown in Figure \ref{fig:noise-estimation}, which seems to be white + blue noise).
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}{.45\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{Figures/cov.png}
+	  \caption{Noise covariance matrix not taking into account frequency correlations (size is 512 x 512). In order to subtract the signal to estimate this, I simply subtracted one IFG from the next and so on.}
+	  \label{fig:cov-matrix}
+	\end{subfigure}
+	\begin{subfigure}{.45\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{Figures/psd.png}
+	  \caption{Noise PSD not taking into account frequency correlations (Fourier transform was made along NIFG). In order to subtract the signal to estimate this, I simply subtracted one IFG from the next and so on.}
+	  \label{fig:psd}
+	\end{subfigure}
+	\caption{Noise estimations without taking into account frequency correlations.}
+	\label{fig:noise-estimation}
+\end{figure}
+
+I now believe that there is no difference in where we place the (let's call it) space distance Fourier transform $F_x$ in relation to the pointing matrix in our data model, if we are considering a stop and stare approach (which we are for now), because it is the same to first bin and then take the Fourier transform or vice-versa. Taking this into account, the most efficient way to program is taking the Fourier transform of the following after binning:
+
+\begin{equation}
+	\hat m_p = \frac{\sum_{i \in p}\frac{d_i}{\sigma_i^2}}{\sum_{i \in p}\frac{1}{\sigma_i^2}}.
+\end{equation}
+
+For now we are also assuming an instrument that is not differential, i.e. there is no sutraction of an internal calibration because, even though FIRAS is differential, a general FTS does not need to be. In order to take this into account, the two options are to either consider a completely different equation and Fourier transform as the first step and then subtract in sky frequency space or to leave it as is and subtract in interferogram space.
 
 %-------------------------------------------------------------
 %                                       Table with references 
