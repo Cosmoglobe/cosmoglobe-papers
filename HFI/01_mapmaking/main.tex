@@ -1,0 +1,277 @@
+%                                                                 aa.dem
+% AA vers. 9.1, LaTeX class for Astronomy & Astrophysics
+% demonstration file
+%                                                       (c) EDP Sciences
+%-----------------------------------------------------------------------
+%
+% \documentclass[referee]{aa} % for a referee version
+%\documentclass[onecolumn]{aa} % for a paper on 1 column  
+%\documentclass[longauth]{aa} % for the long lists of affiliations 
+%\documentclass[letter]{aa} % for the letters 
+%\documentclass[bibyear]{aa} % if the references are not structured 
+%                              according to the author-year natbib style
+
+%
+
+\documentclass{aa}  
+
+%
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{natbib}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{txfonts}
+\usepackage{xcolor}
+
+\usepackage{blindtext}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage[options]{hyperref}
+% To add links in your PDF file, use the package "hyperref"
+% with options according to your LaTeX or PDFLaTeX drivers.
+\usepackage{float}
+%\usepackage{stfloats}
+\usepackage{dblfloatfix}
+\usepackage{afterpage}
+\usepackage{ifthen}
+\usepackage[morefloats=12]{morefloats}
+
+\usepackage{placeins}
+\usepackage{multicol}
+\usepackage[export]{adjustbox}\usepackage[breaklinks,colorlinks,citecolor=blue]{hyperref}
+\bibpunct{(}{)}{;}{a}{}{,}
+\usepackage[switch]{lineno}
+\definecolor{linkcolor}{rgb}{0.6,0,0}
+\definecolor{citecolor}{rgb}{0,0,0.75}
+\definecolor{urlcolor}{rgb}{0.12,0.46,0.7}
+%\usepackage[breaklinks, colorlinks, urlcolor=urlcolor,linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
+\hypersetup{linktocpage}
+\usepackage{bold-extra}
+\usepackage{tabularx, booktabs}
+
+\input{Planck}
+
+% Custom definitions
+\newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
+\def\Cosmoglobe{\textsc{Cosmoglobe}}
+\def\Planck{\textit{Planck}}
+\def\WMAP{\textit{WMAP}}
+
+
+\begin{document} 
+
+
+   \title{N+2 mapmaking for polarized CMB experiments in the presence of emission lines}
+
+   \input{authors.tex}
+
+   %\institute{Institute of Theoretical Astrophysics, University of Oslo, Blindern, Oslo, Norway}
+  
+   % Shortened title, author list for top of page 
+   \titlerunning{N+2 mapmaking}
+   \authorrunning{Galloway et al.}
+
+   \date{\today} 
+   
+   \abstract{N+2 mapmaking is a novel algorithmic approach to constructing maps in both intensity and polarization for CMB data. By }
+   
+   \maketitle
+%\setcounter{tocdepth}{2}
+%\tableofcontents
+   
+% INTRODUCTION
+%-------------------------------------------------------------------
+\section{Introduction}
+
+The problem of bandpass mismatch is important to consider when combining multiple Cosmic Microwave Background (CMB) detectors into the same map. Small differences in bandpass can result in major disagreements about signal amplitudes, particularly in regions with sharp spectral features like CO-emission lines or with steep spectral indexes. These disagreements can in turn lead to temperature-to-polarization leakage when the differences in temperature are attributed to polarized signal instead of to bandpass differences by the mapmaking algorithm. 
+
+Multiple approaches have been proposed to mitigate this issue. The most obvious is to bin each map independently, however this is impossible for cases with high signal-to-noise in intensity, but much higher polarization noise, as is the case for the Planck instrument. Making independent polarizations maps results in maps with poor polarization angle coverage and bad cross-linking, so that the individual maps are not usable on their own, requiring combination after the fact. Other approaches correspond to adjusting the detector bandpasses until they agree with one another, and then creating the joint maps assuming this unified bandpass model. 
+
+In this paper, we present a novel method of mapmaking for Planck-like cases, using the LFI 30 GHz channel as an example dataset. The approach, which we call N+2 mapmaking, involves expanding the pointing matrix and the data vector in the mapmaking equation to produce single-detector intensity maps while simultaneously producing combined polarization maps for the entire frequency channel. This allows for the exact temperature bandpass to be used, while at the same time combining the polarization data to maximize the signal-to-noise ratio.
+
+\section{Mathematical Description}
+
+The mapmaking problem is often expressed in the literature as \citep{de_Gasperis_2005}
+
+\begin{equation}
+D_t = A_{t,p}S_p + n
+\end{equation}
+
+With $D_t$ being the combined detector timestreams, $A$ the pointing matrix, $S$ the signal vector and $n$ the noise timestreams. In the case of n+2 mapmaking, we can write $D_t$ as 
+
+\begin{equation}
+D_t = \begin{pmatrix}
+D_t^1\\ D_t^2\\ \vdots \\ D_t^k\\
+\end{pmatrix},
+\end{equation}
+
+as usual. However, the sky signal the $S$ in our model is given by 
+
+\begin{equation}
+S_p = \begin{pmatrix}
+I_{1,p}\\
+I_{2,p}\\
+\vdots\\
+I_{n,p}\\
+Q_p\\
+U_p\\
+\end{pmatrix},
+\end{equation}
+
+which differs from the standard approach by splitting the temperature maps per detector, as desired. We must then define the generalized pointing matrix $A$, so that it maps the correct detector to the correct temperature map.
+
+\begin{equation}
+A_{t,p} = \frac{1}{2}\begin{pmatrix}
+A^1_{t,p} & 0 & \cdots & 0 & cos2\phi_t A^1_{t,p} & sin2\phi_t A^1_{t,p} \\
+0 & A^2_{t,p} & \cdots & 0 & cos2\phi_t A^2_{t,p} & sin2\phi_t A^2_{t,p} \\
+\vdots & \vdots & \ddots & \vdots & \vdots & \vdots \\
+0 & 0 & \cdots & A^k_{t,p} & cos2\phi_t A^k_{t,p} & sin2\phi_t A^k_{t,p} \\
+\end{pmatrix}
+\end{equation}
+
+The standard GLS solution to the mapmaking equation is given by
+
+\begin{equation}
+\tilde{S}_p = (A^t N^{-1}A)^{-1} A^tN^{-1}D.
+\end{equation}
+
+During the mapmaking process, we must accumulate the quantity $A^tN^{-1}A$. Assuming a diagonal noise matrix given by
+
+\begin{equation}
+N = \begin{pmatrix}
+\sigma^2_1 & 0 & \cdots & 0 \\
+0 & \sigma^2_2 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \sigma^2_k \\
+\end{pmatrix}
+\end{equation}
+
+then this quantity expands to
+
+\begin{equation*}
+\begin{tiny}
+\begin{pmatrix}
+(\frac{A^1_{t,p}}{\sigma_1})^2 & 0 & \cdots &
+(\frac{A^1_{t,p}}{\sigma_1})^2 cos2\phi_t & (\frac{A^1_{t,p}}{\sigma_1})^2 sin2\phi_t \\
+
+0 & (\frac{A^2_{t,p}}{\sigma_2})^2 & \cdots &
+(\frac{A^2_{t,p}}{\sigma_2})^2 cos2\phi_t & (\frac{A^2_{t,p}}{\sigma_2})^2 sin2\phi_t \\
+
+\vdots & \vdots & \ddots & \vdots & \vdots \\
+
+(\frac{A^1_{t,p}}{\sigma_1})^2 cos2\phi_t & (\frac{A^2_{t,p}}{\sigma_2})^2 cos2\phi_t & \cdots & 
+\sum_{i} (\frac{A^i_{t,p} cos 2\phi_t}{\sigma_i})^2 & \sum_{i} (\frac{A^i_{t,p}}{\sigma_i})^2 sin2\phi_t cos2\phi_t \\
+
+(\frac{A^1_{t,p}}{\sigma_1})^2 sin2\phi_t & (\frac{A^2_{t,p}}{\sigma_2})^2 sin2\phi_t & \cdots &
+\sum_{i} (\frac{A^i_{t,p}}{\sigma_i})^2 sin2\phi_t cos2\phi_t & \sum_{i} (\frac{A^i_{t,p} sin 2\phi_t}{\sigma_i})^2
+\\
+
+\end{pmatrix}
+\end{tiny}
+\end{equation*}
+
+%Traditional polarized mapmaking for CMB experiments uses a matrix that looks like this (for a given timestep omitting all other columns):
+
+%\begin{equation}
+%M = \begin{pmatrix} 
+%1          & cos(2\phi) & sin(2\phi)\\
+%cos(2\phi) & cos^2(2\phi) & sin(2\phi) cos(2\phi) \\
+%sin(2\phi) & sin(2\phi) cos(2\phi) & sin^2(2\phi) \\ 
+%  \end{pmatrix}
+%\end{equation}
+
+%For n+2 mapmaking, we can generalize it to look like this
+
+%\begin{equation}
+%M = \begin{pmatrix} 
+%\delta_d & 0 & \cdots  & \delta_d cos(2\phi) & \delta_d sin(2\phi)\\
+%0 & \delta_d & \cdots  & \delta_d cos(2\phi) & \delta_d sin(2\phi)\\
+%\vdots & \vdots & \ddots & \vdots & \vdots \\
+%\delta_d cos(2\phi) & \delta_d cos(2\phi) & \cdots  & cos^2(2\phi) & sin(2\phi) cos(2\phi) \\
+%\delta_d sin(2\phi) & \delta_d sin(2\phi) & \cdots & sin(2\phi) cos(2\phi) & sin^2(2\phi) \\ 
+%  \end{pmatrix}
+%\end{equation}
+
+%where the delta function $\delta_d$ indicates which detector of your n detectors this particular sample belongs to.
+
+%We also must define the map vector, which for n detectors looks like
+
+\section{Application to Planck LFI}
+
+To demonstrate the effectiveness of this algorithm, we have applied it to the Planck LFI 30 GHz data, as processed in the commander3 pipeline by the BeyondPlanck and Cosmoglobe collaborations \citep{BP01, watts2023_dr1}. The raw TOD data has been processed as in those previous works, and the signal+white noise only data is fed to the n+2 mapmaker, instead of the full-frequency binned mapmaker that was presented in \citet{BP10}. The n+2 mapmaker produces four temperature maps for the four LFI 30 GHz detectors (27M, 27S, 28M, 28S), as well as combined Q and U maps for the full 30 GHz frequency channel. These maps can be seen in Figure \ref{fig:maps}.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.49\textwidth]{figs/27M_map.png}
+  \includegraphics[width=0.49\textwidth]{figs/27S_map.png}\\
+  \includegraphics[width=0.49\textwidth]{figs/28M_map.png}
+  \includegraphics[width=0.49\textwidth]{figs/28S_map.png}\\
+  %\includegraphics[width=0.5\columnwidth]{figs/cbar_temp.pdf}\\
+  \includegraphics[width=0.49\textwidth]{figs/Q_map.png}
+  \includegraphics[width=0.49\textwidth]{figs/U_map.png}\\
+  %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
+  \caption{Temperature and polarization maps of the LFI 30 GHz data produced using n+2 mapmaking. The top four panels contain the temperature maps, and the bottom row contains the combined Q and U maps.}
+  \label{fig:maps}
+\end{figure*}
+
+\section{Bandpass correction}
+
+Figure \ref{fig:bp_diffs} shows the 6 possible difference maps between the four temperature maps, smoothed to one degree to show their structure.
+
+\begin{figure*}
+\hspace{0.8in} 27S \hspace{2in} 28M \hspace{2in} 28S\\
+  \centering
+  27M \includegraphics[width=0.31\textwidth]{figs/tod_27M_minus_27S_map_c0001_k000001_1deg.png}
+  \includegraphics[width=0.31\textwidth]{figs/tod_27M_minus_28M_map_c0001_k000001_1deg.png}
+  \includegraphics[width=0.31\textwidth]{figs/tod_27M_minus_28S_map_c0001_k000001_1deg.png}\\
+  \hspace{2.3in}
+  27S \includegraphics[width=0.31\textwidth]{figs/tod_27S_minus_28M_map_c0001_k000001_1deg.png}
+    \includegraphics[width=0.31\textwidth]{figs/tod_27S_minus_28S_map_c0001_k000001_1deg.png}\\
+     \hspace{4.6in}
+    28M \includegraphics[width=0.31\textwidth]{figs/tod_28M_minus_28S_map_c0001_k000001_1deg.png} \\
+  %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
+  \caption{All 6 possible difference maps between the 30 Ghz detectors. }
+  \label{fig:bp_diffs}
+\end{figure*}
+
+\begin{equation}
+    \begin{aligned}
+        d &= \textcolor{red}{U_{\text{ADC}} M_{\text{mod}} M_{\text{nlbol}}} \Bigg( \textcolor{red}{n_{4K} + n_{\text{bias}} + n_{\text{jump}} + n_{\text{dark}}} + n_{\text{corr}} + n_{\text{wn}} + \\
+        &\quad \textcolor{red}{M_{\text{cross}}} \left[ G \textcolor{red}T P B \left\{ \int \tau(\nu; \Delta_{\text{bp}}) \big\{ s_{\text{sky}} + \textcolor{red}{s_{\text{zodi}}} + s_{\text{fsl}} + s_{\text{leak}} \big\} \, d\nu + s_{\text{orb}} \right\} + \textcolor{red}{n_{\text{CR}} + n_{\text{cross}}} \right] \Bigg)
+    \end{aligned}
+\end{equation}
+
+\section{Conclusions and Future Plans}
+
+
+\begin{acknowledgements}
+ The current work has received funding from the European
+  Union’s Horizon 2020 research and innovation programme under grant
+  agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
+  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{healpix} package.
+  We acknowledge the use of the Legacy Archive for Microwave Background Data
+  Analysis (LAMBDA), part of the High Energy Astrophysics Science Archive Center
+  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science Division at
+  the NASA Goddard Space Flight Center.  
+  
+   This publication makes use of data products from the Wide-field Infrared Survey Explorer, which is a joint project of the University of California, Los Angeles, and the Jet Propulsion Laboratory/California Institute of Technology, and NEOWISE, which is a project of the Jet Propulsion Laboratory/California Institute of Technology. WISE and NEOWISE are funded by the National Aeronautics and Space Administration.
+   
+   This work has made use of data from the European Space Agency (ESA) mission
+{\it Gaia} (\url{https://www.cosmos.esa.int/gaia}), processed by the {\it Gaia}
+Data Processing and Analysis Consortium (DPAC,
+\url{https://www.cosmos.esa.int/web/gaia/dpac/consortium}). Funding for the DPAC
+has been provided by national institutions, in particular the institutions
+participating in the {\it Gaia} Multilateral Agreement.
+\end{acknowledgements}
+
+
+%-------------------------------------------------------------
+%                                       Table with references 
+%-------------------------------------------------------------
+%
+
+\bibliographystyle{aa}
+\bibliography{references, ../../common/CG_bibliography}
+\end{document}
+%%%% End of aa.dem
