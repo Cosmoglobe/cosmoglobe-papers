@@ -475,6 +475,27 @@ I now believe that there is no difference in where we place the (let's call it) 
 
 For now we are also assuming an instrument that is not differential, i.e. there is no sutraction of an internal calibration because, even though FIRAS is differential, a general FTS does not need to be. In order to take this into account, the two options are to either consider a completely different equation and Fourier transform as the first step and then subtract in sky frequency space or to leave it as is and subtract in interferogram space.
 
+\subsection{Dealing with beam movement while taking interferograms}
+
+In FIRAS, and likely for any FTS, the instrument is still moving while taking interferograms (i.e. it does not stop and stare at a single pixel while it is taking one interferogram). In particular, FIRAS averages a number of interferograms onboard before sending them down. For example, for a short scan, the instrument takes one full interferogram, the MTM flys back, another interferogram is taken, the MTM flys back again, and so on, until 16 full interferograms are taken, with a full cycle, for example while taking data in the slow mode (0.8 cm/s velocity of the MTM), taking 55.36 seconds in total. As such, 16 onboard interferograms correspond to 1 interferogram in our data ("telemetered" interferograms), when taking data in the short mode. Timing info is given in \url{https://lambda.gsfc.nasa.gov/data/cobe/firas/ancil/FIRAS_FEX_MTMSWEEP.TXT}.
+
+As such, we want to understand, for each telemetered interferogram and their latitude and longitude coordinates, how many and which pixels they correspond to, and how much data is taken corresponding to that pixel. For example, if one telemetered interferogram was taken equally over two pixels, the part of the pointing matrix corresponding to this goes from
+\begin{equation}
+	P = \begin{pmatrix}
+		0 & 1 \\
+		0 & 0
+	\end{pmatrix}
+\end{equation}
+to
+\begin{equation}
+	P = \begin{pmatrix}
+		0.5 & 0.5 \\
+		0 & 0
+	\end{pmatrix}.
+\end{equation}
+
+We also know that the pointing solution for each interferogram is given in the middle of taking each telemetered interferogram. (Section 4.2 of the explanatory supplement) The FIRAS line of sight traces a path along a line of approximately constant ecliptic longitude. The beam is of 7 degrees. The beam moves at 3.5 degrees per minute. 
+
 %-------------------------------------------------------------
 %                                       Table with references 
 %-------------------------------------------------------------
