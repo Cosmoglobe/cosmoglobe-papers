@@ -53,6 +53,62 @@
 
 \input{Planck}
 
+\newcommand{\phm}{\phantom{-}}
+\newcommand{\dv}[0]{\vec{d}}
+\renewcommand{\t}[0]{\vec{t}}
+\newcommand{\A}[0]{\tens{A}}
+\newcommand{\B}[0]{\mathrm{B}}
+\newcommand{\Y}[0]{\tens{Y}}
+\newcommand{\n}[0]{\vec{n}}
+\newcommand{\red}[0]{\color{red}}
+\newcommand{\green}[0]{\color{green}}
+\newcommand{\s}[0]{\vec{s}}
+\renewcommand{\a}[0]{\vec{a}}
+\newcommand{\m}[0]{\vec{m}}
+\newcommand{\bv}[0]{\vec{b}}
+\newcommand{\f}[0]{\vec{f}}
+\newcommand{\F}[0]{\tens{F}}
+\newcommand{\T}[0]{\tens{T}}
+\newcommand{\Cp}[0]{\tens{C}}
+\renewcommand{\L}[0]{\tens{L}}
+\newcommand{\g}[0]{\vec{g}}
+\newcommand{\N}[0]{\tens{N}}
+\newcommand{\M}[0]{\tens{M}}
+\newcommand{\iN}[0]{\tens{N}^{-1}}
+\newcommand{\iM}[0]{\tens{M}^{-1}}
+\newcommand{\w}[0]{\vec{w}}
+\renewcommand{\S}[0]{\tens{S}}
+\renewcommand{\r}[0]{\vec{r}}
+\renewcommand{\u}[0]{\vec{u}}
+\newcommand{\q}[0]{\vec{q}}
+\renewcommand{\v}[0]{\vec{v}}
+\renewcommand{\P}[0]{\tens{P}}
+\newcommand{\dt}[0]{d_t}
+\newcommand{\di}[0]{d_i}
+\newcommand{\nt}[0]{n_t}
+\newcommand{\st}[0]{s_t}
+\newcommand{\mt}[0]{m_t}
+\newcommand{\ft}[0]{f_t}
+\newcommand{\Te}[0]{T_{\rm e}}
+\newcommand{\EM}[0]{\rm EM}
+\newcommand{\hi}{\ensuremath{\mathsc {Hi}}}
+\newcommand{\bpbold}{\bfseries{\scshape{BeyondPlanck}}}
+\newcommand{\BP}{\textsc{BeyondPlanck}}
+\newcommand{\bp}{\textsc{BeyondPlanck}}
+\newcommand{\cosmoglobe}{\textsc{Cosmoglobe}}
+\newcommand{\Cosmoglobe}{\textsc{Cosmoglobe}}
+\newcommand{\lfi}[0]{LFI}
+\newcommand{\hfi}[0]{HFI}
+\newcommand{\npipe}[0]{\texttt{NPIPE}}
+\newcommand{\K}[0]{\textit K}
+\newcommand{\Ka}[0]{\textit{Ka}}
+\newcommand{\Q}[0]{\textit Q}
+\newcommand{\V}[0]{\textit V}
+\newcommand{\W}[0]{\textit W}
+\newcommand{\e}{\mathrm e}
+\newcommand{\cvar}{\ensuremath{c(\vartheta, \varphi, \psi)}}
+
+
 % Custom definitions
 \newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
 \def\Cosmoglobe{\textsc{Cosmoglobe}}
@@ -79,7 +135,7 @@
 
    \date{\today} 
    
-   \abstract{We introduce $N+2$ mapmaking as a novel algorithmic approach to constructing maps in both intensity and polarization for CMB data. By expanding the dimensionality of the pointing matrix $A$ to include $N$ temperature maps and two Stokes ($Q$ and $U$) parameters, we decouple the temperature and polarization maps, producing per-detector temperature maps while still combining all measurements into joint polarization maps. We test the effectiveness of this approach on \Planck\ Low Frequency Instrument (LFI) 30 GHz data, and find that the Planck scanning strategy is too poorly cross-linked to allow for a robust separation between temperature and polarization. However, when applied to similar simulated data based on the \Planck\ scanning strategy but with an additional rotating half-wave plate, the algorithm performs well. We conclude that $N+2$ mapmaking may serve as a useful technique for fine-tuning the granularity of the temperature map decomposition of a given experiments within the bounds of its scanning strategy, and thereby, for instance, optimize the final solution to minimize bandpass leakage effects and/or maximize line emission sensitivity.}
+   \abstract{We introduce $N+2$ mapmaking as an novel approach to constructing maps in both intensity and polarization for multi-detector CMB data with minimal bandpass leakage. This method is closely related to the ``spurious mapmaking'' algorithm pioneered by the \WMAP\ team, but rather than solving for residual maps for each detector, we expand the dimensionality of the pointing matrix $\A$ to include $N$ individual temperature maps and two Stokes ($Q$ and $U$) parameters, and thereby produce physically meaningful per-detector temperature maps while still combining all measurements into joint polarization maps. We test the effectiveness of this approach on \Planck\ Low Frequency Instrument (LFI) 30 GHz data. Unfortunately, we find that the \Planck\ scanning strategy is too poorly cross-linked to allow for a robust separation between temperature and polarization, and for this case we instead revert to standard depolarized mapmaking. However, when applied to similar simulated data based on the \Planck\ scanning strategy but with an additional rotating half-wave plate, the algorithm performs as expected. We conclude that $N+2$ mapmaking can serve as a useful technique for fine-tuning the granularity of the temperature map decomposition of a given experiments within the bounds of its scanning strategy, and thereby optimize the final solution to minimize bandpass leakage effects and maximize available temperature foreground information.}
    
    \maketitle
 %\setcounter{tocdepth}{2}
@@ -149,55 +205,46 @@ Section~\ref{sec:mapmaking} describes the problem and the mathematics on $N+2$ m
   \label{fig:depolarized}
 \end{figure*}
 
-The mapmaking problem is often expressed in the literature as \citep{de_Gasperis_2005}
-
+The mapmaking problem is often expressed in the literature as \citep[e.g.,][]{de_Gasperis_2005}
 \begin{equation}
-D_t = A_{t,p}S_p + n,
+d_t = \A_{t,p}s_p + n_t,
 \end{equation}
-
-with $t$ being time, $p$ pixel, $D_t$ being the combined detector timestreams, $A$ the pointing matrix, $S$ the signal vector and $n$ the noise timestreams. In the case of N+2 mapmaking, we can write $D_t$ as 
-
+where $t$ and $p$ denote time sample and pixel; $d_t$ is the detector timestream; $\A$ is the pointing matrix; $s$ is the signal vector; and $n$ represents zero-mean instrumental Gaussian noise with covariance $\N$. In the case of $N+2$ mapmaking, we write $d_t$ as 
 \begin{equation}
-D_t = \begin{pmatrix}
-D_t^1\\ D_t^2\\ \vdots \\ D_t^i\\
+d_t = \begin{pmatrix}
+d_t^1\\ d_t^2\\ \vdots \\ d_t^i\\
 \end{pmatrix},
 \end{equation}
-
-as usual, where $i$ indexes detectors. However, the sky signal the $S$ in this new model is given by 
-
+where $i$ indexes detectors, the sky signal for a single pixel, $s_p$, as
 \begin{equation}
-S_p = \begin{pmatrix}
+s_p = \begin{pmatrix}
 I_{1,p}\\
 I_{2,p}\\
 \vdots\\
 I_{i,p}\\
 Q_p\\
 U_p\\
-\end{pmatrix},
+\end{pmatrix}.
 \end{equation}
-
-which differs from the standard approach by splitting the temperature maps per detector, as intended. Our data model for the timestream of a single detector $i$ then becomes
-
+This differs from the standard approach by allowing individual temperature maps per detector. Our data model for the timestream of a single detector $i$ then becomes
 \begin{equation}
 d_{i,p,t} = I_{i,p} + Q_p \cos2\phi_i(t) + U_p \sin2\phi_i(t).
 \label{eq:datamodel}
 \end{equation}
+The $Q$ and $U$ terms are in this model common between all detectors, and thus independent of $i$.
 
-The $Q$ and $U$ terms are common between all detectors in this model, and thus are independent of $i$. We must then define the generalized pointing matrix $A$, so that it maps the correct detector to the correct temperature map.
-
+Based on this model, we generalize the pointing matrix such that it maps the correct detector to the correct temperature map,
 \begin{equation}
-A_{t,p} = \begin{pmatrix}
-1 & 0 & \cdots & 0 & cos2\phi_1 & sin2\phi_1 \\
-0 & 1 & \cdots & 0 & cos2\phi_2 & sin2\phi_2 \\
+\A_{t,p} = \begin{pmatrix}
+1 & 0 & \cdots & 0 & \cos2\phi_1 & \sin2\phi_1 \\
+0 & 1 & \cdots & 0 & \cos2\phi_2 & \sin2\phi_2 \\
 \vdots & \vdots & \ddots & \vdots & \vdots & \vdots \\
-0 & 0 & \cdots & 1 & cos2\phi_i & sin2\phi_i \\
+0 & 0 & \cdots & 1 & \cos2\phi_i & \sin2\phi_i \\
 \end{pmatrix},
 \end{equation}
-
-where, for notational ease, we have dropped the explicit function of time for the polarization angles. Thus we find that $A_{t,p} S_p$ recovers the data model, as desired. The standard Generalized Least Squares (GLS) solution to the mapmaking equation is given by
-
+where, for notational ease, we have dropped the explicit function of time for the polarization angles. The standard Generalized Least Squares (GLS) solution to the mapmaking equation is as usual given by
 \begin{equation}
-\tilde{S}_p = (A^t N^{-1}A)^{-1} A^tN^{-1}D.
+\tilde{s}_p = (\A^t \N^{-1}\A)^{-1} \A^t\N^{-1}d.
 \label{eq:gls}
 \end{equation}
 
@@ -218,44 +265,38 @@ where, for notational ease, we have dropped the explicit function of time for th
 \end{figure*}
 
 
-During the mapmaking process, we must accumulate the quantity $A^tN^{-1}A$. Assuming a diagonal noise matrix $N$ given by
-
+During the mapmaking process, we must accumulate the quantity $\A^t\N^{-1}\A$. Assuming $\N$ to be diagonal and given by
 \begin{equation}
 N = \begin{pmatrix}
 \sigma^2_1 & 0 & \cdots & 0 \\
 0 & \sigma^2_2 & \cdots & 0 \\
 \vdots & \vdots & \ddots & \vdots \\
 0 & 0 & \cdots & \sigma^2_i \\
-\end{pmatrix}
+\end{pmatrix},
 \end{equation}
-
-then, for an individual pixel $p$, this quantity expands to
-
+this quantity expands into
 \begin{equation*}
 \begin{tiny}
 \sum_t
 \begin{pmatrix}
 (\frac{1}{\sigma_1})^2 & 0 & \cdots &
-(\frac{1}{\sigma_1})^2 cos2\phi_1 & (\frac{1}{\sigma_1})^2 sin2\phi_1 \\
+(\frac{1}{\sigma_1})^2 \cos2\phi_1 & (\frac{1}{\sigma_1})^2 \sin2\phi_1 \\
 
 0 & (\frac{1}{\sigma_2})^2 & \cdots &
-(\frac{1}{\sigma_2})^2 cos2\phi_2 & (\frac{1}{\sigma_2})^2 sin2\phi_2 \\
+(\frac{1}{\sigma_2})^2 \cos2\phi_2 & (\frac{1}{\sigma_2})^2 \sin2\phi_2 \\
 
 \vdots & \vdots & \ddots & \vdots & \vdots \\
 
-(\frac{1}{\sigma_1})^2 cos2\phi_1 & (\frac{1}{\sigma_2})^2 cos2\phi_2 & \cdots & 
-\sum_{i} (\frac{cos 2\phi_i}{\sigma_i})^2 & \sum_{i} \frac{sin2\phi_t cos2\phi_i}{\sigma_i^2}  \\
+(\frac{1}{\sigma_1})^2 \cos2\phi_1 & (\frac{1}{\sigma_2})^2 \cos2\phi_2 & \cdots & 
+\sum_{i} (\frac{\cos 2\phi_i}{\sigma_i})^2 & \sum_{i} \frac{\sin2\phi_t \cos2\phi_i}{\sigma_i^2}  \\
 
-(\frac{1}{\sigma_1})^2 sin2\phi_1 & (\frac{1}{\sigma_2})^2 sin2\phi_2 & \cdots &
-\sum_{i} \frac{sin2\phi_i cos2\phi_i}{\sigma_i^2}  & \sum_{i} (\frac{ sin 2\phi_i}{\sigma_i})^2
+(\frac{1}{\sigma_1})^2 \sin2\phi_1 & (\frac{1}{\sigma_2})^2 \sin2\phi_2 & \cdots &
+\sum_{i} \frac{\sin2\phi_i cos2\phi_i}{\sigma_i^2}  & \sum_{i} (\frac{ \sin 2\phi_i}{\sigma_i})^2
 \\
-
 \end{pmatrix}
-\end{tiny}.
+\end{tiny}
 \end{equation*}
-
-Here, the sum over $t$ on the left represents the sum over every observation of a particular pixel $p$. Simultaneously, we can also accumulate the vector $A^tN^{-1} D$ which has the form
-
+for a given pixel, where the sum over $t$ represents the sum over all observation hitting a particular pixel $p$. Simultaneously, we can also accumulate the vector $\A^t\N^{-1}d$ which has the form
 \begin{equation}
 \sum_t
 \begin{pmatrix}
@@ -263,12 +304,11 @@ Here, the sum over $t$ on the left represents the sum over every observation of 
 \frac{d_{2}}{\sigma_2^2}\\
 \vdots\\
 \frac{d_{i}}{\sigma_i^2}\\
-\sum_i \frac{d_{i}}{\sigma_i^2} cos2\phi_i\\
-\sum_i \frac{d_{i}}{\sigma_i^2} sin2\phi_i\\
-\end{pmatrix},
+\sum_i \frac{d_{i}}{\sigma_i^2} \cos2\phi_i\\
+\sum_i \frac{d_{i}}{\sigma_i^2} \sin2\phi_i\\
+\end{pmatrix}.
 \end{equation}
-
-again, summed over all observation for a given pixel. Once these quantities are computed for all observations over the entire mission, it remains to simply invert the first matrix and front multiply the data vector to obtain the sky vector $S$, as described by equation \ref{eq:gls}.
+Once these quantities are computed for all observations over the entire mission, it remains to simply invert the first matrix and front multiply the data vector to obtain the sky vector $\tilde{s}$, as described by Eq.~\ref{eq:gls}.
 
 
 %Traditional polarized mapmaking for CMB experiments uses a matrix that looks like this (for a given timestep omitting all other columns):
