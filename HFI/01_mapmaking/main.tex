@@ -380,7 +380,7 @@ The bottom row of this figure shows the Q and U polarization maps produced from 
 
 The root cause of these polarization issues seen in Fig. \ref{fig:maps} is the poor polarization angle coverage that LFI has, caused by its scan strategy. When the Planck mission was designed, it was highly optimized for temperature mapmaking and gain stability, which resulted in an approach when Planck scanned in great circles in ecliptic coordinates, modulated by a slow cycloidal procession to improve coverage at the ecliptic poles. \citep{planckScan} While this was effective at achieving a fairly uniform depth of coverage across the sky, it had some unfortunately consequences for polarization coverage.
 
-Each Planck detector visits each pixel from the same angle of approach each time, with only a small variation in the polarization angle $\phi$. Without summing the different detectors together this results in a poorly conditioned matrix $A^tN^{-1}A$. This can be seen visually in Fig. \ref{fig:polangles}, where we plot the off-diagonal temperature-polarization cross terms ($(\frac{1}{\sigma_i})^2 cos2\phi_i$ and $(\frac{1}{\sigma_i})^2 sin2\phi_i$) for the four 30GHz detectors as well as for the full combined channel map. 
+Each Planck detector visits each pixel from the same angle of approach each time, with only a small variation in the polarization angle $\phi$. Without summing the different detectors together this results in a poorly conditioned matrix $A^tN^{-1}A$. This can be seen visually in Fig. \ref{fig:polangles}, where we plot the off-diagonal temperature-polarization cross terms ($(\frac{1}{\sigma_i})^2 \cos2\phi_i$ and $(\frac{1}{\sigma_i})^2 \sin2\phi_i$) for the four 30GHz detectors as well as for the full combined channel map. 
 
 For an experiment with theoretically perfect polarization coverage, these maps should be consistent with zero, as the sine and cosine terms will cancel when averaged over the polarization angle $\phi$. The full frequency channel in the bottom row of Fig. \ref{fig:polangles} is almost an order of magnitude less than any of the individual detectors on their own and this discrepancy leads to poor condition number in the $A^t N^{-1}A$ matrix. The standard 3x3 case for a typical pixel has a condition number around 2, whereas the condition number for the N+2 case was on the order of 100. This means that we must unfortunately abandon this mathematically optimal procedure for real Planck data, and proceed with a reduced complexity case that can better handle this polarization coverage issue.
 
@@ -406,13 +406,13 @@ It is still possible, to simultaneously produce individual temperature maps and 
 \begin{equation}
 \begin{pmatrix}
 (\frac{1}{\sigma})^2 &
-(\frac{1}{\sigma})^2 cos2\phi_t & (\frac{1}{\sigma})^2 sin2\phi_t \\
+(\frac{1}{\sigma})^2 \cos2\phi_t & (\frac{1}{\sigma})^2 \sin2\phi_t \\
 
-(\frac{1}{\sigma})^2 cos2\phi_t & 
-(\frac{cos 2\phi_t}{\sigma})^2 & (\frac{1}{\sigma})^2 sin2\phi_t cos2\phi_t \\
+(\frac{1}{\sigma})^2 \cos2\phi_t & 
+(\frac{\cos 2\phi_t}{\sigma})^2 & (\frac{1}{\sigma})^2 \sin2\phi_t \cos2\phi_t \\
 
-(\frac{1}{\sigma})^2 sin2\phi_t & 
-(\frac{1}{\sigma})^2 sin2\phi_t cos2\phi_t &(\frac{ sin 2\phi_t}{\sigma})^2
+(\frac{1}{\sigma})^2 \sin2\phi_t & 
+(\frac{1}{\sigma})^2 \sin2\phi_t \cos2\phi_t &(\frac{ \sin 2\phi_t}{\sigma})^2
 \\
 \end{pmatrix}
 .
