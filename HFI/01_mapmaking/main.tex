@@ -135,7 +135,7 @@
 
    \date{\today} 
    
-   \abstract{We introduce $N+2$ mapmaking as a novel approach to constructing maps in both intensity and polarization for multi-detector CMB data with minimal bandpass leakage. This method is closely related to the ``spurious mapmaking'' algorithm pioneered by the \WMAP\ team, but we solve for physically meaningful temperature maps, rather than for residual maps, for each detector. Explicitly, we expand the dimensionality of the pointing matrix $\A$ to include $N$ individual temperature maps and two Stokes ($Q$ and $U$) parameters, resulting in per-detector temperature maps but common polarization maps. We test the effectiveness of this approach on \Planck\ Low Frequency Instrument (LFI) 30 GHz data. Unfortunately, we find that the \Planck\ scanning strategy is too poorly cross-linked to allow for a robust separation between temperature and polarization, and for this case we instead revert to standard depolarized mapmaking. However, when applied to similar simulated data based on the \Planck\ scanning strategy but with an additional rotating half-wave plate, the algorithm performs as expected. We conclude that $N+2$ mapmaking can serve as a useful technique for fine-tuning the granularity of the temperature map decomposition of a given experiments within the bounds of its scanning strategy, and thereby optimize the final solution to minimize bandpass leakage effects and maximize available temperature foreground information.}
+   \abstract{We introduce $N+2$ mapmaking as an novel approach to constructing maps in both intensity and polarization for multi-detector CMB data with minimal bandpass leakage. This method is closely related to the ``spurious mapmaking'' algorithm pioneered by the \WMAP\ team, but rather than solving for residual maps for each detector, we expand the dimensionality of the pointing matrix $\A$ to include $N$ individual temperature maps and two Stokes ($Q$ and $U$) parameters, and thereby produce physically meaningful per-detector temperature maps while still combining all measurements into joint polarization maps. We test the effectiveness of this approach on \Planck\ Low Frequency Instrument (LFI) 30 GHz data. Unfortunately, we find that the \Planck\ scanning strategy is too poorly cross-linked to allow for a robust separation between temperature and polarization, and for this case we instead revert to standard depolarized mapmaking. However, when applied to similar simulated data based on the \Planck\ scanning strategy but with an additional rotating half-wave plate, the algorithm performs as expected. We conclude that $N+2$ mapmaking can serve as a useful technique for fine-tuning the granularity of the temperature map decomposition of a given experiments within the bounds of its scanning strategy, and thereby optimize the final solution to minimize bandpass leakage effects and maximize available temperature foreground information.}
    
    \maketitle
 %\setcounter{tocdepth}{2}
@@ -184,7 +184,7 @@ Section~\ref{sec:mapmaking} describes the problem and the mathematics of $N+2$ m
   \includegraphics[width=0.47\textwidth]{figs/map_Q_polang_all.pdf}
   \includegraphics[width=0.47\textwidth]{figs/map_U_polang_all.pdf}\\
   %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
-  \caption{Polarization terms from the four 30GHz LFI detectors (rows 1-4) and the combined term used by the traditional binned mapmaker (bottom row). The left column is the Q term $(\frac{1}{\sigma})^2\cos2\phi$, and the right column is the U term, $(\frac{1}{\sigma})^2\sin2\phi$.}
+  \caption{Polarization terms from the four 30GHz LFI detectors (rows 1-4) and the combined term used by the traditional binned mapmaker (bottom row). The left column is the Q term $(\frac{1}{\sigma})^2 cos2\phi$, and the right column is the U term, $(\frac{1}{\sigma})^2 sin2\phi$.}
   \label{fig:polangles}
 \end{figure*}
 
@@ -250,18 +250,16 @@ where, for notational ease, we have dropped the explicit function of time for th
 
 \begin{figure*}
 \begin{tabular}{B C C C}
-& 27S & 28M & 28S\\
-  
+& 27S & 28M & 28S\\  
   27M & \includegraphics[width=0.31\textwidth]{figs/27M_minus_27S_depol.pdf} & 
 \includegraphics[width=0.31\textwidth]{figs/27M_minus_28M_depol.pdf} &
 \includegraphics[width=0.31\textwidth]{figs/27M_minus_28S_depol.pdf}\\
  & \hspace{4.8cm } 27S & \includegraphics[width=0.31\textwidth]{figs/27S_minus_28M_depol.pdf} &
  \includegraphics[width=0.31\textwidth]{figs/27S_minus_28S_depol.pdf}\\
- &     \caption{All 6 possible difference maps between the 30 Ghz detectors. } & \hspace{4.7cm } 28M  & \includegraphics[width=0.31\textwidth]{figs/28M_minus_28S_depol.pdf} \\
+ &     \caption{All 6 possible difference maps between the 30 Ghz detectors. }   \label{fig:bp_diffs} & \hspace{4.7cm } 28M  & \includegraphics[width=0.31\textwidth]{figs/28M_minus_28S_depol.pdf} \\
   %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
   \end{tabular}
 \vspace{-0.75cm}
-      \label{fig:bp_diffs}
 \end{figure*}
 
 
@@ -291,7 +289,7 @@ this quantity expands into
 \sum_{i} (\frac{\cos 2\phi_i}{\sigma_i})^2 & \sum_{i} \frac{\sin2\phi_t \cos2\phi_i}{\sigma_i^2}  \\
 
 (\frac{1}{\sigma_1})^2 \sin2\phi_1 & (\frac{1}{\sigma_2})^2 \sin2\phi_2 & \cdots &
-\sum_{i} \frac{\sin2\phi_i \cos2\phi_i}{\sigma_i^2}  & \sum_{i} (\frac{ \sin 2\phi_i}{\sigma_i})^2
+\sum_{i} \frac{\sin2\phi_i cos2\phi_i}{\sigma_i^2}  & \sum_{i} (\frac{ \sin 2\phi_i}{\sigma_i})^2
 \\
 \end{pmatrix}
 \end{tiny}
@@ -315,9 +313,9 @@ Once these quantities are computed for all observations over the entire mission,
 
 %\begin{equation}
 %M = \begin{pmatrix} 
-%1          &\cos(2\phi) &\sin(2\phi)\\
-%cos(2\phi) &\cos^2(2\phi) &\sin(2\phi)\cos(2\phi) \\
-%sin(2\phi) &\sin(2\phi)\cos(2\phi) &\sin^2(2\phi) \\ 
+%1          & cos(2\phi) & sin(2\phi)\\
+%cos(2\phi) & cos^2(2\phi) & sin(2\phi) cos(2\phi) \\
+%sin(2\phi) & sin(2\phi) cos(2\phi) & sin^2(2\phi) \\ 
 %  \end{pmatrix}
 %\end{equation}
 
@@ -325,11 +323,11 @@ Once these quantities are computed for all observations over the entire mission,
 
 %\begin{equation}
 %M = \begin{pmatrix} 
-%\delta_d & 0 & \cdots  & \delta_d\cos(2\phi) & \delta_d\sin(2\phi)\\
-%0 & \delta_d & \cdots  & \delta_d\cos(2\phi) & \delta_d\sin(2\phi)\\
+%\delta_d & 0 & \cdots  & \delta_d cos(2\phi) & \delta_d sin(2\phi)\\
+%0 & \delta_d & \cdots  & \delta_d cos(2\phi) & \delta_d sin(2\phi)\\
 %\vdots & \vdots & \ddots & \vdots & \vdots \\
-%\delta_d\cos(2\phi) & \delta_d\cos(2\phi) & \cdots  &\cos^2(2\phi) &\sin(2\phi)\cos(2\phi) \\
-%\delta_d\sin(2\phi) & \delta_d\sin(2\phi) & \cdots &\sin(2\phi)\cos(2\phi) &\sin^2(2\phi) \\ 
+%\delta_d cos(2\phi) & \delta_d cos(2\phi) & \cdots  & cos^2(2\phi) & sin(2\phi) cos(2\phi) \\
+%\delta_d sin(2\phi) & \delta_d sin(2\phi) & \cdots & sin(2\phi) cos(2\phi) & sin^2(2\phi) \\ 
 %  \end{pmatrix}
 %\end{equation}
 
@@ -382,7 +380,7 @@ The bottom row of this figure shows the Q and U polarization maps produced from 
 
 The root cause of these polarization issues seen in Fig. \ref{fig:maps} is the poor polarization angle coverage that LFI has, caused by its scan strategy. When the Planck mission was designed, it was highly optimized for temperature mapmaking and gain stability, which resulted in an approach when Planck scanned in great circles in ecliptic coordinates, modulated by a slow cycloidal procession to improve coverage at the ecliptic poles. \citep{planckScan} While this was effective at achieving a fairly uniform depth of coverage across the sky, it had some unfortunately consequences for polarization coverage.
 
-Each Planck detector visits each pixel from the same angle of approach each time, with only a small variation in the polarization angle $\phi$. Without summing the different detectors together this results in a poorly conditioned matrix $A^tN^{-1}A$. This can be seen visually in Fig. \ref{fig:polangles}, where we plot the off-diagonal temperature-polarization cross terms ($(\frac{1}{\sigma_i})^2\cos2\phi_i$ and $(\frac{1}{\sigma_i})^2 \sin2\phi_i$) for the four 30GHz detectors as well as for the full combined channel map. 
+Each Planck detector visits each pixel from the same angle of approach each time, with only a small variation in the polarization angle $\phi$. Without summing the different detectors together this results in a poorly conditioned matrix $A^tN^{-1}A$. This can be seen visually in Fig. \ref{fig:polangles}, where we plot the off-diagonal temperature-polarization cross terms ($(\frac{1}{\sigma_i})^2 cos2\phi_i$ and $(\frac{1}{\sigma_i})^2 sin2\phi_i$) for the four 30GHz detectors as well as for the full combined channel map. 
 
 For an experiment with theoretically perfect polarization coverage, these maps should be consistent with zero, as the sine and cosine terms will cancel when averaged over the polarization angle $\phi$. The full frequency channel in the bottom row of Fig. \ref{fig:polangles} is almost an order of magnitude less than any of the individual detectors on their own and this discrepancy leads to poor condition number in the $A^t N^{-1}A$ matrix. The standard 3x3 case for a typical pixel has a condition number around 2, whereas the condition number for the N+2 case was on the order of 100. This means that we must unfortunately abandon this mathematically optimal procedure for real Planck data, and proceed with a reduced complexity case that can better handle this polarization coverage issue.
 
@@ -408,13 +406,13 @@ It is still possible, to simultaneously produce individual temperature maps and 
 \begin{equation}
 \begin{pmatrix}
 (\frac{1}{\sigma})^2 &
-(\frac{1}{\sigma})^2\cos2\phi_t & (\frac{1}{\sigma})^2\sin2\phi_t \\
+(\frac{1}{\sigma})^2 cos2\phi_t & (\frac{1}{\sigma})^2 sin2\phi_t \\
 
-(\frac{1}{\sigma})^2\cos2\phi_t & 
-(\frac{\cos 2\phi_t}{\sigma})^2 & (\frac{1}{\sigma})^2\sin2\phi_t\cos2\phi_t \\
+(\frac{1}{\sigma})^2 cos2\phi_t & 
+(\frac{cos 2\phi_t}{\sigma})^2 & (\frac{1}{\sigma})^2 sin2\phi_t cos2\phi_t \\
 
-(\frac{1}{\sigma})^2\sin2\phi_t & 
-(\frac{1}{\sigma})^2\sin2\phi_t\cos2\phi_t &(\frac{\sin2\phi_t}{\sigma})^2
+(\frac{1}{\sigma})^2 sin2\phi_t & 
+(\frac{1}{\sigma})^2 sin2\phi_t cos2\phi_t &(\frac{ sin 2\phi_t}{\sigma})^2
 \\
 \end{pmatrix}
 .
@@ -441,7 +439,7 @@ $Q_p$ and $U_p$ are given by the sky vector we solved for with the 3x3 case, and
 
 These maps are shown in fig. \ref{fig:depolarized} for LFI 30GHz, and it is clear that this method produces a better result than that of the previous approach. The polarized maps are identical to those of the 3x3 binned mapmaker, but this approach maintains the additional advantage of producing the individual temperature maps.
 
-Figure \ref{fig:bp_diffs} shows the 6 possible difference maps between these four temperature maps, smoothed to one degree to show their structure. These differences are largest in the galactic plane, where signals amplitudes are highest. We see that the 27M and 27S detectors predict similar skies, as do 28M and S, and the differences between 27 and 28 horns are more pronounced. Overall, the amplitudes are low enough to fall within the expected bounds.
+Figure \ref{fig:bp_diffs} shows the 6 possible difference maps between these four temperature maps, smoothed to one degree to show their structure. These differences are largest in the galactic plane, where signals amplitudes are highest. We see that in this simulation the 28S detector is somewhat of an outlier, which does not match the real data perfectly, but overall, the amplitudes are low, and are easily explained by bandpass differences between detector pairs.
 
 
 \begin{figure*}
@@ -452,11 +450,10 @@ Figure \ref{fig:bp_diffs} shows the 6 possible difference maps between these fou
 \includegraphics[width=0.31\textwidth]{figs/sim_27M_minus_28S.pdf}\\
  & \hspace{4.8cm } 27S & \includegraphics[width=0.31\textwidth]{figs/sim_27S_minus_28M.pdf} &
  \includegraphics[width=0.31\textwidth]{figs/sim_27S_minus_28S.pdf}\\
- & \caption{All 6 possible difference maps between the simulated 30 GHz maps. } &  \hspace{4.7cm }  28M  & \includegraphics[width=0.31\textwidth]{figs/sim_28M_minus_28S.pdf} \\
+ & \caption{All 6 possible difference maps between the simulated 30 GHz maps. } \label{fig:sim_bp_diffs} &  \hspace{4.7cm }  28M  & \includegraphics[width=0.31\textwidth]{figs/sim_28M_minus_28S.pdf} \\
   %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
   \end{tabular}
 \vspace{-0.75cm}
-      \label{fig:bp_diffs}
 \end{figure*}
 
 
