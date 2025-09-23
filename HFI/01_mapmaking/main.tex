@@ -53,6 +53,12 @@
 
 \input{Planck}
 
+\def\commander{\texttt{Commander}}
+\def\commanderone{\texttt{Commander1}}
+\def\commandertwo{\texttt{Commander2}}
+\def\commanderthree{\texttt{Commander3}}
+
+
 \newcommand{\phm}{\phantom{-}}
 \newcommand{\dv}[0]{\vec{d}}
 \renewcommand{\t}[0]{\vec{t}}
@@ -337,7 +343,7 @@ Once these quantities are computed for all observations over the entire mission,
 
 %We also must define the map vector, which for n detectors looks like
 
-\section{Application to Planck LFI}
+\section{Exploratory application to \Planck\ LFI 30\,GHz}
 \label{sec:lfi}
 
 \begin{figure*}
@@ -355,10 +361,9 @@ Once these quantities are computed for all observations over the entire mission,
 \end{figure*}
 
 
-To demonstrate the effectiveness of this algorithm, we have applied it to the Planck LFI 30 GHz data, as analyzed in the commander3 pipeline by the BeyondPlanck and Cosmoglobe collaborations \citep{bp01, watts2023_dr1}. The raw TOD data has been processed as in those previous works, and the signal+white noise only data is fed to the n+2 mapmaker, instead of the full-frequency binned mapmaker that was presented in \citet{BP10}. 
+To understand the behaviour of the new $N+2$ mapmaking algorithm, we start by applying it to a well-known case, namely the \Planck\ LFI 30\,GHz data. In particular, we implement this algorithm within the Bayesian \commanderthree\ \citep{bp03} Gibbs sampling code developed by the \BP\ and \cosmoglobe\ collaborations \citep{bp01, watts2023_dr1}, and the raw TOD data are processed in an identical manner as in those works with respect to calibration, correlated noise etc. Only the signal-plus-white noise residual TOD are fed to the $N+2$ mapmaker, and our new contribution thus replaces the full-frequency binned mapmaker presented by \citet{BP10}. 
 
-As a brief summary of this algorithmic approach, we construct a complete model of the sky and instrument signals, which for LFI is given by:
-
+To briefly summarize this general algorithmic approach, we start by defining a single parametric model for both the sky and instrument, and for LFI this is currently given by
 \begin{equation}
   \begin{split}
     d_{j,t} = g_{j,t}&\tens{P}_{tp,j}\left[\tens{B}^{\mathrm{symm}}_{pp',j}\sum_{c}
@@ -369,14 +374,9 @@ As a brief summary of this algorithmic approach, we construct a complete model o
   \end{split}
   \label{eq:todmodel}
 \end{equation}
+The details of this model are discussed in \citep{bp01}, but we note that the terms directly relevant to mapmaking are the pointing matrix $\tens{P}_{tp,j}$; the sky signal, which is the sum over sky components $\sum_{c} \tens{M}_{cj}(\beta_{p'}, \Delta_{\mathrm{bp}})a^c_{p'}$; and the white noise $n^{\mathrm{w}}_{j,t}$. The rest of the terms (like the sidelobes or correlated noise) are allowed by the Gibbs sampling algorithm \citep{gibbs} to be assuumed fixed during mapmaking, and thus can be treated as deterministic contaminants and removed as a pre-processing step. This approach greatly simplifies the formal mapmaking process, as we do not need to mitigate correlated noise or other systematics during mapmaking, and can simply bin the TOD per pixel to average down the white noise, using the approach detailed in Sect.~\ref{sec:mapmaking}.
 
-The details of the full model are discussed in \citep{bp01}, but the terms relevant to mapmaking are the pointing matrix $\tens{P}_{tp,j}$, the sky signal, which is the sum over sky components $\sum_{c} \tens{M}_{cj}(\beta_{p'}, \Delta_{\mathrm{bp}})a^c_{p'}$ and the white noise $n^{\mathrm{w}}_{j,t}$. The rest of the terms (like the sidelobes or correlated noise) are allowed by the Gibbs sampling algorithm \citep{gibbs} to be fixed, and thus can be treated as contaminants and removed during the time domain processing before the mapmaking occurs. 
-
-This approach greatly simplifies the formal mapmaking process, as we do not need to mitigate correlated noise or other systematics during mapmaking, and can simply bin the TOD per pixel to beat down the white noise, using the approach detailed in section \ref{sec:mapmaking}.
-
-Applying this to the four LFI 30 GHz detectors (27M, 27S, 28M, 28S), the nplus2 mapmaker produces 4 distinct temperature maps, as well as combined Q and U maps for the full 30 GHz frequency channel. These maps can be seen in Figure \ref{fig:maps}.
-
-The bottom row of this figure shows the Q and U polarization maps produced from the traditional IQU mapmaker, which have been extensively verified by multiple implementations of the algorithm over many years \citep{lfi2013,lfi2015,lfi2018}. The failure of our N+2 polarization maps to resemble them is clearly a problem with this method that we investigate in the next section.
+Applying this method to the four LFI 30\,GHz detectors (denoted 27M, 27S, 28M, and 28S, respectively), the $N+2$ mapmaker produces four distinct temperature maps, shown in the first and second rows, in addition to combined $Q$ and $U$ maps, shown in the third row. These maps can be seen in Fig.~\ref{fig:maps}. For comparison, the bottom row shows the corresponding $Q$ and $U$ maps produced from the traditional binned mapmaker, which have been extensively verified by multiple implementations of the algorithm over many years \citep[e.g.,][]{lfi2013,lfi2015,lfi2018}. Comparing the maps in the third and fourth rows in Fig.~\ref{fig:maps}, we see already at a purely visual level that the new $N+2$ mapmaker does not produce maps that are competitive with the traditional approach for the \Planck\ 30\,GHz data, neither in terms of overall noise levels nor temperature-to-polarization leakage, and we investigate the origin of this problem in the next section.
 
 \subsection{Polarization Angle Coverage}
 
