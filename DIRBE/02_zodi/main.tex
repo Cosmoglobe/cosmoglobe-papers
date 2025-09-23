@@ -259,7 +259,7 @@ attempting to measure the Cosmic Infrared Background (CIB;
 \citealp{partridge1967,hauser1998,hauser:2001}).
 
 One of the most widely used ZL models in the field of cosmology is the
-\textit{COBE}-DIRBE model by \citet{Kelsall1998}, often simply
+\textit{COBE}-DIRBE model by \citet{kelsall1998}, often simply
 referred to as the K98 model. This is a parametric model that describes 
 the three-dimensional distribution and radiative 
 properties of IPD using time-dependent measurements from
@@ -329,12 +329,12 @@ the main aspects of this model, aiming to build intuition about the
 underlying parametric model. We also consider a few numerical
 approximations that reduce the overall computational cost. For full
 details of this model, we refer the interested reader \textbf{to
-\citet{Kelsall1998} and \citet{Hong}.}
+\citet{kelsall1998} and \citet{Hong}.}
 
 \subsection{Parameterization of interplanetary dust}
 IPD in the zodiacal cloud is overall smooth and stable 
 \citep{Leinert1989}, and most of the dust may be accounted for by a 
-diffuse cloud-like component \citep{Kelsall1998}. The origin of IPD 
+diffuse cloud-like component \citep{kelsall1998}. The origin of IPD 
 is debris mainly from comets \citep{Liou1995, ipatov, rigley}, asteroids \citep{Dermott1984} and meteoroids \citep{dikarev}, 
 with potential additions from planets \citep{Jorgensen2021}, 
 the Kuiper belt \citep{Mann2009}, and interstellar dust passing 
@@ -460,7 +460,7 @@ wavelength and the DIRBE channel ID, e.g., channel 1 correponds to
     I^\mathrm{Thermal}_{c,\lambda} = E_{c,\lambda} B_\lambda(T),
 \end{equation}
 where $B_\lambda$ is the Planck function at a wavelength $\lambda$
-\citep{Kelsall1998}. A key parameter in this equation is the IPD
+\citep{kelsall1998}. A key parameter in this equation is the IPD
 temperature $T$, which is assumed to fall off with radial distance $r$
 from the Sun as
 \begin{equation}
@@ -526,7 +526,7 @@ in the line-of-sight; and $ds$ is a small distance along the
 line-of-sight $s$ from the observer and towards $p$.
 
 \textbf{Due to the limited signal-to-noise ratios, we follow
-\citet{Kelsall1998} and only fit one overall albedo for each
+\citet{kelsall1998} and only fit one overall albedo for each
 high-frequency channel, as well as only one common emissivity for all
 three asteroidal bands.}
 
@@ -930,7 +930,7 @@ current pipeline is described in Sect.~\ref{sec:nonlin}.
 So far we have silently skipped past one important term in
 Eq.~\eqref{eq:model}, namely $\s_{\mathrm{static}}$, which is
 discussed in detail by \citep{CG02_01}.  As noted by
-\citet{hauser1998} and \citet{Kelsall1998}, the DIRBE TOD contain
+\citet{hauser1998} and \citet{kelsall1998}, the DIRBE TOD contain
 significant excess radiation that is not well described by the
 low-dimensional parametric K98 model. Shortly after these
 observations, \citet{leinert:1998} showed that some of this radiation
@@ -973,7 +973,7 @@ Before describing the practical numerical implementation used for
 sampling from Eq.~\eqref{eq:gibbs_zodi} in this paper, it is worth
 first considering the more important fundamental differences between
 our approach and that adopted by the DIRBE team as described by
-\citet{Kelsall1998}. The first difference worth noting in this respect
+\citet{kelsall1998}. The first difference worth noting in this respect
 is that while our $\chi^2$ statistic is defined directly in terms of
 TOD, the K98 parameter estimation method works with weekly maps. That
 is, the raw data are co-added week-by-week into pixelized maps, and
@@ -1049,7 +1049,7 @@ suppressed in the bottom left panel, and there is by construction no
 way for the differential method to constrain the absolute level ZL
 monopole. On the one hand, such blindness may certainly be considered
 to be an algorithmic strength, as indeed argued by
-\citet{Kelsall1998}, given that one of the main goals of the entire
+\citet{kelsall1998}, given that one of the main goals of the entire
 DIRBE experiment was to precisely measure the CIB monopole spectrum
 \citep{hauser1998}. Nevertheless, the final derived CIB constraints do
 of course still depend directly on reconstructed ZL monopole, whatever
@@ -1101,8 +1101,8 @@ searches along a set of conjugate directions. The only reason for
 choosing this method over, say, Levenberg-Marquardt was one of
 implementational ease; it does not require derivative information.
 
-The algorithm is defined as follows: We start by initializing all free
-ZL parameters at the K98 model, and run one Powell optimization to
+The algorithm is defined as follows: \textbf{we start by initializing all free
+ZL parameters at the values listed in \citet{kelsall1998} and \citet{Hong}}, and run one Powell optimization to
 reach the nearest local posterior maximum. We then iterate through all
 non-ZL Gibbs steps, to obtain a new foreground and instrument model
 given the new ZL model. When returning to the ZL sampler, we add a
@@ -1136,16 +1136,12 @@ samples. Then, once the data and model configuration was considered
 sufficiently mature for production, a longer run with hundreds of
 samples distributed over multiple chains were produced.
 
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
     \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single pre-production Gibbs chain, showning the burn-in phase. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
     \label{fig:powell_chisq_iter}
 \end{figure}
-
-
-
 
 \begin{figure}[t]
     \centering
@@ -1157,8 +1153,8 @@ samples distributed over multiple chains were produced.
 The overall behaviour of this hybrid MCMC+optimization algorithm is
 illustrated in Fig.~\ref{fig:powell_chisq_iter}, which shows the
 $\chi^2$ obtained from the first $10^6$ Powell likelihood evaluations
-in the penultimate analysis run for the 12+25\,$\mu$m ZL sampling
-group; we show the penultimate chain here rather than the final
+in \textbf{a preliminary analysis run} for the 12+25\,$\mu$m ZL sampling
+group; we show \textbf{the preliminary} chain here rather than the final
 production run to illustrate the burn-in phase. Each discrete jump
 corresponds to one new main Gibbs iteration, while the smooth descent
 between two jumps correspond to the Powell search. The dense black
@@ -1235,7 +1231,7 @@ Chain sampler in terms of ergodicity or reversibility. It is therefore
 not guaranteed to converge to the true posterior distribution, even in
 the limit of an infinite number of samples. Rather, this algorithm is
 essentially simply a pragmatic solution that allow the previous strict
-$\chi^2$ optimization algorithm used by \citet{Kelsall1998} to evade
+$\chi^2$ optimization algorithm used by \citet{kelsall1998} to evade
 local posterior maxima, and explore larger regions of parameter space
 without getting trapped. Significant additional algorithm development
 efforts should be invested in establishing efficient methods for this
@@ -1258,7 +1254,7 @@ in the original DIRBE analysis. For full details on the
 preprocessing of the DIRBE CIO we refer to \cite{CG02_01}.
 
 
-As already noted by \citet{Kelsall1998}, a sharp edge may be seen in
+As already noted by \citet{kelsall1998}, a sharp edge may be seen in
 the K98 ZSMA 25\,$\mu$m map at Galactic coordinates
 $(l,b)\sim(190^{\circ},15^{\circ})$. This corresponds to the very end
 of the DIRBE observing period. \citet{CG02_01} studies this effect in
@@ -1327,7 +1323,7 @@ of the $\sim$\,70\,000 brightest of these sources are fitted
 source-by-source within the current \commander\ DR2 Gibbs sampler,
 while the rest are co-added into a single diffuse model.
 
-The third ancillary data set is \GAIA\ DR2\cite{gaia:2018}. We attempt to match each
+The third ancillary data set is \GAIA\ DR2 \citep{gaia:2018}. We attempt to match each
 source in the AllWISE catalog with \GAIA\ DR2, and for those that have a
 positive match as a star in that catalog (which is more than 90\,\%),
 we record the effective temperature, $T_0$, metallicity,
@@ -1361,21 +1357,24 @@ analysis \citep{CG02_01}.
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.985\textwidth]{figs/total_trace_final.pdf}
-    \caption{Trace plots of all geometrical and shape IPD parameters in addition to the IPD temperature at 1 AU $T_0$ and the full-sky averaged ZL intensity traces for six selected DIRBE channels. The different colors indicate six independent Markov chains, and the gray regions indicate burn-in.}
+    \includegraphics[scale=0.75]{figs/traceplot_tot_shape_new.pdf}
+    \caption{\textbf{Trace plots of all geometrical and shape IPD parameters, along with the power-law index of the IPD
+     temperature, the phase function parameters, and the full-sky averaged ZL intensity traces for six selected DIRBE channels. 
+     Different colors indicate two independent Markov chains, and the gray regions indicate burn-in.}}
     \label{fig:trace-ipd}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.985\textwidth]{figs/emissivity_and_albedo_trace.pdf}
-    \caption{Trace plots of the wavelength dependent emissivity and albedo parameters. The different colors indicate six independent Markov chains, and the gray regions indicate burn-in.}
+    \includegraphics[width=0.985\textwidth]{figs/traceplot_tot_wl_new.pdf}
+    \caption{\textbf{Trace plots of the wavelength dependent emissivity and albedo parameters. 
+    Different colors indicate two independent Markov chains, and the gray regions indicate burn-in.}}
     \label{fig:trace-emissivity-albedo}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=1\textwidth]{figs/correlation_matrix.pdf}
+    \includegraphics[scale=0.9]{figs/correlation_matrix_new.pdf}
     \caption{Correlations between a the fitted ZL parameters $\zeta_{\mathrm{z}}$.}
     \label{fig:correlations}
 \end{figure*}
@@ -1386,7 +1385,7 @@ As discussed in Sect.~\ref{sec:algorithm_comparison}, the
 \cosmoglobe\ DR2 parameter estimation algorithm considers the full
 intensity measured by DIRBE when fitting $\zeta_{\mathrm{z}}$, as
 opposed to only considering differences between weekly and
-full-mission maps as \citet{Kelsall1998} did. In order to minimize the
+full-mission maps as \citet{kelsall1998} did. In order to minimize the
 risk of confusion from Galactic thermal dust and starlight emission,
 it is useful to define a confidence mask for each channel that
 identifies region with a high S/N for ZE, and low S/N for Galactic
@@ -1548,7 +1547,7 @@ post-burn-in samples. The resulting values for the shape parameters
 are tabulated in the third column of
 Table~\ref{table:zodi-params-geo}, while the amplitude parameters are
 provided in Table~\ref{table:zodi-params-source}. For comparison, the
-corresponding values from \citet{Kelsall1998} are listed in the second
+corresponding values from \citet{kelsall1998} are listed in the second
 column in each table. The fourth and final column lists the uniform
 priors imposed on each parameter in the DR2 analysis.
 
@@ -1565,44 +1564,41 @@ perfectly compensates for the changes in the number densities.
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_01a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_01b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_01.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_06a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_06b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_06.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_02a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_02b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_02.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_07a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_07b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_07.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_03a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_03b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_03.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_08a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_08b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_08.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_04a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_04b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_04.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_09a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_09b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_09.pdf}\\
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_05a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_05b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_05.pdf}\hspace*{3mm}
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_10a.pdf}%
-    \includegraphics[width=0.22\linewidth]{figs/compare_res/cosmoglobe_res_10b.pdf}%
-    \includegraphics[width=23mm,angle=90]{figs/compare_res/cbar_10.pdf}%
-    \caption{Half-mission data-minus-signal residual maps for each
-      channel. The two columns within each wavelength section
-      correspond to the first (HM1) and second (HM2) half-mission
-      maps, respectively. All bands between 1.25 and 100$\,\mu$m have
-      been smoothed with a $15\arcm$ Gaussian kernel, and the 140 and
-      240\,$\mu$m channels have been smoothed with a $30\arcm$ FWHM
-      kernel. The gray regions represent unobserved pixels in the
-      half-mission splits.}
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_01.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_01.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_01.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_06.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_06.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_06.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_02.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_02.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_02.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_07.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_07.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_07.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_03.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_03.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_03.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_08.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_08.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_08.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_04.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_04.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_04.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_09.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_09.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_09.pdf}\\
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_05.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_05.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_05.pdf}\hspace*{3mm}
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm1_10.pdf}%
+    \includegraphics[width=0.22\linewidth]{figs/residuals_new/res_hm2_10.pdf}%
+    \includegraphics[width=23mm,angle=90]{figs/residuals_new/res_cb_10.pdf}
+    \caption{\textbf{Half-mission data-minus-signal residual maps for each
+    channel. The two columns within each wavelength section
+    correspond to the first (HM1) and second (HM2) half-mission
+    maps, respectively. The gray regions represent unobserved pixels in the
+    half-mission splits.}}
     \label{fig:half-mission-res2}
 \end{figure*}
 
@@ -1610,73 +1606,71 @@ perfectly compensates for the changes in the number densities.
     \centering
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_01.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_01.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_01.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_01.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_01.pdf}%
-    %}
-    \\
-
-
-    %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_02.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_02.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_02.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_02.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_02.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_01.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_01.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_01.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_01.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_01.pdf}%
     %}
     \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_03.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_03.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_03.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_03.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_03.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_02.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_02.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_02.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_02.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_02.pdf}%
+    %}
+    \\
+
+    %\resizebox{\textwidth}{!}{%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_03.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_03.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_03.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_03.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_03.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_04.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_04.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_04.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_04.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_04.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_04.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_04.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_04.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_04.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_04.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_05.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_05.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_05.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_05.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_05.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_05.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_05.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_05.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_05.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_05.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_06.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_06.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_06.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_06.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_06.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_06.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_06.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_06.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_06.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_06.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_07.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_07.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_07.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_07.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_07.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_07.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_07.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_07.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_07.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_07.pdf}%
     %}
       \\
-    \caption{\textit{(Left column):} Mission-averaged frequency maps containing ZL after data selection at our native HEALPix resolution 
-    of $N_\mathrm{side} = 512$. \textit{(Middle column):} DIRBE ZSMA maps
-    at $N_\mathrm{side} = 256$.\textit{(right column):} Our ZL subtracted mission-average 
-    maps, downgraded to $N_\mathrm{side} = 256$. Rows show, from top to 
-    bottom, DIRBE channels from 1.25 to 60$\,\mu$m. 
+    \caption{\textbf{\textit{(Left column):} Mission-averaged frequency maps containing ZL after data 
+    selection. \textit{(Middle column):} DIRBE ZSMA maps.\textit{(right column):} Our ZL subtracted mission-average 
+    maps. All the maps are at our native HEALPix resolution of $N_\mathrm{side} = 512$. Rows show, from top to 
+    bottom, DIRBE channels from 1.25 to 60$\,\mu$m. } 
     }
     \label{fig:dr2-zsma-compare1}
 \end{figure*}
@@ -1684,29 +1678,29 @@ perfectly compensates for the changes in the number densities.
 \begin{figure*}
     \centering
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_08.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_08.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_08.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_08.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_08.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_08.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_08.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_08.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_08.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_08.pdf}%
     %}
     \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_09.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_09.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_09.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_09.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_09.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_09.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_09.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_09.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_09.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_09.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_ma_10.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_tot_10.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/dirbe_zsma_10.pdf}%
-    \includegraphics[height=2.90cm]{figs/compare_zsma/cosmoglobe_zsma_10.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/compare_zsma/cbar_10.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_10.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_10.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_10.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_10.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_10.pdf}%
     %}
       \\
 
@@ -1714,8 +1708,6 @@ perfectly compensates for the changes in the number densities.
     }    
     \label{fig:dr2-zsma-compare2}
 \end{figure*}
-
-
 
 Figure~\ref{fig:mission-averaged-comp-maps} in
 Appendix~\ref{sec:zodi-comps} compares the mission-averaged ZL maps
@@ -1746,7 +1738,7 @@ channels. In these channels, for which the ZL emission is the
 brightest, the K98 and \cosmoglobe\ DR2 models agree to within
 $\lesssim$\,5\,\% over most of the sky. These differences are thus
 similar in magnitude to the relative residuals measured by
-\citet{Kelsall1998}, which were found to be $\sim$\,2\,\% at
+\citet{kelsall1998}, which were found to be $\sim$\,2\,\% at
 12\,$\mu$m.
 
 \subsection{Goodness-of-fit}
@@ -2329,9 +2321,6 @@ Each map represents the effect of changing one ZL model parameter by $\pm 5\%$ w
     mission-averaged ZL maps. Columns list the circum-solar ring and Earth-trailing feature components.}
     \label{fig:atlas2}
 \end{figure*}
-
-
-
 
 \end{document}
 
