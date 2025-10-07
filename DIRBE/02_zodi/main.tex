@@ -201,7 +201,7 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
    \abstract{We present an improved zodiacal light (ZL) model for \textit{COBE}-DIRBE 
    derived through global Bayesian analysis within the \cosmoglobe\ Data Release~2 (DR2) 
    framework. The parametric form of the ZL model is \textbf{inspired by that} introduced by 
-   Kelsall et al. (1998; K98), but the specific best-fit parameter values are re-derived 
+   \citet{kelsall1998}, but the specific best-fit parameter values are re-derived 
    using the combination of DIRBE Calibrated Individual Observations (CIO), \Planck\ HFI 
    sky maps, and WISE and \textit{Gaia} compact object catalogs. Furthermore, the ZL 
    parameters are fitted jointly with astrophysical parameters, such as thermal dust and 
@@ -296,7 +296,7 @@ applicable to infrared measurements.
 One of the most important generalizations required for application of
 \commanderthree\ to the infrared sky is the implementation of an
 accurate ZL model to remove the time-varying ZL. In this paper we therefore implement 
-in \commanderthree support for \textbf{the K98 model combined with the scattering pahse function described 
+in \commanderthree\ support for \textbf{the K98 model combined with the scattering pahse function described 
 by \citet{Hong},} and we apply this to the time-domain DIRBE data. 
 This new code implementation is based on ZodiPy \citep{San2024}, which is an Astropy-affiliated 
 Python package for ZL simulations. As an early application of this framework, \cite{San2022} 
@@ -412,13 +412,14 @@ a blend of the Themis and Koronis, the Eos, and the Io/Maria asteroid families,
 respectively \citep{Reach1997}. Each dust band, indicated by $B_i$, is 
 modeled as
 \begin{align}
-    n_{\mathrm{B}_i}(x,y,z) &= \frac{3 n_{0, \mathrm{B}_i}}{r_{\mathrm{B}_i}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{p}v^{-1}\right] \\
+    n_{\mathrm{B}_i}(x,y,z) &= \frac{3 n_{0, \mathrm{B}_i}}{r_{\mathrm{B}_i}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{p_i}v_i^{-1}\right] \\
     &\times\left\{1-\exp \left[-\left(\frac{r_{\mathrm{B}_i}}{\delta_{r_{\mathrm{B}_i}}}\right)^{20}\right]\right\},
 \label{eq:band}
 \end{align}
 where $n_{0, \mathrm{B}_i}$ is the number density of band $\mathrm{B}_i$ 
 at 3\,AU, $\delta_{r_{\mathrm{B}_i}}$ is the inner radial cut-off, and 
-$p$, $v$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
+$p_i$, $v_i$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
+%p and v are different for each band so I added _i, is that okay?
 
 \subsubsection{Circum-solar ring and Earth-trailing feature}
 \label{sec:ring}
@@ -428,7 +429,7 @@ gravitational effects \citep{Dermott1994}. This component also
 includes an enhancement to the IPD distribution at Earth's wake, known
 as the ``Earth-trailing feature'' (denoted ``TF''). The composite ring component (denoted ``R'') is then modeled as
 \begin{align}
-    n_\mathrm{R}(x, y, z, \theta)&=n_{0, \mathrm{SR}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{SR}}\right)^2}{\sigma_{R,\mathrm{SR}} ^2}-\frac{\left| Z_\mathrm{R} \right|}{\sigma_{Z, \mathrm{SR}}}\right],\\
+    n_\mathrm{R}(x, y, z, \theta)&=n_{0, \mathrm{SR}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{SR}}\right)^2}{\sigma_{R,\mathrm{SR}} ^2}-\frac{\left| Z_\mathrm{R} \right|}{\sigma_{Z, \mathrm{SR}}}\right]\\
    &+ n_{0, \mathrm{TF}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0,
           \mathrm{TF}}\right)^{2}}{\sigma_{R,
           \mathrm{TF}}^{2}}-\frac{\left|Z_\mathrm{F}\right|}{\sigma_{Z,
@@ -467,8 +468,8 @@ from the Sun as
 \begin{equation}
     T(r) = T_0 r^{-\delta},
 \end{equation}
-where $T_0$ is the temperature of IPD at 1\,AU and $\delta$ is a power
-law exponent which is expected to be $\sim 0.5$ for grey dust. In addition to emitting thermally, IPD grains also scatter
+where $T_0$ is the temperature of IPD at 1\,AU and $\delta$ is a power-law 
+exponent which is expected to be $\sim 0.5$ for grey dust. In addition to emitting thermally, IPD grains also scatter
 sunlight in near-infrared wavelengths. The contribution to the total
 signal from scattering reads
 \begin{equation}\label{eq: scat_term}
@@ -513,8 +514,8 @@ The total intensity from a single IPD grain is then
     I^\mathrm{Total}_{c, \lambda} &= I^\mathrm{Scattering}_{c,\lambda} + I^\mathrm{Thermal}_{c,\lambda}\\
     &= A_{c, \lambda} F_\lambda^\odot \Phi + (1 - A_{c, \lambda})E_{c,\lambda} B_\lambda,
 \end{align}}
-where we have additionally taken into account that reflective material have lower thermal emission
-by adding a factor $(1 - A_{c, \lambda})$ to the thermal term.
+where we have also taken into account that reflective material have lower thermal emission
+by introducing a factor $(1 - A_{c, \lambda})$ to the thermal term.
 The total ZL signal may then be evaluated by summing up the intensity
 from all dust grains, which in practice means evaluating a line-of-sight 
 integral for each observation,
@@ -770,7 +771,7 @@ adopt the following model,
 \begin{align}
 	\label{eq:model}
 	\dv &=\G\B\left[\P\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
-          \s_{\mathrm{static}}\right] + \n,\\
+          \s_{\mathrm{static}}\right] + \n\\
         &\equiv \s^{\mathrm{tot}} + \n,
 \end{align}
 where $\dv$ denote observed data; $\G$ denotes an overall calibration
@@ -982,7 +983,7 @@ important motivation for working with weekly maps rather than single
 TOD samples is lower computational requirements, which was more
 important two decades ago than it is today.
 
-A second important difference between the two algorithms --- and this
+A second important difference between the two algorithms -- and this
 is conceptually a far more important one -- is the fact that while our
 method makes active use of an explicit parametric data model for all
 non-ZL components, the K98 algorithm eliminates any contributions from
@@ -1018,7 +1019,7 @@ Figure~\ref{fig:week_vs_full} illustrates this difference. The top
 left panel shows the full intensity signal as analyzed in the
 \cosmoglobe\ algorithm for one single week of 25\,$\mu$m
 observations. The visual imprint is strongly dominated by the ZL
-features as seen in the total instantaneous ZL view in Appendix.~\ref{sec:zodi-comps}, aligned with the Ecliptic
+features as seen in the total instantaneous ZL view in Appendix~\ref{sec:zodi-comps}, aligned with the Ecliptic
 plane. The right panel shows the same after subtracting the
 full-mission mean; the characteristic cloud pattern has now turned
 into differential structures that are difficult to interpret
@@ -1139,14 +1140,22 @@ samples distributed over multiple chains were produced.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
-    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one single pre-production Gibbs chain, showning the burn-in phase. Each discrete jump indicates the start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. The following systematic decline within each main Gibbs iteration indicates the non-linear optimization performed by the Powell algorithm.  The solid dark region corresponds to a large number of highly sub-optimal parameter trials. }
+    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one 
+    single pre-production Gibbs chain, showning the burn-in phase. Each discrete jump indicates the 
+    start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. 
+    The following systematic decline within each main Gibbs iteration indicates the non-linear optimization 
+    performed by the Powell algorithm. The solid dark region corresponds to a large number of highly 
+    sub-optimal parameter trials. }
     \label{fig:powell_chisq_iter}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
-    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$ for the same run as shown in Fig.~\ref{fig:powell_chisq_iter}. Each curve shows the full set of parameter trials within one single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. Redder colors are earlier in the chain.}
+    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$ for the same run shown 
+    in Fig.~\ref{fig:powell_chisq_iter}. Each curve shows the full set of parameter trials within one 
+    single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. 
+    Redder colors are earlier in the chain.}
     \label{fig:powell_T0}
 \end{figure}
 
@@ -1365,7 +1374,7 @@ ancillary datasets. For full details, see
 \begin{figure*}
     \centering
     \includegraphics[scale=0.75]{figs/traceplot_tot_shape_new.pdf}
-    \caption{\textbf{Trace plots of all geometrical and shape IPD parameters, along with the power-law index of the IPD
+    \caption{\textbf{Trace plots of all geometrical and shape IPD parameters, along with the power-law exponent of the IPD
      temperature, the phase function parameters, and the full-sky averaged ZL intensity traces for six selected DIRBE channels. 
      Different colors indicate two independent Markov chains, and the gray regions indicate burn-in.}}
     \label{fig:trace-ipd}
@@ -1428,7 +1437,7 @@ We are now finally ready to present our new ZL model obtained
 by analyzing the data summarized in Sect.~\ref{sect:data} with the
 algorithm outlined in Sect.~\ref{sect:param-estimation}. We have
 produced a total of \textbf{1251} full Gibbs samples, distributed over \textbf{two}
-Markov chain. We remove the first \textbf{100} samples from each chain as
+Markov chains. We remove the first \textbf{100} samples from each chain as
 burn-in, leaving a total of \textbf{1051} samples for final analysis. In total,
 \textbf{256} computing cores were used to produce this sample set, for a
 total cost of about \textbf{96k} CPU-hrs.
@@ -1499,7 +1508,7 @@ parameters of previous trial runs and not the final K98 parameters.}
 \textbf{Looking at the dust bands parameters (uppermost plots in the central column of Fig.~\ref{fig:trace-ipd}), 
 it is worth noting that the number density of dust band 3 
 seems to be reaching a prior. As already pointed out, with the DIRBE data this band is very faint 
-and cannot robustly measured. Therefore, we aim here to constraining an upper limit for it, 
+and cannot robustly measured. Therefore, we aim here to constrain an upper limit for it, 
 rather than attempting to provide a point estimate.}
 
 Regarding the emissivity and albedo parameters shown in
@@ -1530,8 +1539,8 @@ low signal-to-noise ratios that make it difficult to estimate the
 precise values of $\zeta_{\mathrm{z}}$ for these values also make the
 very same values less important as far as cosmological or Galactic
 science is concerned. The ZL emission at these
-wavelengths is simply very faint, and therefore less
-important. In addition, we note that only the sum over all ZL
+wavelengths is simply very faint, and therefore has limited significance. 
+In addition, we note that only the sum over all ZL
 components matters for cosmological analysis, not each individual
 component, and internal degeneracies are therefore of lower overall
 concern.
@@ -1562,7 +1571,7 @@ concern.
 Figure~\ref{fig:correlations} shows the Pearson correlation
 coefficient between pairs of parameters in $\zeta_{\mathrm{z}}$,
 evaluated directly from the post-burn-in Gibbs sample set. This plot
-is highly structured, the structure of the 
+is highly structured, reflecting the structure of the 
 complex ZL likelihood. 
 %Particularly strong are the correlations between the reference temperature, 
 %$T_0$, and the emissivity and albedo parameters, $E_i$ and $A_i$. 
@@ -1590,14 +1599,14 @@ sampling efficiency in a Gibbs sampler.
 
 To estimate the marginal posterior distribution for each ZL parameter
 individually, we compute the mean and standard deviation of all
-post-burn-in samples. The resulting values for the shape parameters
-are tabulated in the third column of
+post-burn-in samples. \textbf{The resulting values for the shape parameters
+are tabulated in the fourth column of
 Table~\ref{table:zodi-params-geo}, the amplitude parameters are
-provided in Table~\ref{table:zodi-params-source}, \textbf{and the phase function parameters 
-can be found in Table~\ref{table:zodi-params-phase}}. For comparison, the
-corresponding values from \citet{kelsall1998} \textbf{and \citet{Hong}} are listed in the second
-column in each table. The fourth and final column lists the uniform
-priors imposed on each parameter in the DR2 analysis.
+provided in Table~\ref{table:zodi-params-source}, and the phase function parameters 
+can be found in Table~\ref{table:zodi-params-phase}. For comparison, the
+corresponding values from \citet{kelsall1998} and \citet{Hong} are listed in the third
+column in each table. The fifth and final column lists the uniform
+priors imposed on each parameter in the DR2 analysis.}
 
 \input{ipd_param_table.tex}
 
@@ -1605,7 +1614,7 @@ priors imposed on each parameter in the DR2 analysis.
   \small
   \centering
   \caption{\textbf{Best-fit phase function parameter estimates and uncertainties in the DR2 analysis,
-    comparing values with the \citet{Hong}.}}
+    comparing values with those listed in \citet{Hong}.}}
  \label{table:zodi-params-phase}
   \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
   \begin{tabular}{l c rCl c}
@@ -1820,8 +1829,8 @@ Figure~\ref{fig:reldiff} shows a similar relative difference, but now
 as a function of position on the sky for the 12 and 25\,$\mu$m
 channels. In these channels, for which the ZL emission is the
 brightest, the K98 and \cosmoglobe\ DR2 models agree to \textbf{within
-$\lesssim$\,15\,\% over most of the sky.} These differences are thus
-similar in magnitude to the relative residuals measured by
+$\lesssim$\,15\,\% over most of the sky. These differences are thus
+higher, but still comparable in magnitude,} to the relative residuals measured by
 \citet{kelsall1998}, which were found to be $\sim$\,2\,\% at
 12\,$\mu$m.
 
@@ -1946,7 +1955,7 @@ expect $\chi^2_{\mathrm{red}}\sim 1$, with a standard deviation given
 by $\sqrt{2/N_{\mathrm{samp}}}\sim0.005$. Clearly, the current model
 is not a perfect match to the observed data, and significant
 deviations are observed. Still, the values are for several channels
-very close to unity, namely \textbf{140, and 240$\,\mu$m}.
+very close to unity, namely \textbf{140 and 240$\,\mu$m}.
 
 The biggest outliers are  the \textbf{12--60$\,\mu$m} channels, which
 have the highest signal-to-noise ratio to ZL emission. In this case,
@@ -2199,9 +2208,10 @@ of the model and help validate how physical our models are. The ZL
 component-wise maps, both the mission-averaged and the instantaneous maps 
 in~\ref{fig:mission-averaged-comp-maps} 
 and~\ref{fig:mission-averaged-inst-maps}, respectively, are compared to 
-the K98 model. The IPD number density visualization for the K98 model, 
-corresponding to Fig.~\ref{fig:ipd-number-density} can be seen in 
-figure~1 and~2 in~\cite{San2022} .
+the K98 model. 
+%The IPD number density visualization for the K98 model, 
+%corresponding to Fig.~\ref{fig:ipd-number-density} can be seen in 
+%figure~1 and~2 in~\cite{San2022}.
 
 
 % \end{minipage}
