@@ -14,7 +14,7 @@
 
 %
 
-\documentclass{article}  
+\documentclass{aa}  
 
 %
 \usepackage{graphicx}
@@ -173,7 +173,7 @@
 
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR3. II. Mapmaking with interferograms}}
+   \title{\bfseries{Mapmaking for Fourier-Transform Spectrometers}}
 
    \input{authors.tex}
 
@@ -199,313 +199,51 @@
 
 % INTRODUCTION
 %-------------------------------------------------------------------
-\section{Introduction}
-%\the\textwidth \the\columnwidth
+\section{Introduction and Motivation}
+\label{sec:intro}
 
-The basic idea is as follows. If you are looking at a smooth emitter with spectrum $S(\nu)$, an interferogram essentially lets you take the Fourier transform.
-\[
-	I(d)=\int_0^\infty S(\nu)\cos(2\pi d\nu)\,\mathrm d\nu
-\]
-where $d$ is the moving mirror position.\footnote{We are assuming here that the internal calibrator on FIRAS has been taken care of already.} This can be recast as a linear operator, $\mathsf F$ (called so because it is the real part of a Fourier transform), and allows us to write
-\[
-	I_d = F_{d\nu}S_\nu.
-\]
-Note that we've implicitly discretized things here, which is of course an approximation.
+\section{Simulations}
 
-When FIRAS observed, it would collect data as it was pointing at a position on the sky; let's call this $p$, which could stand for $p$ixel or $p$osition. What is the spectrum at the point on the sky? Well, if we have a sky model, we can write this as
-\[
-	S_\nu(p)=\sum_c a_{c,p}f_c(\nu\mid\beta_{p})
-\]
-where $c$ indexes all the components we care about; mostly thermal dust, the CMB, and the CIB, and $\beta_p$ is the generalized (potentially) spatially-dependent spectral parameters, $f_c(\nu\mid\beta_p)$ the frequency dependence, and $a_{c,p}$ a component map on the sky. This also can be cast as a series of matrix equations. One way of looking at it is this;
-\[
-	S_{\nu p}=M_{\nu p, c}a_{c,p}
-\]
-where $\mathsf M$ takes us from a component amplitude space to a spectrum space.
+In order to validate our proposed mapmaking algorithms, we first need to create a dataset to serve as our ground truth. To do this, we start by taking the dust component map as given in \cite{planck2014-a12}.
 
-Where we could get tripped up now is that this spectrum itself has a position dependence; this is where we would the pointing matrix $\mathsf P$, where
-\[
-	S_{\nu t}=P_{tp}S_{\nu p}.
-\]
-We are now doing the physicist thing where different objects have the same variable names. We must fix this for clarity's sake later.
+\subsection{Modern Experiment}
 
-Now the fun thing is that FIRAS is moving while the interferogram is being taken. Let's pretend that we don't even want to know what the components are, we just want maps; now $S_{\nu,p}$ is the object we want to recover.
-\[
-	I_d = F_{dt}P_{tp}S_{p\nu}
-\]
-In words, $d$ is the distance of the mirror, $t$ is the time that we observe, $p$ is the position the telescope is looking at.
+\subsection{FIRAS}
 
-Because there is always noise, let us add noise;
-\[
-	I_d =F_{dt}P_{tp}S_{p\nu}+n_t
-\]
+\section{Mapmaking}
 
-There are two different ways to go here. One is, for each $I_d$, we perform the inverse Fourier transform, then do some mapmaking.
-\[
-	I_d\to F^{-1}I_d\to \hat S_{p\nu}=\frac1{N_\mathrm{obs}}\sum F^{-1}I_d
-\]
-There's a bit more to it, but not much. There is of course noise weighting that can be used as well.
+\todo{Derive mapmaking equation or cite.}
 
-Another way to look at this is through the standard mapmaking equation with a twist;
-\[
-	\mathsf I=\mathsf{FPS}+\boldsymbol n
-\]
-Here, given $\mathsf F$, $\mathsf P$, $\mathsf I$, and $\mathsf N=\langle\boldsymbol n^T\boldsymbol n\rangle$, there is a maximum likelihood solution;
-\[
-	[(\mathsf{FP})^T\mathsf N^{-1}\mathsf{FP}]\hat{\mathsf S}
-	=(\mathsf{FP})^T\mathsf N^{-1}\mathsf I
-\]
-Incidentally, $\mathsf S$ looks a bit scary at first because it is a matrix. In practice, we can reshape it so that instead of a $N_p\times N_\nu$ matrix, we can stack columns to obtain one $N_pN_\nu$-length vector.
+\subsection{Binned mapmaker}
 
-In principle, this is it. There are other advantages here as well; some things, like the apodization function and the optical transfer function like to push the signal to zero. Can we avoid this here?
+\todo{Using only the middle pixel. Compare to the original analysis approach. Show both FFT before and after averaging.}
 
-This should roughly reduce to the usual approach, if we pretend that $\mathsf P$ is invertible;
-\begin{align*}
-	\hat{\mathsf S}&=
-	[(\mathsf{FP})^T\mathsf N^{-1}\mathsf{FP}]^{-1}(\mathsf{FP})^T\mathsf N^{-1}\mathsf I
-	\\
-	&\approx (\mathsf{FP})^{-1}\mathsf I
-\end{align*}
-which completely agrees with the idea from before.
+\subsection{Matrix Inversion}
 
-Where this idea can really help is with the averaging; 4--12 IFG's are averaged on board, so the true data model is a bit more complex;
-\[
-	I_d=\sum_{i}(F_{dt_i}P_{t_i p}S_{p\nu}+n_{t_i})\footnote{\textrm{Or averaged; not important right now}}
-\]
-This can create some blurring in the scanning direction, and potentially splitting in regions with high gradients. It is not clear to me yet how this was avoided in the original FIRAS pipeline.
+\subsection{White noise mapmaker}
 
-\subsection{Motivation}
+\subsection{CG mapmaker}
 
-Using a simple binned mapmaker for a traditional CMB experiment is not optimal. However, due to the Fourier nature of an FTS, using a simple binned mapmaker actually biases the results. We show this in Figure \ref{fig:diff-map-binned}, where we can see that the low signal-to-noise regions are not well recovered. Leaving even simple white noise untreated will lead to a noise floor when Fourier transformed.
+\section{Results}
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/difference_map_binned_0544GHz.png}
-	\caption{Difference between the simulated data (without noise) and the output of the binned mapmaker. The binned mapmaker is not able to recover the full signal, which leads to a bias in the output.}
-	\label{fig:diff-map-binned}
-\end{figure}
+\subsection{Binned mapmaker}
 
-\section{Regarding the Fourier transformations}
+\todo{No noise weighting leads to a noise floor when taking the absolute value of the FFT.}
 
-Everything useful about the Fourier transform, the DTF and specifically the real DTF: \href{https://www.dspguide.com/ch8/1.htm}{here}.
+\subsection{Inversion mapmaker}
 
-\subsection{Matrix Inversion Method}
+\subsection{White noise mapmaker}
 
-So we want to start with the simplest case, where we are able to start from
-\begin{equation}
-	d = Pm + n,
-\end{equation}
-and through the maximum likelihood method get to
-\begin{equation}
-	P^T N^{-1}P \hat m = p^T N^{-1}d
-\end{equation}
-and simply invert the left hand side to get
-\begin{equation}
-	\hat m = (P^T N^{-1}P)^{-1}P^T N^{-1}d.
-\end{equation}
+\subsection{CG}
 
-Now, it's important to define $P$, which, for starters, will simply be the DFT matrix, which we will call $W$. Also, let's go even simpler and say that simply
-\begin{equation}
-	m = P^{-1}d.
-\end{equation}
+\subsection{Comparisons}
 
-Now, what is $P^{-1}$? \href{https://www.youtube.com/watch?v=Er-FcErLXrQ}{This guy} explains it pretty well.
+\section{Conclusions}
 
-A Fourier transform is defined as 
-\begin{equation}
-	\tilde x[k] = \sum_{n=0}^{N-1} e^{-j\frac{2\pi kn}{N}} x[n],
-\end{equation}
-which shows that the DFT matrix operator can be writen as
-\begin{equation}
-	W_{kn} = e^{-j\frac{2\pi kn}{N}},
-\end{equation}
-where we $W_{kn}$ is the $k$th element of the $n$th row of $W$. $j$ is of course the imaginary unit (DSP engineers... it was always gonna have to come to them).
+\section{Appendix}
 
-The inverse Fourier transform is defined as
-\begin{equation}
-	x[n]=\frac{1}{N} \sum_{n=0}^{N-1} \tilde x[k] e^{+j\frac{2\pi kn}{N}},
-\end{equation}
-which then similarly defines the inverse DFT matrix as
-\begin{equation}
-	W^{-1}_{nk} = \frac{1}{N} e^{+j\frac{2\pi kn}{N}},
-\end{equation}
-which we can relate to the DFT matrix via matrix operations:
-\begin{align}
-	W^{-1}_{nk} &= \frac{1}{N} (e^{-j\frac{2\pi kn}{N}})^*\\
-	&= \frac{1}{N} (W)^*_{nk}\\
-	&= \frac{1}{N} (W^{*^T})_{kn},
-\end{align}
-which is just the hermitian conjugate, perfect!
+\subsection{DFT matrix}
 
-\subsection{The curse of using Fourier transforms on real-valued input}
-
-This would be perfect and very easy if we were using complex-valued input, where the full $N$ points of the transform are relevant.
-However, our signal is real-valued, and carrying around a copy of the transform is not very useful and only gives way to more calculations.
-One would think that we could build a real DFT matrix (i.e. a matrix operator that is equivalent to the real Fourier transform).
-As such, we need to build a matrix that is $N/2+1$ by $N$, which, of course, is not square, and therefore we lose the nice unitary (up to a normalization factor) properties of the DFT matrix.
-Still, we can try to work it out on the same principle that the inverse operator is the same as the transpose operator (up to a normalization factor) and see what happens.
-This is probably the questionable assumption that I'm making.
-
-So, this is how we define the real DFT matrix:
-\begin{align}
-	&\omega = e^{-2\pi i / N}\\
-	&W^r_{\nu_i x_i} = \omega^{\nu_i x_i},
-\end{align}
-and this matrix works on the real-valued input as expected, the same as using the numpy.fft.rfft function.
-
-We can also visualise what the operators look like in Figure \ref{fig:dft}.
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfigure}{.45\textwidth}
-	  \centering
-	  \includegraphics[width=\linewidth]{Figures/dft.png}
-	  \caption{Square DFT.}
-	  \label{fig:dft-square}
-	\end{subfigure}
-	\begin{subfigure}{.45\textwidth}
-	  \centering
-	  \includegraphics[width=\linewidth]{Figures/dft_non_square.png}
-	  \caption{Non-square DFT.}
-	  \label{fig:dft-non-square}
-	\end{subfigure}
-	\caption{Visual representations of the forward matrix operators.}
-	\label{fig:dft}
-\end{figure}
-
-Now we need the inverse operator, which then needs to be $N$ by $N/2+1$.
-If the assumption that the transpose matrix is the inverse operator holds, then building the inverse operator from the definition of the inverse Fourier transform should work.
-The closest I have been able to come up with is the following definition:
-\begin{align}
-	&\omega = e^{2\pi i / N}\\
-	&W^{r^{-1}}_{x_i \nu_i} = \frac{1}{N/2 +1} (\omega^{\nu_i x_i} - 1).
-\end{align}
-
-The matrix operators are shown in Figure \ref{fig:idft}.
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfigure}{.45\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{Figures/idft.png}
-		\caption{Square inverse DFT.}
-		\label{fig:idft-square}
-	\end{subfigure}
-	\begin{subfigure}{.45\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{Figures/idft_non_square.png}
-		\caption{Non-square inverse DFT.}
-		\label{fig:idft-non-square}
-	\end{subfigure}
-	\caption{Visual representations of the inverse matrix operators.}
-	\label{fig:idft}
-\end{figure}
-
-Nothing seems obviously wrong with the non-square version of the operator.
-However, Figure \ref{fig:problems} shows what the matrix multiplication of the forward and inverse operators ($W^{r^{-1}}W^r$) looks like (which we expect to be the identity matrix) and the close-up of the difference between the original real-valued input and the output after putting it through our built non-square DFT and inverse DFT operators.
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfigure}{.45\textwidth}
-	  \centering
-	  \includegraphics[width=\linewidth]{Figures/multiplied.png}
-	  \caption{Multiplication of the forward and inverse operators.}
-	  \label{fig:problems-multiplication}
-	\end{subfigure}
-	\begin{subfigure}{.45\textwidth}
-	  \centering
-	  \includegraphics[width=\linewidth]{Figures/bumps.png}
-	  \caption{Close-up of the difference between the original and the output.}
-	  \label{fig:problems-closeup}
-	\end{subfigure}
-	\caption{Visual representations of the problems with the non-square inverse DFT.}
-	\label{fig:problems}
-\end{figure}
-
-I also tried simply taking the hermitian conjugate of the DFT matrix instead of building the inverse DFT matrix "from scratch" and that seems to wield the same results.
-
-\section{Mapmaking for FTS}
-
-When looking at each individual interferogram (and therefore only looking at one pixel), there is a fairly simple matrix formulation of the maximum likelihood mapmaking equation, which which relates the spatial distance in the instrument $x$ with sky frequency $\nu$ and reads
-\begin{equation}
-	(F^T_{\nu; x} N^{-1}_{x;x} F_{x;\nu}) m_\nu = F^T_{\nu; x} N^{-1}_{x;x} d_x,
-\end{equation}
-where ; in the index separates the two dimensions of the matrix.
-
-Now the standard mapmaking equation relates time $t$ with position in the sky $p$ and reads
-\begin{equation}
-	(P^T_{p;t} N^{-1}_{t;t} P_{t;p})m_p = P^T_{p;t} N^{-1}_{t;t}d_t.
-\end{equation}
-
-Now in order to be able to treat pixel correlations, we need to put the two together, which I think will look like this:
-\begin{equation}
-	(P^T_{\nu p;\nu}F^T_{\nu;xt} N^{-1}_{xt;xt} F_{xt;\nu}P_{\nu;\nu p})m_{\nu p} = P^T_{\nu p;\nu}F^T_{\nu;xt} N^{-1}_{xt;xt}d_{xt}.
-\end{equation}
-
-\subsection{Revised data model and corresponding ML mapmaking equation}
-
-After speaking to Sigurd, he came up (somewhat independently) with the following data model:
-\begin{equation}
-	d_i = P_i F T_i m + n,
-\end{equation}
-where $i$ for the FIRAS case would correspond to temperature bins. And the corresponding ML mapmaking equation would then be:
-\begin{equation}
-	\hat m = \left(\sum_i T_i^T F^T P_i^T N^{-1} P_i F T \right)^{-1} \sum_i T_i^T F^T P^T N^{-1} d_i,
-\end{equation}
-where $F$ here should be cosine transforms.
-
-We spoke about it after and mentioned that it actually might make more sense to add the ICAL (and others) back in when the data is in IFG space, which then even can ignore these temperature bins.
-This would probably mean that we need to do all other low-level IFG processing before entering this "pipeline" too, like removing the transient reponse from the  onboard digital filters, etc.
-
-\subsection{Mapmaking without taking into account frequency correlations}
-
-For the sake of starting with something simple, we will assume that we have white noise and no frequency correlations (which is not true, the current noise estimate (without taking into account frequency correlations) for FIRAS is shown in Figure \ref{fig:noise-estimation}, which seems to be white + blue noise).
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfigure}{.45\textwidth}
-	  \centering
-	  \includegraphics[width=\linewidth]{Figures/cov.png}
-	  \caption{Noise covariance matrix not taking into account frequency correlations (size is 512 x 512). In order to subtract the signal to estimate this, I simply subtracted one IFG from the next and so on.}
-	  \label{fig:cov-matrix}
-	\end{subfigure}
-	\begin{subfigure}{.45\textwidth}
-	  \centering
-	  \includegraphics[width=\linewidth]{Figures/psd.png}
-	  \caption{Noise PSD not taking into account frequency correlations (Fourier transform was made along NIFG). In order to subtract the signal to estimate this, I simply subtracted one IFG from the next and so on.}
-	  \label{fig:psd}
-	\end{subfigure}
-	\caption{Noise estimations without taking into account frequency correlations.}
-	\label{fig:noise-estimation}
-\end{figure}
-
-I now believe that there is no difference in where we place the (let's call it) space distance Fourier transform $F_x$ in relation to the pointing matrix in our data model, if we are considering a stop and stare approach (which we are for now), because it is the same to first bin and then take the Fourier transform or vice-versa. Taking this into account, the most efficient way to program is taking the Fourier transform of the following after binning:
-
-\begin{equation}
-	\hat m_p = \frac{\sum_{i \in p}\frac{d_i}{\sigma_i^2}}{\sum_{i \in p}\frac{1}{\sigma_i^2}}.
-\end{equation}
-
-For now we are also assuming an instrument that is not differential, i.e. there is no sutraction of an internal calibration because, even though FIRAS is differential, a general FTS does not need to be. In order to take this into account, the two options are to either consider a completely different equation and Fourier transform as the first step and then subtract in sky frequency space or to leave it as is and subtract in interferogram space.
-
-\subsection{Dealing with beam movement while taking interferograms}
-
-In FIRAS, and likely for any FTS, the instrument is still moving while taking interferograms (i.e. it does not stop and stare at a single pixel while it is taking one interferogram). In particular, FIRAS averages a number of interferograms onboard before sending them down. For example, for a short scan, the instrument takes one full interferogram, the MTM flys back, another interferogram is taken, the MTM flys back again, and so on, until 16 full interferograms are taken, with a full cycle, for example while taking data in the slow mode (0.8 cm/s velocity of the MTM), taking 55.36 seconds in total. As such, 16 onboard interferograms correspond to 1 interferogram in our data ("telemetered" interferograms), when taking data in the short mode. Timing info is given in \url{https://lambda.gsfc.nasa.gov/data/cobe/firas/ancil/FIRAS_FEX_MTMSWEEP.TXT}.
-
-As such, we want to understand, for each telemetered interferogram and their latitude and longitude coordinates, how many and which pixels they correspond to, and how much data is taken corresponding to that pixel. For example, if one telemetered interferogram was taken equally over two pixels, the part of the pointing matrix corresponding to this goes from
-\begin{equation}
-	P = \begin{pmatrix}
-		0 & 1 \\
-		0 & 0
-	\end{pmatrix}
-\end{equation}
-to
-\begin{equation}
-	P = \begin{pmatrix}
-		0.5 & 0.5 \\
-		0 & 0
-	\end{pmatrix}.
-\end{equation}
-
-We also know that the pointing solution for each interferogram is given in the middle of taking each telemetered interferogram. (Section 4.2 of the explanatory supplement) The FIRAS line of sight traces a path along a line of approximately constant ecliptic longitude. The beam is of 7 degrees. The beam moves at 3.5 degrees per minute. 
 
 %-------------------------------------------------------------
 %                                       Table with references 
