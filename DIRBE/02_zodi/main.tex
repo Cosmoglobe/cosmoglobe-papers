@@ -1373,20 +1373,22 @@ ancillary datasets. For full details, see
     \label{fig:zodi-procmask}
 \end{figure}
 
-\begin{figure*}
+\begin{figure*}[h!]
     \centering
     \includegraphics[scale=0.75]{figs/traceplot_tot_shape_new.pdf}
     \caption{\textbf{Trace plots of all geometrical and shape IPD parameters, along with the power-law exponent of the IPD
      temperature, the phase function parameters, and the full-sky averaged ZL intensity traces for six selected DIRBE channels. 
-     Different colors indicate two independent Markov chains, and the gray regions indicate burn-in.}}
+     Different colors indicate two independent Markov chains, the gray regions indicate the burn-in set for each 
+     parameter, and vertical axes were cropped to emphasize convergence.}}
     \label{fig:trace-ipd}
 \end{figure*}
 
-\begin{figure*}
+\begin{figure*}[h!]
     \centering
     \includegraphics[width=0.985\textwidth]{figs/traceplot_tot_wl_new.pdf}
     \caption{\textbf{Trace plots of the wavelength dependent emissivity and albedo parameters. 
-    Different colors indicate two independent Markov chains, and the gray regions indicate burn-in.}}
+    Different colors indicate two independent Markov chains, the gray regions indicate the burn-in set for each 
+     parameter, and vertical axes were cropped to emphasize convergence.}}
     \label{fig:trace-emissivity-albedo}
 \end{figure*}
 
@@ -1437,12 +1439,13 @@ masking.
 \section{Results}\label{sect:improved-model}
 We are now finally ready to present our new ZL model obtained
 by analyzing the data summarized in Sect.~\ref{sect:data} with the
-algorithm outlined in Sect.~\ref{sect:param-estimation}. We have
-produced a total of \textbf{1251} full Gibbs samples, distributed over \textbf{two}
-Markov chains. We remove the first \textbf{100} samples from each chain as
-burn-in, leaving a total of \textbf{1051} samples for final analysis. In total,
-\textbf{256} computing cores were used to produce this sample set, for a
-total cost of about \textbf{96k} CPU-hrs.
+algorithm outlined in Sect.~\ref{sect:param-estimation}. \textbf{We have
+produced a total of 1251 full Gibbs samples, distributed over two
+Markov chains. A number of samples between 100 and 300, tuned on each parameter 
+individually, was removed from each chain as burn-in, 
+leaving a total of 1051--651 samples for final analysis. In total,
+256 computing cores were used to produce this sample set, for a
+total cost of about 96k CPU-hrs.}
 
 
 \subsection{Markov chains}
@@ -1451,7 +1454,8 @@ We start our presentation with a visual inspection of the individual
 Markov chains for \textbf{each one of the 36 free ZL parameter in $\zeta_{\mathrm{z}}$}. 
 These are shown for the general ZL shape parameters in
 Fig.~\ref{fig:trace-ipd} and for the amplitude (emissivity and albedo)
-parameters in Fig.~\ref{fig:trace-emissivity-albedo}. The gray regions indicate the discarded burn-in. 
+parameters in Fig.~\ref{fig:trace-emissivity-albedo}. \textbf{The gray regions indicate the discarded burn-in, 
+which, at this stage, was tuned for each parameter individually.} 
 %\footnote{Due to a parameter file error introduced before the final production run, the emissivity
 % for asteroidal bands for the 25$\,\mu$m band, $E_{\mathrm{6,B}}$, was accidentally fixed at the best-fit value
 %  derived in the penultimate run. This parameter is thus not marginalized over in the current results, but rather
@@ -1513,14 +1517,15 @@ seems to be reaching a prior. As already pointed out, with the DIRBE data this b
 and cannot robustly measured. Therefore, we aim here to constrain an upper limit for it, 
 rather than attempting to provide a point estimate.}
 
-Regarding the emissivity and albedo parameters shown in
+\textbf{Regarding the emissivity and albedo parameters shown in
 Fig.~\ref{fig:trace-emissivity-albedo}, we see much of the same
-quantitative behavior, with a slight drift during the first
-\textbf{100}~samples, and generally long correlation lengths. 
-For the \textbf{60--240}\,$\mu$m channels the correlation lengths are extremely
-long, and each chain only simply appears to fall down into a local
-$\chi^2$ minima after initialization, and then explore a very small region
-around that initial point. 
+quantitative behavior. A slight drift is visible during burn-in, 
+which here was set to 100 samples for all parameters a part from the emissivities 
+at 100\,$\mu$m that required more time to converge.  
+All the albedoes are characterized by extremely long correlation lengths, 
+and each emissivity chain for the 100--240\,$\mu$m channels appears to fall down into a local
+$\chi^2$ minima after initialization and then explore a very small region
+around that initial point.} 
 %For these channels we also observe
 %a number of apparent phase transitions, in which the Markov chains
 %suddenly move from one stationary state to another, most notably in the curve denoted by the red line, 
@@ -1572,9 +1577,10 @@ concern.
 
 Figure~\ref{fig:correlations} shows the Pearson correlation
 coefficient between pairs of parameters in $\zeta_{\mathrm{z}}$,
-evaluated directly from the post-burn-in Gibbs sample set. This plot
-is highly structured, reflecting the structure of the 
-complex ZL likelihood. 
+evaluated directly from the post-burn-in Gibbs sample set. \textbf{Here, the burn-in was set to 
+300 samples to match the longest convergence period among all parameters, ensuring that an 
+equal number of post–burn-in samples were used for all correlations.}
+This plot is highly structured, reflecting the structure of the complex ZL likelihood. 
 %Particularly strong are the correlations between the reference temperature, 
 %$T_0$, and the emissivity and albedo parameters, $E_i$ and $A_i$. 
 \textbf{Particularly strong are the correlations between the emissivity parameters in the 60--240\,$\mu$m channels.} 
@@ -1603,7 +1609,9 @@ sampling efficiency in a Gibbs sampler.
 
 To estimate the marginal posterior distribution for each ZL parameter
 individually, we compute the mean and standard deviation of all
-post-burn-in samples. \textbf{The resulting values for the shape parameters
+post-burn-in samples. \textbf{For each parameter the number of burn-in 
+samples was tuned individually, as shown in Fig.~\ref{fig:trace-ipd} and 
+\ref{fig:trace-emissivity-albedo}. The resulting values for the shape parameters
 are tabulated in the fourth column of
 Table~\ref{table:zodi-params-geo}, the amplitude parameters are
 provided in Table~\ref{table:zodi-params-source}, and the phase function parameters 
