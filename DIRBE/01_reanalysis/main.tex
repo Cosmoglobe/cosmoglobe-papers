@@ -446,7 +446,7 @@ generalized modified blackbody model to account for thermal dust
 across the combined DIRBE and \Planck\ HFI frequency range;
 for full details, see \citet{CG02_05}. The four components correspond
 to cold dust, hot dust, and nearby dust emission, respectively, \textbf{as
-well as dust extinction traced by the WHAM H$_\alpha$ sky map \citep{wham:2003}}. All
+well as dust extinction traced by the WHAM H$\alpha$ sky map \citep{wham:2003}}. All
 four are modeled with spatially constant spectral parameters, and
 only the cold and hot component amplitudes are fitted pixel-by-pixel;
 the amplitude of the nearby component is fixed to the \GAIA-based dust
@@ -691,7 +691,7 @@ posteriors.
 \begin{table}[t]
   \begingroup
   \newdimen\tblskip \tblskip=5pt
-	\caption{List of celestial body flags.}
+	\caption{List of celestial body flags. Comets are flagged with the radius listed if they are within 2~AU of the Sun, otherwise they have a $1^\circ$ exclusion radius.}
   \label{tab:planet_flags}
   \nointerlineskip
   \vskip -3mm
@@ -710,7 +710,7 @@ posteriors.
     \def!{\kern\signwidth}
     %
  \halign{
-      \hbox to 1.5cm{#\leaderfil}\tabskip 1em&
+      \hbox to 3.5cm{#\leaderfil}\tabskip 1em&
       \hfil#\hfil\tabskip 1em&
       \hfil#\hfil\tabskip 1em&
       \hfil#\hfil\tabskip 1em&
@@ -726,14 +726,35 @@ posteriors.
       \omit Object\hfil&
       \omit\hfil Radius ($^\circ$) \hfil\cr
       \noalign{\vskip 4pt\hrule\vskip 4pt}
-      Moon****** & 10 \cr
-      Mercury*** & *1 \cr
-      Venus***** & *2 \cr
-      Mars****** & *2 \cr
-      Jupiter*** & *2 \cr
-      Saturn**** & *1 \cr
-      Uranus**** & *1 \cr
-      Neptune*** & *1 \cr
+      Moon********************** & 10 \cr
+      Mercury******************* & *1 \cr
+      Venus********************* & *2 \cr
+      Mars********************** & *2 \cr
+      Jupiter******************* & *2 \cr
+      Saturn******************** & *1 \cr
+      Uranus******************** & *1 \cr
+      Neptune******************* & *1 \cr
+      73P/Schwassmann–Wachmann 3 & *2 \cr
+      C/1989 Q1***************** & *2 \cr
+      C/1989 T1***************** & *2 \cr
+      C/1989 X1***************** & 15 \cr
+      C/1990 K1***************** & *1 \cr
+      1 Ceres******************* & *1 \cr
+      2 Pallas****************** & *1 \cr
+      4 Vesta******************* & *1 \cr
+      15 Eunomia**************** & *1 \cr
+      31 Euphrosyne************* & *1 \cr
+      41 Daphne***************** & *1 \cr
+      42 Isis******************* & *1 \cr
+      85 Io********************* & *1 \cr
+      185 Eunike**************** & *1 \cr
+      194 Prokne**************** & *1 \cr
+      372 Palma***************** & *1 \cr
+      405 Thia****************** & *1 \cr
+      511 Davida**************** & *1 \cr
+      704 Interamnia************ & *1 \cr
+      747 Winchester************ & *1 \cr
+      1021 Flammario************ & *1 \cr
       \noalign{\vskip 4pt\hrule\vskip 5pt} } }
   \endPlancktablewide \endgroup
 \end{table}
@@ -847,9 +868,8 @@ The different detector technology for each band accounts for the different perfo
 In order to produce maps with full multipole support, we analyze the CIOs directly and convert the pointing into 7\arcm\  $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered CIOs.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from CIO pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in the Python preprocessing script \texttt{quadcube}.\footnote{\url{https://github.com/MetinSa/quadcube}}
 
 The delivered CIOs are organized into 285 single-day files, with the datapoints ordered by Quadcube pixel index. The primary processing step was converting the pointing into $N_\mathrm{side}=512$ pixels using \texttt{quadcube}. The data are sampled at 8\,Hz and labeled by time index in seconds since January 1, 1981 00:00 UTC. Because the data are pre-calibrated and bad data are already removed, there are some gaps in the data, which we fill manually with an appropriate flag. Additional flags, such as excess noise, orbit and attitude errors, and presence of the SAA, are additionally extracted. In total, the data are placed in one \texttt{hdf5} file per band, following the format enumerated in \citet{bp03}.
-The planet, comet, and asteroid flags are not present in the CIOs, and are regenerated beforehand. Using the radii as defined in Table~\ref{tab:planet_flags}, we mark data points within the pointing of each pixel. Note that this is not strictly optimal due to the non-circular beam shape, and can be optimized in future analyses.
+The planet, comet, and asteroid flags are not present in the CIOs, and are regenerated beforehand. Using the radii as defined in Table~\ref{tab:planet_flags}, we mark data points within the pointing of each pixel. These moving objects are the same as tabulated in \citet{arendt:2014}, including the comets first detected in \citet{lisse:1998}. Note that this is not strictly optimal due to the non-circular beam shape, and can be optimized in future analyses.
 
-\textbf{Add references to the existing comet/asteroid flags}
 
 
 %\subsubsection{DIRBE Calibrated Individual Observations (CIOs)}
