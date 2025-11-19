@@ -419,6 +419,20 @@ operations. }
 %  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
 %  T_{\mathrm{e},j})
 %  a_{\mathrm{e},j} && \textrm{(FIR sources)}\nonumber\\
+%  - &\M_{\mathrm{mbb}}(\beta_\epsilon,\T_{\epsilon},q_i;\nuzeronear,\{\Delta\nu_i\}) \t_{\epsilon}
+%  a_{\nu} && \textrm{(Dust Extinction)} \nonumber \\
+%  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+%  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+%  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \nonumber\\
+%  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+%  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
+%	+ &\delta(\nu-\nu_{0,\CII}) \a_{\CII}
+%  h^{\CII}_{\nu} && (\CII) \nonumber\\
+%  + \epsilon &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+%  f_{\GAIA,j} a_{\mathrm{s},j}, &\quad&
+%  \textrm{(Bright stars)} \nonumber\\
+%  + &U_{\mathrm{mJy}} \t_{\gaia,\mathrm{fs}}\, a_{\mathrm{fs},\nu}, &\quad&
+%  \textrm{(Faint stars)} \nonumber\\  
   + &m_{\nu} && \textrm{(Monopole)}. \nonumber
 \end{alignat}
 In this expression, we have defined a function of the form
@@ -498,17 +512,9 @@ rather attempt to actually fit $T_e$ in future work.
 %quality. The result is a novel full-sky \CII\ map with an angular resolution of
 %about $1^{\circ}$ FWHM.
 
-\textit{(HKE: MATHEW NEEDS TO UPDATE THIS) The sixth component correspond to \textbf{bright} starlight emission, which
+The sixth component correspond to \textbf{bright} starlight emission, which
 is relevant in the frequency range between 1 and 25\,$\mu$m; for full
-details regarding this model, see \citet{CG02_04}. For \textbf{this component}, we first
-extract a baseline star catalog by thresholding the AllWISE
-3.5\,$\mu$m catalog at magnitude 8, resulting in a set of about
-783\,000 sources.\footnote{We have tried different thresholds, and
-found that magnitude 8 provides a good compromise; magnitude 6 results
-in obviously missing sources, while magnitude 10 leads to too many
-unconstrained sources.} For each of these, we search the \GAIA\ DR2
-catalog, and if this returns a positive star identification within a
-radius of 20~arcsec, we record the object, and store the best-fit
+details regarding this model, see \citet{CG02_04}. For \textbf{this component}, we first crossmatch the AllWISE pointsource catalog \citep{wiseCat} agaist Gaia DR2, obtaining corresponding entries for almost all stars brighter than Mag 12 in the W1 band. Then, we construct a unique set of brightest stars that are no closer together than 5 arcseconds, which gives us a set of 478317 bright point sources that includes most of the brightest source on the sky, but which will not be degenerate with one another when sampled. For each of these, we store the best-fit
 temperature $T_\mathrm{s}$, surface gravity $g$, and metallicity
 $[\mathrm{M}/\mathrm{H}]$ as determined by \GAIA. These are then used
 to estimate the best-fit SED using the PHOENIX spectrum grid
@@ -518,9 +524,8 @@ beam-convolved SED is denoted $f_{\GAIA,j}$, which is unique for each
 star. We then fit one overall amplitude for each star to the four
 highest DIRBE frequency bands between 1.25 and 4.9\,$\mu$m; we also
 account for star emission in the 12 and 25\,$\mu$m bands, but these
-bands are not used for the actual fit. A total of 717\,000 stars are
-included in the fit of individual stars; these are denoted as ``bright
-stars'' in the sky model.}
+bands are not used for the actual fit. These individually fit sources are are denoted as ``bright
+stars'' in the sky model.
 
 %\begin{figure*}
 %  \centering
@@ -536,19 +541,19 @@ stars'' in the sky model.}
 %this component is identical to the bright star component, except for
 %the parametric form of the SED.
 
-\textit{The AllWISE catalog itself contains a total of about 747 million
+The AllWISE catalog itself contains a total of about 747 million
 sources, making it impossible to fit all of these with DIRBE without
 introducing massive degeneracies. We therefore instead co-add the rest
-of the AllWISE sources into a diffuse background map of faint sources
+of the AllWISE sources into a diffuse background map of ``faint sources''
 under the assumption that their mean SED is equal to the average of
 the bright sources that actually are fitted as part of the
-algorithm. Together, these three source components comprise an
+algorithm, which forms the seventh component of the data model. Together, these two source components comprise an
 unprecedented deep model for compact objects in DIRBE that has only
-become possible due to WISE and \GAIA.}
+become possible due to WISE and \GAIA.
 
-The ninth and final component is simply a monopole per frequency. For
+The eighth and final component is simply a monopole per frequency. For
 DIRBE, this should ideally describe the CIB spectrum, but it
-is also sensitive to zodiacal light and Galactic residuals. In particular, DIRBE was designed to have negligible straylight contamination, while internal thermal sources in FIRAS were explicitly measured by onboard thermistorse and subtracted before mapmaking.
+is also sensitive to zodiacal light and Galactic residuals. In particular, DIRBE was designed to have negligible straylight contamination, while internal thermal sources in FIRAS were explicitly measured by onboard thermistors and subtracted before mapmaking.
 %For
 %\Planck, the monopoles account for the arbitrary zero-levels present
 %in the \Planck\ PR4 maps. 
@@ -2169,6 +2174,6 @@ At the same time, this work demonstrates the need for more external data with co
 %
 
 \bibliographystyle{aa}
-\bibliography{../../common/CG_bibliography,../../common/Planck_bib}
+\bibliography{../../common/CG_bibliography,../../common/Planck_bib,references}
 \end{document}
 %%%% End of aa.dem
