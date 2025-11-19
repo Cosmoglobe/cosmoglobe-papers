@@ -894,9 +894,12 @@ The planet, comet, and asteroid flags are not present in the CIOs, and are regen
 \label{sec:ancillary}
 
 As demonstrated by the success of the \bp\ and \cosmoglobe\ projects, the use of complementary datasets with different angular resolution, frequency coverage, and observation strategies, can greatly improve the quality of low-level data processing. In this work, we use \Planck\ High Frequency Instrument, \WISE, \GAIA, and \COBE-FIRAS to better constrain our sky model and characterize the DIRBE data.
+\textbf{All of these data are not used in the full end-to-end processing, but are used to determine dust morphology (Sec.~\ref{sec:planckhfi}), gain (Sec.~\ref{sec:firas}), and point source contributions (Sec.~\ref{sec:gaia_and_wise}).
+}
 
 
 \subsection{\Planck\ HFI}
+\label{sec:planckhfi}
 
 
 The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
@@ -909,19 +912,10 @@ At the same time, CIB fluctuations with a similar SED to the Milky Way have been
 Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
 We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
 
-\subsection{\GAIA\ and \WISE}
-
-In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a complete survey of all stars that are detectable within the DIRBE bands.
-
-Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 66\,217 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source.
-
-\textbf{Do we mention the issue with lower depth here?}
-
-Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all \WISE\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the \gaia\ catalog. The SEDs as derived by \gaia\ are then averaged over and used to scale the entire template. Within the Gibbs chain, this is sampled with a total scaling parameter, with a fixed map and relative amplitudes between different frequencies. For a full description of the star model, see the work in companion paper \citet{CG02_04}.
-
 
 
 \subsection{\COBE-FIRAS}
+\label{sec:firas}
 
 The \COBE-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}. 
 FIRAS's primary goal was the characterization of the CMB blackbody spectrum \citep{mather:1994}, which motivated much of the experiment's design choices. In particular, its angular resolution of $7^\circ$ was chosen due to its focus on monopole characterization, while still allowing for foreground mitigation. Notably, the calibration for DIRBE and FIRAS were performed independently, although they have been compared explicitly by \citet{fixsen1997}. The possibility of improving the $140$ and $240\,\mathrm{\mu m}$ bands has already been noted to reduce the discrepancy between the two experiments. The possibility of joint determination of gain and zodiacal emission using both of these datasets will be explored in future work.
@@ -948,10 +942,16 @@ To avoid the correlation between nearby bands, we used a subset of the FIRAS ban
 \input{firas_bands_table.tex}
 
 
-%\section{Data selection and goodness-of-fit}
-%\label{sec:data_selection}
 
-%\subsection{Baseline data selection}
+\subsection{\GAIA\ and \WISE}
+\label{sec:gaia_and_wise}
+
+In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a complete survey of all stars that are detectable within the DIRBE bands.
+
+Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 66\,217 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source. \textbf{The AllWISE point source catalog has a slightly lower depth between $44\fdg7<\lambda<54\fdg8$ and $230\fdg9<\lambda<238\fdg7$ due to relatively observation fraction during the 3-Band Cryo phase.\footnote{\url{https://irsa.ipac.caltech.edu/data/WISE/docs/release/AllWISE/expsup/sec2\_2.html\#w1sat}}. This will be replaced by the updated CatWISE \citep{CatWISE} catalog in future analyses.}
+
+Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all \WISE\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the \gaia\ catalog. The SEDs as derived by \gaia\ are then averaged over and used to scale the entire template. Within the Gibbs chain, this is sampled with a total scaling parameter, with a fixed map and relative amplitudes between different frequencies. For a full description of the star model, see the work in companion paper \citet{CG02_04}.
+
 
 \subsection{Mask definitions}
 
@@ -1017,16 +1017,16 @@ refer the interested reader there for further details.
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_01.pdf}       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_02.pdf}\\
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_03.pdf}
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_04.pdf}\\       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_05.pdf}       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_06.pdf}\\       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_07.pdf}
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_08.pdf}\\       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_09.pdf}
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_10.pdf}       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_01.pdf}       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_02.pdf}\\
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_03.pdf}
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_04.pdf}\\       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_05.pdf}       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_06.pdf}\\       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_07.pdf}
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_08.pdf}\\       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_09.pdf}
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_10.pdf}       
 	\caption{White noise rms maps for each DIRBE channel. All maps are in units of $\mathrm{MJy\,sr^{-1}}$.}
   \label{fig:sigma0_map}
 \end{figure*}
