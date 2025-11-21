@@ -419,6 +419,20 @@ operations. }
 %  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
 %  T_{\mathrm{e},j})
 %  a_{\mathrm{e},j} && \textrm{(FIR sources)}\nonumber\\
+%  - &\M_{\mathrm{mbb}}(\beta_\epsilon,\T_{\epsilon},q_i;\nuzeronear,\{\Delta\nu_i\}) \t_{\epsilon}
+%  a_{\nu} && \textrm{(Dust Extinction)} \nonumber \\
+%  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+%  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+%  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \nonumber\\
+%  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+%  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
+%	+ &\delta(\nu-\nu_{0,\CII}) \a_{\CII}
+%  h^{\CII}_{\nu} && (\CII) \nonumber\\
+%  + \epsilon &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+%  f_{\GAIA,j} a_{\mathrm{s},j}, &\quad&
+%  \textrm{(Bright stars)} \nonumber\\
+%  + &U_{\mathrm{mJy}} \t_{\gaia,\mathrm{fs}}\, a_{\mathrm{fs},\nu}, &\quad&
+%  \textrm{(Faint stars)} \nonumber\\  
   + &m_{\nu} && \textrm{(Monopole)}. \nonumber
 \end{alignat}
 In this expression, we have defined a function of the form
@@ -498,17 +512,9 @@ rather attempt to actually fit $T_e$ in future work.
 %quality. The result is a novel full-sky \CII\ map with an angular resolution of
 %about $1^{\circ}$ FWHM.
 
-\textit{(HKE: MATHEW NEEDS TO UPDATE THIS) The sixth component correspond to \textbf{bright} starlight emission, which
+The sixth component correspond to \textbf{bright} starlight emission, which
 is relevant in the frequency range between 1 and 25\,$\mu$m; for full
-details regarding this model, see \citet{CG02_04}. For \textbf{this component}, we first
-extract a baseline star catalog by thresholding the AllWISE
-3.5\,$\mu$m catalog at magnitude 8, resulting in a set of about
-783\,000 sources.\footnote{We have tried different thresholds, and
-found that magnitude 8 provides a good compromise; magnitude 6 results
-in obviously missing sources, while magnitude 10 leads to too many
-unconstrained sources.} For each of these, we search the \GAIA\ DR2
-catalog, and if this returns a positive star identification within a
-radius of 20~arcsec, we record the object, and store the best-fit
+details regarding this model, see \citet{CG02_04}. For \textbf{this component}, we first crossmatch the AllWISE pointsource catalog \citep{wiseCat} agaist Gaia DR2, obtaining corresponding entries for almost all stars brighter than Mag 12 in the W1 band. Then, we construct a unique set of brightest stars that are no closer together than 5 arcseconds, which gives us a set of 478317 bright point sources that includes most of the brightest source on the sky, but which will not be degenerate with one another when sampled. For each of these, we store the best-fit
 temperature $T_\mathrm{s}$, surface gravity $g$, and metallicity
 $[\mathrm{M}/\mathrm{H}]$ as determined by \GAIA. These are then used
 to estimate the best-fit SED using the PHOENIX spectrum grid
@@ -518,9 +524,8 @@ beam-convolved SED is denoted $f_{\GAIA,j}$, which is unique for each
 star. We then fit one overall amplitude for each star to the four
 highest DIRBE frequency bands between 1.25 and 4.9\,$\mu$m; we also
 account for star emission in the 12 and 25\,$\mu$m bands, but these
-bands are not used for the actual fit. A total of 717\,000 stars are
-included in the fit of individual stars; these are denoted as ``bright
-stars'' in the sky model.}
+bands are not used for the actual fit. These individually fit sources are are denoted as ``bright
+stars'' in the sky model.
 
 %\begin{figure*}
 %  \centering
@@ -536,19 +541,19 @@ stars'' in the sky model.}
 %this component is identical to the bright star component, except for
 %the parametric form of the SED.
 
-\textit{The AllWISE catalog itself contains a total of about 747 million
+The AllWISE catalog itself contains a total of about 747 million
 sources, making it impossible to fit all of these with DIRBE without
 introducing massive degeneracies. We therefore instead co-add the rest
-of the AllWISE sources into a diffuse background map of faint sources
+of the AllWISE sources into a diffuse background map of ``faint sources''
 under the assumption that their mean SED is equal to the average of
 the bright sources that actually are fitted as part of the
-algorithm. Together, these three source components comprise an
+algorithm, which forms the seventh component of the data model. Together, these two source components comprise an
 unprecedented deep model for compact objects in DIRBE that has only
-become possible due to WISE and \GAIA.}
+become possible due to WISE and \GAIA.
 
-The ninth and final component is simply a monopole per frequency. For
+The eighth and final component is simply a monopole per frequency. For
 DIRBE, this should ideally describe the CIB spectrum, but it
-is also sensitive to zodiacal light and Galactic residuals. In particular, DIRBE was designed to have negligible straylight contamination, while internal thermal sources in FIRAS were explicitly measured by onboard thermistorse and subtracted before mapmaking.
+is also sensitive to zodiacal light and Galactic residuals. In particular, DIRBE was designed to have negligible straylight contamination, while internal thermal sources in FIRAS were explicitly measured by onboard thermistors and subtracted before mapmaking.
 %For
 %\Planck, the monopoles account for the arbitrary zero-levels present
 %in the \Planck\ PR4 maps. 
@@ -889,9 +894,12 @@ The planet, comet, and asteroid flags are not present in the CIOs, and are regen
 \label{sec:ancillary}
 
 As demonstrated by the success of the \bp\ and \cosmoglobe\ projects, the use of complementary datasets with different angular resolution, frequency coverage, and observation strategies, can greatly improve the quality of low-level data processing. In this work, we use \Planck\ High Frequency Instrument, \WISE, \GAIA, and \COBE-FIRAS to better constrain our sky model and characterize the DIRBE data.
+\textbf{All of these data are not used in the full end-to-end processing, but are used to determine dust morphology (Sec.~\ref{sec:planckhfi}), gain (Sec.~\ref{sec:firas}), and point source contributions (Sec.~\ref{sec:gaia_and_wise}).
+}
 
 
 \subsection{\Planck\ HFI}
+\label{sec:planckhfi}
 
 
 The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
@@ -904,19 +912,10 @@ At the same time, CIB fluctuations with a similar SED to the Milky Way have been
 Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
 We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
 
-\subsection{\GAIA\ and \WISE}
-
-In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a complete survey of all stars that are detectable within the DIRBE bands.
-
-Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 66\,217 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source.
-
-\textbf{Do we mention the issue with lower depth here?}
-
-Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all \WISE\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the \gaia\ catalog. The SEDs as derived by \gaia\ are then averaged over and used to scale the entire template. Within the Gibbs chain, this is sampled with a total scaling parameter, with a fixed map and relative amplitudes between different frequencies. For a full description of the star model, see the work in companion paper \citet{CG02_04}.
-
 
 
 \subsection{\COBE-FIRAS}
+\label{sec:firas}
 
 The \COBE-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}. 
 FIRAS's primary goal was the characterization of the CMB blackbody spectrum \citep{mather:1994}, which motivated much of the experiment's design choices. In particular, its angular resolution of $7^\circ$ was chosen due to its focus on monopole characterization, while still allowing for foreground mitigation. Notably, the calibration for DIRBE and FIRAS were performed independently, although they have been compared explicitly by \citet{fixsen1997}. The possibility of improving the $140$ and $240\,\mathrm{\mu m}$ bands has already been noted to reduce the discrepancy between the two experiments. The possibility of joint determination of gain and zodiacal emission using both of these datasets will be explored in future work.
@@ -924,7 +923,7 @@ FIRAS's primary goal was the characterization of the CMB blackbody spectrum \cit
 \begin{figure*}
     \centering
     \includegraphics[width=0.9\textwidth]{figs/traceplots.pdf}
-	\caption{Trace plots of MCMC sampling chains. Each panel shows a series of sampled components for each Gibbs sample, including the ten DIRBE monopoles, the zodiacal dust cloud albedos $A$ and emissivities $E$, the ambient dust temperature at 1 AU $T_0$, and the instrumental parameters for band 10. Monopoles are plotted in units of $\mathrm{kJy\,sr^{-1}}$, $f_\mathrm{knee,10}$ in Hz, $\sigma_0$ in $\mathrm{MJy\,sr^{-1}}$, and $T_0$ in kelvin, while all other parameters are unitless.}
+	\caption{Trace plots of MCMC sampling chains. Each panel shows a series of sampled components for each Gibbs sample, including the ten DIRBE monopoles, the zodiacal dust cloud albedos $A$ and emissivities $E$, and the instrumental parameters for band 10. Monopoles are plotted in units of $\mathrm{kJy\,sr^{-1}}$, $f_\mathrm{knee,10}$ in Hz, and $\sigma_0$ in $\mathrm{MJy\,sr^{-1}}$, while all other parameters are unitless.}
     \label{fig:trace}
 \end{figure*}
 
@@ -943,10 +942,16 @@ To avoid the correlation between nearby bands, we used a subset of the FIRAS ban
 \input{firas_bands_table.tex}
 
 
-%\section{Data selection and goodness-of-fit}
-%\label{sec:data_selection}
 
-%\subsection{Baseline data selection}
+\subsection{\GAIA\ and \WISE}
+\label{sec:gaia_and_wise}
+
+In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source, while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the  Milky Way comes from the \Gaia\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in \Gaia\ DR2. Despite \Gaia\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a complete survey of all stars that are detectable within the DIRBE bands.
+
+Conversely, the \WISE\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6\farcs11, 6\farcs4, 6\farcs5, and 12\farcs0. This gives a direct estimate of point source brightness and location, and allows for direct cross-matching with the \GAIA\ DR2 catalog. In order to leverage the \gaia\ data properly, we extract the SED for point sources in both \gaia\ and \WISE\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the \gaia+\WISE\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 66\,217 extragalactic sources that exist in \WISE\ but not in \gaia. These are fit as modified blackbodies per source. \textbf{The AllWISE point source catalog has a slightly lower depth between $44\fdg7<\lambda<54\fdg8$ and $230\fdg9<\lambda<238\fdg7$ due to relatively observation fraction during the 3-Band Cryo phase.\footnote{\url{https://irsa.ipac.caltech.edu/data/WISE/docs/release/AllWISE/expsup/sec2\_2.html\#w1sat}}. This will be replaced by the updated CatWISE \citep{CatWISE} catalog in future analyses.}
+
+Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all \WISE\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the \gaia\ catalog. The SEDs as derived by \gaia\ are then averaged over and used to scale the entire template. Within the Gibbs chain, this is sampled with a total scaling parameter, with a fixed map and relative amplitudes between different frequencies. For a full description of the star model, see the work in companion paper \citet{CG02_04}.
+
 
 \subsection{Mask definitions}
 
@@ -977,7 +982,7 @@ Discarding the burnin of 20 samples, we obtain a total of 833 independent Gibbs 
 
 We can also compute the correlation between parameters in the Gibbs chain, as displayed in Fig.~\ref{fig:correlations}.  As expected, there are strong correlations between the zodiacal dust parameters. Likewise, there are strong correlations between monopoles of nearby frequency maps. There are small correlations, on the order of 10\,\%, between the monopoles and zodiacal dust parameters. While these correlations are expected, the relatively low correlation indicates that the zodiacal dust and the monopole signal are relatively decoupled.
 
-The two instrumental noise parameters are chosen as representative of the behavior of instrumental noise parameters in general. The white noise level is correlated with the monopoles, demonstrating the dependence of some instrumental parameters on the final noise level. Conversely, band 10's noise parameters, while degenerate with each other as expected (see \citealt{bp04} and \citealt{bp06}), have negligible correlation with zodiacal dust and monopole parameters.
+The \textbf{three} instrumental noise parameters are chosen as representative of the behavior of instrumental noise parameters in general. The white noise level is correlated with the \textbf{albedos, which are themselves weakly correlated with the monopoles. This demonstrates} the dependence of some instrumental parameters on the final noise level. Conversely, band 10's noise parameters, while degenerate with each other as expected (see \citealt{bp04} and \citealt{bp06}), have negligible correlations with the monopoles.
 
 
 
@@ -1012,16 +1017,16 @@ refer the interested reader there for further details.
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_01.pdf}       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_02.pdf}\\
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_03.pdf}
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_04.pdf}\\       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_05.pdf}       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_06.pdf}\\       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_07.pdf}
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_08.pdf}\\       
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_09.pdf}
-  \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_10.pdf}       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_01.pdf}       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_02.pdf}\\
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_03.pdf}
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_04.pdf}\\       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_05.pdf}       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_06.pdf}\\       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_07.pdf}
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_08.pdf}\\       
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_09.pdf}
+  \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_10.pdf}       
 	\caption{White noise rms maps for each DIRBE channel. All maps are in units of $\mathrm{MJy\,sr^{-1}}$.}
   \label{fig:sigma0_map}
 \end{figure*}
@@ -1077,7 +1082,7 @@ refer the interested reader there for further details.
 
 As defined in Sect.~\ref{sec:datamodel}, $\xi_{\mathrm{n}}$ denotes
 the set of all instrumental noise parameters in our data model, and
-for all channels except 140 and 240$\,\mu$m this simply consist of a white
+for all channels except 140 and 240$\,\mu$m this simply consists of a white
 noise rms per TOD sample, $\sigma_0$, which is assumed to be constant
 within each 24\,hr data segment. The corresponding posterior mean is
 plotted as a function of observing day in Fig.~\ref{fig:sigma0}. Gaps
@@ -1098,8 +1103,9 @@ of the DIRBE detectors, for instance due to varying levels of
 radiation from the Sun or the Earth. As demonstrated by \citet{bp06}
 within the \BP\ analysis by correlating $\sigma_0$ with house-keeping
 focal plane thermometer measurements, this was the case for
-\Planck\ LFI. We have not yet been able to locate
-similar publicly available house-keeping information for DIRBE.
+\Planck\ LFI. 
+\textbf{A preliminary analysis of available housekeeping data (J.~Weiland, priv.~comm) does not
+indicate any correlation with these features.}
 
 
        
@@ -1206,17 +1212,18 @@ latitudes. The same holds true for most other channels as well.
 The dominant residual at short wavelengths is due to
 residual starlight emission in the Galactic disk. At 1.25$\,\mu$m the starlight emission is
 slightly over-subtracted, while at 2.2\,$\mu$m it is slightly
-under-subtracted. In this respect it is important to note that the
-starlight model presented by \citet{CG02_04} is based on the WISE
+under-subtracted. \textbf{The relatively larger degree of oversubtraction at 1.25$\,\mathrm{\mu m}$ is due the emissivity, which is applied uniformly for all stars. In practice, this overestimates the effect of extinction in the highest density portions of the Galactic plane.} In this respect it is important to note that the
+starlight model presented by \citet{CG02_04} is based on the \textbf{AllWISE}
 catalog, which includes about 747 million sources. While this is a
 large number, it is still much lower than the total number of stars in
 the Milky Way, which is about 100\,billion. The completeness of the
-WISE catalog is, however, much higher at high Galactic latitudes than
+\textbf{AllWISE} catalog is, however, much higher at high Galactic latitudes than
 in the central bulge, and it is therefore not surprising that the
-model is not statistically adequate at low Galactic latitudes. 
+model is not statistically adequate at low Galactic latitudes.
+\textbf{These bands also have residuals northwest of the Galactic plane, corresponding to the relatively low depth of coverage in the AllWISE coverage discussed in Sec.~\ref{sec:gaia_and_wise}.}
        
 In general, only very faint ZL residuals are seen in the two
-shortest wavelength bands. In order to suppress these further, it is
+shortest wavelength bands, \textbf{with the exception of the ecliptic plane at $1.25\,\mathrm{\mu m}$}. In order to suppress these further, it is
 worth considering fitting the albedo of the asteroidal bands
 independently from the cloud; however, the signal-to-noise ratio of
 the bands at these wavelengths is very low, and there is a significant
@@ -1226,16 +1233,16 @@ doing so.
 Significantly stronger ZL residuals are seen in the 3.5 to 60$\,\mu$m
 channels, but still at the sub-percent level of the total
 intensity. The asteroidal bands are particularly noteworthy at
-25$\,\mu$m. In order to improve on these, higher angular resolution
+12 and 25$\,\mu$m. In order to improve on these, higher angular resolution
 would be extremely useful, and a future joint analysis with \IRAS\
 and/or \AKARI\ should prove useful in reducing these residuals further.
 
 Between 60 and 140$\,\mu$m, the dominant residuals are clearly due to
 Galactic dust emission, and to improve on these, a more detailed
-thermal dust model should be established. In this respect, it is
-worth recalling that we currently only fit two degrees of freedom per
-pixel for thermal dust emission from 100\,GHz to 1.25$\,\mu$m, and
-there are therefore massive opportunities for refining the current
+thermal dust model should be established. 
+\textbf{Recall that each of the dust components are fit to a template, with a global amplitude per frequency channel. It is therefore expected that more high-resolution data in the infrared, such as from \AKARI, \IRAS, and SPHEREx, will allow
+}
+for refining the current
 model without compromising the overall signal-to-noise ratio and
 introducing uncontrollable degeneracies. Natural next steps are to
 allow for spatial variations in the spectral parameters for each
@@ -1518,7 +1525,7 @@ sky signal model at long wavelengths.
       \noalign{\vskip 4pt\hrule\vskip 5pt} } }
   \endPlancktablewide 
   \tablenote {{\rm a}} Reproduced from the DIRBE Explanatory Supplement.\par
-  \tablenote {{\rm b}} Noise sensitivity per $0.7^{\circ}\times 0.7^{\circ}$ pixel, averaged over the full sky.\par
+  \tablenote {{\rm b}} Noise sensitivity per $0\fdg7\times 0\fdg7$ pixel, averaged over the full sky.\par
 \endgroup
 \end{table*}
 
@@ -1811,7 +1818,7 @@ emission, and there are very few traces of residual ZL
 emission. However, there is one striking exception to this, namely the
 25$\,\mu$m channel. In this case, we see both a large residual
 monopole and clear ZL band residuals. A minor exception is also the
-12 and 60$\,\mu$m channels, which also shows slight evidence of residual ZL
+12 and 60$\,\mu$m channels, which also show slight evidence of residual ZL
 band emission, although in this case the Galactic signal once again
 clearly dominates. In the next section, we compare these maps with the
 corresponding DIRBE K98 products.
@@ -1918,7 +1925,7 @@ difficult to determine by eye which of the two reveals a cleaner
 Galactic signal. At 4.9$\,\mu$m, however, there is no longer any
 visual ambiguity: Here we clearly see that the K98 map exhibits
 ZL residual while the DR2 model is visually clean. The
-same holds even more true at 12$\,\mu$m.
+same holds even moreso at 12$\,\mu$m.
 
 At 25$\,\mu$m, however, the relative improvements are less
 striking. While the DR2 map does show lower residuals than K98 also in
@@ -2189,6 +2196,6 @@ At the same time, this work demonstrates the need for more external data with co
 %
 
 \bibliographystyle{aa}
-\bibliography{../../common/CG_bibliography,../../common/Planck_bib}
+\bibliography{../../common/CG_bibliography,../../common/Planck_bib,references}
 \end{document}
 %%%% End of aa.dem
