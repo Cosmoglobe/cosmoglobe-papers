@@ -395,13 +395,13 @@ appropriate unit conversions to be applied during input and output
 operations. }
 \begin{alignat}{4}
   \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
-  &\M_{\mathrm{mbb}}(\bcold,\Tcold, q_i;\nuzerocold,\{\Delta\nu_i\})\t_{\mathrm{cold}}
+  &q^{\mathrm{cold}}_i\,\t_{\mathrm{cold}}
   && \textrm{(Cold dust)}\nonumber\\ %\label{eq:skymodel}\\
-  + &\M_{\mathrm{mbb}}(\bhot,\Thot, q_i;\nuzerohot,\{\Delta\nu_i\})
+  + &q_i^{\mathrm{hot}}\,
   \t_{\mathrm{hot}} && \textrm{(Hot dust)}\nonumber \\
-  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,q_i;\nuzeronear,\{\Delta\nu_i\}) \t_{\mathrm{near}}
+  + &q_i^{\mathrm{near}}\, \t_{\mathrm{near}}
  && \textrm{(Nearby dust)} \nonumber \\
-  + &\M_{\mathrm{mbb}}(\bext,\Text, q_i;\nuzeroext,\{\Delta\nu_i\})\t_{\mathrm{ext}}
+  + &q_i^{\mathrm{ext}}\,\t_{\mathrm{ext}}
   && \textrm{(H$_{\alpha}$ extinction)}\nonumber\\ %\label{eq:skymodel}\\
   + &\left(\frac{\nuzeroff}{\nu}\right)^2
   \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
@@ -435,44 +435,9 @@ operations. }
 %  \textrm{(Faint stars)} \nonumber\\  
   + &m_{\nu} && \textrm{(Monopole)}. \nonumber
 \end{alignat}
-In this expression, we have defined a function of the form
-\begin{equation}
-  M_{\mathrm{mbb}}(\beta, T, q_i;\nu_0, \{\Delta\nu_i\}) =
-    \begin{cases}
-      q_i & \nu \in \Delta\nu_i\\
-      \left(\frac{\nu}{\nu_0}\right)^{\beta+1}
-  \frac{\e^{h\nu_0/\kB T}-1}{\e^{h\nu/\kB T}-1} & \nu \notin \Delta\nu_i,
-    \end{cases}       
-\end{equation}
-which represents a generalized modified blackbody function. However,
-in addition to the usual emissivity index and temperature, $\beta$ and
-$T$, this function takes a set of constant values, $q_i$, and
-corresponding frequency ranges $\Delta\nu_i$. If the requested
-frequency happens to lie in any one of $\Delta\nu_i$, then $q_i$ is
-returned; otherwise the default is to return the standard modified
-blackbody spectrum. \textbf{In the current analysis, we use the smooth modified blackbody form for \Planck\ HFI, and the discrete binned form for DIRBE.} Another point to note in the above equation is
-that if a given amplitude is denoted by $\a$, then it is fitted freely
-to the current data; if it is denoted by $\t$, it is fixed to an
-external template. \textbf{Finally, $\epsilon_j(\nu)$ denotes a frequency-dependent dust extinction factor. In the current analysis, this is based on the \Planck\ 2013 $E(\mathrm{B}-\mathrm{V})$ model (see \citealp{CG02_04} for details), and is only applied to the bright discrete stars. Generalizing this to a full Galactic 3D dust model lies beyond the scope of the current paper, but we note that very preliminary work in this direction has already started.}
+In this expression, $\t$ denotes an external fixed spatial template, and $q_i$ (where relevant) represents its amplitude. The four first terms indicate four physically distinct thermal dust tracers, as discussed by \citet{CG02_05}: The first and second components traces cold HI correlated dust and hot $\mathrm{C}_{\mathrm{II}}$ correlated dust with temperatures around $T\sim16\,\mathrm{K}$ and 26\,K, respectively, and we adopt the \Planck\ HFI-based templates presented by \citet{CG02_06} for these. The third component corresponds to nearby dust (located closer to the Sun than 1.25\,kpc), and we adopt the \GAIA-based dust extinction template presented by \citet{edenhofer:2024} for this. Finally, the fourth component corresponds to dust extinction as traced by the WHAM H$\alpha$ sky map \citep{wham:2003}; for a full discussion of this effect, see \citet{CG02_05}. It is important to note that this dust model has in fact no degrees of freedom per pixel as far as the current DIRBE-based analysis is concerned. 
 
-As indicated by the above sky model, we fit a novel four-component
-generalized modified blackbody model to account for thermal dust
-across the combined DIRBE and \Planck\ HFI frequency range;
-for full details, see \citet{CG02_05}. The four components correspond
-to cold dust, hot dust, and nearby dust emission, respectively, \textbf{as
-well as dust extinction traced by the WHAM H$\alpha$ sky map \citep{wham:2003}}. All
-four are modeled with spatially constant spectral parameters, and
-only the cold and hot component amplitudes are fitted pixel-by-pixel;
-the amplitude of the nearby component is fixed to the \GAIA-based dust
-extinction template covering distances up to 1.25\,kpc produced by
-\citet{edenhofer:2024}.  As such, this dust model has in fact only two
-degrees of freedom per pixel, in addition to fewer than 30 spatially
-constant SED parameters. This is an extremely economical model of
-thermal dust emission, considering the fact that it describes the
-entire combined frequency range covered by both \Planck\ HFI and
-DIRBE, from 100\,GHz to 1\,$\mu$m.
-
-To account for free-free emission, we adopt the model presented by
+To account for (a low level of) free-free emission, we adopt the model presented by
 \citet{planck2014-a11}, both in terms of spatial distribution and
 spectrum. The SED of this component is defined by the Gaunt factor,
 $g_{\mathrm{ff}}(\nu; T_e)$ \citep{dickinson:2003,draine:2011}, which
@@ -525,7 +490,10 @@ star. We then fit one overall amplitude for each star to the four
 highest DIRBE frequency bands between 1.25 and 4.9\,$\mu$m; we also
 account for star emission in the 12 and 25\,$\mu$m bands, but these
 bands are not used for the actual fit. These individually fit sources are are denoted as ``bright
-stars'' in the sky model.
+stars'' in the sky model. For each bright star, we apply a dust extinction correction, $\epsilon(\nu)$. In the current analysis, this is based on the \Planck\ 2013 $E(\mathrm{B}-\mathrm{V})$ model, which clearly only represents a first-order approximation, given that it does not take into account the position of each star along each line-of-sight. Generalizing this to a full Galactic 3D dust model lies beyond the scope of the current paper, but we note that very preliminary work in this direction has already started.
+
+
+
 
 %\begin{figure*}
 %  \centering
@@ -544,12 +512,13 @@ stars'' in the sky model.
 The AllWISE catalog itself contains a total of about 747 million
 sources, making it impossible to fit all of these with DIRBE without
 introducing massive degeneracies. We therefore instead co-add the rest
-of the AllWISE sources into a diffuse background map of ``faint sources''
-under the assumption that their mean SED is equal to the average of
-the bright sources that actually are fitted as part of the
-algorithm, which forms the seventh component of the data model. Together, these two source components comprise an
-unprecedented deep model for compact objects in DIRBE that has only
-become possible due to WISE and \GAIA.
+of the AllWISE sources into a diffuse background map of ``faint
+sources'' under the assumption that their mean SED is equal to the
+average of the bright sources that actually are fitted as part of the
+algorithm, which forms the seventh component of the data model. No
+extinction correction is applied to the faint stars. Together, these
+two source components comprise an unprecedented deep model for compact
+objects in DIRBE that has only recently become possible due to WISE and \GAIA.
 
 The eighth and final component is simply a monopole per frequency. For
 DIRBE, this should ideally describe the CIB spectrum, but it
