@@ -1,0 +1,767 @@
+%                                                                 aa.dem
+% AA vers. 9.1, LaTeX class for Astronomy & Astrophysics
+% demonstration file
+%                                                       (c) EDP Sciences
+%-----------------------------------------------------------------------
+%
+% \documentclass[referee]{aa} % for a referee version
+%\documentclass[onecolumn]{aa} % for a paper on 1 column  
+%\documentclass[longauth]{aa} % for the long lists of affiliations 
+%\documentclass[letter]{aa} % for the letters 
+%\documentclass[bibyear]{aa} % if the references are not structured 
+%                              according to the author-year natbib style
+
+%
+
+\documentclass{aa}  
+
+%
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{natbib}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{txfonts}
+\usepackage{xcolor}
+
+\usepackage{blindtext}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage[options]{hyperref}
+% To add links in your PDF file, use the package "hyperref"
+% with options according to your LaTeX or PDFLaTeX drivers.
+\usepackage{float}
+%\usepackage{stfloats}
+\usepackage{dblfloatfix}
+\usepackage{afterpage}
+\usepackage{ifthen}
+\usepackage[morefloats=12]{morefloats}
+
+\usepackage{placeins}
+\usepackage{multicol}
+%\usepackage[breaklinks,colorlinks,citecolor=blue]{hyperref}
+\bibpunct{(}{)}{;}{a}{}{,}
+\usepackage[switch]{lineno}
+\definecolor{linkcolor}{rgb}{0.6,0,0}
+\definecolor{citecolor}{rgb}{0,0,0.75}
+\definecolor{urlcolor}{rgb}{0.12,0.46,0.7}
+\usepackage[breaklinks, colorlinks, urlcolor=urlcolor,
+    linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
+\hypersetup{linktocpage}
+\usepackage{bold-extra}
+
+\input{Planck}
+
+% Custom definitions
+\newcommand{\mathsc}[1]{{\normalfont\textsc{#1}}}
+\newcommand{\dv}[0]{\vec{d}}
+\newcommand{\s}[0]{\vec{s}}
+\newcommand{\M}[0]{\tens{M}}
+\renewcommand{\P}[0]{\tens{P}}
+\newcommand{\G}[0]{\tens{G}}
+\newcommand{\B}[0]{\tens{B}}
+\renewcommand{\a}[0]{\vec{a}}
+\newcommand{\n}[0]{\vec{n}}
+\renewcommand{\t}[0]{\vec{t}}
+\def\Cosmoglobe{\textsc{Cosmoglobe}}
+\def\Planck{\textit{Planck}}
+\def\WMAP{\textit{WMAP}}
+\def\COBE{\textit{COBE}}
+\def\GAIA{\textit{Gaia}}
+\def\gaia{\textit{Gaia}}
+\def\Gaia{\textit{Gaia}}
+\def\WISE{WISE}
+\def\AKARI{\textit{{AKARI}}}
+\def\IRAS{\textit{{IRAS}}}
+\def\nside{$N_{\mathrm{side}}$}
+\newcommand{\cii}{\ensuremath{\mathsc{C\ ii}}}
+\newcommand{\CII}{\ensuremath{\mathsc{C\ ii}}}
+\def\Commander{\texttt{Commander} }
+\def\commanderthree{\texttt{Commander3} }
+
+\def\Tcmb{\ifmmode T_\mathrm{CMB}\else $T_{\mathrm{CMB}}$\fi}
+\def\Tcold{\ifmmode T_\mathrm{c}\else $T_{\mathrm{c}}$\fi}
+\def\Thot{\ifmmode T_\mathrm{h}\else $T_{\mathrm{h}}$\fi}
+\def\Tnear{\ifmmode T_\mathrm{n}\else $T_{\mathrm{n}}$\fi}
+\def\scmb{\ifmmode s_\mathrm{CMB}\else $s_{\mathrm{CMB}}$\fi}
+\def\squad{\ifmmode s_\mathrm{quad}\else $s_{\mathrm{quad}}$\fi}
+\def\ssynch{\ifmmode s_\mathrm{s}\else $s_\mathrm{s}$\fi}
+\def\sdust{\ifmmode s_\mathrm{d}\else $s_{\mathrm{d}}$\fi}
+\def\ssdust{\ifmmode s_\mathrm{sd}\else $s_{\mathrm{sd}}$\fi}
+\def\same{\ifmmode s_\mathrm{AME}\else $s_{\mathrm{AME}}$\fi}
+\def\ssrc{\ifmmode s_\mathrm{src}\else $s_{\mathrm{src}}$\fi}
+\def\sco{\ifmmode s_\mathrm{CO}\else $s_{\mathrm{CO}}$\fi}
+\def\sff{\ifmmode s_\mathrm{ff}\else $s_{\mathrm{ff}}$\fi}
+\def\gff{\ifmmode g_\mathrm{ff}\else $g_{\mathrm{ff}}$\fi}
+\def\fsynch{\ifmmode f_\mathrm{s}\else $f_{\mathrm{s}}$\fi}
+\def\fsd{\ifmmode f_\mathrm{sd}\else $f_{\mathrm{sd}}$\fi}
+\def\fame{\ifmmode f_\mathrm{AME}\else $f_{\mathrm{AME}}$\fi}
+\def\alphasrc{\ifmmode \alpha_\mathrm{src}\else $\alpha_{\mathrm{src}}$\fi}
+\def\bcold{\ifmmode \beta_\mathrm{c}\else $\beta_{\mathrm{c}}$\fi}
+\def\bhot{\ifmmode \beta_\mathrm{h}\else $\beta_{\mathrm{h}}$\fi}
+\def\bnear{\ifmmode \beta_\mathrm{n}\else $\beta_{\mathrm{n}}$\fi}
+\def\bsynch{\ifmmode \beta_\mathrm{s}\else $\beta_{\mathrm{s}}$\fi} 
+\def\bsun{\ifmmode \beta_\mathrm{sun}\else $\beta_{\mathrm{sun}}$\fi} 
+\def\nuzeros{\ifmmode \nu_{0,\mathrm{s}}\else $\nu_{0,\mathrm{s}}$\fi} 
+\def\nuzeroff{\ifmmode \nu_{0,\mathrm{ff}}\else $\nu_{0,\mathrm{ff}}$\fi} 
+\def\nuzerocold{\ifmmode \nu_{0,\mathrm{c}}\else $\nu_{0,\mathrm{c}}$\fi}
+\def\nuzerohot{\ifmmode \nu_{0,\mathrm{h}}\else $\nu_{0,\mathrm{h}}$\fi}
+\def\nuzeronear{\ifmmode \nu_{0,\mathrm{n}}\else $\nu_{0,\mathrm{n}}$\fi} 
+\def\nuzeroame{\ifmmode \nu_{0,\mathrm{AME}}\else $\nu_{0,\mathrm{AME}}$\fi} 
+\def\nuzerosd{\ifmmode \nu_{0,\mathrm{}}\else $\nu_{0,\mathrm{sd}}$\fi} 
+\def\nuzerosrc{\ifmmode \nu_{0,\mathrm{src}}\else $\nu_{0,\mathrm{src}}$\fi} 
+\def\nup{\ifmmode \nu_{\mathrm{p}}\else $\nu_{\mathrm{p}}$\fi} 
+\def\alphasd{\ifmmode \alpha_{\mathrm{sd}}\else $\alpha_{\mathrm{sd}}$\fi} 
+\def\Te{\ifmmode T_{\mathrm{e}}\else $T_{\mathrm{e}}$\fi} 
+\def\kB{\ifmmode k_\mathrm{B}\else $k_{\mathrm{B}}$\fi} 
+
+
+\begin{document} 
+
+
+%\title{\bfseries{\Cosmoglobe\ DR2. VII. Multi-component spectral energy density model of large-scale thermal dust emission from 100\,GHz to 100\,THz}}
+\title{\bfseries{\Cosmoglobe\ DR2. VII. Towards a concordance model of large-scale thermal dust emission for microwave and infrared frequencies}}
+%\title{\bfseries{\Cosmoglobe\ DR2. VII. The mean thermal dust emission SED as seen by \Planck\ HFI and \COBE-DIRBE}}
+
+   \input{authors.tex}
+
+   %\institute{Institute of Theoretical Astrophysics, University of Oslo, Blindern, Oslo, Norway}
+  
+   % Shortened title, author list for top of page 
+   \titlerunning{Compact model of thermal dust emission}
+   \authorrunning{Gjerløw et al.}
+
+   \date{\today} 
+   
+   \abstract{We present a compact global model of thermal dust emission derived from the \Planck\ HFI and \COBE-DIRBE frequency channels between 100\,GHz and 12\,$\mu$m, as part of the global Bayesian \Cosmoglobe\ DR2 analysis. This model is based on four morphologically distinct astrophysical components, each defined by a spatially varying amplitude coupled with a spatially constant spectral energy distribution (SED). The four components correspond to nearby, cold, hot, and infrared dust emission, respectively. The amplitude map of the nearby dust component is defined by integrating the GAIA extinction-based 3D dust model of Edenhofer et al. (2022) along each line of sight, and this component therefore does not introduce any new parameters per pixel. The amplitude maps for the cold and hot components are derived from the \Planck\ 100, 143, 217, and 545\,GHz maps alone, while the amplitude of the infrared component is primarily derived from the DIRBE 60 and 100$\,\mu$m channels. The SEDs of each component are modelled with standard modified blackbody (MBB) emission laws with a free temperature, $T$, and spectral index, $\beta$, up to some maximum frequency, after which is defined by a piecewise binned function. Fitting this model to the HFI and DIRBE data, we make the following observations: 1) With only three free parameters per pixel, this model is able to reproduce more than 98\,\% of the observed diffuse Galactic signal at all \Planck\ and DIRBE frequency channels between 100\,GHz and 12\,$\mu$m; 2) the cold component correlates strongly with HI emission, and has an effective MBB temperature of $T_{\mathrm{cold}} = 11\pm3\,\mathrm{K}$; 3) the hot component correlates strongly with \CII\ emission, and has an effective MBB temperature of $T_{\mathrm{hot}} = 40\pm5\,\mathrm{K}$; 4) the infrared component is morphologically similar to the hot component, but more concentrated around the Galactic center;
+   }
+   \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
+
+   \maketitle
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+   
+% INTRODUCTION
+%-------------------------------------------------------------------
+\section{Introduction}
+%\the\textwidth \the\columnwidth
+Dust is really important!
+
+
+\section{Bayesian modelling of thermal dust emission in \Cosmoglobe\ DR2}
+\label{sec:dr2}
+
+\subsection{Data model and posterior distribution}
+
+\subsection{Multi-component thermal dust modelling}
+
+%\section{Dust modelling}
+%\subsection{Current status}
+%\label{sec:current_dust}
+Interstellar dust -- amorphous particles of silicate and carbonaceous materials
+-- makes its presence known on practically all astrophysically relevant
+wavelengths. The efforts to classify and describe this material is significant
+in its own right, but knowing its properties also allows for better and more
+precise astrophysical foreground removal in cases where interstellar dust
+emission contaminate the other signals of interest.\footnote{For a recent
+review, see \cite{Hensley2021}}.
+
+Recently, the "astrodust+PAH" model \citep{Hensley2023} was introduced, wherein
+the diffuse interstellar medium is hypothesised to be made up of a single
+composite material (the eponymous astrodust) for scales larger than
+$\sim0.02~\mu$m, and a distinct variety of materials -- including so-called
+polycyclic aromatic hydrocarbons (PAH) -- on scales smaller than this.
+
+In the wavelength regime between $3000-100~\mu$ m, this model is described well
+ by modified blackbody spectral energy density (SED)\footnote{The actual
+ astrodust model is made up of a composite MBB which has a transition between
+353 and 217 GHz}, that is a SED with the following behavior
+\begin{equation}
+s(\nu) \propto \nu^\beta B(\nu, T),
+\label{eq:mbb}
+\end{equation}
+
+where $\nu$ is the frequency, $B$ is the Planck law for a perfect blackbody,
+and $\beta$ is the spectral index. Typical temperatures of this blackbody in
+the diffuse ISM is around $\sim$ 20 K, meaning that the distribution typically
+peaks around 150\,$\mu$ m ($\sim 2000$ GHz).
+
+At lower wavelengths (2.5\,$\mu$m - 12\,$\mu$m), the astrodust+PAH model is
+mostly dominated by the nanoscale particle emission, and exhibits strong
+emission lines at various wavelengths (see Fig.~10 in \cite{Hensley2023}).
+
+\subsubsection{Spatial variations}
+This is a general picture -- typically, in a given line-of-sight the relative
+contribution of various dust components will vary. At the same time, the degree
+to which such variations can be detected and described is limited by the
+resolution and signal-to-noise ratios of the available data at the wavelengths
+involved. For example, .... Thus classifying populations of interstellar dust
+with common spectral parameters has been of high importance.
+
+One natural distinction that has been made is between ``hot'' and ``cold''
+dust. If we are able to divide the interstellar dust into components of high
+and low energy, such components could lend themselves to be traced by
+independent probes of interstellar matter. For the low-energy component, a
+natural tracer would be the H I column density as measured by experiments such
+as HI4PI. The hot dust component, similarly, could be traced by other measures
+of high-energy regions, with the traditional candidates being either the
+H$\alpha$ or C II spectral lines.
+
+In addition to this, we may also use known distance information to infer
+various dust populations. As an example, \cite{edenhofer:2024} constructed a
+series of high-resolution (\nside 256) extinction maps using data from GAIA and
+
+MORE HERE ON WHAM ETC
+
+%\subsection{The \Cosmoglobe DR2 analysis}
+The current paper is part of the \Cosmoglobe\ DR2 suite, meaning that our dust
+modelling is one part of a larger global Bayesian end-to-end analysis. In the
+\Cosmoglobe\ framework, the standard modus operandi is to begin with an explicit
+parametric model incorporating all known aspects of the dataset with which we
+are working -- including both instrumental effects as well as a physical model
+of what is being observed. For instance, the DIRBE time-ordered data (TOD) used
+in this analysis have been parametrized thus:
+\begin{align}
+	\label{eq:model}
+    \dv_{\mathrm{dirbe}} &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}}\right] + \n \\
+                         & \equiv \s^{\mathrm{tot}} + \n \nonumber,
+\end{align}
+where $\dv$ is the stacked TODs, $\G$ is an overall gain factor, $\P$ is the
+pointing matrix which projects the physical sky onto a $n_{\mathrm{tod}}$-sized
+space, $\B$ is the instrumental beam convolution operator, and $\n$ is the
+instrumental noise. The physical sky is represented by the next three terms:
+first, a sum over sky components that can be modelled as constant at every
+point in time (in galactic coordinates) -- the sum is over a HEALPix map of
+amplitudes for each sky component ($\a_c$) multiplied by a mixing matrix which
+extrapolates the given component to the frequencies observed; secondly, there
+is a term representing the zodiacal emission, which cannot be treated as a time
+constant; finally there is a term representing a component that is static in
+solar coordinates, which may either be related to the DIRBE sidelobes, or be
+geniune excess radiation originating in the Solar System. These two last terms
+are treated in \citet{CG02_02} and \citet{CG02_03}, and what concerns us in the
+present work is the first of the three terms, which we can write out more
+explicitly as follows:
+
+\begin{equation}
+\label{eq:skymodel}
+\begin{aligned}
+  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
+  &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
+  && \textrm{(Cold dust)} \\
+  + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
+  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\\
+  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
+  a_{\nu} && \textrm{(Nearby dust)} \\
+  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
+  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\\
+  + &\delta(\nu-\nu_{0,\cii}) \a_{\cii}
+	h^{\cii}_{\nu} && (\cii)\\
+  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
+  \textrm{(Bright stars)} \\
+  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
+  \textrm{(Faint stars)} \\  
+    + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
+  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
+  T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
+  a_{\mathrm{e},j} && \textrm{(FIR sources)}\\
+  + &m_{\nu} && \textrm{(Monopole)}. 
+\end{aligned}
+\end{equation}
+
+As it stands, this is as ``complete'' of a static model we currently can write down
+for the frequency domain we are dealing with in this paper. The first three
+terms is the complete model of thermal dust, which is the main focus of this
+work, and will be elaborated on below. The fourth term models the free-free
+dust component, which is expected to contribute moderately at all relevant
+frequencies without becoming a dominant term. The next two terms describe CO
+and C II line emission that show up as delta function-like contributions to the
+total signal at certain frequencies (TODO). Then, there are three point source
+terms, all of which are dealt with in \citet{CG02_04}. Finally, the final term
+represents the monopole at each frequency, which is also treated in
+\citet{CG02_03}.
+
+\subsubsection{Bayesian end-to-end analysis}
+As mentioned, this work is part of a global analysis of data spanning
+100-2.4$\cdot 10^6$ GHz, wherein we draw samples from the \emph{posterior}
+distribution of the full set of parameters that enter the analysis
+\citep{CG02_01} -- in formulaic terms, we are mapping out $P(\theta | \dv)$,
+the probability distribution of the set of parameters $\theta$ given the
+observed data $\dv$. Bayes' theorem allows us to write
+\begin{equation}
+    \label{eq:bayestheorem}
+    P(\theta|\dv) = \frac{P(\dv|\theta)P(\theta)}{P(\dv)},
+\end{equation}
+and, since $P(\dv)$ typically only enters as a normalizing term as long as the
+parameter space does not change, sampling from $P(\theta|\dv)$ is (modulo a
+prior term) is equivalent to sampling from
+$P(\dv|\theta)\equiv\mathcal{L}(\theta)$, the so-called \emph{likelihood}
+function.
+
+The number of parameters involved in our model (Eq. \ref{eq:model}) is of the
+order of millions, making sampling from the likelihood function a non-trivial
+task. The \Cosmoglobe\ framework is based on the \Commander software
+\citep{eriksen:2004,seljebotn:2019,bp03}, which maps out the posterior
+parameter distribution through a process called \emph{Gibbs sampling}
+\citep[e.g.,][]{geman:1984}, a Monte-Carlo method based on sequentially
+sampling each parameter (or a subset of parameters) from their respective
+marginal distributions wrt. all other parameters. The theory of Gibbs sampling
+then says that by combining these samples into a full set for all the
+parameters involved, this set will represent a proper sample from the joint
+distribution. Applied to Eq. \ref{eq:model}, we get a sequence of operations as
+follows:
+
+%\begin{equation}
+%\begin{alignat}{11}
+%\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
+%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%&\,\a_{\mathrm{static}})\\ \nonumber
+%\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
+%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%&\,\a_{\mathrm{static}})\\ \nonumber
+%\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
+%\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+%&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
+%\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+%&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\ \nonumber
+%\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
+%\end{alignat}
+%\end{equation}
+
+\begin{equation}
+    \label{eq:gibbschain}
+\begin{aligned}
+\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
+\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+&\,\a_{\mathrm{static}})\\
+\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
+\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+&\,\a_{\mathrm{static}})\\
+\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\
+\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})
+\end{aligned}
+\end{equation}
+
+Here, the symbol $\leftarrow$ indicates the operation of drawing a sample from
+the distribution on the right-hand side. After some burn-in period, the
+resulting joint parameter sets will correspond to samples drawn from the true
+underlying joint posterior.
+
+Since every step of the Gibbs sampling process assumes that all other
+parameters are ``given'', we can now treat a highly interconnected problem
+(i.e. sampling from the joint posterior of all parameters involved in our data
+model) as a highly modular one -- meaning that we can perform each
+``sub-analysis'' without being concerned with the other parts of the problem.
+Hence, in this paper, we mainly focus on the three first components of Eq.
+(\ref{eq:skymodel}), and leave the other components for other papers. (TODO
+maybe actually cite those papers)
+
+\subsubsection{Three-component dust model}
+As mentioned above, we here adopt a model for thermal dust that comprises three
+distinct components, represented by the first three terms of Eq.
+(\ref{eq:skymodel}). All three components are modelled as having a continuous
+modified blackbody behaviour between 100 and 1050~GHz, i.e. below the DIRBE
+frequencies, multiplied by an amplitude per pixel, which for two of the
+components is allowed to vary as a free parameter in the Gibbs chain, and for
+the last component is defined as full-sky template.
+
+The spectral parameters -- that is, $\beta$ and $T$ in Eq. (\ref{eq:mbb}) -- of
+this model are set to be constant across the sky for each of the three
+components. Thus, each of the component has a different spectral parameter pair
+than the others, but it is not allowed to vary spatially.
+
+For the frequencies covered by DIRBE bands 3-10, we extend this model in the
+following way: We define a set of SED bins, each of which is chosen to
+correspond to the width of the DIRBE bands, as shown in table \ref{tab:bins}.
+Each of these bins are associated with a free parameter for that dust
+component; namely, the amplitude of the SED in that bin. In other words, the
+SED for a given component for a given SED bin is a constant, but the exact
+value of this constant is allowed to vary in the Gibbs chain.
+
+%Since the phenomenology of thermal dust gets more complicated above 1050~GHz
+%(see sec. \ref{sec:current_dust}), instead of adopting a model based on
+%underlying physics, we define a set of bins, each of which is chosen to roughly
+%correspond to the width of DIRBE bands 3-10, respectively, as shown in Table
+%\ref{tab:bins}. Each of the bins is assigned an amplitude for each dust
+%component, and the SED of that component for the frequencies encompassed by a
+%given bin is given by the amplitude assigned to that bin\footnote{Only one of
+%    the three components are allowed to have nonzero amplitudes at DIRBE band 3
+%and 4 -- see below}. We do not define such bins for DIRBE bands 1 and 2, and we
+%force the total dust SED to be zero at these bands, since the thermal dust
+%emission is expected to be negligible at these frequenies.
+
+The first component we call ``nearby dust''. We define this component in order
+to properly utilize the available knowledge about nearby dust structure --
+several works, such as \citet{Dharmawardena:2024} and \citet{edenhofer:2024}
+use extinction data from catalogues such as Gaia to infer the dust structure
+out to 1-3~kpc. We define a template (see Section \ref{sec:data} for a detailed
+explanation of this template) which traces these nearby dust structures. The
+complete SED of this component is thus defined as
+\begin{equation}
+    \label{eq:nearby_dust}
+    s(\nu) = \begin{cases} a\t\nu^{\beta} B(\nu, T) & \nu \in [100,
+        1050~\text{GHz}] \\
+        a^i_{\textrm{bin}}\t & \nu \in [\nu_{\textrm{bin, start}}^i,
+        \nu_{\textrm{bin, end}}^i]
+            \end{cases},
+\end{equation}
+where $a$ is a scaling parameter, $\t$ is the nearby dust template, and the
+remaining parameters on the first line are the same as in Eq.~(\ref{eq:mbb}),
+and $\nu_{\textrm{bin, start}}^i$ and $\nu_{\textrm{bin, end}}^i$ are the start
+and end frequencies of bin $i$, respectively.
+
+The two next components are not constrained spatially by templates; rather,
+their amplitudes are allowed to vary from pixel to pixel. We call these
+components ``cold'' and ``hot'' dust, respectively, and their SEDs can both be
+expressed as follows,
+\begin{equation}
+    \label{eq:coldhotdust}
+    s(\nu) = \begin{cases} \a\nu^{\beta} B(\nu, T) & \nu \in [100,
+        1050~\text{GHz}] \\
+        a^i_{\textrm{bin}} & \nu \in [\nu_{\textrm{bin, start}}^i,
+        \nu_{\textrm{bin, end}}^i]
+            \end{cases},
+\end{equation}
+where $\a$ is the vector of per-pixel amplitudes. The only difference between
+the two components is that SED amplitude of the hot dust component is allowed
+to be nonzero for bins 7 and 8 (DIRBE bands 3 and 4), while the cold dust
+(as well as the nearby dust) SEDs are only allowed to be nonzero for bins 1-6
+(DIRBE bands 10 through 5).
+
+With this model, we are effectively operating with roughly two degrees of
+freedom per pixel -- namely, the hot and cold dust amplitudes. The rest of the
+parameters are all spatially constant, and so adds just fractional degrees of
+freedom to the total dust model.
+
+We emphasize that this model is mostly phenomenological, and we are already
+planning several improvements to the model to be published in the future.
+However, already with this relatively crude model the results are of sufficient
+interest for the community that we think it worthwhile to report.
+
+\begin{table*}
+    \centering
+    \caption{Defintion of the SED bins used in this paper}
+    \begin{tabular}{c|c|c|c}
+        \label{tab:bins}
+        Bin number & Frequency range (GHz) & Wavelength range ($\mu$m) & DIRBE band correspondence \\
+        \hline
+        1 & 1050-1667 & 286.5-179.8 & 10 \\
+        2 & 1667-2540 & 179.8-118.0 & 9 \\
+        3 & 2540-4064 & 118.0-73.8 & 8 \\
+        4 & 4064-9000 & 73.8-33.3 & 7 \\
+        5 & 9000-18100 & 33.3-16.6 & 6 \\
+        6 & 18100-45500 & 16.6-6.6 & 5  \\
+        7 & 45500-70215 & 6.6-4.3 & 4 \\
+        8 & 70215-109490 & 4.3-2.7 & 3
+    \end{tabular}
+\end{table*}
+
+
+\subsection{Gibbs sampling}
+
+
+\section{Data}
+\label{sec:data}
+This paper concerns itself with a subset of the total global analysis which is
+described more fully in \cite{CG02_01}; namely, the part of the analysis that
+models the three thermal dust components. Describing the data that goes into
+this part of the analysis is two-tiered, in the sense that there may be (and in
+this case, is) data that is used in the total global analysis which is not
+directly used for fitting the dust models, and then there is data that
+\emph{is} directly used for this purpose. However, even the data that is not
+directly used to fit our dust models still affect the total analysis by
+affecting the overall data model fit (eq.~\ref{eq:skymodel}).
+
+Below, we first describe the data that directly impacts the dust fitting --
+namely, the DIRBE and \Planck\ HFI data -- before describing the ancillary data
+that is used in the global the analysis. All of the data used is described in
+more detail in \cite{CG02_01}, and we refer the interested reader to that
+paper.
+
+\subsection{\COBE-DIRBE}
+The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
+CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
+measured the sky in ten frequency bands from $1\,\mathrm{\mu m}$ to
+$240\,\mathrm{\mu m}$. In this analysis, we have converted the original DIRBE
+CIO (Calibrated Individual Observations), whose pointing information is given
+in terms of Quadcube pixels with a resolution of 20\arcs\ into a HEALPix
+\nside=512 pixelation, giving an approximate resolution of 7\arcm. Following
+the nomenclature of \cite{CG02_01}, we refer to the DIRBE CIOs as
+``time-ordered data'' (TOD). Including DIRBE TOD in the analysis in this way
+allows us to target the zodiacal light \citep{CG02_02}, which, as mentioned
+above, must be analysed as a time-varying component on the sky, in contrast to
+other astrophysical components.
+
+The use of DIRBE data also allows a fuller exploration of the scales relevant
+for interstellar dust modelling; in particular, we are able to capture the
+``bump'' and falling off of the thermal dust SEDs. 
+
+\subsection{External dust tracers}
+The \Planck High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed
+the sky in six frequency channels from 100 GHz to 857 GHz, with the primary
+purpose being characterizing temperature fluctuations in the CMB to
+unprecedentedly small scales. As it also was able to target the far-infrared
+sky, it is able to shed light on the dust component in this frequency range,
+and more generally for the analysis of which this paper is a part, is able to
+also characterize the CIB fluctuations
+\citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+
+The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+
+In addition to its complementary observation strategy, \Planck's frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered \Planck\ maps have had an estimate of the zodiacal emission modeled using the 3D model derived by K98 with varying emissivities per component. While this technically is redundant information that could contaminate this joint analysis, the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work.
+
+At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the DIRBE range. In order to avoid this, we remove the GNILC \citep{planck2016-XLVIII} estimate of the CIB from the HFI maps before including them in our analysis.
+
+Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
+We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
+
+\subsection{Data preprocessing}
+
+\subsection{Masks}
+
+
+\section{Results}
+
+\subsection{Markov chains, correlations and convergence}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/traceplots.pdf}
+  \caption{Traceplots.}
+  \label{fig:trace}
+\end{figure}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/corrmat_extended.pdf}
+  \caption{Correlations.}
+  \label{fig:corrmat}
+\end{figure}
+
+
+
+\subsection{Multi-component thermal dust SED posteriors}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/cold_dust_sed.pdf}
+  \caption{Cold dust SED.}
+  \label{fig:cold_dust_sed}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/hot_dust_sed.pdf}
+  \caption{Hot dust SED.}
+  \label{fig:hot_dust_sed}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/nearby_dust_sed.pdf}
+  \caption{Nearby dust SED.}
+  \label{fig:nearby_dust_sed}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/nearby_dust_sed.pdf}
+  \caption{H$\alpha$ SED.}
+  \label{fig:wham_sed}
+\end{figure}
+
+
+\clearpage
+\section{\Cosmoglobe\ DR2 sky model}
+
+\subsection{Summary of global sky model}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\textwidth]{figures/all_fgs.pdf}
+  \caption{Summary of all foregrounds.}
+  \label{fig:SED_overview}
+\end{figure*}
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.49\linewidth]{figures/CGDR2_colddust_1deg_n512_v1.pdf}
+  \includegraphics[width=0.49\linewidth]{figures/CGDR2_hotdust_1deg_n512_v1.pdf}\\
+  \includegraphics[width=0.49\textwidth]{figures/lambda_WHAM_1_256.pdf}
+  \includegraphics[width=0.49\textwidth]{figures/extinctions_515.pdf}
+  \caption{Dust amplitude maps used in the \Cosmoglobe\ DR2 sky model.  }
+  \label{fig:dustmaps}
+\end{figure*}
+
+
+\subsection{Component-wise decomposition}
+
+
+       \begin{figure*}
+         \centering
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_10a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_10a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_10a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_10a_v01.pdf}\\
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_09a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_09a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_09a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_09a_v01.pdf}\\
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_08a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_08a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_08a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_08a_v01.pdf}\\
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_07a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_07a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_07a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_07a_v01.pdf}\\
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_06a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_06a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_06a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_06a_v01.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_06a_v01.pdf}\\  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_05a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_05a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_05a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_05a_v01.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_05a_v01.pdf}\\
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_04a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_04a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_04a_v01.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_04a_v01.pdf}\\  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_03a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_03a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_03a_v01.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_03a_v01.pdf}\\  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_02a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_02a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_02a_v01.pdf}  
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_02a_v01.pdf}\\
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_01a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_01a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_01a_v01.pdf}
+         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_01a_v01.pdf}\\
+         \includegraphics[width=0.50\linewidth]{figures/colourbar_MJysr.pdf}
+         \caption{Comparison between the raw DIRBE data and the various fitted components for one single Gibbs sample. Columns show, from left to right, 1) the time-ordered DIRBE data co-added into pixelized maps; 2) zodiacal light emission; 3) thermal dust emission; 4) star emission; and 5) data-minus-model residual emission. Rows show individual frequency channels. Missing entries corresponds to components that are forced to zero in the model. Note that all panels are plotted with the same color scale in units of MJy/sr, and can be directly compared.}
+         \label{fig:comp_vs_freq}
+       \end{figure*}
+
+
+\subsection{Model efficiency and residuals}
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
+  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}
+  \caption{Comparison between thermal dust frequency maps (left column) and residual frequency maps (right column). }
+  \label{fig:dustmaps}
+\end{figure*}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/template_signal_rms_v1.pdf}
+  \caption{Thermal dust model efficiency.}
+  \label{fig:efficiency}
+\end{figure}
+
+
+
+       
+
+
+\clearpage
+\section{Conclusions}
+
+
+
+
+\blindtext
+
+
+
+
+
+\begin{acknowledgements}
+ The current work has received funding from the European
+  Union’s Horizon 2020 research and innovation programme under grant
+  agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
+  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{HEALPIX} package.
+  We acknowledge the use of the Legacy Archive for Microwave Background Data
+  Analysis (LAMBDA), part of the High Energy Astrophysics Science Archive Center
+  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science Division at
+  the NASA Goddard Space Flight Center.  
+\end{acknowledgements}
+
+
+%-------------------------------------------------------------
+%                                       Table with references 
+%-------------------------------------------------------------
+%
+
+\bibliographystyle{aa}
+\bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
+\end{document}
+%%%% End of aa.dem
+
+
