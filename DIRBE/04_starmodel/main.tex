@@ -62,7 +62,7 @@
 \begin{document} 
 
 
-   \title{\bfseries{\Cosmoglobe\ DR2. IV. Modelling compact objects\\ in DIRBE with GAIA and WISE}}
+   \title{\bfseries{\Cosmoglobe\ DR2. IV. Modelling starlight\\ in DIRBE with GAIA and WISE}}
 
    \input{authors.tex}
 
@@ -74,7 +74,8 @@
 
    \date{\today} 
    
-   \abstract{We present a model of starlight emission and extragalactic pointsources in the Diffuse Infrared Background Explorer (DIRBE) data between 1.25 and 25$\,\mu$m based on GAIA and WISE measurements. We include three classes of compact objects: Bright point sources with spectral energy densities (SEDs) measured by GAIA, bright point sources without SED data, which are most likely stars within our own galaxy, and a diffuse background of dim pointsource emission. We find that the number of stars with a statistically significant flux density detected at Galactic latitudes $|b|>20^{\circ}$ at more than than $5\,\sigma$ is 717\,454 stars, for an average of 0.4~stars per DIRBE beam area. Furthermore, based on this model we find that total star emission accounts for 98\,\% of the observed flux density at 1.25\,$\mu$m; 83\,\% at 4.9$\,\mu$m; and 3\,\% at 25\,$\mu$m. Furthermore, we also include the contribution from the diffuse background of faint sources, which is fit as an independent component in the model. As shown in companion papers, this new model is sufficiently accurate to allow for precise characterization of both extragalactic background (cosmic infrared and optical background; CIB and COB) fluctuations and Galactic (free-free and polycyclic aromatic hydrocarbon (PAH) dust) emission in the four highest DIRBE frequencies.      }
+   \abstract{We present a model of starlight emission and extragalactic pointsources in the Diffuse Infrared Background Explorer (DIRBE) data between 1.25 and 25$\,\mu$m based on GAIA and WISE measurements. We include two classes of compact objects: Bright point sources with spectral energy densities (SEDs) measured by GAIA and a diffuse background of dim pointsource emission.   
+   \textit{We find that the number of stars with a statistically significant flux density detected at Galactic latitudes $|b|>20^{\circ}$ at more than than $5\,\sigma$ is 478\ 317 stars, for an average of 0.4~stars per DIRBE beam area. Furthermore, based on this model we find that total star emission accounts for 98\,\% of the observed flux density at 1.25\,$\mu$m; 83\,\% at 4.9$\,\mu$m; and 3\,\% at 25\,$\mu$m. Furthermore, we also include the contribution from the diffuse background of faint sources, which is fit as an independent component in the model.} As shown in companion papers, this new model is sufficiently accurate to allow for precise characterization of both extragalactic background (cosmic infrared and optical background; CIB and COB) fluctuations and Galactic (free-free and polycyclic aromatic hydrocarbon (PAH) dust) emission in the four highest DIRBE frequencies.      }
 
 
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
@@ -82,7 +83,6 @@
    \maketitle
 
 \setcounter{tocdepth}{2}
-\tableofcontents
    
 % INTRODUCTION
 %-------------------------------------------------------------------
@@ -99,9 +99,9 @@ In this paper, part of the larger Cosmoglobe DR2 results paper suite, we discuss
 \label{sec:models}
 
 
-In this work, we break the compact objects into three categories as follows: 1) Bright (> Mag 8 in the WISE 3.4 $\,\mu$m) objects with SEDs measured by Gaia (hereafter "stars"), described in section \ref{sec:starmodel}, 2) Bright objects without SED information (hereafter "extra sources"), described in section \ref{sec:extragalacticmodel}, and 3) a diffuse background of dim objects (hereafter "diffuse"), described in section \ref{sec:diffusemodel}.
+In this work, we break the compact objects into two categories as follows: 1) Bright (> Mag 12 in the WISE 3.4 $\,\mu$m) objects with SEDs measured by Gaia (hereafter "stars"), described in section \ref{sec:starmodel}, and 2) a diffuse background of dim objects (hereafter "diffuse"), described in section \ref{sec:diffusemodel}.
 
-Figure \ref{fig:starcount} shows the total number of stars and extra objects in each pixel at nside=512. There are a total of 717454 stars supplemented with 66217 extra sources over the full sky, but, as is expected, they are primarily clustered in the galactic plane. The majority of the sky at high latitudes contains 0-1 sources/pixel, making it well behaved. In the bottom panel, we see the number of sources included in the diffuse template per pixel, which contains the vast majority of the (faint) sources. In the galactic plane, the large number of distinct sources per pixel leads to degeneracies between sources, which in turn leads to instability in the individual star parameters. Despite this, the overall estimate of pointsource emission is quite stable, as shown in section \ref{sec:results}. An overview of this processing is shown in figure \ref{fig:diagram}.
+Figure \ref{fig:starcount} shows the total number of stars in each pixel at nside=512. There are a total of 478317 stars over the full sky, but, as is expected, they are primarily clustered in the galactic plane. In the bottom panel, we see the number of sources included in the diffuse template per pixel, which contains the vast majority of the (faint) sources. An overview of this processing is shown in figure \ref{fig:diagram}.
 
 \begin{figure}
   \centering
@@ -111,28 +111,30 @@ Figure \ref{fig:starcount} shows the total number of stars and extra objects in 
   \label{fig:starcount}
 \end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{figs/diagram/dirbe_diagram.pdf}\\
+  \includegraphics[width=\columnwidth]{figs/diagram/dirbe_diagram.pdf}\\
   \caption{Schematic diagram of the commander handling of compact objects in DIRBE. Red ovals are input data, and the blue boxes are the three classes of sources described in this paper. }
   \label{fig:diagram}
-\end{figure*}
+\end{figure}
 
 \subsection{Stars}
 
 \label{sec:starmodel}
 
-For each star we extract estimates of the effective temperature, $T_{\mathrm{eff}}$, the gravitational acceleration, $\log g$, and the metallicity, $[M/H]$, from the GAIA DR2 database \citep{gaiaCat}, and use those to identify a best-fit spectral energy density (SED) from the PHOENIX starlight database \citep{Husser_2013}. The distributions of these parameters for the stars we select are shown in figure \ref{fig:gaiacat}. For stars with $T_{\mathrm{eff}} > 12000$K the PHOENIX catalog lacks data, which means that the 1.1\% of sources with higher temperatures use this 12000K temperature spectra. This could lead to an issue with the SEDs of these hottest stars, but the overall amplitudes are fit per star so this should mitigate the majority of this effect.
+We begin construction of the bright star model by taking the AllWise pointsource database \citep{wiseCat} and thresholding at Mag 7 in the W1 band. We then construct a unique sets of stars, starting with the brightest ones, which are no closer than 5 arcseconds to one another, which allows their parameters to be sampled without degeneracies. We repeat this procedure twice more, until we have three unique sampling groups of stars, all of which are far enough apart to be sampled simultaneously.
+
+For each star in these groups we extract estimates of the effective temperature, $T_{\mathrm{eff}}$, the gravitational acceleration, $\log g$, and the metallicity, $[M/H]$, from the GAIA DR2 database \citep{gaiaCat}, and use those to identify a best-fit spectral energy density (SED) from the PHOENIX starlight database \citep{Husser_2013}. The distributions of these parameters for the stars we select are shown in figure \ref{fig:gaiacat}. For stars with $T_{\mathrm{eff}} > 12000$K the PHOENIX catalog lacks data, which means that the 1.1\% of sources with higher temperatures use this 12000K temperature spectra as the closest match. This could lead to an issue with the SEDs of these hottest stars, but the overall amplitudes are fit per star so this should mitigate the majority of this effect.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{figs/gaia/t_eff.pdf}
   \includegraphics[width=\columnwidth]{figs/gaia/logg.pdf}\\
   \includegraphics[width=\columnwidth]{figs/gaia/metalicity.pdf}\\
-  \caption{Histograms of the three star parameters (effective temperature, gravity and metalicity) that are used by the PHOENIX database to determine the star SEDs, for the 717454 stars used in this analysis.}
+  \caption{Histograms of the three star parameters (effective temperature, gravity and metalicity) that are used by the PHOENIX database to determine the star SEDs, for the 478317 stars used in this analysis.}
   \label{fig:gaiacat}
 \end{figure}
 
-The effects of these varying parameters on the star SEDs was examined in figure \ref{fig:catalogueSEDs}. Although these effects are likely well known in the stellar astronomy community, we show them here for cosmologists who do not have an intuition for them. Here, we select a star with $T_{\mathrm{eff}}= 4600$K, $\log g = 3.5$ and $[M/H]= 0.0$ as our reference star, being close to the mean of our sample. We then vary each of the three parameters slightly, holding the others constant and plot difference between the two curves, for both positive variation (top subplots) and negative (bottom subplots). The effective temperature is perhaps not surprisingly the dominant effect on the SED. A simpler model of star parameters in the far-infrared could perhaps neglect $\log g$ and $[M/H]$ entirely and produce SEDs based purely on $T_{\mathrm{eff}}$, and would be nearly as predictive, but we made a conservative choice to include them in the analysis regardless. 
+The effects of these stellar parameters on the star SEDs was examined in Figure \ref{fig:catalogueSEDs}. Although these effects are likely well known in the stellar astronomy community, we show them here for cosmologists (such as ourselves) who do not have an intuition for them. Here, we select a star with $T_{\mathrm{eff}}= 6000$K, $\log g = 3$ and $[M/H]= 0.0$ as our reference star. We then vary each of the three parameters slightly, holding the others constant and plot the two curves. The effective temperature is perhaps not surprisingly the dominant effect on the SED. A simpler model of star parameters in the far-infrared could perhaps neglect $\log g$ and $[M/H]$ entirely and produce SEDs based purely on $T_{\mathrm{eff}}$, and would be nearly as predictive, but we made a conservative choice to include all three parameters in the analysis regardless. 
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{figs/gaia/star_SED_Teff.pdf}
@@ -149,15 +151,16 @@ The effects of these varying parameters on the star SEDs was examined in figure 
 \end{figure}
 
 
-The full Bayesian data mode is shown in \cite{CG02_01}, and includes the star component $s_{stars}(p, \lambda_j)$, the star emissions as a function of pixel $p$ and frequency $\lambda_j$ for a band $j$. Equation \ref{eq:datamodel} shows the data model for the star component that we describe in this paper
+The full Bayesian data model is shown in \cite{CG02_01}, and includes the star component $s_{stars}(p, \lambda_j)$, the star emissions as a function of pixel $p$ and frequency $\lambda_j$ for a band $j$. Equation \ref{eq:datamodel} shows the data model for the star component that we describe in this paper:
 
 
 \begin{equation}
-s_{stars}(p, \lambda_j) = \sum_i a_i B_i(p, \lambda_j) E_i(\lambda_j),
-\label{eq:datamodel}
+ s_{stars}(p, \lambda_j) = U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  \epsilon_j(\nu)\,f_{\mathrm{Gaia},j} a_{\mathrm{s},j}.
+  \label{eq:datamodel}
 \end{equation}
 
-where in the notation of \cite{CG02_01} 
+Here,$U_{\mathrm{mJy}}$ is a unit conversion factor, $a_{\mathrm{s},j}$ is the amplitude per source, $\epsilon_j(\nu)$ is the frequency dependant extinction factor and
 
 \begin{equation}
 f_{\mathrm{GAIA}} = B_i(p, \lambda_j) E_i(\lambda_j),
@@ -165,9 +168,9 @@ f_{\mathrm{GAIA}} = B_i(p, \lambda_j) E_i(\lambda_j),
 
 which is the beam-convolved SED taken from the PHOENIX catalogue.
 
-Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the GAIA data and the PHOENIX starlight database, as discussed in section \ref{sec:phoenix}, and the beam $B$ is fixed for each detector, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star. We include a star component in DIRBE bands 01-06 (1.25 - 25 $\mu$m), as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
+Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the GAIA data and the PHOENIX starlight database, as discussed in section \ref{sec:phoenix}, and the beam $B$ is fixed for each detector. The extinction factor $\epsilon_j(\nu)$ is also just based on the existing SOMETHING model, as detailed in section \ref{sec:extinction_model}, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star. We include a star component in DIRBE bands 01-06 (1.25 - 25 $\mu$m), as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
 
-To sample the star amplitudes $a_i$ we attempt to minimize the residual in each band for each source $i$, which can be expressed as a linear minimization problem, analogous to the mapmaking equation
+To sample the star amplitudes $a_i$, we attempt to minimize the residual in each band for each source $i$, which can be expressed as a linear minimization problem, analogous to the mapmaking equation
 
 \begin{equation}
 \label{eq:minimize}
@@ -192,7 +195,7 @@ Here, $\sigma_j^2(p)$ is the noise in pixel $p$ in band $j$, and $d_j(p)$ is the
 a_i = \frac{Y_i}{X_i} + \frac{1}{\sqrt{X_i}} N_i(0,1),
 \end{equation}
 
-where $N_i(0,1)$ is a sample drawn from a unit Gaussian with 0 mean.
+where $N_i(0,1)$ is a sample drawn from a unit Gaussian with 0 mean. 
 
 \subsubsection{The PHOENIX Database}
 \label{sec:phoenix}
@@ -231,38 +234,29 @@ There, we run into the limitation that the older files are only defined to $\lam
     \label{tab:phoenix}
 \end{table}
 
-\subsection{Binary Stars}
+\subsubsection{Binary Stars}
 
 In the Gaia database, X\% of stars were found to be binaries
 
-\subsection{Extra Pointsources}
+\subsubsection{Extinction}
+\label{sec:extinction_model}
 
-\label{sec:extragalacticmodel}
-
-After fitting the star catalogue, we are left with another background of pointsources, which lack spectral information. Sources that do not match against the GAIA catalogue or that do not have sufficient SED information to model, but which are still brighter than magnitude 5.06 in the WISE $3.4 \mu m$ band ($3000$ MJy) are fit with a more general blackbody of the form:
-
-\begin{equation}
-a \frac{e^{\frac{\nu_0 h}{k_b \theta}} - 1}{e^{\frac{\nu h}{k_b \theta}} - 1} * (\frac{\nu}{\nu_0})^{\theta_2 + 1}
-\end{equation}
-
-Here, $\nu_0$ is a reference frequency, set to $239833.966$ GHz (1.25 $\mu m$), $\theta_1$ and $\theta_2$ are spectral indexes that describe the source's frequency scaling behaviour, and a is an overall amplitude scaling. 
-
-
+At the highest frequencies, dust extinction becomes one of the dominant effects on the star emission, particularly in the galactic plane.
 
 \subsection{Diffuse Star Emission}
 
 \label{sec:diffusemodel}
 
-Finally, after modelling the brightest sources using one of the two methods described above, we are left with a diffuse background of stars that are too dim to be individually resolved, but that in aggregate form a significant contribution to the total star signal at these wavelengths and so must be accounted for. We model this diffuse background using a single full-sky template, generated from the WISE W1 data at 3.4$\mu$m. We take the full AllWISE pointsource catalog, and select source with a included W1 magnitude that isn't already included in one of the previous pointsource models (ie. sources dimmer than Mag. 8, or less that Mag. 5 with no stellar parameter data). We create a high resolution healpix map \citep{healpix} at nside=2048, and then add each source in turn to this map. We then downgrade the map to nside=512, which gives the map shown in Fig. \ref{fig:diffuse}. 
+Finally, after modelling the brightest sources using the method described above, we are left with a diffuse background of stars that are too dim to be individually resolved, but that in aggregate form a significant contribution to the total star signal at these wavelengths and so must be accounted for. We model this diffuse background using a single full-sky template, generated from the WISE W1 data at 3.4$\mu$m. We take the full AllWISE pointsource catalog, and select sources with a valid W1 magnitude that aren't already included in the bright pointsource model. We create a high resolution healpix map \citep{healpix} at nside=2048, and then add each source in turn to this map. We then downgrade the map to nside=512, which gives the map shown in Fig. \ref{fig:diffuse}. 
 
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{figs/diffuseTemplate/diffuse_stars_log.pdf}\\
-  \caption{The template of diffuse star emission evaluated in the DIRBE 01 band, plotted on a log scale.}
+  \includegraphics[width=\columnwidth]{figs/diffuseTemplate/diffuse_template.pdf}\\
+  \caption{The unsmoothed template of diffuse star emission evaluated in the DIRBE 01 band, plotted on a log scale.}
   \label{fig:diffuse}
 \end{figure}
 
-This template is then included in the full sky model, with an amplitude fit jointly in bands 01-04, with an SED given by the mean of all SEDs of all the individual stars modelled in section \ref{sec:starmodel}. This SED is fit with a single amplitude parameter, which compensates for the overall difference in bandpass between W1 and the DIRBE bands. Although bands 5 and 6 do no contribute to the amplitude fit, the template is extrapolated to those bands as well and added to the total sky model.
+\textit{This template is then included in the full sky model, with an amplitude fit jointly in bands 01-04, with an SED given by the mean of all SEDs of all the individual stars modelled in section \ref{sec:starmodel}. This SED is fit with a single amplitude parameter, which compensates for the overall difference in bandpass between W1 and the DIRBE bands. Although bands 5 and 6 do no contribute to the amplitude fit, the template is extrapolated to those bands as well and added to the total sky model.}
 
 \section{Astrophysical results}
 \label{sec:results}
@@ -274,7 +268,7 @@ In this paper, we present just the results of the star models described in secti
 
 \subsection{Maps}
 
-In Figure \ref{fig:starsT} we show the mean compact object maps for the full pipeline run in all six DIRBE bands where they are modelled. Here, the maps show the sum of star component, the extra source component, and the diffuse background, which fully accounts for the pointsource emission over the full sky. As expected, the majority of the emission is found in the galactic plane, but there is also an important contribution from high latitude stars.
+In Figure \ref{fig:starsT} we show the mean star maps for the full pipeline run in all six DIRBE bands where they are modelled. Here, the maps show the sum of the star component and the diffuse background, which fully accounts for the pointsource emission over the full sky. As expected, the majority of the emission is found in the galactic plane, but there is also an important contribution from high latitude stars.
 
 \begin{figure*}
   \centering
@@ -288,33 +282,34 @@ In Figure \ref{fig:starsT} we show the mean compact object maps for the full pip
   \label{fig:starsT}
 \end{figure*}
 
-In Figure \ref{fig:zooms} we show zoom ins of a 20$^\mathrm{o}$ patch of sky centered at (lon, lat)= $20^\mathrm{o}, 70^\mathrm{o}$, plotting the DIRBE sky map in each band for the four highest frequency bands where the stars are most significant. In the second column, we show the total star model for the same region, and then the resulting residual as a percentage of the model after removing the model from the data, masked to only show the region around the pointsources. The residuals contain a variety of mis-modeled point sources.
+In Figure \ref{fig:zooms} we show zoom ins of a 20$^\mathrm{o}$ patch of sky centered at (lon, lat)= $20^\mathrm{o}, 70^\mathrm{o}$, plotting the DIRBE sky map in each band for the four highest frequency bands where the stars are most significant. In the second column, we show the total star model for the same region, then the resulting residual, and finally the overall chisq of the fit. The residuals contain a variety of mis-modeled point sources.
 
 We can identify three types of pointsource residuals in this third column, although there are a large number of sources with residuals that are subdominant to the background noise level and so can be considered to be well modelled. Some of the pointsources clearly show the imprints of spectral complexity, where the residual signature is blue in some bands and red in some others, which implies that our knowledge of the spectra is imperfect and a single overall amplitude fit was insufficient to model that source. The second class of residuals appear to be ring shapes, where the center of the pointsource is modelled well, but we oversubtract emission around the edges. This could be caused by our simplistic modelling of the DIRBE beams, which relies on the scanning strategy to symmeterize the otherwise square beam profile of the DIRBE instrument.
 
-Other pointsource residuals are more complex, and look to be superpositions of multiple sources in the same region. These residuals could possibly be reduced by pruning pointsources from the model that are too close to one another, or potentially by improving our models of the brightest sources. No attempt to do so was made in this work, as these residuals were only a small fraction of the total sky, and can be handled by masking if necessary.
+Other pointsource residuals are more complex, and look to be superpositions of multiple sources in the same region. These residuals could possibly be reduced by pruning pointsources from the model that are too close to one another, or potentially by improving our models of the brightest sources. No attempt to do so was made in this work, as these residuals were only a small fraction of the total sky, and can be handled by masking using the chisq, which clearly shows these regions to be poorly modelled.
 
 \begin{figure*}
   \includegraphics[width=0.95\textwidth]{figs/zoom/combined_zoom.pdf}\\
   \vspace{-8pt}
-  \hspace{1.5in}
-  \includegraphics[scale=1]{figs/zoom/cbar1.pdf}
-  \hspace{1.1in}
-  \includegraphics[scale=1]{figs/zoom/cbar3_50.pdf}
-  \caption{Zoom-ins on a subregion of the sky centred at $(20^\mathrm{o},70^\mathrm{o})$. The third column shows the difference between the two, masked to show only the regions around the brightest stars.}
+  \hspace{1.2in}
+  \includegraphics[scale=0.7]{figs/zoom/cbar1.pdf}
+  \hspace{0.95in}
+  \includegraphics[scale=0.7]{figs/zoom/cbar2.pdf}
+  \hspace{0.15in}
+  \includegraphics[scale=0.7]{figs/zoom/cbar4_chisq.pdf}
+  \caption{Zoom-ins on a subregion of the sky centred at $(20^\mathrm{o},70^\mathrm{o})$. The third column shows the difference between the two, and the final column is the overall chisq of the fit.}
   \label{fig:zooms}
 \end{figure*}
 
 
-In Figure \ref{fig:amptrace}, we show the total amplitude of the compact sources in three pixels in different regions in the sky as a function of iteration, for each of our six independent sampling chains. The first 25 samples in each chain are discarded as burn in, and the remaining samples (810 in total) form the samples included our analysis. We see good mixing of the total amplitudes in the top row, although examining the individual components we do see degeneracies.
-Especially in the galactic plane, the bottom rows show that the three classes of emissions are trading off between each other (see for example the red chain around sample 115 in the first column). This degeneracy is not unexpected, as the model contained many pixels with more free parameters than data measurements. The fact that we see good mixing in the summed amplitudes, however, gives us confidence that the total model is robust despite this type of internal degeneracy.
+In Figure \ref{fig:amptrace}, we show the total amplitude of the stars in three pixels in different regions in the sky as a function of iteration, for both of our two independent sampling chains. The first 50 samples in each chain are discarded as burn in, and the remaining samples (NUMBER in total) form the samples included our analysis. We see good mixing of the total amplitudes in the top row, although examining the individual components we do see slower mixing, especially in the diffuse template.
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.32\textwidth]{figs/mixing/trace_1352704.pdf}
-  \includegraphics[width=0.28\textwidth]{figs/mixing/trace_2429499.pdf}
+  \includegraphics[width=0.34\textwidth]{figs/mixing/trace_1352704.pdf}
+  \includegraphics[width=0.31\textwidth]{figs/mixing/trace_2429499.pdf}
   \includegraphics[width=0.31\textwidth]{figs/mixing/trace_3121308.pdf}\\
-  \caption{Trace plots of the total star amplitude in all six chains for three pixels in different regions of the sky (low latitudes, the LMC and high latitudes) in DIRBE band 01. The dashed vertical line indicates the end of the burn in period, and samples after that are included in our final sample set.}
+  \caption{Trace plots of the total star amplitude in both chains for three pixels in different regions of the sky (low latitudes, the LMC and high latitudes) in DIRBE band 01. The dashed vertical line indicates the end of the burn in period, and samples after that are included in our final sample set.}
   \label{fig:amptrace}
 \end{figure*}
 
@@ -325,7 +320,7 @@ Especially in the galactic plane, the bottom rows show that the three classes of
   \label{fig:corr}
 \end{figure*}
 
-Figure \ref{fig:corr} shows the correlation matrix, computed between each parameter over all 810 samples. In this case, we include a sample of star parameters, as well as some other parameters where we suspect degeneracies may occur. We see correlations between the monopoles of the 01, 02 and 03 bands, and anti correlations between some of the zodiacal light parameters, as has been studied in \citep{CG02_01, CG02_02}, but no correlations between these and the star model parameters, implying that they are independent. We do see correlation between the spectral and amplitude parameters of the randomly selected extragalactic sources ex$_1$ and ex$_2$, which is likely due to weak constraining power on these objects with only a few bands. These sorts of internal degeneracies within the star parameters are what drove our adoption of the simple "star" modelling approach with a single amplitude per source, and so it is not unexpected that the extra pointsources that are fit without the benefit of spectral information from Gaia show this behaviour still. We do not see much cross correlation between the star parameters and other parameters in the global chain, which implies that the star parameters are well mixed and are not degenerate with other full sky parameters in the run.
+Figure \ref{fig:corr} shows the correlation matrix, computed between each parameter over all NUMBER samples. In this case, we include a sample of star parameters, as well as some other parameters where we suspect degeneracies may occur. We see correlations between the monopoles of the 01, 02 and 03 bands, and anti correlations between some of the zodiacal light parameters, as has been studied in \citep{CG02_01, CG02_02}, but no correlations between these and the star model parameters, implying that they are independent.  We do not see much cross correlation between the star parameters and other parameters in the global chain, with the exception of the diffuse template and the zodiacal albedos ($A_{1,2,3}$) which show a mild anti-correlation. This implies that the star parameters are well mixed and are not degenerate with other full sky parameters in the run.
 
 \subsection{Spectral Energy Densities}
 
@@ -333,18 +328,17 @@ In addition to the amplitude maps at each frequency, we can also examine the spe
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figs/starseds/star_seds.pdf}
-  \caption{Star emission as a function of wavelength. In blue we have the distributions of amplitudes for each source in our catalogue as a function of frequency. Each star has a fixed SED that is fit with a single amplitude parameter, and after this fitting process we obtain the distributions shown here at each frequency. Overplotted in orange is the mean of these distributions, which is used as the SED for the diffuse template.}
+  \caption{Star emission as a function of wavelength. The orange line is the median of all the individual stars fit in the model, with variances that are too small to see on this plot. The red curve is the mean of the diffuse template SED fit to the data, with the error bars showing the variance across the chain.}
   \label{fig:starSEDs}
 \end{figure}
 
+\subsection{Extinction}
+
 \begin{figure}
-  \includegraphics[width=\columnwidth]{figs/starseds/exgal_spectra.pdf}
-  \caption{Distribution of extra source spectra as a function of wavelength, shown for the highest frequency DIRBE bands. Overplotted in red is the median source from the ensemble. TODO: convert to mjy/sr}
-  \label{fig:exgalSEDs}
+\includegraphics[width=\columnwidth]{figs/diffuseTemplate/extinction.pdf}
+  \caption{Profiles of the DIRBE Faint Star Model (FSM) and Cosmoglobe star model as a function of galactic latitude. A linear extrapolation is overplotted in the core region from -5 to 5 degrees galactic latitude, but excluding the galactic center from -1 to 1 degree. The theoretical value central value from this fit is compared to the measured values in the central bins to give estimates of the dust extinction in the galactic center for both cases.}
+  \label{fig:extinction}
 \end{figure}
-
-Figure \ref{fig:exgalSEDs} shows the spectra for the extra sources in the same format as fig. \ref{fig:starSEDs}, with the median SED highlighted in red. Overall, we see similar spectral behaviour between these two classes of sources, despite the different modelling approaches. This implies that they may be similar populations of sources (see sec. \ref{sec:extragalactic?}). The extra sources are on average brighter, due to the larger magnitude cuttoff when selecting these sources (dimmer ones were incorporated into the diffuse template). Both classes of sources follow a roughly gaussian amplitude distribution at each frequency, showing no signs of a sharp cuttoff caused by our amplitude cut during the selection process. This is likely due to degeneracies between nearby sources in the model. Those with low amplitudes have had some of their emission sucked up by a nearby brighter source, possibly one within the same $0.11^{\mathrm{o}}$ pixel. About 46\% of sources end up with amplitudes consistent with 0, and are not shown in these plots and so in a subsequent analysis these sources could be trimmed from the model to save computational time and reduce its complexity.
-
 
 \section{Comparison to other Analyses}
 \label{sec:consistency}
@@ -356,10 +350,10 @@ The original DIRBE analysis team \citep{dirbeFaint} also removed point sources f
 The top two panels of Figure \ref{fig:DIRBEfaint} shows our diffuse template and the FSM, converted from QuadCube to healpix and plotted at nside=256. The third image shows the difference between these two templates of star emission, which clearly shows a difference in the treatment of dust extinction in the galactic plane. At 1.25$\mu$m, we can clearly see evidence of extinction in the DIRBE data, as can be seen in the fourth panel of fig. \ref{fig:DIRBEfaint}, and so the fact that our model predicts none compared to the FSM is a clear shortcoming. 
 
 \begin{figure}
-\includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/diffuse_stars.pdf}  \vspace{-4pt}\\
+\includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/diffuse_mean.pdf}  \vspace{-4pt}\\
   \includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/dirbe_template.pdf}\\
   \includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/diffuse_diff.pdf}\\
-  \includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/band_01_map.pdf}\\
+  %\includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/band_01_map.pdf}\\
   \includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/band01_res.pdf}\\
   \caption{The Commander diffuse star template (Top). Next: The DIRBE faint star model at 1.25 $\mu$m retrieved from LAMBDA and converted from QuadCube to healpix and the difference between that model and the diffuse template (position 3). The fourth panel shows our zodi-subtracted frequency map for the DIRBE 01 band, and the bottom panel shows the DIRBE 01 residual from the Commander run, indicating that our star model is slightly overestimating signal in the galactic plane, possibly due to missing extinction.}
   \label{fig:DIRBEfaint}
@@ -369,17 +363,11 @@ This difference shows that our model based on the integrated AllWISE pointsource
 
 In the galactic bulge, our model predicts less emission than the FSM, which, when we look at the bottom panel of fig. \ref{fig:DIRBEfaint}, seems to be a better fit to the data. The blue residuals in the galactic center show that the model overpredicts emission in general in the galaxy, so  increasing the emission to the level that the FSM predicts would be a worse fit in this region. 
 
-\begin{figure}
-\includegraphics[width=\columnwidth]{figs/diffuseTemplate/extinction.pdf}
-  \caption{Profiles of the DIRBE Faint Star Model (FSM) and Cosmoglobe star model as a function of galactic latitude. A linear extrapolation is overplotted in the core region from -5 to 5 degrees galactic latitude, but excluding the galactic center from -1 to 1 degree. The theoretical value central value from this fit is compared to the measured values in the central bins to give estimates of the dust extinction in the galactic center for both cases.}
-  \label{fig:extinction}
-\end{figure}
-
 Figure \ref{fig:extinction} shows another comparison of these two models, highlighting mean behaviour as a function of galactic latitude which shows this missing extinction clearly. The DIRBE FSM shows clear dust extinction in the galactic center at 1.25 $\mu$m, as it explicitly incorporates extinction estimates from the 100 $\mu$m band, whereas the cosmoglobe model built from the Gaia data doesn't show significant extinction on this plot. Regardless, it is surprising to not see any evidence of extinction in the galactic center as previous estimates such as \cite{extinction} estimate it at 70\% at 1 $\mu$m and 94\% at 3.4 $\mu$m. \emph{HK: Is this the case? I am confused by table 3 in rieke+lebofsky. Are they showing just the total scaling of the emissions, or is it actually a measure of the relative extinction in dusty regions?}
 
 \subsection{DIRBE and 2MASS}
 
-After the official DIRBE analysis, \cite{DIRBE2mass}, following \cite{gorjian} used the 2MASS catalogue to remove star emissions from DIRBE and find an improved upper limit on the CIB monopole, but were ultimately unable to claim a detection due to the zodiacal light contamination that they were could not correct. Their analysis looked at four dark patches of the sky and used 2MASS to estimate the contribution of both bright (K band magnitude > 14) and faint sources to the total signal in each patch, which we can compare with the Cosmoglobe estimates, as shown in Table \ref{tab:2mass}.
+After the official DIRBE analysis, \cite{DIRBE2mass}, following \cite{gorjian} used the 2MASS catalogue to remove star emissions from DIRBE and find an improved upper limit on the CIB monopole, but were ultimately unable to claim a detection due to the zodiacal light contamination that they could not correct for. Their analysis looked at four dark patches of the sky and used 2MASS to estimate the contribution of both bright (K band magnitude > 14) and faint sources to the total signal in each patch, which we can compare with the Cosmoglobe estimates, as shown in Table \ref{tab:2mass}.
 
 \begin{table*}
     \centering
@@ -394,18 +382,18 @@ After the official DIRBE analysis, \cite{DIRBE2mass}, following \cite{gorjian} u
     \hline
     \multicolumn{10}{c}{1.25$\mu$m}\\
     \hline
-     1 \rule{0pt}{2ex} & 127.3 & 63.8 & 1.5 & 31.56 & 12.6 & 3.08 & 32.4 & 34.64 & 45.0\\
-     2 & 107.7 & 57.7 & 2.0 & 42.72 & 14.8 & 3.62 & 40.4 & 45.34 & 55.2\\
-     3 & 157.0 & -82.7 & 2.0 & 40.89 & 15.1 & 2.94 & 37.2 & 43.83 & 52.3\\
-     4 & 257.8 & -59.4 & 1.9 & 51.88 & 22.2 & 3.92 & 42.1 & 55.8 & 64.3\\
+     1 \rule{0pt}{2ex} & 127.3 & 63.8 & 1.5 & 31.56 & 6.4 & 3.08 & 35.5 & 34.64 & 41.9\\
+     2 & 107.7 & 57.7 & 2.0 & 42.72 & 9.2 & 3.62 & 44.5 & 45.34 & 53.7\\
+     3 & 157.0 & -82.7 & 2.0 & 40.89 & 9.3 & 2.94 & 38.2 & 43.83 & 47.5\\
+     4 & 257.8 & -59.4 & 1.9 & 51.88 & 14.2 & 3.92 & 44.4 & 55.8 & 58.6\\
      \hline
      \hline
      \multicolumn{10}{c}{2.2$\mu$m}\\
      \hline
-     1 \rule{0pt}{2ex} & 127.3 & 63.8  & 1.5 & 20.79 & 8.3 & 1.58 & 23.1 & 22.37 & 31.4\\
-     2 & 107.7 & 57.7 & 2.0 & 28.99 & 10.3 & 1.87 & 28.8 & 30.86 & 39.1\\
-     3 & 157.0 & -82.7 & 2.0 & 28.62 & 10.9 & 1.50 & 26.5 & 30.12 & 37.4\\
-     4 & 257.8 & -59.4 & 1.9 & 36.16 & 16.7 & 2.03 & 30.0 & 38.19 & 46.7\\
+     1 \rule{0pt}{2ex} & 127.3 & 63.8  & 1.5 & 20.79 & 4.4 & 1.58 & 23.1 & 22.37 & 27.5\\
+     2 & 107.7 & 57.7 & 2.0 & 28.99 & 6.6 & 1.87 & 29.0 & 30.86 & 35.6\\
+     3 & 157.0 & -82.7 & 2.0 & 28.62 & 7.0 & 1.50 & 24.8 & 30.12 & 31.8\\
+     4 & 257.8 & -59.4 & 1.9 & 36.16 & 10.7 & 2.03 & 28.8 & 38.19 & 39.6\\
      \hline
     \end{tabular}
     \caption{Comparison of component intensities in patches from \cite{DIRBE2mass} and Cosmoglobe (CG) at 1.25 and 2.2 $\mu$m. The galactic longitude and latitude of the region center are given by $l$ and $b$, and $r$ is the radius of the field. The definitions of bright and diffuse sources differ between analyses, but the sum of the two allow reasonable comparison.}
@@ -413,120 +401,7 @@ After the official DIRBE analysis, \cite{DIRBE2mass}, following \cite{gorjian} u
 \end{table*}
 
 
-\begin{figure*}
-  \centering
-      \includegraphics[width=\textwidth]{figs/regions/regions_01.pdf}\\
-            \includegraphics[width=0.3\textwidth]{figs/regions/cbar.pdf}\\
-
-  \caption{The four regions from \cite{DIRBE2mass}, shown from left to right. From top to bottom, we have the star emission, the diffuse template and the extra sources.}
-  \label{fig:regions}
-\end{figure*}
-
-The four regions are shown in Figure \ref{fig:regions}, left to right. We plot the stars, diffuse and extragalactic sources components for each region, showing the small scale structures. Differences in star classification between our analysis and \cite{DIRBE2mass} make it challenging to directly compare our amplitude estimates, but the sum of the bright and diffuse sources can still be compared. The Cosmoglobe analysis predicts about 20\% more total star emission, depending on the field and the frequency, which is probably due to having a much deeper star catalogue than 2MASS. By successfully modelling and removing more star emission, we are able to improve upon their limits on the CIB, as shown in \cite{CG02_02}. 
-
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=\columnwidth]{figs/mask_proc_calib.pdf}
-%  \caption{Processing masks use in the analysis.}
-%  \label{fig:masks}
-%\end{figure}
-
-%Consistancy with WISE - maybe compare with a single WISE tile? I think the tile is probably too small for a useful comparison, and stitching together a mozaic is too complicated
-
-\subsection{Extragalactic Sources?}
-\label{sec:extragalactic?}
-
-Throughout the paper, we have called this third class of bright sources that do not match against the PHOENIX database "Extra Sources", mostly as a easy placeholder name. Our processing is agnostic towards the properties of these sources, but we can investigate these sources by matching them against other datasets. One hypothesis we had about these sources is that they might be resolved extraglactic background sources, which would explain why the Gaia star parameters pipeline was unable to properly classify them.
- 
-To investigate this, we take the brightest 10 sources in the DIRBE 01 band, as well as 10 other randomly selected sources of the 66217 total extra sources, and look them up in the SIMBAD and VizieR query services, to try and get a sense of the classifications of these sources in other databases. The results are presented in table \ref{tab:exgal}.
-
-\begin{table*}
-    \centering
-    \newcolumntype{C}{ @{}>{${}}r<{{}$}@{} }
-    \begin{tabular}{l c c c c c c c}
-    \hline
-    \hline
-     Src & $l$ & $b$ & $A_{01}$ & Mag$_{W1}$ & Closest Source ID & $\Delta r$ & Type \\ 
-     & ($^{\circ}$) & ($^{\circ}$) & (MJy) & & & arcsec &  \\
-    
-     \hline
-     1 \rule{0pt}{2ex} & 351.97 & 15.03 & 972 & 2.4 & Gaia DR2 6045630776564826368 & 0.06 & * \\
-     2 & 199.84 & -8.94 & 725 & 1.35 & AllWISE	J055518.95+072220.3 & 0 & * \\
-	 3 & 351.95 & 15.09 & 725 & 1.73 & hstID S8EN231745 & 0.03 & * \\
-     4 & 272.65 & -39.30 & 619 & 3.16 & hstID S142070633 & 1.2 & -\\
-	 5 & 35.50 & 27.83 & 601 & 1.73 & smssj 171432.09+142210.3 & 0.1 & *\\ 
-	 6 & 199.81 & -8.99 & 548 & 3.61 & hstID N9I5116496 & 0.01 & *\\ 
-	 7 & 35.57 &  27.80 & 513 & 0.57 & hstID N3VM068511 & 0.01 & * \\
-	 8 & 199.79 & -8.96 & 495 & -1.38 & hstID N9I5116403 & 0.3 & * \\ 
-	 9 & 272.69 & -39.30 & 495 & 5.01 & AllWISE	J043704.88-620608.5  & 0 & -\\ 
-	 10 & 162.59 & 4.57 & 477 & 1.46 & hstID NCAJ155129 & 0.3 & *\\ 
-	 11 & 126.12 & -6.72 & 0.81 & 4.29 & HD 236669 & 0.4 & Spectroscopic Binary\\ 
-	 12 & 299.45 & 9.14 & 0.81 & 4.96 & HD 108499 & 0.1 & Spectroscopic Binary\\ 
-	 13 & 68.98 & 2.35 & 7.2$\cdot 10^{-4}$ & 5.01 & IRAS 19534+3241 & 0.3 & Long-Period Variable\\
-	 14 & 302.55 &  10.44 & 0.34 & 5.01 & IRAS 12461-5209 & 1.3 & Long Period Variable Candidate\\
-	 15 & 56.88 & -4.15 & 0.46 & 4.40 & V* RW Sge  & 0.17 & Mira Variable \\
-	 16 & 83.035 & 49.70 & 0.76 & 4.63 & HD 234253 & 0.4 & Star\\
-	 17 & 5.02 & -1.36 & 8.1$\cdot 10^{-3}$ & 4.33 & IRAS 17592-2517 & 0.3 & Mira Variable\\ 
-	 18 & 317.08 & -3.65 & 1.8 & 3.55 & IRAS 14569-6242 & 0.4 & Long period variable candidate \\
-	 19 & 187.05 & -4.28 & 17.7 & -2.06 & V* Y Tau & 0.3 & Carbon Star\\
-	 20 & 15.00 & 0.02 & 3.71 & 5.04 & 2MASS 18174772-1553381 & 0.38 & - \\
-     \hline
-    \end{tabular}
-    \caption{Description of 20 extragalactic sources, the 10 brightest and 10 randomly selected ones. The bright sources are almost entirely found within the boundaries of other very bright sources in the optical (denoted with type *), so their brightnesses may be influenced by this confusion. Those with types listed as a dash have no catalogue information about their classifications.}
-    \label{tab:exgal}
-\end{table*}
-
-The majority of the bright sources are within the saturation radii of other very bright sources in the optical, and so their lack of stellar parameters from Gaia (and potentially their large amplitudes) are likely related to confusion with the brighter nearby star. The ten dimmer objects are a range of irregular star types, which may also explain the lack of data from Gaia. Overall, it seems like 'Extragalactic Sources' is likely a misnomer, and this class of object is more likely to be poorly modelled stars within our own galaxy.
-
-Gaia DR2 notes two limitations in their approach that may explain the makeup of these additional sources. Firstly, "All sources are treated as single stars," which could explain why so many binary objects are not fit successfully. Further down the list, they note that "...[in] crowded regions ... the integrated photometry is sometimes compromised ... As the two Gaia fields-of-view are projected onto a common focal plane, sources can overlap even in low density regions." \citep{gaiaClassification} This second limitation may explain the population of bright sources with no spectral data that are found within very bright objects and clusters.
-
-\subsection{Beam Estimation}
-
-Another comparison that can be taken between this work and other analyses is an assessment of the averaged beam profile. DIRBE measured their beams from the sky, although using only a small subset of the total dataset, so it is interesting to see if using the entire map can obtain similar or improved results.
-
-To obtain an estimate of the beams directly from the data, we employ the following procedure in the star dominated channels. For a given frequency map at a band i, we can approximate the full data model as 
-
-\begin{equation}
-M_i \approx \sum_{n=1}^{N} p_n \circledast B_i,
-\label{eq:beammodel}
-\end{equation}
-
-where $M$ is the map, $p_n$ are the list of all pointsources and $B$ is the beam window function. Equation \ref{eq:beammodel} is obviously not true in general, but for bands where the sky is dominated by pointsources this approach is at least approximately correct. If we take the zodi-subtracted maps and mask out the regions in the galactic center where we have known residuals from other components, then we have 
-
-\begin{equation}
-m \cdot M_i = \sum_{n=1}^{N} (m \cdot p_n) \circledast B_i,
-\label{eq:maskedbeam}
-\end{equation}
-
-where $m$ is now a mask which removes the regions in the galactic center. In bands 1-4, where the point sources are by far the brightest signal, this assumption is enough to produce an estimate of the beam function by simply taking the expression and converting to $a_{l,m}$s such that for a single frequency
-
-\begin{equation}
-M'_{alm} = s'_{alm} \cdot B_{alm},
-\label{eq:maskedbeam}
-\end{equation}
-
-where $M'$ is the masked map, and $s'$ is the masked sky, which is the sum of all the pointsources of equation \ref{eq:maskedbeam}. From here, it is a simple matter to divide the two quantities and convert to $C_l$s to extract the averaged beam window function $B_l$.
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.49\textwidth]{figs/stacking/beam_01.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/stacking/beam_02.pdf}\\
-  \includegraphics[width=0.49\textwidth]{figs/stacking/beam_03.pdf}
-  \includegraphics[width=0.49\textwidth]{figs/stacking/beam_04.pdf}\\
-
-  \caption{Normalized beam estimates from pointsources in the first 4 DIRBE bands (blue), and the smoothed profile generated by masking the excess power at low $l$. Overplotted in orange are the $B_l$ profiles from the original DIRBE analysis for comparison.}
-  \label{fig:beams}
-\end{figure*}
-
-In practise, doing the naive division of eq. \ref{eq:maskedbeam} results in a spectra that is dominated by poorly constrained multipoles. Instead, we can compute the binned quantity
-
-\begin{equation}
-\sum \limits_{l\ \mathrm{ bins}}\frac{\sum \limits_{l,m} M' s'}{\sum \limits_{l,m} s^{'2}}
-\end{equation}
-
-where we have dropped the subscript alm, and are summing the spectra over bins with width 5 in $l$. This has the advantage of reducing the noise in the beam estimate considerably by ensuring all bins contain non-zero denominators. Figure \ref{fig:beams} shows these window functions for bands 1-4. At low multipoles, it is clear that there is some additional contribution to the map which ends up in our beam estimates, most likely residual zodiacal light or other large scale leakage from other sky components. The dashed blue line shows the raw calculation, and the solid green line shows a smoothed extrapolation that removes this excess power. The curve is normalized to minimize the difference with the official DIRBE beam profiles (overplotted in orange).
-
-The reconstructed beams are slightly wider than the profiles provided by the original DIRBE team, and do not exhibit as large of a negative dip in the $l=600-1000$ range, especially in the DIRBE 02 channel at 2.2 $\mu$m. Comparing templates of pointsources made with these two beams, we find differences on the order of $10^{-14}$ MJy/sr, which is negligible at these wavelengths, so we can conclude that our approach reproduced the DIRBE beams with high fidelity, and could be an interesting way to estimate beam profiles in other experiments at the frequencies.
+Differences in star classification between our analysis and \cite{DIRBE2mass} make it challenging to directly compare our amplitude estimates, but the sum of the bright and diffuse sources can still be compared. The Cosmoglobe analysis predicts about 20\% more total star emission, depending on the field and the frequency, which is probably due to having a much deeper star catalogue than 2MASS. By successfully modelling and removing more star emission, we are able to improve upon their limits on the CIB, as shown in \cite{CG02_02}. 
 
 \section{Conclusions}
 \label{sec:conclusions}
@@ -537,18 +412,18 @@ Figure \ref{fig:sed} shows the full sky average star SED derived from this work,
 
 \begin{figure*}
   \centering
-  \includegraphics[width=\textwidth]{figs/sed/cg_spec.pdf}
-  \caption{Components of the infrared temperature sky from 1$\mu$m to 1m1 wavelengths. The approximate contribution from stars is shown in yellow, and the observing bands from various experiments are indicated by the vertical lines.}
+  \includegraphics[width=\textwidth]{figs/sed/cg_spec_DR2_en.pdf}
+  \caption{Components of the infrared temperature sky from 1$\mu$m to 1m wavelengths. The approximate contribution from stars is shown in yellow, and the observing bands from various experiments are indicated by the vertical lines.}
   \label{fig:sed}
 \end{figure*}
 
-Using the three classes of sources described in this paper, we were able to model 98\% of the observed DIRBE flux density at 1.25$\mu$m, dropping to 3\% at 25$\mu$m. Despite some evidence of internal degeneracies caused by excess parameters, the star model showed robust mixing, and was able to fully describe the summed star emission in an effective manner. Our model was able to characterize and remove more star emission than previous works, which consequently was able to produce lower residuals and better constraints on the CIB monopoles, as discussed in the companion paper \citet{CG02_03}. Stars form the dominant foreground at these wavelengths, and so this model is an important contribution to the overall Cosmoglobe sky model, and can be re-used and adapted for future analyses using that framework.
+Using the two classes of sources described in this paper, we were able to model 98\% of the observed DIRBE flux density at 1.25$\mu$m, dropping to 3\% at 25$\mu$m. The star model showed robust mixing, and was able to fully describe the summed star emission in an effective manner. Our model was able to characterize and remove more star emission than previous works, which consequently was able to produce lower residuals and better constraints on the CIB monopoles, as discussed in the companion paper \citet{CG02_03}. Stars form the dominant foreground at these wavelengths, and so this model is an important contribution to the overall Cosmoglobe sky model, and can be re-used and adapted for future analyses using that framework.
 
 \subsection{Future Work}
 
-Including additional high frequency data directly in the the full run would be an important next step for this work, and will be the subject of future exploration in the collaboration. WISE is a major candidate experiment here, but also   AKARI \citep{akari} and IRAS \citep{iras} would be important complements to the work performed here. Incorporating these data directly could potentially give enough extra information to constrain the star SEDs directly instead of pre-computing them.
+Including additional high frequency data directly in the the full run would be an important next step for this work, and will be the subject of future exploration in the collaboration. WISE is a major candidate experiment here, but also AKARI \citep{akari} and IRAS \citep{iras} would be important complements to the work performed here. Incorporating these data directly could potentially give enough extra information to constrain the star SEDs directly instead of pre-computing them.
 
-Additionally, the star model could be improved by the inclusion of a dust extinction term. This could be achieved by adding a dust-correlated template map with a negative amplitude, that corresponds to absorption, and fit the amplitude and spectral behaviours of that component as well.
+Additionally, the star model could be improved by the improving the dust extinction model. 
 
 Another place within the model where there is room for improvement is in the treatment of the beams. Instead of assuming spherically symmerized beams, we could properly treat the unique square shape of the DIRBE response function, using techniques like deconvolution mapmaking \citep{artdeco}.
 
@@ -586,3 +461,5 @@ participating in the {\it Gaia} Multilateral Agreement.
 \bibliography{references, ../../common/CG_bibliography}
 \end{document}
 %%%% End of aa.dem
+
+
