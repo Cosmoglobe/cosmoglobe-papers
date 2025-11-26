@@ -121,7 +121,7 @@
 
 %\title{\bfseries{\Cosmoglobe\ DR2. On the correlation between ionized carbon and thermal dust emission}}
 %\title{\bfseries{\Cosmoglobe\ DR2. Thermal dust and ionized carbon emission are spatially strongly correlated}}
-\title{\bfseries{\Cosmoglobe\ DR2. Spatial correlations between thermal dust and ionized carbon emission in \Planck\ HFI and COBE-DIRBE}}
+\title{\bfseries{\Cosmoglobe\ DR2. V. Spatial correlations between thermal dust and ionized carbon emission in \Planck\ HFI and COBE-DIRBE}}
 
    \input{authors.tex}
 
@@ -147,10 +147,9 @@
 %\the\textwidth \the\columnwidth
 Dust is really important!
 
-\clearpage
-\section{Dust modelling}
-\subsection{Current status}
-\label{sec:current_dust}
+\section{Bayesian modelling of thermal dust emission in \Cosmoglobe\ DR2}
+\label{sec:dr2}
+
 Interstellar dust -- amorphous particles of silicate and carbonaceous materials
 -- makes its presence known on practically all astrophysically relevant
 wavelengths. The efforts to classify and describe this material is significant
@@ -183,7 +182,6 @@ At lower wavelengths (2.5\,$\mu$m - 12\,$\mu$m), the astrodust+PAH model is
 mostly dominated by the nanoscale particle emission, and exhibits strong
 emission lines at various wavelengths (see Fig.~10 in \cite{Hensley2023}).
 
-\subsubsection{Spatial variations}
 This is a general picture -- typically, in a given line-of-sight the relative
 contribution of various dust components will vary. At the same time, the degree
 to which such variations can be detected and described is limited by the
@@ -206,7 +204,6 @@ series of high-resolution (\nside 256) extinction maps using data from GAIA and
 
 MORE HERE ON WHAM ETC
 
-\subsection{The \Cosmoglobe DR2 analysis}
 The current paper is part of the \Cosmoglobe\ DR2 suite, meaning that our dust
 modelling is one part of a larger global Bayesian end-to-end analysis. In the
 \Cosmoglobe\ framework, the standard modus operandi is to begin with an explicit
@@ -278,7 +275,6 @@ terms, all of which are dealt with in \citet{CG02_04}. Finally, the final term
 represents the monopole at each frequency, which is also treated in
 \citet{CG02_03}.
 
-\subsubsection{Bayesian end-to-end analysis}
 As mentioned, this work is part of a global analysis of data spanning
 100-2.4$\cdot 10^6$ GHz, wherein we draw samples from the \emph{posterior}
 distribution of the full set of parameters that enter the analysis
@@ -365,7 +361,6 @@ Hence, in this paper, we mainly focus on the three first components of Eq.
 (\ref{eq:skymodel}), and leave the other components for other papers. (TODO
 maybe actually cite those papers)
 
-\subsubsection{Three-component dust model}
 As mentioned above, we here adopt a model for thermal dust that comprises three
 distinct components, represented by the first three terms of Eq.
 (\ref{eq:skymodel}). All three components are modelled as having a continuous
@@ -465,8 +460,16 @@ interest for the community that we think it worthwhile to report.
     \end{tabular}
 \end{table*}
 
+
+
+
+\section{Template fitting methodology}
+\label{sec:tempfit}
+
+
 \section{Data}
 \label{sec:data}
+
 This paper concerns itself with a subset of the total global analysis which is
 described more fully in \cite{CG02_01}; namely, the part of the analysis that
 models the three thermal dust components. Describing the data that goes into
@@ -483,7 +486,9 @@ that is used in the global the analysis. All of the data used is described in
 more detail in \cite{CG02_01}, and we refer the interested reader to that
 paper.
 
-\subsection{DIRBE}
+\subsection{Frequency maps}
+
+\subsubsection{DIRBE}
 The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
 CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
 measured the sky in ten frequency bands from $1\,\mathrm{\mu m}$ to
@@ -501,7 +506,7 @@ The use of DIRBE data also allows a fuller exploration of the scales relevant
 for interstellar dust modelling; in particular, we are able to capture the
 ``bump'' and falling off of the thermal dust SEDs. 
 
-\subsection{Planck HFI}
+\subsubsection{Planck HFI}
 The \Planck High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed
 the sky in six frequency channels from 100 GHz to 857 GHz, with the primary
 purpose being characterizing temperature fluctuations in the CMB to
@@ -520,7 +525,7 @@ At the same time, CIB fluctuations with a similar SED to the Milky Way have been
 Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
 We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
 
-\section{Low-resolution template fitting}
+\subsection{Thermal dust tracers}
 
 \begin{figure*}
   \centering
@@ -533,6 +538,36 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
   \label{fig:tempfit_inputs}
 \end{figure*}
 
+\subsubsection{Ionized carbon --- \COBE-FIRAS CII}
+
+\subsubsection{Neutral hydrogen -- HI4PI}
+
+\subsubsection{Carbon monoxide -- Dame CO\,$J=1$-0}
+
+\subsubsection{Ionized hydrogen -- WHAM}
+
+\subsubsection{Dust extinction -- Gaia}
+
+\subsection{Low-resolution preprocessing}
+
+\subsection{Processing mask}
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Template amplitude fits}
+\label{sec:tempamp}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/tempamp_v1.pdf}
+  \caption{Template amplitudes. }
+  \label{fig:tempamp}
+\end{figure}
+
+
+\subsection{Model efficiency and goodness-of-fit}
+\label{sec:residuals}
 
 \begin{figure*}
   \centering
@@ -543,7 +578,7 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
   \includegraphics[width=0.49\textwidth]{figures/map_tempfit_857_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_857_v1.pdf}
   \caption{Comparison between full (left column) and template cleaned (right) maps. All maps are convolved with the FIRAS beam. }
-  \label{fig:tempfit_map_vs_res}
+  \label{fig:tempfit_map_vs_res1}
 \end{figure*}
 
 
@@ -556,7 +591,7 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
   \includegraphics[width=0.49\textwidth]{figures/map_tempfit_3000_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_3000_v1.pdf}
   \caption{Comparison between full (left column) and template cleaned (right) maps. All maps are convolved with the FIRAS beam. }
-  \label{fig:tempfit_map_vs_res}
+  \label{fig:tempfit_map_vs_res2}
 \end{figure*}
 
 \begin{figure*}
@@ -568,15 +603,8 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
   \includegraphics[width=0.49\textwidth]{figures/map_tempfit_25000_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_25000_v1.pdf}
   \caption{Comparison between full (left column) and template cleaned (right) maps. All maps are convolved with the FIRAS beam. }
-  \label{fig:tempfit_map_vs_res}
+  \label{fig:tempfit_map_vs_res3}
 \end{figure*}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/tempamp_v1.pdf}
-  \caption{Template amplitudes. }
-  \label{fig:tempamp}
-\end{figure}
 
 \begin{figure}
   \centering
@@ -591,6 +619,10 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
   \caption{Template signal rms. }
   \label{fig:temprms}
 \end{figure}
+
+
+\subsection{Modified blackbody fits}
+\label{sec:mbb}
 
 
 
@@ -608,16 +640,40 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 \section{Conclusions}
 
 
-
 \begin{acknowledgements}
- The current work has received funding from the European
-  Union’s Horizon 2020 research and innovation programme under grant
-  agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
-  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{HEALPIX} package.
-  We acknowledge the use of the Legacy Archive for Microwave Background Data
-  Analysis (LAMBDA), part of the High Energy Astrophysics Science Archive Center
-  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science Division at
-  the NASA Goddard Space Flight Center.  
+  We thank \textbf{Richard Arendt}, Tony Banday, Johannes Eskilt, Dale Fixsen, Ken Ganga, Paul
+  Goldsmith, Shuji Matsuura, Sven Wedemeyer, Janet Weiland and \textbf{Edward Wright} for
+  useful suggestions and guidance.  The current work has received
+  funding from the European Union’s Horizon 2020 research and
+  innovation programme under grant agreement numbers 819478 (ERC;
+  \textsc{Cosmoglobe}), 772253 (ERC; \textsc{bits2cosmology}),
+  \textbf{101165647 (ERC, \textsc{Origins}), 101141621 (ERC,
+  \textsc{Commander}), and 101007633 (MSCA; \textsc{CMBInflate}).
+  This article reflects the views of the authors only. The funding
+  body is not responsible for any use that may be made of the
+  information contained therein. This research is also funded by the
+  Research Council of Norway under grant agreement number 344934 (YRT;
+  \textsc{CosmoglobeHD}).} Some of the results in this paper have been
+  derived using healpy \citep{Zonca2019} and the HEALPix
+  \citep{healpix} packages.  We acknowledge the use of the Legacy
+  Archive for Microwave Background Data Analysis (LAMBDA), part of the
+  High Energy Astrophysics Science Archive Center
+  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science
+  Division at the NASA Goddard Space Flight Center. This publication
+  makes use of data products from the Wide-field Infrared Survey
+  Explorer, which is a joint project of the University of California,
+  Los Angeles, and the Jet Propulsion Laboratory/California Institute
+  of Technology, funded by the National Aeronautics and Space
+  Administration. This work has made use of data from the European
+  Space Agency (ESA) mission {\it Gaia}
+  (\url{https://www.cosmos.esa.int/gaia}), processed by the {\it Gaia}
+  Data Processing and Analysis Consortium (DPAC,
+  \url{https://www.cosmos.esa.int/web/gaia/dpac/consortium}). Funding
+  for the DPAC has been provided by national institutions, in
+  particular the institutions participating in the {\it Gaia}
+  Multilateral Agreement.  We acknowledge the use of data provided by
+  the Centre d'Analyse de Données Etendues (CADE), a service of
+  IRAP-UPS/CNRS (http://cade.irap.omp.eu, \citealt{paradis:2012}).
 \end{acknowledgements}
 
 
