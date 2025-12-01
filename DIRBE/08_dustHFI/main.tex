@@ -52,6 +52,9 @@
 
 \usepackage[nameinlink,noabbrev]{cleveref}
 
+\usepackage{caption}
+\usepackage{subcaption}
+
 \DeclareRobustCommand{\ion}[2]{%
 \relax\ifmmode
 \ifx\testbx\f@series
@@ -155,7 +158,7 @@
    \date{\today} 
    
    \abstract{
-    We present the first high resolution hot and cold dust components derived from the \planck\ HFI frequency channels, as part of the global Bayesian \cosmoglobe\ DR2 analysis. This is build based on a new four component dust model proposed from the DIRBE reanalysis companion papers and is used in the final DIRBE reanalysis. We build two components, the nearby dust and H-$\alpha$ correlated dust, using a templates to constrain the spatial relative amplitudes, and allow them a global temperature and $\beta$ fit to a modified blackbody (MBB). These templates are based on the GAIA extinction 3D dust model from \citet{edenhofer:2024} for the nearby dust, and the Wisconsin H-$\alpha$ mapper (WHAM) \cite{wham:2003} map for the H-$alpha$ correlated dust, which is found to have a negative amplitude (dust extinction). The cold and hot dust have free amplitudes per pixel with global temperature and $\beta$. Thus, this dust model has ten global sky parameters (two for each dust component plus the amplitudes of the two templates) and two amplitudes per pixel, one each for the hot and cold dust. We use a large multi-fit Gibbs analysis and a parameter grid search to produce an optimal and physical solution with the \planck\ HFI bands and find a strong correlation between the hot dust and singly-ionized-carbon (\ion{C}{II}) emission and the cold dust and the neutral hydrogen emission. It has long been known that the cold dust correlates with the neutral hydrogen emission, however the correlation between hot dust and \ion{C}{II} emission is an exciting development. Since \ion{C}{II} emission is expected in hotter regions of the Milky Way galaxy this is potentially an expected correlation, though historically has been associated only as a gas tracer and remains to be explored further. We find the hot dust to have a MBB temperature of 30~K with $\beta=1.75$, the cold dust temperature of 11.3~K with $\beta=1.75$. The uncertainty in the gain for the \planck\ HFI 545 and 857 GHz bands contribute heavily to the uncertainty in these parameters, motivating a future \planck\ HFI end-to-end reanalysis. 
+    We present the first high resolution hot and cold dust components derived from the \planck\ HFI frequency channels, as part of the global Bayesian \cosmoglobe\ DR2 analysis. This is build based on a new four component dust model proposed from the DIRBE reanalysis companion papers and is used in the final DIRBE reanalysis. We build two components, the nearby dust and H-$\alpha$ correlated dust, using a templates to constrain the spatial relative amplitudes, and allow them a global temperature and $\beta$ fit to a modified blackbody (MBB). These templates are based on the GAIA extinction 3D dust model from \citet{edenhofer:2024} for the nearby dust, and the Wisconsin H-$\alpha$ mapper (WHAM) \citep{wham:2003} map for the H-$alpha$ correlated dust, which is found to have a negative amplitude (dust extinction). The cold and hot dust have free amplitudes per pixel with global temperature and $\beta$. Thus, this dust model has ten global sky parameters (two for each dust component plus the amplitudes of the two templates) and two amplitudes per pixel, one each for the hot and cold dust. We use a large multi-fit Gibbs analysis and a parameter grid search to produce an optimal and physical solution with the \planck\ HFI bands and find a strong correlation between the hot dust and singly-ionized-carbon (\ion{C}{II}) emission and the cold dust and the neutral hydrogen emission. It has long been known that the cold dust correlates with the neutral hydrogen emission, however the correlation between hot dust and \ion{C}{II} emission is an exciting development. Since \ion{C}{II} emission is expected in hotter regions of the Milky Way galaxy this is potentially an expected correlation, though historically has been associated only as a gas tracer and remains to be explored further. We find the hot dust to have a MBB temperature of 30~K with $\beta=1.75$, the cold dust temperature of 11.3~K with $\beta=1.75$. The uncertainty in the gain for the \planck\ HFI 545 and 857 GHz bands contribute heavily to the uncertainty in these parameters, motivating a future \planck\ HFI end-to-end reanalysis. 
      These new dust templates will be critical for future temperature and polarization measurements from for example Simons Observatory and LiteBIRD, where high-precision measurements of the dust will be critical for measuring $B$-modes in the CMB. 
    % Using the final \Planck\ data release, PR4, we generate updated dust template models following a new four component model with nearby dust, dust extinction, cold dust and hot dust. The hot and cold dust have free amplitudes per pixel but fixed global temperature and spectral index $\beta$. The nearby dust is initialized with a template of dust absorption from the GAIA star catalogue, produced by \cite{edenhofer:2024}. Finally, the dust extinction is initialized with a template from the \wham\ survey. These are further constrained using the Commander Gibbs sampling framework to constrain the dust models spectral energy distributions (SEDs). For this analysis we use the \Planck\ HFI single horn channels, namely 100~GHz, 143~GHz, 217~GHz, 353~GHz, 545~GHz, and 857~GHz, as well as \FIRAS\ bands 857, 1251, 1809, 2081, 2135 and 2802 GHz. The SEDs are modelled with a spatially constant standard modified blackbody (MBB) distribution (i.e. a globally constant temperature and $\beta$ for each dust component), but with a spatially varying amplitude in the case of the cold and hot dust, and a spatially constant (fit to a template) amplitude in the case of the nearby dust and dust extinction. We find that the hot dust correlates strongly with \ion{C}{ii} emission and is found to have . The dust extinction template is the \ion{H}{$\alpha$} emission and is found to have . The cold dust finally is found to have,  and also correlates strongly with the neutral hydrogen mapped with HI4PI.
    }
@@ -187,6 +190,48 @@ Finally, in \cref{sec:future} we discuss future prospects and conclude in \cref{
 \subsection{Sky model}
 \label{sec:skymodel}
 
+
+\begin{figure*}
+     \centering
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/ff_map.pdf}
+         \caption{free-free}
+         \label{fig:freefree}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/co100_map.pdf}
+         \caption{CO100}
+         \label{fig:CO100}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/co217_map.pdf}
+         \caption{CO217}
+         \label{fig:CO217}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/co353_map.pdf}
+         \caption{CO353}
+         \label{fig:CO353}
+     \end{subfigure}
+        \caption{Sky model components}
+        \label{fig:SkyModel}
+ \end{figure*}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/cmb_map.pdf}
+    \caption{CMB }
+    \label{fig:cmb}
+\end{figure}
+
+
+
 \subsection{Gibbs sampling}
 \label{sec:sampling}
 
@@ -202,9 +247,29 @@ Chisq, correlations etc.
 \item Physicality prior
 \end{enumerate}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/hotchi.png}
+    \caption{Hot dust grid search with colour representing the $\chi^2$. In this case we idelly the lowest $\chi^2$, however points in the red-gridded area (ADD RED GRID AND MAKE POINTS CONTOURS, ADD SPECIFIC POITNS THAT WILL BE PLOTTED) show unphysical characteristics (such negative large scale values).}
+    \label{fig:hdchi}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/hotHicorr.png}
+    \caption{Hot dust grid search.}
+    \label{Hot dust grid search with colour representing the correlation between the cold dust and the HI4PI map. Here we want instead the largest correlation with the HI4PI map and the cold dust. Oncec again points in the gridded area show unphysical characteristics.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/hotNearCorr.png}
+    \caption{Hot dust grid search.}
+    \label{Hot dust grid search with colour representing the correlation between the cold dust and the nearby dust template. We would like each dust to be as independent of one another as possible, as such we want to have the nearby dust holding most of the amplitude in its spatial structure, and minimal correaltion with the cold dust.}
+\end{figure}
 
 
-The sky model for the HFI maps includes free-free (ff), carbon monoxide (CO), cosmic microwave background radiation (CMB), and the four aforementioned dust components of interest. 
+The sky model for the HFI maps includes free-free (ff)~\cref{fig:freefree}, carbon monoxide (CO)~\cref{fig:CO100,fig:CO217,fig:CO353}, cosmic microwave background radiation (CMB)~\cref{fig:cmb}, and the four aforementioned dust components of interest. 
 We keep the free-free fixed to WHICH FF MODEL DO WE USE due to the low constraining power of the HFI bands on the free-free component, additionally we keep the CO line-ratios constant for this analysis, but allow the amplitude to vary pixel-by-pixel for the three CO emission lines. 
 For our four dust components, the hot and cold dust are each allowed to have free amplitudes for each pixel, and global\footnote{Here global refers to a single value for the entire map.} temperature and spectral index values. The nearby dust and dust extinction have fixed templates, but are allowed to vary with a global amplitude, temperature, and spectral index.  
 Finally, the monopoles and dipoles are sampled for each frequency band, and we sample the gain for each of the 857~GHz bands. 
@@ -327,13 +392,13 @@ Maybe a table or a figure here?
 \omit\hbox to 1in{Component\hfil}& $T$ (K) & $\beta$\cr
 \noalign{\vskip 4pt\hrule\vskip 6pt}
 \noalign{\vskip 3pt}
-Cold dust& $ 12.70 $ & $ 1.72 $\cr
+Cold dust& $ 11.3 $ & $ 1.85 $\cr
 \noalign{\vskip 3pt}
-Hot dust& $ 27.72 $ & $ 1.56 $\cr
+Hot dust& $ 30.0 $ & $ 1.75 $\cr
 \noalign{\vskip 3pt}
-Extinction& $ 17.80 $ & $ 1.62 $\cr
+Extinction& $ 17.80 $ & $ 2.62 $\cr
 \noalign{\vskip 3pt}
-Nearby dust& $ 20.09 $ & $ 1.69 $\cr
+Nearby dust& $ 18.0 $ & $ 1.7 $\cr
 \noalign{\vskip 3pt}
 \noalign{\vskip 3pt\hrule\vskip 4pt}}}
 \endPlancktable
@@ -384,7 +449,7 @@ Nearby dust& $ 20.09 $ & $ 1.69 $\cr
 The hot dust component also appears to correlate with a physical sky signature, in this case the ionized carbon emission \ion{C}{II}, which is expected to be present around hot O and B type stars, and so as expected should correlate strongly with the \ion{C}{II} emission as seen by DIRBE/FIRAS. 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/dust_hot.pdf}
+    \includegraphics[width=\linewidth]{figures/dust_cii_map.pdf}
     \caption{Hot dust (\ion{C}{II} correlated dust). }
     \label{fig:hot_dust}
 \end{figure}
@@ -398,7 +463,7 @@ The cold dust component very neatly correlates strongy with the HI4PI data set, 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/dust_cold.pdf}
+    \includegraphics[width=\linewidth]{figures/dust_map.pdf}
     \caption{Cold dust}
     \label{fig:dust_cold}
 \end{figure}
@@ -420,7 +485,7 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/dust_near.pdf}
+    \includegraphics[width=\linewidth]{figures/hotPAH_map.pdf}
     \caption{Nearby dust. }
     \label{fig:dust_near}
 \end{figure}
@@ -431,7 +496,7 @@ Why do we think H-alpha has extinction?
 The warm ionized medium is characterized by the \ion{H}{$\alpha$} signature, and in the case of the \Planck\ bands appears as an extinction term, likely due to the warm gas absorbing the light from hotter dust in the background. (??? why is it an extinction term)
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/extinction.pdf}
+    \includegraphics[width=\linewidth]{figures/dust_Ha_map.pdf}
     \caption{Dust extinction. }
     \label{fig:extinction}
 \end{figure}
@@ -503,8 +568,8 @@ We can see the fidelity of the sky model by looking at the difference between th
 
 \begin{figure*}
     \centering
-    \includegraphics{figures/output.png}
-    \caption{Residuals (Data minus model) for the \planck\ HFI bands. WHAT ARE THE UNITS? SHOULD UNITS FOR 545 and 857 be adjusted? The residuals hint at some uncorrected zodiacal light along the ecliptic plane, as well as potentially some improvements to the gain of the 545 channels.}
+    \includegraphics[width=\linewidth]{figures/residuals.pdf}
+    \caption{Residuals (Data minus model) for the \planck\ HFI bands. Units are in $\mu K_\mathrm{CMB}$. The residuals hint at some uncorrected zodiacal light along the ecliptic plane, as well as potentially some improvements to the gain of the 545 channels.}
     \label{fig:residuals}
 \end{figure*}
 
