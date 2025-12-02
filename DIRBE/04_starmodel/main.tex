@@ -207,6 +207,7 @@ To build the best SED model for each stellar source given the parameters retriev
 s &= \frac{1}{3}\bigg[\frac{s_{T-} (T_{+} - T) + s_{T+} (T - T_{-})}{T_{+} - T_{-}} \nonumber \\ 
 &+ \frac{s_{g-} (g_{+} - g) + s_{g+} (g - g_{-})}{g_{+} - g_{-}} \nonumber \\
 &+ \frac{s_{M-} (M_{+} - M) + s_{M+} (M - M_{-})}{M_{+} - M_{-}}\bigg].
+\label{eq:starspec}
 \end{align}
 
 Here, $s$ is a spectra, and we have used $T$, $g$ and $M$ as short forms for $T_{\mathrm{eff}}$, $\log g$ and $[M/H]$. The subscripts + and - correspond to the closest reference value above and below the measured value (for example 0.0 and 0.5 if $\log g=$0.315). 
@@ -236,7 +237,14 @@ There, we run into the limitation that the older files are only defined to $\lam
 
 \subsubsection{Binary Stars}
 
-In the Gaia database, X\% of stars were found to be binaries
+In the Gaia database, X\% of stars were found to be binaries. Whenever stars flagged as binaries in the Gaia database were also provided with physical parameters, we first calculated the spectrum of each binary according to Eq. \ref{eq:starspec}. After this, we weighted the two spectra according to the estimated area of the corresponding star, i.e.
+\begin{equation}
+    s_{\mathrm{b}} = \frac{s_1 r_1^2+ s_2 r_2^2}{r_1^2 + r_2^2},
+\end{equation}
+where $s_{1, 2}$ and $r_{1, 2}$ denotes the SED and radius of the respective star in the binary system. The radii are not given explicitly in the GAIA catalogue, so we used (RAELYN GAVE ME THIS AND I AM NOT ABLE RIGHT NOW TO FIND WHAT IT WAS BASED ON, I'LL TRY HER TOMORROW) the following estimate for the radius:
+\begin{equation}
+r = \exp\bigl(\frac{3.5\cdot 4}{5(3.5 \log(T_{\mathrm{eff}}) - \log(g))}\bigr )
+\end{equation}
 
 \subsubsection{Extinction}
 \label{sec:extinction_model}
