@@ -168,7 +168,7 @@ f_{\mathrm{GAIA}} = B_i(p, \lambda_j) E_i(\lambda_j),
 
 which is the beam-convolved SED taken from the PHOENIX catalogue.
 
-Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the GAIA data and the PHOENIX starlight database, as discussed in section \ref{sec:phoenix}, and the beam $B$ is fixed for each detector. The extinction factor $\epsilon_j(\nu)$ is also just based on the existing SOMETHING model, as detailed in section \ref{sec:extinction_model}, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star. We include a star component in DIRBE bands 01-06 (1.25 - 25 $\mu$m), as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
+Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the GAIA data and the PHOENIX starlight database, as discussed in section \ref{sec:phoenix}, and the beam $B$ is fixed for each detector. The extinction factor $\epsilon_j(\nu)$ is also just based on the existing \cite{ext_model} model, as detailed in section \ref{sec:extinction_model}, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star. We include a star component in DIRBE bands 01-06 (1.25 - 25 $\mu$m), as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
 
 To sample the star amplitudes $a_i$, we attempt to minimize the residual in each band for each source $i$, which can be expressed as a linear minimization problem, analogous to the mapmaking equation
 
@@ -249,7 +249,40 @@ r = \exp\bigl(\frac{3.5\cdot 4}{5(3.5 \log(T_{\mathrm{eff}}) - \log(g))}\bigr )
 \subsubsection{Extinction}
 \label{sec:extinction_model}
 
-At the highest frequencies, dust extinction becomes one of the dominant effects on the star emission, particularly in the galactic plane.
+At the highest frequencies, dust extinction becomes one of the dominant effects on the star emission amplitudes, particularly in the galactic plane. We construct a simplified model of dust extinction, based on the work of \cite{ext_model} and \cite{fitzpatric_19}. We implement their 47 parameter model of dust extinction from the UV to the Infrared,\footnote{Note that we believe there is a typo in \cite{ext_model}, which has added an additional negative sign on their value of $b_{IR}\ \alpha_{1}$, and the correct value should be 1.06099} which provides a sky-averaged dust extinction parameter $\epsilon(\nu)$. 
+
+We combine this spectral behaviour with with a full-sky spatial template using the E(B-V) map from the Planck 2013 dataset \citep{planck_extinc_2013} by starting from Eq. 1 of \cite{ext_model}:
+
+\begin{equation}
+\frac{A(\lambda)}{A(V)} = a(\lambda) + b(\lambda)\left[ \frac{1}{R(V)} - \frac{1}{3.1}\right].
+\end{equation}
+
+Here, $\lambda$ is wavelength, $A$ is the absolute extinction, $a$ and $b$ are their model coefficients and $R(V)$ is given by
+
+\begin{equation}
+R(V) = \frac{A(V)}{E(B-V)},
+\end{equation}
+
+the ratio of absolute to selective extinction in the V band. Substituting this relationship in, and using the full sky average case of R(V) $=3.1$ \citep{fullsky_ext}, which allows us to omit the $b$ terms and obtain
+
+\begin{equation}
+A(\lambda) = 3.1 E(B-V) a(\lambda).
+\end{equation}
+
+We then convert from the horrendous unit of magnitudes to a scaling factor that could actually be applied to our flux data, which gives an expression for the extinction ratio
+
+\begin{equation}
+\frac{F_{\mathrm{ext}}}{F_{\mathrm{raw}}} = \epsilon(\lambda) = e^{-\frac{3.1}{2.5} E(B-V) a(\lambda)}.
+\end{equation}
+
+The resulting spacial extinction template, evaluated in the 1.25$\mu$m band, can be seen in figure \ref{fig:ext_template}. The majority of the extinction is occurring in the galactic plane, but additional contributions can be seen tracing dust structures at high galactic latitudes. The template scales according to the relations shown in Figure 7 of \cite{ext_model}, and is applied to the stars component as described in eq. \ref{eq:datamodel}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figs/extinction/dirbe_extinction_1a.pdf}\\
+  \caption{The full-sky extinction template used in this analysis, evaluated in the DIRBE 01 band at $1.25\mu$m.}
+  \label{fig:ext_template}
+\end{figure}
 
 \subsection{Diffuse Star Emission}
 
