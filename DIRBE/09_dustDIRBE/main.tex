@@ -128,12 +128,13 @@
    %\institute{Institute of Theoretical Astrophysics, University of Oslo, Blindern, Oslo, Norway}
   
    % Shortened title, author list for top of page 
-   \titlerunning{Compact model of thermal dust emission}
+   \titlerunning{Towards a concordance model for thermal dust emission}
    \authorrunning{Gjerløw et al.}
 
    \date{\today} 
    
-   \abstract{We present a compact global model of thermal dust emission derived from the \Planck\ HFI and \COBE-DIRBE frequency channels between 100\,GHz and 12\,$\mu$m, as part of the global Bayesian \Cosmoglobe\ DR2 analysis. This model is based on four morphologically distinct astrophysical components, each defined by a spatially varying amplitude coupled with a spatially constant spectral energy distribution (SED). The four components correspond to nearby, cold, hot, and infrared dust emission, respectively. The amplitude map of the nearby dust component is defined by integrating the GAIA extinction-based 3D dust model of Edenhofer et al. (2022) along each line of sight, and this component therefore does not introduce any new parameters per pixel. The amplitude maps for the cold and hot components are derived from the \Planck\ 100, 143, 217, and 545\,GHz maps alone, while the amplitude of the infrared component is primarily derived from the DIRBE 60 and 100$\,\mu$m channels. The SEDs of each component are modelled with standard modified blackbody (MBB) emission laws with a free temperature, $T$, and spectral index, $\beta$, up to some maximum frequency, after which is defined by a piecewise binned function. Fitting this model to the HFI and DIRBE data, we make the following observations: 1) With only three free parameters per pixel, this model is able to reproduce more than 98\,\% of the observed diffuse Galactic signal at all \Planck\ and DIRBE frequency channels between 100\,GHz and 12\,$\mu$m; 2) the cold component correlates strongly with HI emission, and has an effective MBB temperature of $T_{\mathrm{cold}} = 11\pm3\,\mathrm{K}$; 3) the hot component correlates strongly with \CII\ emission, and has an effective MBB temperature of $T_{\mathrm{hot}} = 40\pm5\,\mathrm{K}$; 4) the infrared component is morphologically similar to the hot component, but more concentrated around the Galactic center;
+   \abstract{
+     We fit a four-component thermal dust model to \COBE-DIRBE data between 3.5 and 240\,$\mu$m within the global Bayesian end-to-end \Cosmoglobe\ DR2 reanalysis. Following a companion analysis of \Planck\ HFI, the four components of this model correspond to ``hot dust'', ``cold dust'', ``nearby dust'', and ``H$\alpha$ correlated dust'', respectively, and each component is modelled in terms of a fixed spatial template and a spatially isotropic spectral energy density (SED) defined by an overall free amplitude for each DIRBE channel. The H$\alpha$ dust is an extinction component and, as such, has a negative amplitude. Except for the cold dust amplitude, which is only robustly detected in the 240\,$\mu$m channel, we measure statistically significant template amplitudes for all components in all DIRBE channels between 3.5 and $240\,\mu\mathrm{m}$; the two highest frequency channels are too dominated by starlight emission to allow robust dust detections. The total number of DIRBE-specific degrees of freedom in this model is thus only 25. Despite this low dimensionality, the resulting total SED agrees well with recent Astrodust predictions, and the overall model efficiency is high although with a notable wavelength dependency; at both low and high frequencies, more than 95\,\% of the signal rms is captured by the model, while at 60 and $100\,\mu\mathrm{m}$ only about 70\,\% of the signal is successfully accounted for. The hot dust component, which was previously found to correlate strongly with \ion{C}{II} emission, has the highest absolute amplitude in all DIRBE frequency channels; at 3.5\,$\mu$m, which is known to be dominated by PAH emission, this component accounts for at least 80\,\% of the total signal. This analysis represents an important step towards establishing a joint concordance model of thermal dust emission applicable to both the microwave and infrared regimes, and we conclude by outlining a roadmap to a future joint analysis of AKARI, DIRBE, IRAS, and \Planck.
    }
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
@@ -455,24 +456,6 @@ planning several improvements to the model to be published in the future.
 However, already with this relatively crude model the results are of sufficient
 interest for the community that we think it worthwhile to report.
 
-\begin{table*}
-    \centering
-    \caption{Defintion of the SED bins used in this paper}
-    \begin{tabular}{c|c|c|c}
-        \label{tab:bins}
-        Bin number & Frequency range (GHz) & Wavelength range ($\mu$m) & DIRBE band correspondence \\
-        \hline
-        1 & 1050-1667 & 286.5-179.8 & 10 \\
-        2 & 1667-2540 & 179.8-118.0 & 9 \\
-        3 & 2540-4064 & 118.0-73.8 & 8 \\
-        4 & 4064-9000 & 73.8-33.3 & 7 \\
-        5 & 9000-18100 & 33.3-16.6 & 6 \\
-        6 & 18100-45500 & 16.6-6.6 & 5  \\
-        7 & 45500-70215 & 6.6-4.3 & 4 \\
-        8 & 70215-109490 & 4.3-2.7 & 3
-    \end{tabular}
-\end{table*}
-
 
 \subsection{Gibbs sampling}
 
@@ -541,17 +524,41 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 
 \subsection{Markov chains, correlations and convergence}
 
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=\columnwidth]{figures/traceplots.pdf}
+%  \caption{Traceplots.}
+%  \label{fig:trace}
+%\end{figure}
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{figures/traceplots.pdf}
-  \caption{Traceplots.}
-  \label{fig:trace}
+  \includegraphics[width=\columnwidth]{figures/traceplots_dust_seds_cold_dust.pdf}
+  \caption{Traceplots for cold dust}
+  \label{fig:trace_colddust}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/traceplots_dust_seds_hot_dust.pdf}
+  \caption{Traceplots for hot dust}
+  \label{fig:trace_hotdust}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/traceplots_dust_seds_nearby_dust.pdf}
+  \caption{Traceplots for nearby dust}
+  \label{fig:trace_nearbydust}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/traceplots_dust_seds_ha-correlated_dust.pdf}
+  \caption{Traceplots for H$\alpha$ dust}
+  \label{fig:trace_hacorr_dust}
 \end{figure}
 
 
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{figures/corrmat_extended.pdf}
+  \includegraphics[width=\columnwidth]{figures/corrmat.pdf}
   \caption{Correlations.}
   \label{fig:corrmat}
 \end{figure}
@@ -560,31 +567,128 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 
 \subsection{Multi-component thermal dust SED posteriors}
 
+
+
+\begin{table*}
+\newdimen\tblskip \tblskip=5pt
+\caption{Summary of dust template amplitude posterior constraints.}
+\label{tab:tempamp}
+\vskip -4mm
+\footnotesize
+\setbox\tablebox=\vbox{
+ \newdimen\digitwidth
+ \setbox0=\hbox{\rm 0}
+ \digitwidth=\wd0
+ \catcode`*=\active
+ \def*{\kern\digitwidth}
+%
+  \newdimen\dpwidth
+  \setbox0=\hbox{.}
+  \dpwidth=\wd0
+  \catcode`!=\active
+  \def!{\kern\dpwidth}
+%
+  \halign{\hbox to 1.7cm{#\leaderfil}\tabskip 2em&
+    \hfil$#$\hfil \tabskip 0.5em&
+    \hfil$#$\hfil \tabskip 1em& 
+    \hfil$#$\hfil \tabskip 1em& 
+    \hfil$#$\hfil \tabskip 1em& 
+    \hfil$#$\hfil \tabskip 1em& 
+    \hfil$#$\hfil \tabskip 1em\cr
+\noalign{\doubleline}
+\omit& \multispan2\hfil\sc Band (THz) \hfil&\multispan4\hfil\sc Template amplitude (unit) \hfil\cr
+\noalign{\vskip -3pt}
+\omit& \multispan2\hrulefill& \multispan4\hrulefill\cr
+\noalign{\vskip 3pt} 
+\omit\sc $\lambda$ ($\mu\mathrm{m}$)\hfil& \nu_{\mathrm{min}} & \nu_{\mathrm{max}} & \a_{\mathrm{h}} & \a_{\mathrm{c}} & \a_{\mathrm{n}} & \a_{\mathrm{H}\alpha}\cr
+\noalign{\vskip 3pt\hrule\vskip 5pt}
+*3.5  & 70.2 & 109.5 & 0.05\pm0.00 & 0.00\pm0.01 & 0.01\pm0.00 & 0.00\pm0.01 \cr
+*4.9  & 45.5 & *70.2 & 0.01\pm0.00 & 0.00\pm0.01 & 0.01\pm0.00 & 0.00\pm0.01 \cr
+*12   & 18.1 & *45.5 & 0.30\pm0.00 & 0.00\pm0.01 & 0.19\pm0.00 & -0.32\pm0.01 \cr
+*25   & *9.0 & *18.1 & 0.22\pm0.00 & 0.00\pm0.01 & 0.13\pm0.00 & -0.28\pm0.01 \cr
+*60   & *4.1 & **9.0 & 2.45\pm0.00 & 0.00\pm0.01 & 0.31\pm0.00 & -2.41\pm0.03 \cr
+100   & *2.5 & **4.1 & 10.92\pm0.03 & 0.00\pm0.01 & 2.61\pm0.00 & -12.40\pm0.02 \cr
+140   & *1.7 & **2.5 & 24.58\pm0.01 & 0.00\pm0.01 & 10.04\pm0.01 & -23.40\pm0.08 \cr
+240   & *1.1 & **1.7 & 11.33\pm0.01 & 2.60\pm0.01 & 8.09\pm0.01 & -8.94\pm0.04 \cr
+\noalign{\vskip 5pt\hrule\vskip 5pt}}}
+\endPlancktablewide
+\par
+\end{table*}
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{figures/cold_dust_sed.pdf}
-  \caption{Cold dust SED.}
-  \label{fig:cold_dust_sed}
+  \includegraphics[width=\columnwidth]{figures/all_components_sed.pdf}
+  \caption{The total dust SED, as well as the three positive dust components. The best-fit astrodust model fit to the total SED for the frequencies shown is also plotted.}
+  \label{fig:total_sed}
 \end{figure}
+
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=\columnwidth]{figures/cold_dust_sed.pdf}
+%  \caption{Cold dust SED.}
+%  \label{fig:cold_dust_sed}
+%\end{figure}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=\columnwidth]{figures/hot_dust_sed.pdf}
+%  \caption{Hot dust SED.}
+%  \label{fig:hot_dust_sed}
+%\end{figure}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=\columnwidth]{figures/nearby_dust_sed.pdf}
+%  \caption{Nearby dust SED.}
+%  \label{fig:nearby_dust_sed}
+%\end{figure}
+%
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=\columnwidth]{figures/nearby_dust_sed.pdf}
+%  \caption{H$\alpha$ SED.}
+%  \label{fig:wham_sed}
+%\end{figure}
+
+\subsection{Model efficiency and residuals}
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_10_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_10_todres_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_06_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_06_todres_v1.pdf}\\
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_09_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_09_todres_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_05_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_05_todres_v1.pdf}\\
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_08_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_08_todres_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_04_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_04_todres_v1.pdf}\\
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_07_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_07_todres_v1.pdf}\hspace*{5mm}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_03_dustres_v1.pdf}
+  \includegraphics[width=0.235\linewidth]{figures/paperVII_03_todres_v1.pdf}
+  \caption{Comparison between thermal dust frequency maps (i.e., stationary sky signal minus starlight and free-free; \emph{first and third columns}) and residual frequency maps (\emph{second and fourth column}). Gray pixels indicate the analysis masks used for each frequency channel. }
+  \label{fig:dustmaps}
+\end{figure*}
+
+
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{figures/hot_dust_sed.pdf}
-  \caption{Hot dust SED.}
-  \label{fig:hot_dust_sed}
-\end{figure}
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/nearby_dust_sed.pdf}
-  \caption{Nearby dust SED.}
-  \label{fig:nearby_dust_sed}
+  \includegraphics[width=\columnwidth]{figures/template_signal_rms_v1.pdf}
+  \caption{Dust model efficiency as a function of frequency, as defined in terms of variance reduction. The red line shows results for DIRBE, as evaluated from the maps shown in Fig.~\ref{fig:dustmaps}, while the blue line shows results for \Planck\ HFI, as presented by \citet{CG02_06}. Vertical bands indicate the position and bandwidth of each DIRBE (orange) and HFI (cyan) frequency channel.}
+  \label{fig:efficiency}
 \end{figure}
 
 \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{figures/nearby_dust_sed.pdf}
-  \caption{H$\alpha$ SED.}
-  \label{fig:wham_sed}
+  \includegraphics[width=\linewidth]{figures/paperVII_07_todres_zoom_v1.pdf}\\
+  \includegraphics[width=\linewidth]{figures/paperVII_08_todres_zoom_v1.pdf}
+  \caption{Full-sky data-minus-model residual maps for the 60 (\emph{top}) and 100\,$\mu$m (\emph{bottom}) DIRBE channels.}
+  \label{fig:res0708}
 \end{figure}
+
+
 
 
 \clearpage
@@ -602,12 +706,12 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.49\linewidth]{figures/CGDR2_colddust_1deg_n512_v1.pdf}
-  \includegraphics[width=0.49\linewidth]{figures/CGDR2_hotdust_1deg_n512_v1.pdf}\\
-  \includegraphics[width=0.49\textwidth]{figures/lambda_WHAM_1_256.pdf}
-  \includegraphics[width=0.49\textwidth]{figures/extinctions_515.pdf}
-  \caption{Dust amplitude maps used in the \Cosmoglobe\ DR2 sky model.  }
-  \label{fig:dustmaps}
+  \includegraphics[width=0.49\linewidth]{figures/CosmoglobeDR2_VII_545-1_dust_cold_v1.pdf}
+  \includegraphics[width=0.49\linewidth]{figures/CosmoglobeDR2_VII_545-1_dust_hot_v1.pdf}\\
+  \includegraphics[width=0.49\textwidth]{figures/CosmoglobeDR2_VII_545-1_dust_near_v1.pdf}
+  \includegraphics[width=0.49\textwidth]{figures/CosmoglobeDR2_VII_545-1_dust_Ha_v1.pdf}
+  \caption{Dust amplitude maps used in the \Cosmoglobe\ DR2 sky model, as evaluated for the \Planck\ HFI 545-1 bolometer channel. From top to bottom and left to right, the four panels show 1) the cold dust amplitude, $\a_{\mathrm{c}}$; 2) the hot dust amplitude, $\a_{\mathrm{h}}$; 3) the nearby dust amplitude, $\a_{\mathrm{n}}$; and 4) the (absolute value of the) H$_{\alpha}$-correlated dust extinction amplitude, $\a_{\mathrm{H}\alpha}$. All panels employ the \Planck\ non-linear high dynamic range color scheme, defined by $\log_{10}((\a + \sqrt{4+\a^2})/2)$, which results in a nearly linear behaviour for small values and exponential for large values.  }
+  \label{fig:templates}
 \end{figure*}
 
 
@@ -616,115 +720,70 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 
        \begin{figure*}
          \centering
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_10a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_10a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_10a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_10a_v01.pdf}\\
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_09a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_09a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_09a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_09a_v01.pdf}\\
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_08a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_08a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_08a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_08a_v01.pdf}\\
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_07a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_07a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_07a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_07a_v01.pdf}\\
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_06a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_06a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_06a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_06a_v01.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_06a_v01.pdf}\\  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_05a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_05a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_dusttot_05a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_05a_v01.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_05a_v01.pdf}\\
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_04a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_04a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_04a_v01.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_04a_v01.pdf}\\  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_03a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_03a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_03a_v01.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_03a_v01.pdf}\\  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_02a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_02a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_02a_v01.pdf}  
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_02a_v01.pdf}\\
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_mapzodi_01a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_zodi_01a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_white_nobar.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_stars_01a_v01.pdf}
-         \includegraphics[width=0.19\linewidth]{figures/compfreq_todres_01a_v01.pdf}\\
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_10_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_10_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_10_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_10_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_10_v02.pdf}\\
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_09_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_09_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_09_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_09_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_09_v02.pdf}\\
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_08_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_08_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_08_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_08_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_08_v02.pdf}\\
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_07_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_07_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_07_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_07_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_07_v02.pdf}\\
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_06_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_06_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_06_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_stars_06_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_06_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_06_v02.pdf}\\  
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_05_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_05_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_05_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_stars_05_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_05_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_05_v02.pdf}\\
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_04_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_04_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_04_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_stars_04_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_04_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_04_v02.pdf}\\  
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_03_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_03_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_03_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_stars_03_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_03_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_03_v02.pdf}\\  
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_02_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_02_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_stars_02_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_02_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_02_v02.pdf}\\
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_01_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_01_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_stars_01_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_01_v02.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_01_v02.pdf}\\
          \includegraphics[width=0.50\linewidth]{figures/colourbar_MJysr.pdf}
-         \caption{Comparison between the raw DIRBE data and the various fitted components for one single Gibbs sample. Columns show, from left to right, 1) the time-ordered DIRBE data co-added into pixelized maps; 2) zodiacal light emission; 3) thermal dust emission; 4) star emission; and 5) data-minus-model residual emission. Rows show individual frequency channels. Missing entries corresponds to components that are forced to zero in the model. Note that all panels are plotted with the same color scale in units of MJy/sr, and can be directly compared.}
+         \caption{Comparison between the raw DIRBE data and the various fitted components for one single Gibbs sample. Columns show, from left to right, 1) the time-ordered DIRBE data co-added into pixelized maps; 2) zodiacal light emission; 3) thermal dust emission; 4) star emission; 5) free-free emission; and 6) data-minus-model residual emission. Rows show individual frequency channels. Missing entries corresponds to components that are forced to zero in the model. Note that all panels are plotted with the same color scale in units of MJy/sr, and can be directly compared.}
          \label{fig:comp_vs_freq}
        \end{figure*}
-
-
-\subsection{Model efficiency and residuals}
-
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\\
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}\hspace*{5mm}
-  \includegraphics[width=0.23\linewidth]{figures/map_tempfit_353_v1.pdf}
-  \includegraphics[width=0.23\linewidth]{figures/res_tempfit_353_v1.pdf}
-  \caption{Comparison between thermal dust frequency maps (left column) and residual frequency maps (right column). }
-  \label{fig:dustmaps}
-\end{figure*}
-
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figures/template_signal_rms_v1.pdf}
-  \caption{Thermal dust model efficiency.}
-  \label{fig:efficiency}
-\end{figure}
-
 
 
        
@@ -765,3 +824,22 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 %%%% End of aa.dem
 
 
+
+
+\begin{table*}
+    \centering
+    \caption{Defintion of the SED bins used in this paper}
+    \begin{tabular}{c|c|c|c}
+        \label{tab:bins}
+        Bin number & Frequency range (GHz) & Wavelength range ($\mu$m) & DIRBE band correspondence \\
+        \hline
+        1 & 1050-1667 & 286.5-179.8 & 10 \\
+        2 & 1667-2540 & 179.8-118.0 & 9 \\
+        3 & 2540-4064 & 118.0-73.8 & 8 \\
+        4 & 4064-9000 & 73.8-33.3 & 7 \\
+        5 & 9000-18100 & 33.3-16.6 & 6 \\
+        6 & 18100-45500 & 16.6-6.6 & 5  \\
+        7 & 45500-70215 & 6.6-4.3 & 4 \\
+        8 & 70215-109490 & 4.3-2.7 & 3
+    \end{tabular}
+\end{table*}
