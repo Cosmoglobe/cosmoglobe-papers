@@ -172,9 +172,16 @@
 %-------------------------------------------------------------------
 \section{Introduction}
 
-Current dust models are not good enough (citations), and new dust models can do better (other dirbe dust papers?), using \Planck\ HFI NPIPE maps and component separation with Commander we can do better. 
+\begin{itemize}
+    \item DIRBE DR2 analysis goals
+    \item Big picture
+    \item Why are we doing this (issues with Planck dust model, results from Eirik)
+\end{itemize}
 
-Recent results show that a four component physically motivated dust model may outperform previous models (cite Eirik and Planck, etc). These four dust models correspond to a hot-dust component (tracing the \ion{C}{II} emission), a cold-dust component, a nearby dust component (PAH) and a dust extinction (using GAIA and tracing the \ion{H}{$\alpha$} emission). We exploit the Commander 3 framework and the \planck\ PR4 data release to produce improved dust maps. 
+
+% Current dust models are not good enough (citations), and new dust models can do better (other dirbe dust papers?), using \Planck\ HFI NPIPE maps and component separation with Commander we can do better. 
+
+% Recent results show that a four component physically motivated dust model may outperform previous models (cite Eirik and Planck, etc). These four dust models correspond to a hot-dust component (tracing the \ion{C}{II} emission), a cold-dust component, a nearby dust component (PAH) and a dust extinction (using GAIA and tracing the \ion{H}{$\alpha$} emission). We exploit the Commander 3 framework and the \planck\ PR4 data release to produce improved dust maps. 
 
 
 % In \cref{sec:data} we discuss the data used for the analysis, and in \cref{sec:model}, the model used for the analysis. In \cref{sec:method} we summarize the analysis methodology using \Commander. Next, in \cref{sec:results} we present the results for the new dust model and compare with \planck's previous results in \cref{sec:planckcompare}. 
@@ -182,66 +189,118 @@ Recent results show that a four component physically motivated dust model may ou
 
 \section{Methods}
 \label{sec:method}
-To address the tight correlations between the four dust components as well as the 857~GHz gain, 
+\begin{itemize}
+    \item Overview of the section, maybe why it is a challenging problem?
+\end{itemize}
+% To address the tight correlations between the four dust components as well as the 857~GHz gain, 
 
 
 \subsection{Data model and posterior distribution}
 \label{sec:model}
+\begin{itemize}
+    \item What is in the HFI data (sky (next section), gain, noise,monopole/dipole,beams, etc.)
+    \item Big data model equation, $d=s+n+...$
+    \item 
+\end{itemize}
 
 \subsection{Sky model}
 \label{sec:skymodel}
+\begin{itemize}
+    \item Put it into context with DR2
+    \item Use Eirik to justify choices
+    \item big equation for $s=a_{cmb}...$ etc
+\end{itemize}
 
+The sky model for the HFI maps includes free-free (ff)~\cref{fig:freefree}, carbon monoxide (CO)~\cref{fig:CO100,fig:CO217,fig:CO353}, cosmic microwave background radiation (CMB)~\cref{fig:cmb}, and the four aforementioned dust components of interest. 
+We keep the free-free fixed to WHICH FF MODEL DO WE USE due to the low constraining power of the HFI bands on the free-free component, additionally we keep the CO line-ratios constant for this analysis, but allow the amplitude to vary pixel-by-pixel for the three CO emission lines. 
+For our four dust components, the hot and cold dust are each allowed to have free amplitudes for each pixel, and global\footnote{Here global refers to a single value for the entire map.} temperature and spectral index values. The nearby dust and dust extinction have fixed templates, but are allowed to vary with a global amplitude, temperature, and spectral index.  
+Finally, the monopoles and dipoles are sampled for each frequency band, and we sample the gain for each of the 857~GHz bands. 
+
+The temperature model used for this analysis may be written as a vector
+\begin{align}
+    \vec{s}_\nu=&u_\nu g_\nu \mathsf{B}_\nu\left[\vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\vec{a} _\mathrm{cmb}\gamma(\nu) \right. \nonumber \\
+    &+\vec{a}_\mathrm{ff}\\
+    &+\vec{a}_\mathrm{cd}\left(\frac{\nu}{\nu_\mathrm{cd}}\right)^{\beta_\mathrm{cd}+1}\left(\frac{e^{h\nu_\mathrm{cd}/k_\mathrm{B}T_\mathrm{cd}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{cd}}-1}\right)\nonumber \\
+    &+\vec{a}_\mathrm{hd}\left(\frac{\nu}{\nu_\mathrm{hd}}\right)^{\beta_\mathrm{hd}+1}\left(\frac{e^{h\nu_\mathrm{hd}/k_\mathrm{B}T_\mathrm{hd}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{hd}}-1}\right)\nonumber \\
+    &+\vec{a}_\mathrm{nd}\left(\frac{\nu}{\nu_\mathrm{nd}}\right)^{\beta_\mathrm{nd}+1}\left(\frac{e^{h\nu_\mathrm{nd}/k_\mathrm{B}T_\mathrm{nd}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{nd}}-1}\right)\nonumber \\
+    &+\vec{a}_\mathrm{de}\left(\frac{\nu}{\nu_\mathrm{de}}\right)^{\beta_\mathrm{de}+1}\left(\frac{e^{h\nu_\mathrm{de}/k_\mathrm{B}T_\mathrm{de}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{de}}-1}\right)\nonumber \\
+    &+\vec{a}^{100}_\mathrm{co}h_\nu^{100}+\vec{a}^{217}_\mathrm{co}h_\nu^{217}+\vec{a}^{353}_\mathrm{co}h_\nu^{353}\left. \vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\right] \nonumber\\
+    &+m_\nu
+    \label{equ:model}
+\end{align}
+where $u_\nu$ is a unit scaling conversion factor to go from brightness temperature to thermodynamic temperature, $g_\nu$ is the gain (which in this case is only sampled for 857 GHz), $\mathsf{B}_\nu$ is the beam convolution operator, $\vec{a}_{c}$ for $c\in (\mathrm{ff,cd,hd,nd,de,co})$ are the amplitudes, which are sampled per-pixel for the CMB ($\mathrm{cmb}$), cold-dust ($\mathrm{cd}$), hot dust ($\mathrm{hd}$), and the CO lines, and as a spatially constant value for the nearby dust ($\mathrm{nd}$) and dust extinction ($\mathrm{de}$). The free-free ($\mathrm{ff}$) is held fixed, as well as the CO line ratios ($h_\nu^{\{100,217,353\}})$. 
+Synchrotron is not included in this analysis since it is negligible in the HFI frequency ranges. 
+
+
+\begin{align}
+    \vec{s}_{\nu,\mathrm{d}}=\vec{a}_\mathrm{d}\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}\left(\frac{e^{h\nu_\mathrm{d}/k_\mathrm{B}T_\mathrm{d}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{d}}-1}\right)
+    \label{eq:MBB}
+\end{align}
+
+
+% \begin{figure*}
+%      \centering
+%      \begin{subfigure}[b]{0.49\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{figures/ff_map.pdf}
+%          \caption{free-free}
+%          \label{fig:freefree}
+%      \end{subfigure}
+%      \hfill
+%      \begin{subfigure}[b]{0.49\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{figures/co100_map.pdf}
+%          \caption{CO100}
+%          \label{fig:CO100}
+%      \end{subfigure}
+%      \hfill
+%      \begin{subfigure}[b]{0.49\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{figures/co217_map.pdf}
+%          \caption{CO217}
+%          \label{fig:CO217}
+%      \end{subfigure}
+%      \begin{subfigure}[b]{0.49\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{figures/co353_map.pdf}
+%          \caption{CO353}
+%          \label{fig:CO353}
+%      \end{subfigure}
+%         \caption{Sky model components}
+%         \label{fig:SkyModel}
+%  \end{figure*}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/cmb_map.pdf}
+%     \caption{CMB }
+%     \label{fig:cmb}
+% \end{figure}
 
 \begin{figure*}
-     \centering
-     \begin{subfigure}[b]{0.49\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figures/ff_map.pdf}
-         \caption{free-free}
-         \label{fig:freefree}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.49\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figures/co100_map.pdf}
-         \caption{CO100}
-         \label{fig:CO100}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.49\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figures/co217_map.pdf}
-         \caption{CO217}
-         \label{fig:CO217}
-     \end{subfigure}
-     \begin{subfigure}[b]{0.49\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figures/co353_map.pdf}
-         \caption{CO353}
-         \label{fig:CO353}
-     \end{subfigure}
-        \caption{Sky model components}
-        \label{fig:SkyModel}
- \end{figure*}
-
-\begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/cmb_map.pdf}
-    \caption{CMB }
-    \label{fig:cmb}
-\end{figure}
-
-
+    \includegraphics[width=\textwidth]{figures/foregrounds_plotres.pdf}
+    \caption{Sky model components. The Free-free amplitude and spectral index parameters are held fixed, the relative CO line ratios are also held fixed. The amplitudes for the CO lines and the CMB are fit in the Gibbs sampling chain. Maps have been plotted with a beam of 80 arcminutes for redability, but are produced at full resolution of \nside\ 2048 with a beam of 5 arcminutes. }
+    \label{fig:SkyModel}
+\end{figure*}
 
 \subsection{Gibbs sampling}
 \label{sec:sampling}
+\begin{itemize}
+    \item Big Gibbs samplign equation
+    \item Discuss sampling algorithms
+    \item Mention briefly why some parameters aren't in the chain? and upcoming section on grid search?
+\end{itemize}
 
 \subsection{Summary statistics and optimization strategy}
 \label{sec:statistics}
 
-Chisq, correlations etc.
+
+We found that the four dust components were highly correlated, and so we performed an extensive grid search so as to explore the parameter space efficiently, while imposing a physicality prior requiring that the large scale amplitudes of the hot and cold dust were positive, and that the temperatures of the dust components did not exceed 35~K or go lower than 10~K. Each step in the grid search used Gibbs sampling fit the 857-{1-4} gains, the amplitudes per pixel of the hot and cold dust, the CMB and the CO amplitudes, as well as monopoles and dipoles, for a set temperature and spectral index for each dust component. These amplitudes are fit through the conjugate gradient sampling routine implemented in the Commander3 framework. 
+
 
 \begin{enumerate}
+\item Grid search methodology?
 \item Minimize chisq
 \item Maximize HI correlation versus cold dust
 \item Minimize correlations with nearby dust (suck up as much as possible with nearby)
@@ -270,33 +329,12 @@ Chisq, correlations etc.
 \end{figure}
 
 
-The sky model for the HFI maps includes free-free (ff)~\cref{fig:freefree}, carbon monoxide (CO)~\cref{fig:CO100,fig:CO217,fig:CO353}, cosmic microwave background radiation (CMB)~\cref{fig:cmb}, and the four aforementioned dust components of interest. 
-We keep the free-free fixed to WHICH FF MODEL DO WE USE due to the low constraining power of the HFI bands on the free-free component, additionally we keep the CO line-ratios constant for this analysis, but allow the amplitude to vary pixel-by-pixel for the three CO emission lines. 
-For our four dust components, the hot and cold dust are each allowed to have free amplitudes for each pixel, and global\footnote{Here global refers to a single value for the entire map.} temperature and spectral index values. The nearby dust and dust extinction have fixed templates, but are allowed to vary with a global amplitude, temperature, and spectral index.  
-Finally, the monopoles and dipoles are sampled for each frequency band, and we sample the gain for each of the 857~GHz bands. 
-
-The temperature model used for this analysis may be written as a vector
-\begin{align}
-    \vec{s}_\nu=&u_\nu g_\nu \mathsf{B}_\nu\left[\vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\vec{a} _\mathrm{cmb}\gamma(\nu) \right. \nonumber \\
-    &+\vec{a}_\mathrm{ff}\\
-    &+\vec{a}_\mathrm{cd}\left(\frac{\nu}{\nu_\mathrm{cd}}\right)^{\beta_\mathrm{cd}+1}\left(\frac{e^{h\nu_\mathrm{cd}/k_\mathrm{B}T_\mathrm{cd}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{cd}}-1}\right)\nonumber \\
-    &+\vec{a}_\mathrm{hd}\left(\frac{\nu}{\nu_\mathrm{hd}}\right)^{\beta_\mathrm{hd}+1}\left(\frac{e^{h\nu_\mathrm{hd}/k_\mathrm{B}T_\mathrm{hd}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{hd}}-1}\right)\nonumber \\
-    &+\vec{a}_\mathrm{nd}\left(\frac{\nu}{\nu_\mathrm{nd}}\right)^{\beta_\mathrm{nd}+1}\left(\frac{e^{h\nu_\mathrm{nd}/k_\mathrm{B}T_\mathrm{nd}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{nd}}-1}\right)\nonumber \\
-    &+\vec{a}_\mathrm{de}\left(\frac{\nu}{\nu_\mathrm{de}}\right)^{\beta_\mathrm{de}+1}\left(\frac{e^{h\nu_\mathrm{de}/k_\mathrm{B}T_\mathrm{de}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{de}}-1}\right)\nonumber \\
-    &+\vec{a}^{100}_\mathrm{co}h_\nu^{100}+\vec{a}^{217}_\mathrm{co}h_\nu^{217}+\vec{a}^{353}_\mathrm{co}h_\nu^{353}\left. \vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\right] \nonumber\\
-    &+m_\nu
-    \label{equ:model}
-\end{align}
-where $u_\nu$ is a unit scaling conversion factor to go from brightness temperature to thermodynamic temperature, $g_\nu$ is the gain (which in this case is only sampled for 857 GHz), $\mathsf{B}_\nu$ is the beam convolution operator, $\vec{a}_{c}$ for $c\in (\mathrm{ff,cd,hd,nd,de,co})$ are the amplitudes, which are sampled per-pixel for the CMB ($\mathrm{cmb}$), cold-dust ($\mathrm{cd}$), hot dust ($\mathrm{hd}$), and the CO lines, and as a spatially constant value for the nearby dust ($\mathrm{nd}$) and dust extinction ($\mathrm{de}$). The free-free ($\mathrm{ff}$) is held fixed, as well as the CO line ratios ($h_\nu^{\{100,217,353\}})$. 
-Synchrotron is not included in this analysis since it is negligible in the HFI frequency ranges. 
-
-%\section{Analysis, How does commander work/what did we do?}
-%\label{sec:method}
-Commander dump, gibbs sampling, the whole nine yards. 
-For this analysis we use the Commander3 framework 
-
-We found that the four dust components were highly correlated, and so we performed an extensive grid search so as to explore the parameter space efficiently, while imposing a physicality prior requiring that the large scale amplitudes of the hot and cold dust were positive, and that the temperatures of the dust components did not exceed 40K or go lower than 10K. Each step in the grid search fit the 857-{1-4} gains, the amplitudes per pixel of the hot and cold dust, the CMB and the CO amplitudes, as well as monopoles and dipoles, for a set temperature and spectral index for each dust component. These amplitudes are fir through the conjugate gradient sampling routine implemented in the Commander 3 framework. 
-
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/ColdChisq.png}
+    \caption{Cold dust grid search with colour representing the $\chi^2$. In this case we idelly the lowest $\chi^2$, however points in the red-gridded area (ADD RED GRID AND MAKE POINTS CONTOURS, ADD SPECIFIC POITNS THAT WILL BE PLOTTED) show unphysical characteristics (such negative large scale values).}
+    \label{fig:cdchi}
+\end{figure}
 
 
 \section{Data}
@@ -324,6 +362,7 @@ Additionally, we use the Wisconsin \ion{H}{$\alpha$} mapper data as a template f
 As mentioned above, we additionally correct the \planck\ HFI maps with the GNILC CIB maps \citep{planck2016-XLVIII} and the \Planck\ PR2 zodiacal light model \cite{planck2014-a09, planck2013-pip88, maris2006c}. 
 Free-free?
 CO line ratios?
+Compare also to Dame et al. CO map, HI4PI and Firas CII map for some of the summary statistics. 
 
 \subsection{Masks}
 \label{sec:masks}
@@ -331,7 +370,7 @@ When computing the fit for the hot and cold dust we used the full sky, however d
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/gain857_mask.pdf}
+    \includegraphics[\linewidth]{figures/gain857_mask.pdf}
     \caption{Mask used during the gain calculations for the 857~GHz maps.}
     \label{fig:gainmask}
 \end{figure}
@@ -359,13 +398,23 @@ When computing the fit for the hot and cold dust we used the full sky, however d
 
 \section{Thermal dust template results}
 \label{sec:results}
-Gain? Full model maybe? Maybe put the chain results into the appendix?
-Maybe a table or a figure here?
+\begin{itemize}
+    \item What is coming in this section broadly (best fit, then summary statistics, then grid search results for each of the dust components)
+    \item We only show a subset of the grid here for simplicity but many more parameters were additionally tested before best fit was chosen, large error bars due to gain uncertainty 
+\end{itemize}
 
-\begin{align}
-    \vec{s}_{\nu,\mathrm{d}}=\vec{a}_\mathrm{d}\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}\left(\frac{e^{h\nu_\mathrm{d}/k_\mathrm{B}T_\mathrm{d}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{d}}-1}\right)
-    \label{eq:MBB}
-\end{align}
+
+
+
+
+\subsection{Best-fit model}
+\label{sec:bestfit}
+
+\begin{enumerate}
+    \item Update SED plot, add HFI bands, adjust amplitudes
+    \item Update final model plots?
+    \item Describe the best fit model generally, mention next sections will go into more details
+\end{enumerate}
 
 \begin{figure}
     \centering
@@ -373,8 +422,6 @@ Maybe a table or a figure here?
     \caption{Four component dust spectral energy distributions. Each of the four spectral energy distributions are fit with a modified blackbody with a reference frequency of 545~GHz. REMAKE WITH WIDTH OF LINE FROM THE DISTRIBUTION OF THE PARAMETERS? ADD IN PLANCK BANDS? Individual spectral distribution parameters can be found in \cref{tab:SEDs}.}
     \label{fig:dustSED}
 \end{figure}
-
-
 
 
 \begin{table}[tbp!]
@@ -410,8 +457,8 @@ Maybe a table or a figure here?
 \label{tab:gains}
 \end{table}
 
-\subsection{Best-fit model}
-\label{sec:bestfit}
+
+
 \begin{table}[tbp!]
 \begingroup
 \newdimen\tblskip \tblskip=5pt
@@ -442,7 +489,17 @@ Nearby dust& $ 18.0 $ & $ 1.7 $\cr
 
 \subsection{Hot dust SED grid (\texorpdfstring{$T_{\mathrm{hot}}$}{T hot} and \texorpdfstring{$\beta_{\mathrm{hot}}$}{b hot})}
 \label{sec:ciidust}
-The hot dust component also appears to correlate with a physical sky signature, in this case the ionized carbon emission \ion{C}{II}, which is expected to be present around hot O and B type stars, and so as expected should correlate strongly with the \ion{C}{II} emission as seen by DIRBE/FIRAS. 
+
+\begin{enumerate}
+    \item Add side by side plot of CII and hot dust?
+    \item Add TT-correlation plot between CII and hot dust
+    \item Discuss correlation coeff between CII and hot dust (mention masks)
+    \item Add summary statistics plots from grid search
+    \item Add/update full grid search plane 
+\end{enumerate}
+
+
+The hot dust component correlates strongly with the ionized carbon emission \ion{C}{II}, which is expected to be present around hot O and B type stars, and so as expected should correlate strongly with the \ion{C}{II} emission as seen by DIRBE/FIRAS. 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/dust_cii_map.pdf}
@@ -453,17 +510,41 @@ The hot dust component also appears to correlate with a physical sky signature, 
 
 \begin{figure*}
     \centering
-    \includegraphics[width=\linewidth]{figures/HotDust_Grid.pdf}
-    \caption{Hot dust (\ion{C}{II} correlated dust) for varying $T_\mathrm{H}$ and $\beta_\mathrm{H}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. }
-    \label{fig:hot_dust_set}
+    \includegraphics[width=\linewidth]{figures/HotDust_hot_Grid.pdf}
+    \caption{Hot dust (\ion{C}{II} correlated dust) amplitudes for varying $T_\mathrm{H}$ and $\beta_\mathrm{H}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:hot_cold_dust_set}. }
+    \label{fig:hot_hot_dust_set}
 \end{figure*}
 
-Similar to the cold dust analysis, we calculate the Pearson correlation coefficient and find ...
-
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/HotDust_cold_Grid.pdf}
+    \caption{Cold dust (\ion{H}{I} correlated dust) amplitudes for varying $T_\mathrm{h}$ and $\beta_\mathrm{h}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:hot_hot_dust_set}.}
+    \label{fig:hot_cold_dust_set}
+\end{figure*}
 
 \subsection{Cold dust SED grid (\texorpdfstring{$T_{\mathrm{cold}}$}{T cold} and \texorpdfstring{$\beta_{\mathrm{cold}}$}{b cold})}
 \label{sec:colddust}
-The cold dust component very neatly correlates strongy with the HI4PI data set, which maps the neutral hydrogen signature in the Milky Way. Since neutral hydrogen is only present in cold areas of the Milky Way, it is expected that these two should correlate spatially, though the HI4PI maps are not used as a template for this analysis. 
+
+\begin{enumerate}
+    \item Add summary statistics plots from grid search
+    \item Add/update full grid search plane 
+\end{enumerate}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/ColdDust_hot_Grid.pdf}
+    \caption{Hot dust (\ion{C}{II} correlated dust) amplitudes for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:cold_cold_dust_set}. }
+    \label{fig:cold_hot_dust_set}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/ColdDust_cold_Grid.pdf}
+    \caption{Cold dust (\ion{H}{I} correlated dust) amplitudes for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:cold_hot_dust_set}.}
+    \label{fig:cold_cold_dust_set}
+\end{figure*}
+
+%  The cold dust component very neatly correlates strongy with the HI4PI data set, which maps the neutral hydrogen signature in the Milky Way. Since neutral hydrogen is only present in cold areas of the Milky Way, it is expected that these two should correlate spatially, though the HI4PI maps are not used as a template for this analysis. 
 
 \begin{figure}
     \centering
@@ -474,17 +555,26 @@ The cold dust component very neatly correlates strongy with the HI4PI data set, 
 
 We compare the cold dust to the HI4PI maps using a standard pixel-by-pixel correlation,
 \begin{align}
-    \rho_{\mathrm{HI4PI,CD}}=\frac{\sum (a_{\mathrm{CD},i}-\overline{a}_{\mathrm{CD}})(a_{\mathrm{HI4PI},i}-\overline{a}_{\mathrm{HI4PI}})}{\sigma_{\mathrm{CD}}^2\sigma_{\mathrm{HI4PI}}^2}
+    \rho_{\mathrm{HI4PI,CD}}=\frac{1}{N-1}\sum_p^N\frac{(a_{\mathrm{CD},p}-\overline{a}_{\mathrm{CD}})(a_{\mathrm{HI4PI},p}-\overline{a}_{\mathrm{HI4PI}})}{\sigma_{\mathrm{CD}}\sigma_{\mathrm{HI4PI}}}
 \end{align}
-where $a$ are the pixel-by-pixel amplitudes in the two maps, and $\overline{a}$ are the average amplitudes across the whole maps, and $\sigma^2$ the map variances. 
-The cold dust resolution is reduced to \nside\ of ?? to match the resolution of the HI4PI maps. 
-We find the two maps have a Pearson correlation coefficient of ... 
+where $a_p$ are the pixel-by-pixel amplitudes in the two maps, and $\overline{a}$ are the average amplitudes across the whole maps, and $\sigma$ the map standard deviations. 
+The cold dust resolution is reduced to \nside\ of 1024 with a beam of 16.2 arcmin to match the resolution of the HI4PI maps.
+We find the two maps have a Pearson correlation coefficient of 0.93 (applying the same $\chi^2$ mask as in \cref{fig:chimask}). 
 
-PLOT OF THE TWO map amplitudes?. 
+
+
 
 
 \subsection{Nearby dust SED grid (\texorpdfstring{$a_{\mathrm{near}}$}{a near}, \texorpdfstring{$T_{\mathrm{near}}$}{T near} and \texorpdfstring{$\beta_{\mathrm{near}}$}{b near})}
 \label{sec:hotpah}
+
+\begin{enumerate}
+    \item Add TT-correlation plot between nearby and cold dust, and nearby and hot dust?
+    \item Add summary statistics plots from grid search
+    \item Add/update full grid search plane 
+    \item Discuss the template a bit more maybe? Edenhofer...
+\end{enumerate}
+
 The nearby dust parameters (amplitude and spectral indices) are fixed to the \GAIA-based dust extinction template by \citet{edenhofer:2024}, which covers distances up to 1.25 kpc. This primarily uses \GAIA\ distances and extinction estimates to build a 3D map of the nearby dust from \citet{2023Zhang}, which also leverages the two micron all sky survey (2MASS), the wide-field infrared survey explorer (WISE and unWISE), the large sky area multi-object fibre spectroscopic telescope (LAMOST). We use the total integrated dust map for out model in this analysis. 
 
 \begin{figure}
@@ -496,8 +586,17 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
 
 \subsection{\texorpdfstring{$\mathrm{H}_\alpha$}{Ha} correlated dust SED grid (\texorpdfstring{$a_{\mathrm{H}\alpha}$}{a Ha}, \texorpdfstring{$T_{\mathrm{H}\alpha}$}{T Ha} and \texorpdfstring{$\beta_{\mathrm{H}\alpha}$}{b Ha})}
 \label{sec:halpha}
-Why do we think H-alpha has extinction?
-The warm ionized medium is characterized by the \ion{H}{$\alpha$} signature, and in the case of the \Planck\ bands appears as an extinction term, likely due to the warm gas absorbing the light from hotter dust in the background. (??? why is it an extinction term)
+
+
+\begin{enumerate}
+    \item Discuss poor control due to low signal, choice to use the results from DIRBE as fiducial
+    \item Add summary statistics plots from grid search
+    \item Add/update full grid search plane 
+    \item Discuss the template a bit more maybe? WHAM and DIRBE results, why is this an extinction?
+\end{enumerate}
+
+% Why do we think H-alpha has extinction?
+% The warm ionized medium is characterized by the \ion{H}{$\alpha$} signature, and in the case of the \Planck\ bands appears as an extinction term, likely due to the warm gas absorbing the light from hotter dust in the background. (??? why is it an extinction term)
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/dust_Ha_map.pdf}
@@ -509,6 +608,13 @@ The warm ionized medium is characterized by the \ion{H}{$\alpha$} signature, and
 \section{Efficiency assessment and goodness-of-fit}
 \label{sec:gof}
 
+\begin{enumerate}
+    \item update efficiency plot
+    \item discuss efficiency and residuals (appendix)
+    \item 
+\end{enumerate}
+
+
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/AvgDust_Grid_smcbar.pdf}
@@ -519,24 +625,66 @@ The warm ionized medium is characterized by the \ion{H}{$\alpha$} signature, and
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/efficiency.pdf}
-    \caption{Efficiency of the model representing the data. Taking the input map squared minus the residuals, divided by the residuals and summed across the map we can measure how much of the signal is represented by the model and find that it is greater than 98\% across all HFI bands. There is one point for each band, though many are overlapping.}
+    \includegraphics[width=\linewidth]{figures/All_efficiency.pdf}
+    \caption{Efficiency of the dust model representing the data. Taking the input map minus the non-dust components (e.g. CMB, free-free, CO) squared minus the residuals sqaured, divided by the residuals squared and summed across the map we can measure how much of the signal is represented by the model and find that it is greater than 98\% across all HFI bands in blue. There is one point for each band, though many are overlapping. When we average the individual detector maps at each frequency (orange) we find that the final efficiency is greater than 99\% across all frequencies. This can also be seen clearly in \cref{fig:MapsVsResiduals} where it is clear that the residuals are around 100 times smaller than the dust signal at each band.}
     \label{fig:efficiency}
 \end{figure}
 
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/dustFrac.pdf}
+    \caption{Average dust from each component contributing to the total dust signal. }
+    \label{fig:dustFrac}
+\end{figure*}
+
+
+
 \section{Correlations with external line emission maps}
 \label{sec:correlations}
+\begin{itemize}
+    \item Add side by side plot of Hi4PI and cold dust? -> not this should come 
+    \item Add TT-correlation plot between Hi4PI and cold dust, and Dame CO and cold dust?
+    \item Discuss correlation coeff between Hi4Pi and cold dust (mention masks), maybe mention CO
+\end{itemize}
 
+% \begin{figure*}
+%   \centering
+%   \includegraphics[width=0.49\linewidth]{figures/CGDR2_colddust_1deg_n512_v1.pdf}
+%   \includegraphics[width=0.49\linewidth]{figures/HI4PI_NHI_n0064_60arcmin_rescaled_TQU.pdf}\\
+%   \includegraphics[width=0.49\linewidth]{figures/CGDR2_hotdust_1deg_n512_v1.pdf}
+%   \includegraphics[width=0.49\linewidth]{figures/init_CII_firas_n16_v20.pdf}
+%   \caption{Comparison of \Cosmoglobe\ DR2 thermal dust maps with respective line emission tracers.  }
+%   \label{fig:dustmaps}
+% \end{figure*}
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.49\linewidth]{figures/CGDR2_colddust_1deg_n512_v1.pdf}
-  \includegraphics[width=0.49\linewidth]{figures/HI4PI_NHI_n0064_60arcmin_rescaled_TQU.pdf}\\
-  \includegraphics[width=0.49\linewidth]{figures/CGDR2_hotdust_1deg_n512_v1.pdf}
-  \includegraphics[width=0.49\linewidth]{figures/init_CII_firas_n16_v20.pdf}
+  \includegraphics[width=\linewidth]{figures/dustComp}
   \caption{Comparison of \Cosmoglobe\ DR2 thermal dust maps with respective line emission tracers.  }
   \label{fig:dustmaps}
 \end{figure*}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/correlation_plot.pdf}
+    \caption{Correlation between dust components and tracers. The correlation between the hot dust and the CII emission seen in FIRAS, as well as the cold dust and the HI4PI HI emission are very strong.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}
+    \caption{Pixel-Pixel correlation between the hot dust and Firas CII maps. Both maps are at \nside\ 16 with a 420 arcminute beam.}
+    \label{fig:hotCiiCorr}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}
+    \caption{Pixel-Pixel correlation between the cold dust and HI4PI maps. Both maps are at \nside\ 64 with a 16.2 arcminute beam.}
+    \label{fig:coldHI4PICorr}
+\end{figure}
 
 \section{Modified blackbody fit to multi-component dust model}
 \label{sec:mbb}
@@ -544,26 +692,19 @@ The warm ionized medium is characterized by the \ion{H}{$\alpha$} signature, and
 Commander1 on dust model
 
 
-%\section{Discussion}
-%\label{sec:discussion}
-Correlations between the dust models? Anything looking weird/interesting?
-The new sky model including these four dust components shows good consistency with the data (residuals may be seen in \cref{app:residuals}). 
 
-%\section{Comparison with Planck}
-%\label{sec:planckcompare}
-Planck had stuff and we have new stuff
 
 %\section{Future directions}
 %\label{sec:future} 
-In this analysis we only explore the intensity or dust temperature, future work should explore the polarized dust in a similar manner, with the aim of creating physically motivated dust templates as was done in Eiriks paper ADD REFERENCE. Future work will also explore the HFI data from the raw time-ordered data (as was done in \Cosmoglobe\ DR1 and \BeyondPlanck ADD REFERENCES) including the updated dust models here from the \npipe\ analysis. This will lead to improved gain modeling, and zodiacal light modeling, two obvious areas of improvement when considering the residuals (see \cref{app:residuals}). 
-These dust templates have been applied to the \Cosmoglobe\ DR2 results with DIRBE, and results can be seen in Eiriks second paper ADD REFERENCE. 
-We have already seen great benefit in using data sets beyond the standard CMB maps, and we expect with many high-fidelity experiments online or soon to come online (SUCH AS? SPHEREX? SO? ), we may find more or better tracers of the dust, allowing us to further improve these models. 
+
 
 \section{Conclusions}
 \label{sec:conc}
-Using physically motivated dust models, we produce four new dust maps from the \planck\ PR4 HFI maps. These dust models include a cold dust component, a hot dust component (correlated with \ion{C}{II}), a nearby dust component (), and a dust extinction component (correlated with \ion{H}{$\alpha$}). These new models show improvement over previous \planck\ results, with ADD PHYSICAL REASON WE KNOW ITS BETTER. Previous analysis has indicated that a two-component dust model should out-preform the legacy single-component dust model, and this has further added physical tracers for the various components. Future analysis with the time-ordered HFI data will see further improvements to the HFI maps as well as the component separated maps, and we expect results from other experiments (CMB and beyond) to both benefit from, and contribute to, these new component maps. 
+% Using physically motivated dust models, we produce four new dust maps from the \planck\ PR4 HFI maps. These dust models include a cold dust component, a hot dust component (correlated with \ion{C}{II}), a nearby dust component (), and a dust extinction component (correlated with \ion{H}{$\alpha$}). These new models show improvement over previous \planck\ results, with ADD PHYSICAL REASON WE KNOW ITS BETTER. Previous analysis has indicated that a two-component dust model should out-preform the legacy single-component dust model, and this has further added physical tracers for the various components. Future analysis with the time-ordered HFI data will see further improvements to the HFI maps as well as the component separated maps, and we expect results from other experiments (CMB and beyond) to both benefit from, and contribute to, these new component maps. 
 
-
+% In this analysis we only explore the intensity or dust temperature, future work should explore the polarized dust in a similar manner, with the aim of creating physically motivated dust templates as was done in Eiriks paper ADD REFERENCE. Future work will also explore the HFI data from the raw time-ordered data (as was done in \Cosmoglobe\ DR1 and \BeyondPlanck ADD REFERENCES) including the updated dust models here from the \npipe\ analysis. This will lead to improved gain modeling, and zodiacal light modeling, two obvious areas of improvement when considering the residuals (see \cref{app:residuals}). 
+% These dust templates have been applied to the \Cosmoglobe\ DR2 results with DIRBE, and results can be seen in Eiriks second paper ADD REFERENCE. 
+% We have already seen great benefit in using data sets beyond the standard CMB maps, and we expect with many high-fidelity experiments online or soon to come online (SUCH AS? SPHEREX? SO? ), we may find more or better tracers of the dust, allowing us to further improve these models. 
 
 \begin{acknowledgements}
  Some of the results in this paper have been derived using the HEALPix \citep{HEALPIX} package.
