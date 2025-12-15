@@ -245,7 +245,7 @@ Four out of the five templates in this model are already known to be
 efficient dust tracers, namely 1) HI4PI HI line emission tracing
 molecular gas; 2) GAIA extinction, tracing near-by dust absorption; 3)
 Dame et al. CO line emission, tracing cold dust in star-forming
-regions; and 4) WHAM H$\alpha$ line emission, tracing hod dust in
+regions; and 4) WHAM H$\alpha$ line emission, tracing hot dust in
 ionized regions. However, in this paper and its companion papers we
 find additionally that ionized carbon emission, as traced by the FIRAS
 CII 158\,$\mu$m line emission map, is an excellent tracer of thermal
@@ -291,7 +291,7 @@ polycyclic aromatic hydrocarbons (PAH) -- on scales smaller than this.
 In the wavelength regime between $3000-100~\mu$ m, this model is described well
  by modified blackbody spectral energy density (SED)\footnote{The actual
  astrodust model is made up of a composite MBB which has a transition between
-353 and 217 GHz}, that is a SED with the following behavior
+353 and 217 GHz.}, that is, a SED with the following behavior
 \begin{equation}
 s(\nu) \propto \nu^\beta B(\nu, T),
 \label{eq:mbb}
@@ -590,25 +590,113 @@ interest for the community that we think it worthwhile to report.
 \section{Template fitting methodology}
 \label{sec:tempfit}
 
+As the aim of this paper mainly is to investigate the feasibility of describing
+thermal dust as a linear combination of components -- components that
+reasonably can be imagined to be associated with the thermal dust in the galaxy
+-- we perform a fitting of such components to existing data \emph{outside} of
+the \Cosmoglobe\ framework proper. That is, we here attempt to fit the
+abovementioned components directly to dust-dominated \Planck\ HFI and DIRBE data,
+and we do this without any joint modelling like the one used in \Cosmoglobe.
+
+In order to perform such a fit, we first assume all components and all data on
+which we wish to perform the fit are given as HEALPix maps in the same
+resolution (see section \ref{sec:data} for more on this). For each data set
+$\mathbf{d}_i$ at a given frequency band $i$ (bold notation here implies a
+vector of $n_{pix}$ HEALPix pixels), the basic data model we employ is
+
+\begin{equation}
+    \mathbf{d}_i = \sum_c a_{i, c} \mathbf{t}_c + m_i + \mathbf{n}_i,
+    \label{eq:datamodel}
+\end{equation}
+where the sum runs over the $n$ components that we assume to be
+adequate dust tracers, and where $a_{i, c}$ is the amplitude that best
+describes the given component's contribution to the frequency the given data
+was measured at. $\mathbf{t}_c$ denotes the spatial template of component $c$.
+In addition, we include a monopole term, $m_i$, and a white noise contribution
+$\mathbf{n}_i$. We thus assume that the data does \emph{not} include a CMB
+contribution or a dipole term (again, see section \ref{sec:data} for how we
+deal with these assumptions).
+
+We allow for masking of the data and components, with the only effect being to
+make each vector in the equation shorter, and $n_{pix}$ in what follows is the
+effective number of pixels after masking.
+
+Given this model, the main goal becomes to find the set of amplitudes $a_{i,
+c}$ (and monopole) that jointly minimize the residual
+\begin{equation}
+    \mathbf{r}_i \equiv \mathbf{d}_i - \mathbf{s}_i,
+\end{equation}
+where we define $s_i$ to be all the terms on the right hand side of eq.
+\ref{eq:datamodel} except the white noise term.
+
+This kind of minimization for a linear problem has a well-known solution. We
+annotate our solution vector at each frequency band as $\mathbf{a}_i$ (which in
+this case is an $n+1$-dimensional vector, the extra dimension being due to the
+monopole contribution), and we can then write
+\begin{equation}
+    \mathbf{a}_i = (\mathrm{T}^T \mathrm{T})^{-1} (\mathrm{T}^T\mathbf{d}) ,
+    \label{eq:lss}
+\end{equation}
+where we define $\mathrm{T}$ as a $n_{pix}$ by $n+1$ matrix such that matrix
+column $c$ contains component template $\mathbf{t}_c$ (and the final column
+is a constant, representing the monopole). Implicit in this way of solving for
+the amplitudes is the assumption that the noise RMS is constant from pixel to
+pixel -- at the resolutions used for this analysis, this is a fair assumption,
+as large-scale instrumental features are dominated by systematic effects rather
+than white noise. Applying this equation, the solution vector will then have as
+its $n+1$ elements the best-fit amplitudes for each component (and best-fit
+monopole).
+
 
 \section{Data}
 \label{sec:data}
+Since we are in this papers mostly concerned with economical dust modelling, we
+use the most accurate data available in the frequency ranges where dust
+dominates. More specifically, we here use \Planck\ HFI data from 353 GHz
+upwards, as well as DIRBE data from the 6 longest-wavelength bands (from 240
+$\mu m$  to $12 \mu m$).
 
-This paper concerns itself with a subset of the total global analysis which is
-described more fully in \cite{CG02_01}; namely, the part of the analysis that
-models the three thermal dust components. Describing the data that goes into
-this part of the analysis is two-tiered, in the sense that there may be (and in
-this case, is) data that is used in the total global analysis which is not
-directly used for fitting the dust models, and then there is data that
-\emph{is} directly used for this purpose. However, even the data that is not
-directly used to fit our dust models still affect the total analysis by
-affecting the overall data model fit (eq.~\ref{eq:skymodel}).
+We use five known or derived dust tracers as component templates: The
+COBE-FIRAS CII observations, the HI4PI neutral hydrogen map, the DAME CO
+$J=1\rightarrow0$ map, the WHAM ionized hydrogen map, and a derived map of
+nearby dust structures based on GAIA observations. Some of these templates are
+only expected to be relevant at lower frequencies; the details of this is
+described below, and summarized in table \ref{tab:bands}.
 
-Below, we first describe the data that directly impacts the dust fitting --
-namely, the DIRBE and \Planck\ HFI data -- before describing the ancillary data
-that is used in the global the analysis. All of the data used is described in
-more detail in \cite{CG02_01}, and we refer the interested reader to that
-paper.
+\begin{table*}
+    \centering
+    \caption{Templates used for each frequency band}
+    \begin{tabular}{c|c|c|c|c|c}
+        \label{tab:bands}
+        Band & CII & HI4PI & Gaia & WHAM & CO \\
+        \hline
+        \Planck\ 353\,GHz & x & x & x & x & x \\
+        \Planck\ 545\,GHz & x & x & x & x & x \\
+        \Planck\,857 GHz & x & x & x & x & x \\
+        DIRBE 240 $\mu m$ & x & x & x & x & x \\
+        DIRBE 140 $\mu m$ & x & x & x & x & x \\
+        DIRBE 100 $\mu m$ & x & x & x & x & x \\
+        DIRBE 60 $\mu m$ & x & x & x & x & \\
+        DIRBE 25 $\mu m$ & x & x & & & \\
+        DIRBE 12 $\mu m$ & x & & & & 
+    \end{tabular} 
+\end{table*}
+
+
+%This paper concerns itself with a subset of the total global analysis which is
+%described more fully in \cite{CG02_01}; namely, the part of the analysis that
+%models the three thermal dust components. Describing the data that goes into
+%this part of the analysis is two-tiered, in the sense that there may be (and in
+%this case, is) data that is used in the total global analysis which is not
+%directly used for fitting the dust models, and then there is data that
+%\emph{is} directly used for this purpose. However, even the data that is not
+%directly used to fit our dust models still affect the total analysis by
+%affecting the overall data model fit (eq.~\ref{eq:skymodel}).
+
+Below, we first describe the DIRBE and \Planck\ HFI data before describing the
+dust tracing templates in more detail, and for which frequencies they are
+enabled in the analysis. Finally, we describe the preprocessing
+and masking used for this analysis.
 
 \subsection{Frequency maps}
 
@@ -616,46 +704,43 @@ paper.
 The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
 CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
 measured the sky in ten frequency bands from $1\,\mathrm{\mu m}$ to
-$240\,\mathrm{\mu m}$. In this analysis, we have converted the original DIRBE
-CIO (Calibrated Individual Observations), whose pointing information is given
-in terms of Quadcube pixels with a resolution of 20\arcs\ into a HEALPix
-\nside=512 pixelation, giving an approximate resolution of 7\arcm. Following
-the nomenclature of \cite{CG02_01}, we refer to the DIRBE CIOs as
-``time-ordered data'' (TOD). Including DIRBE TOD in the analysis in this way
-allows us to target the zodiacal light \citep{CG02_02}, which, as mentioned
-above, must be analysed as a time-varying component on the sky, in contrast to
-other astrophysical components.
+$240\,\mathrm{\mu m}$. 
 
-The use of DIRBE data also allows a fuller exploration of the scales relevant
-for interstellar dust modelling; in particular, we are able to capture the
-``bump'' and falling off of the thermal dust SEDs. 
+In this analysis, we started from the \nside=512 maps
+created with the procedure described in \cite{CG02_01} from the DIRBE CIO
+(Calibrated Individual Observations). The shortest-wavelength features of thermal
+dust are the PAH features, which are expected to be detectable in the the
+spectrum down to a few microns \citep{Hensley2021}; we therefore here include the 8
+longest-wavelength bands of DIRBE, ranging from $240 \mu m$ to $3.5 \mu m$.
 
 \subsubsection{Planck HFI}
 The \Planck High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed
 the sky in six frequency channels from 100 GHz to 857 GHz, with the primary
 purpose being characterizing temperature fluctuations in the CMB to
 unprecedentedly small scales. As it also was able to target the far-infrared
-sky, it is able to shed light on the dust component in this frequency range,
-and more generally for the analysis of which this paper is a part, is able to
-also characterize the CIB fluctuations
-\citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+sky, it is able to shed light on the dust component
+\citep{planck2013-XVII,planck2014-a12,planck2016-l03}.
 
-The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+Since this work is primarily concerned with dust modeling, we attempt to avoid
+contamination from especially the CMB signal which starts to dominate at the
+lower \Planck\ frequencies. To that end, we use only the HFI data from
+353-857\,GHz. All the frequency maps are from the \Planck\ PR4 data release
+\citep{npipe}.
 
-In addition to its complementary observation strategy, \Planck's frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered \Planck\ maps have had an estimate of the zodiacal emission modeled using the 3D model derived by K98 with varying emissivities per component. While this technically is redundant information that could contaminate this joint analysis, the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work.
+%The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+%
+%In addition to its complementary observation strategy, \Planck's frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered \Planck\ maps have had an estimate of the zodiacal emission modeled using the 3D model derived by K98 with varying emissivities per component. While this technically is redundant information that could contaminate this joint analysis, the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work.
+%
+%At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the DIRBE range. In order to avoid this, we remove the GNILC \citep{planck2016-XLVIII} estimate of the CIB from the HFI maps before including them in our analysis.
 
-At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the DIRBE range. In order to avoid this, we remove the GNILC \citep{planck2016-XLVIII} estimate of the CIB from the HFI maps before including them in our analysis.
-
-Since this work is primarily concerned with the DIRBE dataset, the modeling of CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the \commanderthree\ PR3 CMB temperature estimate from the \Planck\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.
-We use single \Planck\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}.
 
 \subsection{Thermal dust tracers}
 
 \begin{figure*}
   \centering
   \includegraphics[width=0.49\textwidth]{figures/CII_FIRAS_v1_n16.pdf}
-  \includegraphics[width=0.49\textwidth]{figures/extinctions_515.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/HI4PI_NHI_n0064_60arcmin_rescaled_T.pdf}
+  \includegraphics[width=0.49\textwidth]{figures/extinctions_515.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/lambda_WHAM_1_256.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/lambda_wco_dht2001.pdf}
   \caption{Input thermal dust tracers used for low-resolution template fitting. }
@@ -663,16 +748,42 @@ We use single \Planck\ detector maps to avoid the complication of subtle bandpas
 \end{figure*}
 
 \subsubsection{Ionized carbon --- \COBE-FIRAS CII}
+The \COBE-FIRAS instrument is still the only full-sky spectrometric survey in
+the radio and infrared electromagnetic wavelengths, and as such, it provides
+the best full-sky measurement of spectral line emission. The $157.7\mu m$ CII
+line emission has previously been recognized as a gas tracer; here, we
+investigate its potential as a tracer of interstellar dust.
+
+We use the \COBE-FIRAS CII map, available on the LAMBDA website.
+\footnote{lambda.gsfc.nasa.gov} As this is the lowest-resolution map in the
+analysis, we do not perform any preprocessing on the map before using it as a
+template.
 
 \subsubsection{Neutral hydrogen -- HI4PI}
-
-\subsubsection{Carbon monoxide -- Dame CO\,$J=1$-0}
-
-\subsubsection{Ionized hydrogen -- WHAM}
+The HI4PI HI survey 
 
 \subsubsection{Dust extinction -- Gaia}
 
+\subsubsection{Ionized hydrogen -- WHAM}
+
+\subsubsection{Carbon monoxide -- Dame CO\,$J=1$-0}
+
 \subsection{Low-resolution preprocessing}
+The template fitting procedure described in section \ref{sec:tempfit} requires
+all maps to be smoothed to a common resolution -- if not, the extra degrees of
+freedom at smaller scales in some of the maps and templates might bias the fit
+at larger scales. Out of all the data and templates used in this analysis, the
+\COBE-FIRAS CII map is the one with the lowest native resolution. We therefore
+convolve all maps with the \COBE-FIRAS beam, shown in Fig. \ref{fig:firasbeam},
+and we repixelate all maps to an HEALPix \nside\ of 16.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/firas_beam.pdf}
+  \caption{The \COBE-FIRAS beam, with which all maps in this analysis were smoothed.}
+  \label{fig:firasbeam}
+\end{figure}
+
 
 \subsection{Processing mask}
 
