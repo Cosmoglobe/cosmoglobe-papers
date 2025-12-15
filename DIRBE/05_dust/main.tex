@@ -245,7 +245,7 @@ Four out of the five templates in this model are already known to be
 efficient dust tracers, namely 1) HI4PI HI line emission tracing
 molecular gas; 2) GAIA extinction, tracing near-by dust absorption; 3)
 Dame et al. CO line emission, tracing cold dust in star-forming
-regions; and 4) WHAM H$\alpha$ line emission, tracing hod dust in
+regions; and 4) WHAM H$\alpha$ line emission, tracing hot dust in
 ionized regions. However, in this paper and its companion papers we
 find additionally that ionized carbon emission, as traced by the FIRAS
 CII 158\,$\mu$m line emission map, is an excellent tracer of thermal
@@ -291,7 +291,7 @@ polycyclic aromatic hydrocarbons (PAH) -- on scales smaller than this.
 In the wavelength regime between $3000-100~\mu$ m, this model is described well
  by modified blackbody spectral energy density (SED)\footnote{The actual
  astrodust model is made up of a composite MBB which has a transition between
-353 and 217 GHz}, that is a SED with the following behavior
+353 and 217 GHz.}, that is, a SED with the following behavior
 \begin{equation}
 s(\nu) \propto \nu^\beta B(\nu, T),
 \label{eq:mbb}
@@ -590,19 +590,95 @@ interest for the community that we think it worthwhile to report.
 \section{Template fitting methodology}
 \label{sec:tempfit}
 
+As the aim of this paper mainly is to investigate the feasibility of describing
+thermal dust as a linear combination of components -- components that
+reasonably can be imagined to be associated with the thermal dust in the galaxy
+-- we perform a fitting of such components to existing data \emph{outside} of
+the \Cosmoglobe\ framework proper. That is, we here attempt to fit the
+abovementioned components directly to dust-dominated \Planck\ HFI and DIRBE data,
+and we do this without any joint modelling like the one used in \Cosmoglobe.
+
+In order to perform such a fit, we first assume all components and all data on
+which we wish to perform the fit are given as HEALPix maps in the same
+resolution (see section \ref{sec:data} for more on this). For each data set
+$\mathbf{d}_i$ at a given frequency band $i$ (bold notation here implies a
+vector of $n_{pix}$ HEALPix pixels), the basic data model we employ is
+
+\begin{equation}
+    \mathbf{d}_i = \sum_c a_{i, c} \mathbf{t}_c + m_i + \mathbf{n}_i,
+    \label{eq:datamodel}
+\end{equation}
+where the sum runs over the $n$ components that we assume to be
+adequate dust tracers, and where $a_{i, c}$ is the amplitude that best
+describes the given component's contribution to the frequency the given data
+was measured at. $\mathbf{t}_c$ denotes the spatial template of component $c$.
+In addition, we include a monopole term, $m_i$, and a white noise contribution
+$\mathbf{n}_i$. We thus assume that the data does \emph{not} include a CMB
+contribution or a dipole term (again, see section \ref{sec:data} for how we
+deal with these assumptions).
+
+We allow for masking of the data and components, with the only effect being to
+make each vector in the equation shorter, and $n_{pix}$ in what follows is the
+effective number of pixels after masking.
+
+Given this model, the main goal becomes to find the set of amplitudes $a_{i,
+c}$ (and monopole) that jointly minimize the residual
+\begin{equation}
+    \mathbf{r}_i \equiv \mathbf{d}_i - \mathbf{s}_i,
+\end{equation}
+where we define $s_i$ to be all the terms on the right hand side of eq.
+\ref{eq:datamodel} except the white noise term.
+
+This kind of minimization for a linear problem has a well-known solution. We
+annotate our solution vector at each frequency band as $\mathbf{a}_i$ (which in
+this case is an $n+1$-dimensional vector, the extra dimension being due to the
+monopole contribution), and we can then write
+\begin{equation}
+    \mathbf{a}_i = (\mathrm{T}^T \mathrm{T})^{-1} (\mathrm{T}^T\mathbf{d}) ,
+\end{equation}
+where we define $\mathrm{T}$ as a $n_{pix}$ by $n+1$ matrix such that matrix
+column $c$ contains component template $\mathbf{t}_c$ (and the final column
+is a constant, representing the monopole). Implicit in this way of solving for
+the amplitudes is the assumption that the noise RMS is constant from pixel to
+pixel -- at the resolutions used for this analysis, this is a fair assumption,
+as large-scale instrumental features are dominated by systematic effects rather
+than white noise. Applying this equation, the solution vector will then have as
+its $n+1$ elements the best-fit amplitudes for each component (and best-fit
+monopole).
+
+
+In order to perform such a fit, we first downgrade all datasets and components
+to the lowest common resolution, which in our case is an \nside of 16.
+Furthermore, we smooth all maps with the FIRAS beam, shown in Fig.
+\ref{fig:firasbeam}, as this is the lowest resolution beam present in the maps
+used.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{figures/firas_beam.pdf}
+  \caption{The FIRAS beam, with which all maps in this analysis were smoothed.}
+  \label{fig:firasbeam}
+\end{figure}
 
 \section{Data}
 \label{sec:data}
+Since we are in this papers mostly concerned with economical dust modelling, we
+use the most accurate data available in the frequency ranges where dust
+dominates. More specifically, we here use \Planck\ HFI data from 353 GHz
+upwards, as well as DIRBE data from the 8 longest wavelength bands (from 240
+$\mu m$  to $3.5 \mu m$).
 
-This paper concerns itself with a subset of the total global analysis which is
-described more fully in \cite{CG02_01}; namely, the part of the analysis that
-models the three thermal dust components. Describing the data that goes into
-this part of the analysis is two-tiered, in the sense that there may be (and in
-this case, is) data that is used in the total global analysis which is not
-directly used for fitting the dust models, and then there is data that
-\emph{is} directly used for this purpose. However, even the data that is not
-directly used to fit our dust models still affect the total analysis by
-affecting the overall data model fit (eq.~\ref{eq:skymodel}).
+
+
+%This paper concerns itself with a subset of the total global analysis which is
+%described more fully in \cite{CG02_01}; namely, the part of the analysis that
+%models the three thermal dust components. Describing the data that goes into
+%this part of the analysis is two-tiered, in the sense that there may be (and in
+%this case, is) data that is used in the total global analysis which is not
+%directly used for fitting the dust models, and then there is data that
+%\emph{is} directly used for this purpose. However, even the data that is not
+%directly used to fit our dust models still affect the total analysis by
+%affecting the overall data model fit (eq.~\ref{eq:skymodel}).
 
 Below, we first describe the data that directly impacts the dust fitting --
 namely, the DIRBE and \Planck\ HFI data -- before describing the ancillary data
