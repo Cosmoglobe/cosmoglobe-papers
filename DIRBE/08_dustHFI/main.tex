@@ -217,6 +217,7 @@ The rest of the paper is organized as follows. In \cref{sec:method} we discuss b
 % To address the tight correlations between the four dust components as well as the 857~GHz gain, 
 
 
+
 \subsection{Data model and posterior distribution}
 \label{sec:model}
 \begin{itemize}
@@ -251,12 +252,22 @@ During the Gibbs sampling (see \cref{sec:sampling}), we apply a 30 degree galact
     \item We only show a subset of the grid here for simplicity but many more parameters were additionally tested before the best fit was chosen, large error bars due to gain uncertainty 
 \end{itemize}
 
+
+
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/SEDGrid_withOneColourbar.pdf}
     \caption{Contour plot of relevant statistical tests and $\chi^2$ for each dust model SED. Maps of a subset of the grid points can be found in \cref{app:GridSearchTests}.}
     \label{fig:SEDGridContours}
 \end{figure*}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/chisq.pdf}\\
+    \includegraphics[width=\linewidth]{figures/chisq.pdf}
+    \caption{$\chi^2$ as a function of nearby (\emph{top}) and $H\alpha$-correlated (\emph{bottom}) dust amplitude.}
+    \label{fig:SEDGridAmplitude}
+\end{figure}
 
 
 \subsection{Sky model}
@@ -333,13 +344,6 @@ Synchrotron is not included in this analysis since it is negligible in the HFI f
 %     \label{fig:cmb}
 % \end{figure}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=\textwidth]{figures/foregrounds_plotres.pdf}
-    \caption{Sky model components. The Free-free amplitude and spectral index parameters are held fixed, the relative CO line ratios are also held fixed. The amplitudes for the CO lines and the CMB are fit in the Gibbs sampling chain. Maps have been plotted with a beam of 80 arcminutes for redability, but are produced at full resolution of \nside\ 2048 with a beam of 5 arcminutes. }
-    \label{fig:SkyModel}
-\end{figure*}
-
 \subsection{Gibbs sampling}
 \label{sec:sampling}
 \begin{itemize}
@@ -349,11 +353,6 @@ Synchrotron is not included in this analysis since it is negligible in the HFI f
 \end{itemize}
 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figures/correlation_plot.pdf}
-    \caption{Correlation between dust components and tracers. The correlation between the hot dust and the CII emission seen in FIRAS, as well as the cold dust and the HI4PI HI emission are very strong.}
-\end{figure}
 
 \subsection{Summary statistics and optimization strategy}
 \label{sec:statistics}
@@ -438,12 +437,12 @@ When considering our summary statistics in \cref{sec:correlations} we compare th
     \item Describe the best fit model generally, mention next sections will go into more details
 \end{enumerate}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figures/dust_sed.pdf}
-    \caption{Four component dust spectral energy distributions. Each of the four spectral energy distributions are fit with a modified blackbody with a reference frequency of 545~GHz. REMAKE WITH WIDTH OF LINE FROM THE DISTRIBUTION OF THE PARAMETERS? ADD IN PLANCK BANDS? Individual spectral distribution parameters can be found in \cref{tab:SEDs}.}
-    \label{fig:dustSED}
-\end{figure}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=\linewidth]{figures/dust_sed.pdf}
+%    \caption{Four component dust spectral energy distributions. Each of the four spectral energy distributions are fit with a modified blackbody with a reference frequency of 545~GHz. REMAKE WITH WIDTH OF LINE FROM THE DISTRIBUTION OF THE PARAMETERS? ADD IN PLANCK BANDS? Individual spectral distribution parameters can be found in \cref{tab:SEDs}.}
+%    \label{fig:dustSED}
+%\end{figure}
 
 
 \begin{table}[tbp!]
@@ -515,17 +514,34 @@ Nearby dust& $ 18.0 $ & $ 1.7 $\cr
     \label{fig:hot_dust}
 \end{figure}
 
+
 \begin{figure*}[t]
     \centering
-\includegraphics{figures/dustComp_Himap.pdf}
-\includegraphics{figures/dustComp_firasCII.pdf}
-\includegraphics{figures/dustComp_coldDust.pdf}
-\includegraphics{figures/dustComp_hotDust.pdf}
+%\includegraphics{figures/dustComp_Himap.pdf}
+%\includegraphics{figures/dustComp_firasCII.pdf}
+\includegraphics[width=0.85\linewidth]{figures/dustComp_coldDust.pdf}
+\includegraphics[width=0.85\linewidth]{figures/dustComp_hotDust.pdf}
 \includegraphics{figures/dustComp_Himap.pdf}
 \includegraphics{figures/dustComp_firasCII.pdf}
     \caption{}
     \label{fig:dust_figures}
 \end{figure*}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.84\linewidth]{figures/comp_cmb.pdf}\\
+    \includegraphics[width=0.84\linewidth]{figures/comp_ff.pdf}\\
+    \includegraphics[width=0.84\linewidth]{figures/comp_co10.pdf}\\
+    \includegraphics[width=0.84\linewidth]{figures/comp_co21.pdf}\\
+    \includegraphics[width=0.84\linewidth]{figures/comp_co32.pdf}
+    \caption{Sky model amplitude maps corresponding to the baseline thermal dust model. From top to bottom, the panels show CMB, free-free, CO $J=$1-0, CO $J=$2-1, and CO $J=3-2$. All maps are smoothed to a common resolution of 80' FWHM. }
+    \label{fig:SkyModel}
+\end{figure}
+
+
+
+
+
 
 
 \subsection{Hot dust SED grid (\texorpdfstring{$T_{\mathrm{hot}}$}{T hot} and \texorpdfstring{$\beta_{\mathrm{hot}}$}{b hot})}
@@ -648,12 +664,22 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
 \end{figure}
 
 
-\begin{figure*}
+
+\begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/dustFrac.pdf}
-    \caption{Average dust from each component contributing to the total dust signal. }
-    \label{fig:dustFrac}
-\end{figure*}
+    \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}\\
+    \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}
+    \caption{(Top:) Scatter plot between the hot dust and FIRAS CII maps; both maps are smoothed to a common resolution of 420' FWHM, and pixelized at \nside=16. (Bottom:) Scatter plot between the cold dust and HI4PI maps; both maps are smoothed to a common resolution of 16.2' FWHM, and pixelized at \nside=1024.}
+    \label{fig:hotCiiCorr}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/correlation_plot.pdf}
+    \caption{Correlation between dust components and tracers. The correlation between the hot dust and the CII emission seen in FIRAS, as well as the cold dust and the HI4PI HI emission are very strong.}
+\end{figure}
+
 
 
 
@@ -685,19 +711,6 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
 
 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}
-    \caption{Pixel-Pixel correlation between the hot dust and Firas CII maps. Both maps are at \nside\ 16 with a 420 arcminute beam.}
-    \label{fig:hotCiiCorr}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}
-    \caption{Pixel-Pixel correlation between the cold dust and HI4PI maps. Both maps are at \nside\ 64 with a 16.2 arcminute beam.}
-    \label{fig:coldHI4PICorr}
-\end{figure}
 
 % \begin{figure}
 %     \centering
@@ -834,6 +847,18 @@ The parameter space explored for the H$_\alpha$ correlated dust was shown to hav
     \caption{Cold dust (\ion{H}{I} correlated dust) amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set}. This explores only $a_\mathrm{H\alpha}=1$.}
     \label{fig:Ha_cold_dust_set}
 \end{figure*}
+
+\section{Thermal dust map characterization}
+\label{app:dustCharacterization}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/dustFrac.pdf}
+    \caption{Average dust from each component contributing to the total dust signal. }
+    \label{fig:dustFrac}
+\end{figure*}
+
 
 \end{document}
 %%%% End of aa.dem
