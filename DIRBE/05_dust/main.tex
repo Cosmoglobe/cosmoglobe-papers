@@ -660,9 +660,12 @@ upwards, as well as DIRBE data from the 6 longest-wavelength bands
 We use five known or derived dust tracers as component templates: The
 \COBE-FIRAS \CII\ observations, the HI4PI neutral hydrogen map, the Dame CO
 $J=1\rightarrow0$ map, the WHAM ionized hydrogen map, and a derived map of
-nearby dust structures based on \GAIA\ observations. Some of these templates are
-only expected to be relevant at lower frequencies; the details of this is
-described below, and summarized in table \ref{tab:bands}.
+nearby dust structures based on GAIA observations. We note that the fitting
+procedure described in Section \ref{sec:tempfit} does not require that we use
+the same templates for all data bands, and because some of these five templates
+are only expected to be relevant at lower frequencies, we will restrict the
+number of templates used for each band according to table \ref{tab:bands}. We
+provide justification for these restrictions below, on a per-component basis.
 
 \begin{table*}
     \centering
@@ -760,9 +763,14 @@ analysis, we do not perform any preprocessing on the map before using it as a
 template.
 
 \subsubsection{Neutral hydrogen -- HI4PI}
-The HI4PI \HI\ survey 
+The HI4PI HI survey \citep{HI4PI:2016} is a full-sky survey of the 21 cm
+hydrogen line, performed by a combination of data from EBHIS and GASS. The 21
+cm line has been used as a tracer for dust structures \citep{planck2011-7.12},
+and 
 
-\subsubsection{Dust extinction -- \Gaia}
+\subsubsection{Dust extinction -- Gaia}
+One source of important information about the 3-dimensional structure of dust is starlight extinction. By comparing expected stellar spectra with observed ones, Edenhofer et al. (REFERENCE) was able to reconstruct such dust structures up to a distance of (TBD), represented by a series of maps for each distance bin. Using the accompanying software, we integrated these maps out to their furthest distance, which still represents relatively close dust structures, galactically speaking, and we use this as a template for nearby dust. The choice of the distance cut is driven more by the available Edenhofer maps than any physical considerations; still, in this work, this seems to be the best way of utilizing the available additional information about the dust morphology that these maps represent.
+
 
 \subsubsection{Ionized hydrogen -- WHAM}
 
@@ -784,14 +792,18 @@ and we repixelate all maps to an HEALPix \nside\ of 16.
   \label{fig:firasbeam}
 \end{figure}
 
-
 \subsection{Processing mask}
+The FIRAS CII map in particular contains systematic effects, which we mask in this analysis. In addition, due to the complexity of the galactic center, as well as certain high-activity complexes (TBD), we mask these as well. 
 
 \section{Results}
 \label{sec:results}
 
 \subsection{Template amplitude fits}
 \label{sec:tempamp}
+
+The fit template amplitudes per frequency band are shown in Fig. \ref{fig:tempamp}. As is evident, the spectra of all templates show a characteristic bump, which is the expected behavior of modified blackbody SEDs with temperatures in the typical thermal dust temperature range (see below for actual temperature estimations of these spectra).
+
+We also see that the H$\alpha$ component has a negative SED, showing that it indeed functions as a dust extinction template.
 
 \begin{figure}
   \centering
@@ -803,6 +815,7 @@ and we repixelate all maps to an HEALPix \nside\ of 16.
 
 \subsection{Model efficiency and goodness-of-fit}
 \label{sec:residuals}
+In Figs. \ref{fig:tempfit_map_vs_res1}-\ref{fig:tempfit_map_vs_res3}, we show a comparison between the original data (left columns) and the template cleaned maps (right columns). 
 
 \begin{figure*}
   \centering
