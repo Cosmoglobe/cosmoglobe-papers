@@ -126,7 +126,7 @@
 \newcolumntype{B}{>{\centering\arraybackslash}m{0.03\textwidth}}
 
 
-\begin{document} 
+\begin{document}
 
 
    \title{$N+2$ mapmaking for polarized CMB experiments}
@@ -289,32 +289,6 @@ Once these quantities are computed for all observations over the entire mission,
 \end{figure}
 
 
-%Traditional polarized mapmaking for CMB experiments uses a matrix that looks like this (for a given timestep omitting all other columns):
-
-%\begin{equation}
-%M = \begin{pmatrix} 
-%1          & cos(2\phi) & sin(2\phi)\\
-%cos(2\phi) & cos^2(2\phi) & sin(2\phi) cos(2\phi) \\
-%sin(2\phi) & sin(2\phi) cos(2\phi) & sin^2(2\phi) \\ 
-%  \end{pmatrix}
-%\end{equation}
-
-%For n+2 mapmaking, we can generalize it to look like this
-
-%\begin{equation}
-%M = \begin{pmatrix} 
-%\delta_d & 0 & \cdots  & \delta_d cos(2\phi) & \delta_d sin(2\phi)\\
-%0 & \delta_d & \cdots  & \delta_d cos(2\phi) & \delta_d sin(2\phi)\\
-%\vdots & \vdots & \ddots & \vdots & \vdots \\
-%\delta_d cos(2\phi) & \delta_d cos(2\phi) & \cdots  & cos^2(2\phi) & sin(2\phi) cos(2\phi) \\
-%\delta_d sin(2\phi) & \delta_d sin(2\phi) & \cdots & sin(2\phi) cos(2\phi) & sin^2(2\phi) \\ 
-%  \end{pmatrix}
-%\end{equation}
-
-%where the delta function $\delta_d$ indicates which detector of your n detectors this particular sample belongs to.
-
-%We also must define the map vector, which for n detectors looks like
-
 \section{Application to \Planck\ LFI 30\,GHz}
 \label{sec:lfi}
 
@@ -345,25 +319,6 @@ Once these quantities are computed for all observations over the entire mission,
   \caption{Input sky minus output maps for the simulated LFI 30\,GHz sky as generated using $N+2$ mapmaking in \commanderthree\ . The top four panels show the temperature maps, and the bottom row shows the combined $Q$ and $U$ maps.}
   \label{fig:sim_diff}
 \end{figure*}
-
-
-
-%\begin{figure*}
-%\begin{tabular}{B C C C}
-%& 27S & 28M & 28S\\  
-%  27M & \includegraphics[width=0.31\textwidth]{figs/27M_minus_27S_depol.pdf} & 
-%\includegraphics[width=0.31\textwidth]{figs/27M_minus_28M_depol.pdf} &
-%\includegraphics[width=0.31\textwidth]{figs/27M_minus_28S_depol.pdf}\\
-% & \hspace{4.8cm } 27S & \includegraphics[width=0.31\textwidth]{figs/27S_minus_28M_depol.pdf} &
-% \includegraphics[width=0.31\textwidth]{figs/27S_minus_28S_depol.pdf}\\
-% &     \caption{All 6 possible difference maps between the 30 Ghz detectors. }   \label{fig:bp_diffs} & \hspace{4.7cm } 28M  & \includegraphics[width=0.31\textwidth]{figs/28M_minus_28S_depol.pdf} \\
-%  %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
-%  \end{tabular}
-%\vspace{-0.75cm}
-%\end{figure*}
-
-
-
 
 
 To understand the behaviour of the new $N+2$ mapmaking algorithm, we start by applying it to a well-known case, namely the \Planck\ LFI 30\,GHz data. In particular, we implement this algorithm within the Bayesian \commanderthree\ \citep{bp03} Gibbs sampling code developed by the \BP\ and \cosmoglobe\ collaborations \footnote{All code used in this analysis is publicly available at \url{https://github.com/Cosmoglobe/Commander}} \citep{bp01, watts2023_dr1}, and the raw TOD data are processed in an identical manner as in those works with respect to calibration, correlated noise, etc. Only the signal-plus-white noise residual TOD are fed to the $N+2$ mapmaker, and our new contribution thus replaces the full-frequency binned mapmaker presented by \citet{BP10}. 
@@ -427,7 +382,7 @@ We have introduced $N+2$ mapmaking as a novel method producing temperature and p
 
 In the current paper, we apply the $N+2$ formalism to the \Planck\ LFI 30\,GHz data within the Bayesian \commanderthree\ framework, at first attempting to produce single-detector temperature maps jointly with coadded polarization maps. Unfortunately, we find that poor polarization angle coverage of the \Planck\ scanning strategy prohibits a robust separation of temperature and polarization signals. In future work, it is instead worth considering producing horn maps, as for instance done in \Planck\ PR4 \citep{npipe}. However, in that work the horn maps were produced as a post-processing step that was separate from the main analysis, whereas with the new $N+2$ mapmaker the horn maps can be derived jointly with the co-added polarization maps. This is particularly useful in an iterative end-to-end Bayesian framework like \Cosmoglobe, in which close interaction between the calibration, mapmaking and component separation steps is essential.    
 
-When applying the $N+2$ algorithm to a simulated LFI-like data set with randomized polarization angles, corresponding to adding a fast rotating half-wave plate to the instrument, we find that the $N+2$ algorithm produces maps that are consistent with expectations. In this case, we also find that the algorithm is capable of producing single-detector temperature maps with minimal temperature-to-polarization leakage. Incidentally, based on the same test, we also show that the introduction of a spinning half-wave plate does not by itself allow the production of clean polarization maps from multi-detector observations, which is of interest for future experiments that rely on a spinning half-wave plate, such as LiteBIRD \citep{litebird2022}. For these, the $N+2$ mapmaking algorithm offers the possibility of making multi-detector maps with effective temperature-to-polarization leakage as an alternative to the standard single-detector maps. This could be useful for mitigating correlated but low signal-to-noise ratio systematic effects that would benefit from detector coaddition. 
+When applying the $N+2$ algorithm to a simulated LFI-like data set with randomized polarization angles, corresponding to adding a fast rotating half-wave plate to the instrument, we find that the $N+2$ algorithm produces maps that are consistent with expectations. In this case, we also find that the algorithm is capable of producing single-detector temperature maps with minimal temperature-to-polarization leakage. Incidentally, based on the same test, we also show that the introduction of a spinning half-wave plate does not by itself allow the production of clean polarization maps from multi-detector observations, which is of interest for future experiments that rely on a spinning half-wave plate, such as LiteBIRD \citep{litebird2022}. For these, the $N+2$ mapmaking algorithm offers the possibility of making multi-detector maps minimizing temperature-to-polarization leakage as an alternative to the standard single-detector maps. This could be useful for mitigating correlated but low signal-to-noise ratio systematic effects that would benefit from detector coaddition. 
 
 \begin{acknowledgements}
  The authors would like to thank Dr. Sigurd Næss for useful conversations that he didn't think were sufficient to merit co-authorship.
@@ -462,80 +417,3 @@ Work on this article was produced while attending the PhD program in PhD in Spac
 
 
 
-\subsection{Depolarized mapmaking}
-\label{sec:depol}
-
-
-
-%\begin{figure*}[t]
-%  \centering
-%  \includegraphics[width=0.49\textwidth]{figs/map_T_27M_depol.pdf}
-%  \includegraphics[width=0.49\textwidth]{figs/map_T_27S_depol.pdf}\\
-%  \includegraphics[width=0.49\textwidth]{figs/map_T_28M_depol.pdf}
-%  \includegraphics[width=0.49\textwidth]{figs/map_T_28S_depol.pdf}\\
-%  %\includegraphics[width=0.5\columnwidth]{figs/cbar_temp.pdf}\\
-%  \includegraphics[width=0.49\textwidth]{figs/map_Q_depol.pdf}
-%  \includegraphics[width=0.49\textwidth]{figs/map_U_depol.pdf}\\
-%  %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
-%  \caption{Temperature and polarization maps of the LFI 30 GHz data produced using depolarized n+2 mapmaking. The top four panels contain the temperature maps, and the bottom row contains the combined Q and U maps.}
-%  \label{fig:depolarized}
-%\end{figure*}
-
-
-
-It is still possible, to simultaneously produce individual temperature maps and joint polarization maps in this case, albeit without all of the nice leakage-reducing properties of the ideal N+2 mapmaker. To generate our Q and U polarization maps in this case, we are forced to construct a traditional 3x3 $A^T N^{-1}A$ matrix, of the form
-
-\begin{equation}
-\begin{pmatrix}
-(\frac{1}{\sigma})^2 &
-(\frac{1}{\sigma})^2 \cos2\phi_t & (\frac{1}{\sigma})^2 \sin2\phi_t \\
-
-(\frac{1}{\sigma})^2 \cos2\phi_t & 
-(\frac{\cos 2\phi_t}{\sigma})^2 & (\frac{1}{\sigma})^2 \sin2\phi_t \cos2\phi_t \\
-
-(\frac{1}{\sigma})^2 \sin2\phi_t & 
-(\frac{1}{\sigma})^2 \sin2\phi_t \cos2\phi_t &(\frac{ \sin 2\phi_t}{\sigma})^2
-\\
-\end{pmatrix}
-.
-\end{equation}
-
-Here, each entry includes contributions from every detector. We can then compute the GLS solution to Eq. \ref{eq:gls} and solve for our common sky signal vector 
-
-\begin{equation}
-S_p = \begin{pmatrix}
-I_p\\
-Q_p\\
-U_p\\
-\end{pmatrix}.
-\end{equation}
-
-Once we have derived $Q$ and $U$ for our pixel $p$, the temperature data as a function of time and pixel follows from the data model of eq. \ref{eq:datamodel}. 
-
-\begin{equation}
-T_{i,p} = d_{i,p,t} - Q_p \cos2\phi_t - U_p \sin2\phi_t.
-\end{equation}
-
-
-$Q_p$ and $U_p$ are given by the sky vector we solved for with the 3x3 case, and so to compute the depolarized temperature map for each detector we can simply perform a noise weighted sum over the time index $t$ for each pixel $p$. The quantities $\sum_t d_{i,p,t}/\sigma_t^2$, $\sum_t \cos2\phi_t/\sigma_t^2$ and $\sum_t \sin2\phi_t/\sigma_t^2$ have already been precomputed as elements of the N+2 mapmaking matrix, and so it is trivial to then solve for the depolarized temperature maps given the polarized components. 
-
-These maps are shown in fig. \ref{fig:depolarized} for LFI 30GHz, and it is clear that this method produces a better result than that of the previous approach. The polarized maps are identical to those of the 3x3 binned mapmaker, but this approach maintains the additional advantage of producing the individual temperature maps.
-
-Figure \ref{fig:bp_diffs} shows the 6 possible difference maps between these four temperature maps, smoothed to one degree to show their structure. These differences are largest in the galactic plane, where signals amplitudes are highest. We see that in this simulation the 28S detector is somewhat of an outlier, which does not match the real data perfectly, but overall, the amplitudes are low, and are easily explained by bandpass differences between detector pairs.
-
-
-\begin{figure*}
-\begin{tabular}{B C C C}
-& 27S & 28M & 28S\\
-  27M & \includegraphics[width=0.30\textwidth]{figs/sim_27M_minus_27S.pdf} & 
-\includegraphics[width=0.30\textwidth]{figs/sim_27M_minus_28M.pdf} &
-\includegraphics[width=0.31\textwidth]{figs/sim_27M_minus_28S.pdf}\\
- & \hspace{4.8cm } 27S & \includegraphics[width=0.31\textwidth]{figs/sim_27S_minus_28M.pdf} &
- \includegraphics[width=0.31\textwidth]{figs/sim_27S_minus_28S.pdf}\\
- & \caption{All 6 possible difference maps between the simulated 30 GHz maps. 
-
-	} \label{fig:sim_bp_diffs} &  \hspace{4.7cm }  28M  & \includegraphics[width=0.31\textwidth]{figs/sim_28M_minus_28S.pdf} \\
-  %\includegraphics[width=0.5\columnwidth]{figs/cbar_pol.pdf}\\
-  \end{tabular}
-\vspace{-0.75cm}
-\end{figure*}
