@@ -83,6 +83,7 @@
 \def\Tcold{\ifmmode T_\mathrm{c}\else $T_{\mathrm{c}}$\fi}
 \def\Thot{\ifmmode T_\mathrm{h}\else $T_{\mathrm{h}}$\fi}
 \def\Tnear{\ifmmode T_\mathrm{n}\else $T_{\mathrm{n}}$\fi}
+\def\Thalpha{\ifmmode T_\mathrm{H\alpha}\else $T_{\mathrm{H\alpha}}$\fi}
 \def\scmb{\ifmmode s_\mathrm{CMB}\else $s_{\mathrm{CMB}}$\fi}
 \def\squad{\ifmmode s_\mathrm{quad}\else $s_{\mathrm{quad}}$\fi}
 \def\ssynch{\ifmmode s_\mathrm{s}\else $s_\mathrm{s}$\fi}
@@ -100,6 +101,7 @@
 \def\bcold{\ifmmode \beta_\mathrm{c}\else $\beta_{\mathrm{c}}$\fi}
 \def\bhot{\ifmmode \beta_\mathrm{h}\else $\beta_{\mathrm{h}}$\fi}
 \def\bnear{\ifmmode \beta_\mathrm{n}\else $\beta_{\mathrm{n}}$\fi}
+\def\bhalpha{\ifmmode \beta_\mathrm{H\alpha}\else $\beta_{\mathrm{H\alpha}}$\fi}
 \def\bsynch{\ifmmode \beta_\mathrm{s}\else $\beta_{\mathrm{s}}$\fi} 
 \def\bsun{\ifmmode \beta_\mathrm{sun}\else $\beta_{\mathrm{sun}}$\fi} 
 \def\nuzeros{\ifmmode \nu_{0,\mathrm{s}}\else $\nu_{0,\mathrm{s}}$\fi} 
@@ -107,6 +109,7 @@
 \def\nuzerocold{\ifmmode \nu_{0,\mathrm{c}}\else $\nu_{0,\mathrm{c}}$\fi}
 \def\nuzerohot{\ifmmode \nu_{0,\mathrm{h}}\else $\nu_{0,\mathrm{h}}$\fi}
 \def\nuzeronear{\ifmmode \nu_{0,\mathrm{n}}\else $\nu_{0,\mathrm{n}}$\fi} 
+\def\nuzerohalpha{\ifmmode \nu_{0,\mathrm{H\alpha}}\else$\nu_{0,\mathrm{H\alpha}}$\fi} 
 \def\nuzeroame{\ifmmode \nu_{0,\mathrm{AME}}\else $\nu_{0,\mathrm{AME}}$\fi} 
 \def\nuzerosd{\ifmmode \nu_{0,\mathrm{}}\else $\nu_{0,\mathrm{sd}}$\fi} 
 \def\nuzerosrc{\ifmmode \nu_{0,\mathrm{src}}\else $\nu_{0,\mathrm{src}}$\fi} 
@@ -226,8 +229,85 @@ thermal dust emission in both intensity and polarization.
 
 \section{Bayesian modelling of thermal dust emission in \Cosmoglobe\ DR2}
 \label{sec:dr2}
+This paper, being a part of the second \Cosmoglobe Data Release (DR2), is by
+the nature of that analysis -- that is, a global, Bayesian analysis mapping out
+the joint posterior of all involved unknowns -- intricately bound up with the
+other papers in the release, both in terms of the data sets and data model
+used. Hence, here we will here recap of the data model used, as presented in
+\citep{CG02_01}, after which we will devote a subsection to how the thermal
+dust part of the global model is modelled.
 
 \subsection{Data model and posterior distribution}
+In the \Cosmoglobe\ framework, the standard modus operandi is to begin with an
+explicit parametric model incorporating all known aspects of the dataset with
+which we are working -- including both instrumental effects as well as a
+physical model of what is being observed. For instance, the DIRBE time-ordered
+data (TOD) used in this analysis have been parametrized thus:
+\begin{align}
+	\label{eq:model}
+    \dv_{\mathrm{dirbe}} &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}}\right] + \n \\
+                         & \equiv \s^{\mathrm{tot}} + \n \nonumber,
+\end{align}
+where $\dv$ is the stacked TODs, $\G$ is an overall gain factor, $\P$ is the
+pointing matrix which projects the physical sky onto a $n_{\mathrm{tod}}$-sized
+space, $\B$ is the instrumental beam convolution operator, and $\n$ is the
+instrumental noise. The physical sky is represented by the next three terms:
+first, a sum over sky components that can be modelled as constant at every
+point in time (in galactic coordinates) -- the sum is over a HEALPix map of
+amplitudes for each sky component ($\a_c$) multiplied by a mixing matrix which
+extrapolates the given component to the frequencies observed; secondly, there
+is a term representing the zodiacal emission, which cannot be treated as a time
+constant; finally there is a term representing a component that is static in
+solar coordinates, which may either be related to the DIRBE sidelobes, or be
+geniune excess radiation originating in the Solar System. These two last terms
+are treated in \citet{CG02_02} and \citet{CG02_03}, and what concerns us in the
+present work is the first of the three terms, which we can write out more
+explicitly as follows:
+
+\begin{equation}
+\label{eq:skymodel}
+\begin{aligned}
+  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
+  &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
+  && \textrm{(Cold dust)} \\
+  + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
+  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\\
+  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
+  a_{\nu} && \textrm{(Nearby dust)} \\
+  + &\M_{\mathrm{mbb}}(\bhalpha,\Thalpha,\nuzerohalpha) \t_{\mathrm{H\alpha}}
+  a_{\nu} && \textrm{(H$\alpha$ correlated dust)} \\
+  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
+  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\\
+  + &\delta(\nu-\nu_{0,\cii}) \a_{\cii}
+	h^{\cii}_{\nu} && (\cii)\\
+  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
+  \textrm{(Bright stars)} \\
+  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
+  \textrm{(Faint stars)} \\  
+    + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
+  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
+  T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
+  a_{\mathrm{e},j} && \textrm{(FIR sources)}\\
+  + &m_{\nu} && \textrm{(Monopole)}. 
+\end{aligned}
+\end{equation}
+
+As it stands, this is as ``complete'' of a static model we currently can write down
+for the frequency domain we are dealing with in this paper. The first four
+terms is the complete model of thermal dust, which is the main focus of this
+work, and will be elaborated on below. The fourth term models the free-free
+dust component, which is expected to contribute moderately at all relevant
+frequencies without becoming a dominant term. The next two terms describe CO
+and C II line emission that show up as delta function-like contributions to the
+total signal at certain frequencies (TODO). Then, there are three point source
+terms, all of which are dealt with in \citet{CG02_04}. Finally, the final term
+represents the monopole at each frequency, which is also treated in
+\citet{CG02_03}.
 
 \subsection{Multi-component thermal dust modelling}
 
@@ -287,80 +367,9 @@ In addition to this, we may also use known distance information to infer
 various dust populations. As an example, \cite{edenhofer:2024} constructed a
 series of high-resolution (\nside 256) extinction maps using data from GAIA and
 
-MORE HERE ON WHAM ETC
+MORE HERE ON HALPHA
 
 %\subsection{The \Cosmoglobe DR2 analysis}
-The current paper is part of the \Cosmoglobe\ DR2 suite, meaning that our dust
-modelling is one part of a larger global Bayesian end-to-end analysis. In the
-\Cosmoglobe\ framework, the standard modus operandi is to begin with an explicit
-parametric model incorporating all known aspects of the dataset with which we
-are working -- including both instrumental effects as well as a physical model
-of what is being observed. For instance, the DIRBE time-ordered data (TOD) used
-in this analysis have been parametrized thus:
-\begin{align}
-	\label{eq:model}
-    \dv_{\mathrm{dirbe}} &=\G\P\left[\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
-          \s_{\mathrm{static}}\right] + \n \\
-                         & \equiv \s^{\mathrm{tot}} + \n \nonumber,
-\end{align}
-where $\dv$ is the stacked TODs, $\G$ is an overall gain factor, $\P$ is the
-pointing matrix which projects the physical sky onto a $n_{\mathrm{tod}}$-sized
-space, $\B$ is the instrumental beam convolution operator, and $\n$ is the
-instrumental noise. The physical sky is represented by the next three terms:
-first, a sum over sky components that can be modelled as constant at every
-point in time (in galactic coordinates) -- the sum is over a HEALPix map of
-amplitudes for each sky component ($\a_c$) multiplied by a mixing matrix which
-extrapolates the given component to the frequencies observed; secondly, there
-is a term representing the zodiacal emission, which cannot be treated as a time
-constant; finally there is a term representing a component that is static in
-solar coordinates, which may either be related to the DIRBE sidelobes, or be
-geniune excess radiation originating in the Solar System. These two last terms
-are treated in \citet{CG02_02} and \citet{CG02_03}, and what concerns us in the
-present work is the first of the three terms, which we can write out more
-explicitly as follows:
-
-\begin{equation}
-\label{eq:skymodel}
-\begin{aligned}
-  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
-  &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
-  && \textrm{(Cold dust)} \\
-  + &\M_{\mathrm{mbb}}(\bhot,\Thot,\nuzerohot)
-  \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\\
-  + &\M_{\mathrm{mbb}}(\bnear,\Tnear,\nuzeronear) \t_{\mathrm{near}}
-  a_{\nu} && \textrm{(Nearby dust)} \\
-  + &\left(\frac{\nuzeroff}{\nu}\right)^2
-  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
-  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
-  + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
-  h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\\
-  + &\delta(\nu-\nu_{0,\cii}) \a_{\cii}
-	h^{\cii}_{\nu} && (\cii)\\
-  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
-  f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
-  \textrm{(Bright stars)} \\
-  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
-  \textrm{(Faint stars)} \\  
-    + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
-  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
-  T_{\mathrm{e},j}, \nu_{0,\mathrm{e}})
-  a_{\mathrm{e},j} && \textrm{(FIR sources)}\\
-  + &m_{\nu} && \textrm{(Monopole)}. 
-\end{aligned}
-\end{equation}
-
-As it stands, this is as ``complete'' of a static model we currently can write down
-for the frequency domain we are dealing with in this paper. The first three
-terms is the complete model of thermal dust, which is the main focus of this
-work, and will be elaborated on below. The fourth term models the free-free
-dust component, which is expected to contribute moderately at all relevant
-frequencies without becoming a dominant term. The next two terms describe CO
-and C II line emission that show up as delta function-like contributions to the
-total signal at certain frequencies (TODO). Then, there are three point source
-terms, all of which are dealt with in \citet{CG02_04}. Finally, the final term
-represents the monopole at each frequency, which is also treated in
-\citet{CG02_03}.
-
 \subsubsection{Bayesian end-to-end analysis}
 As mentioned, this work is part of a global analysis of data spanning
 100-2.4$\cdot 10^6$ GHz, wherein we draw samples from the \emph{posterior}
@@ -448,7 +457,7 @@ Hence, in this paper, we mainly focus on the three first components of Eq.
 (\ref{eq:skymodel}), and leave the other components for other papers. (TODO
 maybe actually cite those papers)
 
-\subsubsection{Three-component dust model}
+\subsubsection{Four-component dust model}
 As mentioned above, we here adopt a model for thermal dust that comprises three
 distinct components, represented by the first three terms of Eq.
 (\ref{eq:skymodel}). All three components are modelled as having a continuous
