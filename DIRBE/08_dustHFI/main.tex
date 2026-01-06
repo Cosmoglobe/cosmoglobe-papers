@@ -334,9 +334,25 @@ where the amplitudes for the maps (as mentioned in \cref{fig:SkyModel}) are samp
 \RS{Should I also have Cls for the CMB? That is also fit but maybe fine to lump it in with the amplitudes from the sky model?}
 \RS{Add references} 
 
-\subsection{Grid search and optimization strategy}
-\label{sec:MethodGridSearch}
-To address the high level of correlation between the various dust models we find that a grid search was optimal. Allowing the amplitudes to vary freely within the Gibbs sampling algorithm tended to favor unphysical results and so with the grid search we can apply a so-called physicality prior to the data, while also attempting to minimize the $\chi^2$. We chose our physicality prior from several reasonable assumptions. Firstly, we expect that the hot and cold dust should have positive large scale modes, or in other words parameters that lead to the hot or cold dust being largely negative are deemed unphysical. Secondly, in addition to a low $\chi^2$, the nearby dust and the H$\alpha$ dust should be uncorrelated with the hot and the cold dust, as much as possible. A highly correlated hot and nearby dust model would indicate that either the nearby dust is too low, leaving much of the nearby dust to leak into the hot dust for example. Lastly, we expect that the cold dust and the \ion{H}{I} signal as seen by HI4PI should be more highly correlated, so we keep that in mind while exploring the parameter space (though we do not force such a correlation). 
+\subsection{Summary statistics and optimization strategy}
+\label{sec:statistics}
+
+
+We found that the four dust components were highly correlated, and so we performed an extensive grid search to explore the parameter space efficiently, while imposing a physicality prior requiring that the large scale amplitudes of the hot and cold dust be positive, and that the temperatures of the dust components did not exceed 35~K or go lower than 10~K. Additionally, the nearby dust and the H$\alpha$ dust should be uncorrelated with the hot and the cold dust, as much as possible. A highly correlated hot and nearby dust model would indicate that either the nearby dust is too low, leaving much of the nearby dust to leak into the hot dust for example. Lastly, we expect that the cold dust and the \ion{H}{I} signal as seen by HI4PI should be more highly correlated, so we keep that in mind while exploring the parameter space (though we do not force such a correlation). 
+
+Each step in the grid search used Gibbs sampling fit the 857-{1-4} gains, the amplitudes per pixel of the hot and cold dust, the CMB and the CO amplitudes, as well as monopoles and dipoles, for a set temperature and spectral index for each dust component. These amplitudes are fit through the conjugate gradient sampling routine implemented in the Commander3 framework and as described above for a set $\beta$ and $T$ for each dust component and a set amplitude scale for each of the templates. 
+
+
+\begin{enumerate}
+\item Grid search methodology?
+\item Minimize chisq
+\item Maximize HI correlation versus cold dust
+\item Minimize correlations with nearby dust (suck up as much as possible with nearby)
+\item Physicality prior
+\end{enumerate}
+
+
+
 
 \section{Thermal dust template results}
 \label{sec:results}
@@ -345,12 +361,15 @@ To address the high level of correlation between the various dust models we find
     \item We only show a subset of the grid here for simplicity but many more parameters were additionally tested before the best fit was chosen, large error bars due to gain uncertainty 
 \end{itemize}
 
-
+The grid search results are summarized in \cref{fig:SEDGridContours} and \cref{fig:SEDGridAmplitude}. We choose fiducial values based on the criteria as described above, and show how when each dust component is set to its fiducial value and the last one allowed to vary how the space explore changes. The gray grids show areas that were unphysical (with large negative hot or cold dust fits). We additionally plot the correlation with the hot and the cold dust compared to the templates for the nearby and H$\alpha$ correlated dust, where the aim is to have the lowest overall correlation between those components. 
+We found that varying the spectral parameters of the hot or cold dust had more effect on the final amplitudes of the other, for example, as the hot dust changed in temperature, the final amplitudes of the hot dust did not change drastically, however the cold dust amplitudes did change dramatically in response. As such, we have included in the Hot dust grid the correlation between the cold dust and the HI4PI maps, and interestingly the line tracing the 92\% correlation traces closely with the unphysical region, and a similar line can be drawn when we look at the correlation between the hot dust and the Firas CII map, with the 95\% correlation region tracing the unphysical areas. 
+Broadly speaking we have very little constraining power on the H$\alpha$ correlated dust with the \planck\ HFI bands. Since it represents a very small contribution to the signal we choose to set the value for the $T_{\mathrm{H\alpha}}$ and $\beta_{\mathrm{H\alpha}}$ to those from the DIRBE results \citep{CG02_05}. Despite exploring a wide parameter space for those and the amplitude scale factor we found that the $\chi^2$ as well as the correlations with the hot and cold dust were relatively robust. 
+ 
 
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/SEDGrid_withOneColourbar.pdf}
-    \caption{Contour plot of relevant statistical tests and $\chi^2$ for each dust model SED. Maps of a subset of the grid points can be found in \cref{app:GridSearchTests}.}
+    \caption{Contour plot of relevant statistical tests and $\chi^2$ for each dust model SED. Maps of a subset of the grid points can be found in \cref{app:GridSearchTests}. }
     \label{fig:SEDGridContours}
 \end{figure*}
 
@@ -380,20 +399,7 @@ To address the high level of correlation between the various dust models we find
 
 
 
-\subsection{Summary statistics and optimization strategy}
-\label{sec:statistics}
 
-
-We found that the four dust components were highly correlated, and so we performed an extensive grid search so as to explore the parameter space efficiently, while imposing a physicality prior requiring that the large scale amplitudes of the hot and cold dust were positive, and that the temperatures of the dust components did not exceed 35~K or go lower than 10~K. Each step in the grid search used Gibbs sampling fit the 857-{1-4} gains, the amplitudes per pixel of the hot and cold dust, the CMB and the CO amplitudes, as well as monopoles and dipoles, for a set temperature and spectral index for each dust component. These amplitudes are fit through the conjugate gradient sampling routine implemented in the Commander3 framework. 
-
-
-\begin{enumerate}
-\item Grid search methodology?
-\item Minimize chisq
-\item Maximize HI correlation versus cold dust
-\item Minimize correlations with nearby dust (suck up as much as possible with nearby)
-\item Physicality prior
-\end{enumerate}
 
 % \begin{figure*}
 %     \centering
@@ -523,15 +529,26 @@ Nearby dust& $ 18.0 $ & $ 1.7 $\cr
 
 \begin{figure*}[t]
     \centering
-%\includegraphics{figures/dustComp_Himap.pdf}
-%\includegraphics{figures/dustComp_firasCII.pdf}
 \includegraphics[width=0.85\linewidth]{figures/dustComp_coldDust.pdf}
 \includegraphics[width=0.85\linewidth]{figures/dustComp_hotDust.pdf}
 \includegraphics{figures/dustComp_Himap.pdf}
 \includegraphics{figures/dustComp_firasCII.pdf}
-    \caption{}
+    \caption{DR2 Cold and hot dust components (top panels) as compared with relevant tracers \ion{H}{I} and \ion{C}{II} (bottom panels).}
     \label{fig:dust_figures}
 \end{figure*}
+
+% \begin{figure*}[t]
+%     \centering
+% \includegraphics{figures/dust_Ha_map.pdf}
+% \includegraphics{figures/dust_near.pdf}
+% \includegraphics[width=0.65\linewidth]{figures/dustComp_coldDust.pdf}
+% \includegraphics[width=0.65\linewidth]{figures/dustComp_hotDust.pdf}
+% \includegraphics{figures/dustComp_Himap.pdf}
+% \includegraphics{figures/dustComp_firasCII.pdf}
+%     \caption{}
+%     \label{fig:dust_figures}
+% \end{figure*}
+
 
 \begin{figure}
     \centering
@@ -758,7 +775,7 @@ Commander1 on dust model
 \begin{figure*}
     \centering
     \includegraphics{figures/commander1_dustComp.pdf}
-    \caption{Beta and T fits}
+    \caption{Beta and T fits. \RS{Confirm map v1 vs v2 with Ingunn}}
     \label{fig:beta_T}
 \end{figure*}
 
@@ -811,7 +828,7 @@ Here we present some of the point from the grid search for each of the dust comp
 As can be seen in \cref{fig:SEDGridContours}, there is an unphysical space mapped by the hottest and higher spectral index in the cold dust grid. This corresponds to large over-subtraction and negative areas in the hot dust amplitudes as can be seen in \cref{fig:cold_hot_dust_set}. 
 \begin{figure*}
     \centering
-    \includegraphics[width=\linewidth]{figures/coldDust_hot_Grid.pdf}
+    \includegraphics[width=\linewidth]{figures/hotDust_cold_Grid.pdf}
     \caption{Hot dust (\ion{C}{ii} correlated dust) amplitudes for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:cold_cold_dust_set}. }
     \label{fig:cold_hot_dust_set}
 \end{figure*}
@@ -821,6 +838,13 @@ As can be seen in \cref{fig:SEDGridContours}, there is an unphysical space mappe
     \includegraphics[width=\linewidth]{figures/coldDust_cold_Grid.pdf}
     \caption{Cold dust (\ion{H}{i} correlated dust) amplitudes for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:cold_hot_dust_set}.}
     \label{fig:cold_cold_dust_set}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics{figures/coldDust_cold_Grid_ratio.pdf}
+    \caption{ratio}
+    \label{fig:cold_cold_dust_set2}
 \end{figure*}
 
 \subsection{Hot dust}
@@ -834,7 +858,7 @@ Similar to with the cold dust, in \cref{fig:SEDGridContours}, there is an unphys
 
 \begin{figure*}
     \centering
-    \includegraphics[width=\linewidth]{figures/hotDust_cold_Grid.pdf}
+    \includegraphics[width=\linewidth]{figures/coldDust_hot_Grid.pdf}
     \caption{Cold dust (\ion{H}{i} correlated dust) amplitudes for varying $T_\mathrm{h}$ and $\beta_\mathrm{h}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:hot_hot_dust_set}.}
     \label{fig:hot_cold_dust_set}
 \end{figure*}
