@@ -287,7 +287,6 @@ where $g_j$ are the instrumental gain for detector $j$, $\mathsf{B}$ the beam co
     \item Use Eirik to justify choices
     \item big equation for $s=a_{cmb}...$ etc
 \end{itemize}
-\RS{I want to move this up to below masks, second section of the `methods section'. }
 As mentioned in \cref{sec:planckhfi}, the \planck\ HFI bands include several relevant foregrounds in addition to dust, such as free-free (ff), carbon monoxide (CO), cosmic microwave background radiation (CMB) (see \cref{fig:SkyModel}). 
 For this analysis we fix the free-free fixed to  due to the low constraining power of the HFI bands on the free-free component. The template we use has electron temperature ($T_e$) of 7000 K and amplitudes set from the Beyond Planck analysis \cite{bp01}.\RS{Is this correct?}%(init_ff_amp_BP8.1_v1.fits) 
 Additionally, we keep the CO line-ratios constant for this analysis and set to the ratios from the \planck\ results \cite{planck2013-p03a}, but allow the amplitude to vary pixel-by-pixel for the three CO emission lines. \RS{Is this correct? Do we have more up to date CO line ratios from later data releases?}
@@ -361,7 +360,7 @@ Each step in the grid search used Gibbs sampling fit the 857-{1-4} gains, the am
     \item We only show a subset of the grid here for simplicity but many more parameters were additionally tested before the best fit was chosen, large error bars due to gain uncertainty 
 \end{itemize}
 
-The grid search results are summarized in \cref{fig:SEDGridContours} and \cref{fig:SEDGridAmplitude}. We choose fiducial values based on the criteria as described above, and show how when each dust component is set to its fiducial value and the last one allowed to vary how the space explore changes. The gray grids show areas that were unphysical (with large negative hot or cold dust fits). We additionally plot the correlation with the hot and the cold dust compared to the templates for the nearby and H$\alpha$ correlated dust, where the aim is to have the lowest overall correlation between those components. 
+The grid search results are summarized in \cref{fig:SEDGridContours} and \cref{fig:SEDGridAmplitude}. We choose fiducial values based on the criteria as described above, and show how when each dust component is set to its fiducial value and only one allowed to vary how the space explored changes (see also \cref{app:GridSearchTests}). The gray grids show areas that were unphysical (with large negative hot or cold dust fits). We additionally plot the correlation with the hot and the cold dust compared to the templates for the nearby and H$\alpha$ correlated dust, where the aim is to have the lowest overall correlation between those components. 
 We found that varying the spectral parameters of the hot or cold dust had more effect on the final amplitudes of the other, for example, as the hot dust changed in temperature, the final amplitudes of the hot dust did not change drastically, however the cold dust amplitudes did change dramatically in response. As such, we have included in the Hot dust grid the correlation between the cold dust and the HI4PI maps, and interestingly the line tracing the 92\% correlation traces closely with the unphysical region, and a similar line can be drawn when we look at the correlation between the hot dust and the Firas CII map, with the 95\% correlation region tracing the unphysical areas. 
 Broadly speaking we have very little constraining power on the H$\alpha$ correlated dust with the \planck\ HFI bands. Since it represents a very small contribution to the signal we choose to set the value for the $T_{\mathrm{H\alpha}}$ and $\beta_{\mathrm{H\alpha}}$ to those from the DIRBE results \citep{CG02_05}. Despite exploring a wide parameter space for those and the amplitude scale factor we found that the $\chi^2$ as well as the correlations with the hot and cold dust were relatively robust. 
  
@@ -502,20 +501,20 @@ Broadly speaking we have very little constraining power on the H$\alpha$ correla
 \omit\hbox to 1in{Component\hfil}& $T$ (K) & $\beta$\cr
 \noalign{\vskip 4pt\hrule\vskip 6pt}
 \noalign{\vskip 3pt}
-Cold dust& $ 11.3 $ & $ 1.85 $\cr
+Cold dust& $ 11.3 $ \RS{$11\pm2$} & $ 1.85 $ \RS{$1.85\pm0.15$}\cr
 \noalign{\vskip 3pt}
-Hot dust& $ 30.0 $ & $ 1.75 $\cr
+Hot dust& $ 30.0 $ \RS{$30\pm5$} & $ 1.75 $\RS{$1.75\pm0.2$or+0.2-0.05}\cr
 \noalign{\vskip 3pt}
-H$_\alpha$ dust& $ 17.80 $ & $ 2.62 $\cr
+H$_\alpha$ dust& $ 17.80 $\RS{???} & $ 2.62 $ \RS{???}\cr
 \noalign{\vskip 3pt}
-Nearby dust& $ 18.0 $ & $ 1.7 $\cr
+Nearby dust& $ 18.0 $ \RS{$18+2-1$}& $ 1.7 $ \RS{$1.7\pm0.1$}\cr
 \noalign{\vskip 3pt}
 \noalign{\vskip 3pt\hrule\vskip 4pt}}}
 \endPlancktable
 \endgroup
 \caption{Parameters fit in the \Commander\ Gibbs sampling. See 
 % \cref{fig:dust_cold,fig:dust_near,fig:extinction,fig:hot_dust} for the maps and 
-\cref{fig:dustSED} the spectral energy distribution of the dust components.}
+\cref{fig:dustSED} the spectral energy distribution of the dust components. \RS{Need to choose final values and error bars!!!}}
 \label{tab:SEDs}
 \end{table}
 
@@ -671,6 +670,7 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
 \end{enumerate}
 
 
+
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/AvgDust_Grid_plotres.pdf}
@@ -691,11 +691,21 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
 
 
 
+\section{Correlations with external line emission maps}
+\label{sec:correlations}
+\begin{itemize}
+    \item Add TT-correlation plot between Hi4PI and cold dust, and Dame CO and cold dust?
+    \item Discuss correlation coeff between Hi4Pi and cold dust (mention masks), maybe mention CO
+\end{itemize}
+
+One of the great successes of the 4-component dust model is the high degree of correlation between the \ion{H}{I} emission, a known dust tracer, and the cold dust, at 93\% and the correlation between the new dust tracer \ion{C}{II}, which traditionally maps the hot ionized medium and traces well the hot dust component, with a correlation of 95\% (see also \cref{fig:hotCiiCorr}). 
+\Cref{fig:correlationSquare} shows the spatial correlations between the different dust components and the tracers, and we can see that we have a low degree of correlation between the near dust and the hot and cold dust. We have additionally included Dame in this check \cite{dame2001}, which maps the galactic carbon dioxide emission lines, however we do not find a high degree of correlation with other dust tracers. 
+
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}\\
     \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}
-    \caption{(Top:) Scatter plot between the hot dust and FIRAS CII maps; both maps are smoothed to a common resolution of 420' FWHM, and pixelized at \nside=16. (Bottom:) Scatter plot between the cold dust and HI4PI maps; both maps are smoothed to a common resolution of 16.2' FWHM, and pixelized at \nside=1024.}
+    \caption{(Top:) Scatter plot between the hot dust and FIRAS CII maps; both maps are smoothed to a common resolution of 420' FWHM, and pixelated at \nside=16. (Bottom:) Scatter plot between the cold dust and HI4PI maps; both maps are smoothed to a common resolution of 16.2' FWHM, and pixelated at \nside=1024.}
     \label{fig:hotCiiCorr}
 \end{figure}
 
@@ -704,18 +714,8 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
     \centering
     \includegraphics[width=\linewidth]{figures/correlation_plot.pdf}
     \caption{Correlation between dust components and tracers. The correlation between the hot dust and the CII emission seen in FIRAS, as well as the cold dust and the HI4PI HI emission are very strong.}
+    \label{fig:correlationSquare}
 \end{figure}
-
-
-
-
-\section{Correlations with external line emission maps}
-\label{sec:correlations}
-\begin{itemize}
-    \item Add side by side plot of Hi4PI and cold dust? -> not this should come 
-    \item Add TT-correlation plot between Hi4PI and cold dust, and Dame CO and cold dust?
-    \item Discuss correlation coeff between Hi4Pi and cold dust (mention masks), maybe mention CO
-\end{itemize}
 
 % \begin{figure*}
 %   \centering
@@ -758,7 +758,7 @@ The nearby dust parameters (amplitude and spectral indices) are fixed to the \GA
 \section{Modified blackbody fit to multi-component dust model}
 \label{sec:mbb}
 
-Commander1 on dust model
+Using Commander 1 \RS{add citation} and the new dust maps at each requency we compare the full sky dust temperature and dust $\beta$ maps to previous \planck\ thermal dust maps (see \cref{fig:beta_T}). It is clear that spectral index from the new four component dust model is much smoother across the sky when compared to the GNILC and Commander 2015 maps, and the degeneracy between the temperature and the spectral index is also reduced \RS{is it? should I calculate numbers?}. 
 
 % \begin{figure*}
 %     \centering
@@ -806,7 +806,7 @@ We note that the residuals are very small, and the new dust model successfully r
 % \bibliography{../../common/CG_bibliography,references,../../common/Planck_bib}
 \bibliography{../../common/CG_bibliography,references,Planck_bib}
 
-
+\clearpage
 \appendix
 \crefalias{section}{appendix}
 \section{Residuals}
@@ -901,7 +901,7 @@ The parameter space explored for the H$_\alpha$ correlated dust was shown to hav
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/coldDust_wham_Grid.pdf}
-    \caption{Cold dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set}. This explores only $a_\mathrm{H\alpha}=1$.}
+    \caption{Cold dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other parameters set to the fiducial values. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set}. This explores only $a_\mathrm{H\alpha}=1$.}
     \label{fig:Ha_cold_dust_set}
 \end{figure*}
 
