@@ -103,13 +103,14 @@ Many full-sky datasets exist which measure the emissions from point sources in o
 
 In this paper, part of the larger Cosmoglobe DR2 results paper suite, we discuss the modelling of compact objects as part of our larger full sky astrophysical model. Section \ref{sec:models} discusses this modelling in a larger Bayesian context. Section \ref{sec:results} shows the astrophysical results of the work by presenting a unified star model and its associated errors. Section \ref{sec:consistency} then shows the consistency between our results and other work in this area. Finally, we conclude in Section \ref{sec:conclusions}, discussing the impacts of this work and offering some avenues for future research.
 
-\section{Compact Object modelling in a Bayesian context}
+\section{Star modelling in a Bayesian context}
 \label{sec:models}
 
 
 In this work, we break the compact objects into two categories as follows: 1) Bright (> Mag 12 in the WISE 3.4 $\,\mu$m) objects with SEDs measured by \Gaia\ (hereafter ``stars''), described in section \ref{sec:starmodel}, and 2) a diffuse background of dim objects (hereafter ``diffuse''), described in section \ref{sec:diffusemodel}.
 
 Figure \ref{fig:starcount} shows the total number of stars in each pixel at $N_\mathrm{side}=512$. There are a total of 478317 stars over the full sky, but, as is expected, they are primarily clustered in the galactic plane. In the bottom panel, we see the number of sources included in the diffuse template per pixel, which contains the vast majority of the (faint) sources. An overview of this processing is shown in figure \ref{fig:diagram}.
+
 
 \begin{figure}
   \centering
@@ -122,7 +123,7 @@ Figure \ref{fig:starcount} shows the total number of stars in each pixel at $N_\
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figs/diagram/dirbe_diagram.pdf}\\
-  \caption{Schematic diagram of the commander handling of compact objects in DIRBE. Red ovals are input data, and the blue boxes are the three classes of sources described in this paper. }
+  \caption{Schematic diagram of the commander handling of compact objects in DIRBE. Red ovals are input data, and the blue boxes are the three classes of sources described in this paper. TODO: update bottom left image with final amplitude figure}
   \label{fig:diagram}
 \end{figure}
 
@@ -162,6 +163,7 @@ The effects of these stellar parameters on the star SEDs was examined in Figure 
 The full Bayesian data model is shown in \cite{CG02_01}, and includes the star component $s_\mathrm{stars}(p, \lambda_j)$, the star emissions as a function of pixel $p$ and frequency $\lambda_j$ for a band $j$. Equation \ref{eq:datamodel} shows the data model for the star component that we describe in this paper:
 
 
+
 \begin{equation}
  s_\mathrm{stars}(p, \lambda_j) = U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
   \epsilon_j(\nu)\,f_{\mathit{Gaia},j} a_{\mathrm{s},j}.
@@ -174,7 +176,7 @@ Here,$U_{\mathrm{mJy}}$ is a unit conversion factor, $a_{\mathrm{s},j}$ is the a
 f_{\mathit{Gaia}} = B_i(p, \lambda_j) E_i(\lambda_j),
 \end{equation}
 
-which is the beam-convolved SED taken from the PHOENIX catalogue.
+is the beam-convolved SED taken from the PHOENIX catalogue.
 
 Here, we sum over each star $i$, where $a_i$ is a single overall amplitude parameter fit per star and $B_i(p, \lambda)$ is the instrument beam for a detector at frequency $\lambda$ in a pixel $p$ for a given star $i$. $E_i(\lambda)$ is the normalized emission for a given frequency $\lambda$. The emission $E_i$ is drawn directly from the \GAIA\ data and the PHOENIX starlight database, as discussed in section \ref{sec:phoenix}, and the beam $B$ is fixed for each detector. The extinction factor $\epsilon_j(\nu)$ is also just based on the existing \cite{ext_model} model, as detailed in section \ref{sec:extinction_model}, so we fit only the overall amplitude $a_i$ for each star in this model. This greatly reduces the degeneracies between the stars and other astrophysical components such as dust, and was found to work better than fitting a full SED per star. We include a star component in DIRBE bands 01--06 (1.25--25 $\mu$m), as at longer wavelengths the contribution from star emission was greatly subdominant to zodiacal light and dust, and including that data degraded the quality of the amplitude fits. 
 
@@ -258,7 +260,7 @@ r = \exp\left(\frac{3.5\cdot 4}{5(3.5 \log(T_{\mathrm{eff}}) - \log(g))}\right )
 \subsubsection{Extinction}
 \label{sec:extinction_model}
 
-At the highest frequencies, dust extinction becomes one of the dominant effects on the star emission amplitudes, particularly in the galactic plane. We construct a simplified model of dust extinction, based on the work of \cite{ext_model} and \cite{fitzpatric_19}. We implement their 47 parameter model of dust extinction from the UV to the Infrared,\footnote{Note that we believe there is a typo in \cite{ext_model}, which has added an additional negative sign on their value of $b_{IR}\ \alpha_{1}$, and the correct value should be 1.06099} which provides a sky-averaged dust extinction parameter $\epsilon(\nu)$. 
+At the highest frequencies, dust extinction $\epsilon(\nu)$ becomes one of the dominant effects on the star emission amplitudes, particularly in the galactic plane. We construct a simplified model of dust extinction, based on the work of \cite{ext_model} and \cite{fitzpatric_19}. We implement their 47 parameter model of dust extinction from the UV to the Infrared,\footnote{Note that we believe there is a typo in \cite{ext_model}, which has added an additional negative sign on their value of $b_{IR}\ \alpha_{1}$, and the correct value should be 1.06099} which provides a sky-averaged dust extinction parameter $\epsilon(\nu)$. 
 
 We combine this spectral behaviour with with a full-sky spatial template using the $E(B-V)$ map from the Planck 2013 dataset \citep{planck_extinc_2013} by starting from Eq.~1 of \cite{ext_model}:
 
@@ -273,6 +275,7 @@ R(V) = \frac{A(V)}{E(B-V)},
 \end{equation}
 
 the ratio of absolute to selective extinction in the V band. Substituting this relationship in, and using the full sky average case of $R(V) =3.1$ \citep{fullsky_ext}, which allows us to omit the $b$ terms and obtain
+
 
 \begin{equation}
 A(\lambda) = 3.1\, E(B-V) a(\lambda).
@@ -311,9 +314,9 @@ Finally, after modelling the brightest sources using the method described above,
 \section{Astrophysical results}
 \label{sec:results}
 
-The model described in the previous section is then included in a full sky model, which includes galactic dust, zodical light and other components. A model of the DIRBE instrument is used to estimate other data artifacts, the most prominent of which was a sun-stationary signal of unknown origins. Following our previous work withing the Cosmoglobe framework \citep{BP01, watts2023_dr1}, we implement this model within the \texttt{commander3} codebase \citep{BP03}, which is our Bayesian end-to-end analysis pipeline. The full posterior of all our model parameters was then sampled using Gibbs sampling, exploring the full space around the maximum likelihood values of each parameter. We computed a total of 810 unique samples spread over 6 independent chains after discarding our burn-in data, which gave robust sample sizes for the results described here. 
+The model described in the previous section is then included in a full sky model, which includes galactic dust, zodical light and other components. A model of the DIRBE instrument is used to estimate other data artifacts, the most prominent of which was a sun-stationary signal of unknown origins. Following our previous work withing the Cosmoglobe framework \citep{BP01, watts2023_dr1}, we implement this model within the \texttt{commander3} codebase \citep{BP03}, which is our Bayesian end-to-end analysis pipeline. The full posterior of all our model parameters was then sampled using Gibbs sampling, exploring the full space around the maximum likelihood values of each parameter. We computed a total of NUMBER unique samples spread over 6 independent chains after discarding our burn-in data, which gave robust sample sizes for the results described here. 
 
-In this paper, we present just the results of the star models described in section \ref{sec:models}, but we direct interested readers to the companion papers in the larger data release. More details on the overall sampling approach can be found in \citet{CG02_01}. The other components of the sky model are described in \citet{CG02_02} and \citet{CG02_05}, and our limits on the CIB monopole derived from this work are presented in \citet{CG02_03}. 
+In this paper, we present just the results of the star models described in section \ref{sec:models}, but we direct interested readers to the companion papers in the larger data release. More details on the overall sampling approach can be found in \citet{CG02_01}. The other components of the sky model are described in \citet{CG02_02}, \citet{CG02_05}, \citet{CG02_06} and \citet{CG02_07} and our limits on the CIB monopole derived from this work are presented in \citet{CG02_03}. 
 
 
 \subsection{Maps}
@@ -347,7 +350,7 @@ Other point source residuals are more complex, and look to be superpositions of 
   \includegraphics[scale=0.7]{figs/zoom/cbar2.pdf}
   \hspace{0.15in}
   \includegraphics[scale=0.7]{figs/zoom/cbar4_chisq.pdf}
-  \caption{Zoom-ins on a subregion of the sky centred at $(20^\mathrm{o},70^\mathrm{o})$. The third column shows the difference between the two, and the final column is the overall chisq of the fit.}
+  \caption{Zoom-ins on a subregion of the sky centred at $(20^\mathrm{o},70^\mathrm{o})$. The third column shows the difference between the two, and the final column is the overall chisq of the fit. TODO: update figure once chisq maps are done}
   \label{fig:zooms}
 \end{figure*}
 
@@ -384,9 +387,11 @@ In addition to the amplitude maps at each frequency, we can also examine the spe
 
 \subsection{Extinction}
 
+We also investigate our model of extinction, to determine how well it approximated the real sky. 
+
 \begin{figure}
 \includegraphics[width=\columnwidth]{figs/diffuseTemplate/extinction.pdf}
-  \caption{Profiles of the DIRBE Faint Star Model (FSM) and Cosmoglobe star model as a function of galactic latitude. A linear extrapolation is overplotted in the core region from -5 to 5 degrees galactic latitude, but excluding the galactic center from -1 to 1 degree. The theoretical value central value from this fit is compared to the measured values in the central bins to give estimates of the dust extinction in the galactic center for both cases.}
+  \caption{Profiles of the DIRBE Faint Star Model (FSM) and Cosmoglobe star model as a function of galactic latitude. A linear extrapolation is overplotted in the core region from -5 to 5 degrees galactic latitude, but excluding the galactic center from -1 to 1 degree. The theoretical value central value from this fit is compared to the measured values in the central bins to give estimates of the dust extinction in the galactic center for both cases. TODO:update once chisq is done}
   \label{fig:extinction}
 \end{figure}
 
@@ -405,7 +410,7 @@ The top two panels of Figure \ref{fig:DIRBEfaint} shows our diffuse template and
   \includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/diffuse_diff.pdf}\\
   %\includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/band_01_map.pdf}\\
   \includegraphics[width=0.9\columnwidth]{figs/diffuseTemplate/band01_res.pdf}\\
-  \caption{The Commander diffuse star template (Top). Next: The DIRBE faint star model at 1.25 $\mu$m retrieved from LAMBDA and converted from QuadCube to healpix and the difference between that model and the diffuse template (position 3). The fourth panel shows our zodi-subtracted frequency map for the DIRBE 01 band, and the bottom panel shows the DIRBE 01 residual from the Commander run, indicating that our star model is slightly overestimating signal in the galactic plane, possibly due to missing extinction.}
+  \caption{The Commander diffuse star template (Top). Next: The DIRBE faint star model at 1.25 $\mu$m retrieved from LAMBDA and converted from QuadCube to healpix and the difference between that model and the diffuse template (position 3). The fourth panel shows our zodi-subtracted frequency map for the DIRBE 01 band, and the bottom panel shows the DIRBE 01 residual from the Commander run, indicating that our star model is slightly overestimating signal in the galactic plane, possibly due to missing extinction. TODO: update once chisq are done}
   \label{fig:DIRBEfaint}
 \end{figure}
 
@@ -446,7 +451,7 @@ After the official DIRBE analysis, \cite{DIRBE2mass}, following \cite{gorjian} u
      4 & 257.8 & -59.4 & 1.9 & 36.16 & 10.7 & 2.03 & 28.8 & 38.19 & 39.6\\
      \hline
     \end{tabular}
-    \caption{Comparison of component intensities in patches from \cite{DIRBE2mass} and Cosmoglobe (CG) at 1.25 and 2.2 $\mu$m. The galactic longitude and latitude of the region center are given by $l$ and $b$, and $r$ is the radius of the field. The definitions of bright and diffuse sources differ between analyses, but the sum of the two allow reasonable comparison.}
+    \caption{Comparison of component intensities in patches from \cite{DIRBE2mass} and Cosmoglobe (CG) at 1.25 and 2.2 $\mu$m. The galactic longitude and latitude of the region center are given by $l$ and $b$, and $r$ is the radius of the field. The definitions of bright and diffuse sources differ between analyses, but the sum of the two allow reasonable comparison. TODO: update these numbers with new run}
     \label{tab:2mass}
 \end{table*}
 
@@ -463,7 +468,7 @@ Figure \ref{fig:sed} shows the full sky average star SED derived from this work,
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth]{figs/sed/cg_spec_DR2_en.pdf}
-  \caption{Components of the infrared temperature sky from 1$\mu$m to 1m wavelengths. The approximate contribution from stars is shown in yellow, and the observing bands from various experiments are indicated by the vertical lines.}
+  \caption{Components of the infrared temperature sky from 1$\mu$m to 1m wavelengths. The approximate contribution from stars is shown in yellow, and the observing bands from various experiments are indicated by the vertical lines. TODO: update with new run}
   \label{fig:sed}
 \end{figure*}
 
