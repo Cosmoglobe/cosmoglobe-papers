@@ -24,7 +24,7 @@
 
 \usepackage{blindtext}
 % \usepackage{siunitx}
-% \DeclareSIUnit\arcmin{arcmin}
+% \DeclareSIUnit\arcmin{arcmn}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \usepackage[options]{hyperref}
 % To add links in your PDF file, use the package "hyperref"
@@ -164,8 +164,8 @@
    %\institute{Institute of Theoretical Astrophysics, University of Oslo, Blindern, Oslo, Norway}
   
    % Shortened title, author list for top of page 
-   \titlerunning{HFI dust templates}
-   \authorrunning{.}
+   \titlerunning{Disentangling cold and hot dust with HFI}
+   \authorrunning{Sullivan et al.}
 
    \date{\today} 
    
@@ -487,6 +487,15 @@ Near dust& $ 18 \pm 2$ & $ 1.7 \pm 0.1 $& $\le 1^\mathrm{b}$\cr
     \label{fig:efficiency}
 \end{figure}
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}\\
+    \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}
+    \caption{\emph{Top:} Scatter plot between the hot dust and FIRAS \ion{C}{ii} maps; both maps are smoothed to a common resolution of 420' FWHM, and pixelated at \nside=16. \emph{Bottom:} Scatter plot between the cold dust and HI4PI maps; both maps are smoothed to a common resolution of 16.2' FWHM, and pixelated at \nside=1024.%\RS{full size of each is also available, but not sure it adds much info compared to this smaller version - if full size preferred uncomment below}
+    }
+    \label{fig:hotCiiCorr}
+\end{figure}
+
 
 % \section{Data model and posterior distribution}
 % \label{sec:skymodel}
@@ -517,6 +526,22 @@ Near dust& $ 18 \pm 2$ & $ 1.7 \pm 0.1 $& $\le 1^\mathrm{b}$\cr
 % Finally, the monopoles ($m_\nu$) are sampled for each frequency band. As mentioned in \cref{sec:planckhfi} we have corrected the maps for the CIB and zodiacal light, so these are not included here, as well as synchrotron and anomalous microwave emission (AME) which are subdominant in the HFI frequency range. 
 % Note that while in \cite{CG02_05} we fit a five-component dust model, of which one is the carbon monoxide correlated dust, in this case the true CO emission is highly correlated with the CO dust component and since we don't include the DIRBE sensitive CO channels it is effectively merged with the cold dust component. 
 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/correlation_plot_fs_nodame.pdf}
+    \caption{Pearson's correlation coefficient between dust components and tracers. The correlation between the hot dust and the \ion{C}{ii} emission seen in FIRAS, as well as the cold dust and the HI4PI \ion{H}{i} emission are very strong.
+    %Full size seemed a bit too large but if smaller is desired, use correlation_plot_nodame.pdf
+    }
+    \label{fig:correlationSquare}
+\end{figure}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/commander1_dustComp.pdf}
+    \caption{Comparison of the temperature $T$ and spectral index $\beta$ sky fits between \planck\ 2015, GNILC 2015 and the new \cosmoglobe\ DR2 results. Priors for the top and bottom plots are the same.}
+    \label{fig:beta_T}
+\end{figure*}
 
 
 
@@ -653,6 +678,7 @@ Finally, the monopole values are simply offsets for each map, which are effectiv
 %     \label{fig:extinction}
 % \end{figure}
 
+
 \section{Efficiency assessment and goodness-of-fit}
 \label{sec:gof}
 We can asses our goodness-of-fit by comparing our model to the data $-$ model residuals, as has been done in \cref{fig:MapsVsResiduals}. The first column is the sum of all dust maps at each of the six \planck\ HFI frequencies. The central column shows the residuals at the same scale range as the maps, and ehe right column shows the residuals at a tighter scale range. While there is still structure to the residual maps, they are largely driven by structures that appear uncorrelated with galactic dust. This indicates there are perhaps future improvements to be made to the gain, zodiacal light modelling and potentially carbon monoxide lines. The residuals for each individual detector can be found in \cref{app:residuals}.
@@ -687,21 +713,6 @@ Evidence for this correlation is further supported by the observation of an inte
 
 
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/correlation_plot_fs_nodame.pdf}
-    \caption{Pearson's correlation coefficient between dust components and tracers. The correlation between the hot dust and the \ion{C}{ii} emission seen in FIRAS, as well as the cold dust and the HI4PI \ion{H}{i} emission are very strong.
-    %Full size seemed a bit too large but if smaller is desired, use correlation_plot_nodame.pdf
-    }
-    \label{fig:correlationSquare}
-\end{figure}
-
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/commander1_dustComp.pdf}
-    \caption{Comparison of the temperature $T$ and spectral index $\beta$ sky fits between \planck\ 2015, GNILC 2015 and the new \cosmoglobe\ DR2 results. Priors for the top and bottom plots are the same.}
-    \label{fig:beta_T}
-\end{figure*}
 
 
 
@@ -745,7 +756,45 @@ Evidence for this correlation is further supported by the observation of an inte
 
 \section{Modified blackbody fit to multi-component dust model}
 \label{sec:mbb}
-We fit a spatially varying 3-parameter MBB to our new four-component model and find very similar spatial distributions of $T$ and $\beta$ as in the official \textit{Planck} analysis, but with a smoother $\beta$ map, as well as less correlation between the dust $\beta$ maps and $T$ maps (see \cref{fig:beta_T}). This analysis was done using \texttt{Commander 1} \cite{eriksen2008}.\footnote{\texttt{Commander 1} is distinct from \texttt{Commander 3} in that it uses a per-pixel Gibbs sampling routine, compared to the \texttt{Commander 3}, which mixes harmonic and map space analysis.}
+
+So far we have fitted four dust components to the Planck data, each
+modelled as a modified black-body with free spectral parameters $T$
+and $\beta$ that are non-varying on the sky. We now want to compare
+this to the \textit{Planck} 2015 analysis where only one MBB
+dust component was fitted to the Planck data, but allowing for spatial
+variations of $T$ and $beta$. The Planck 2015 maps are plotted at the
+top of  \cref{fig:beta_T}. Here both $T$, $beta$ and the dust
+amplitude are fitted per Healpix nside=256 pixel using
+\texttt{Commander 1} \cite{eriksen2008}.\footnote{\texttt{Commander 1}
+is distinct from \texttt{Commander 3} in that it uses a per-pixel
+Gibbs sampling routine, compared to the \texttt{Commander 3}, which
+mixes harmonic and map space analysis.}.
+While $beta$ is relaitvely flat on the sky, we see that $T$ varies
+significantly. In this analysis (ref Planck X 2015) CIB was not fitted
+separately, and the CIB fluctuations mostly went into the thermal dust
+component. The hot areas on high latitudes corresponds to CIB mixing in the
+dust component.
+
+(ref Planck GNILC) fitted separate CIB and thermal dust components to
+the Planck data using GNILC, a needlet ILC code with power spectrum
+priors. Also here the thermal dust component was modelled as a
+1-component MBB with variable $T$ and $beta$ as plotted in the middle
+of \cref{fig:beta_T}. Compared to the Commander maps above, the CIB
+pollution is now gone from the $T$ map, but the $beta$ maps is varying
+more on the sky.
+
+In the bottom of \cref{fig:beta_T} we have used Commander1 to fit 
+a 1-component MBB with varing spectral indices to the 4-component dust
+model with spatially flat spectral parameters developed in this
+paper. We see that an underlying simple 4-component dust model appears
+very similar as a 1-component model with a close to constant $beta$ and a varying
+temperature $T$. Except for at high latitudes, where Commander 2015
+$T$ is CIB dominated, while the Planck maps in this analysis are CIB
+subtracted, the two $T$ maps agree very well. This shows that the
+effective 1-component MBB from Planck 2015 can instead be replaced
+with the new simpler 4-component model with fewer free parameters.  
+
+
 %and the new dust maps at each frequency we compare the full sky dust temperature and dust $\beta$ maps to previous \planck\ thermal dust maps (see \cref{fig:beta_T}) per pixel. It is clear that spectral index from the new four component dust model is much smoother across the sky when compared to the GNILC and Commander 2015 maps, and the degeneracy between the temperature and the spectral index is also reduced \RS{is it? should I calculate numbers?}. 
 %When fitting a spatially varying 3-parameter MBB model to the new four-component dust model with isotropic SEDs, we find very similar spatial distributions of $T$ and $\beta$ as in the official \textit{Planck} analysis.
 
@@ -793,30 +842,103 @@ Future analyses of this data could attempt improved gain estimations for the 545
 
 \clearpage
 \appendix
+\onecolumn
 \crefalias{section}{appendix}
+
+
+%\begin{figure*}[t]
+%    \centering
+%    \includegraphics[width=0.6\linewidth]{figures/residuals_plotres.pdf}
+%    \caption{Residuals (Data minus model) for the \planck\ HFI bands. Units are in $\mu K_\mathrm{CMB}$. The residuals hint at some uncorrected zodiacal light along the ecliptic plane, as well as potentially some offsets to the gain of the 545 channels.}
+%    \label{fig:residuals}
+%\end{figure*}
+
 \section{Residuals}
 \label{app:residuals}
+
+\noindent\begin{minipage}{0.83\textwidth}
+\vspace*{1mm}
+\centering
+\hspace*{1.5cm}\includegraphics[width=\textwidth]{figures/residuals_plotres.pdf}
+\captionof{figure}{Residuals (Data minus model) for the \planck\ HFI bands. Units are in $\mu K_\mathrm{CMB}$. The residuals hint at some uncorrected zodiacal light along the ecliptic plane, as well as potentially some offsets to the gain of the 545 channels.}
+\label{fig:residuals}
+\end{minipage}
+
+
 We can see the fidelity of the sky model by looking at the difference between the data and the model at each of the bands (see \cref{fig:residuals}). The residuals indicate potential for improvement to the modelling of the zodiacal light, as well as improvements to the 545~GHz gain. The incredibly low residuals in the 100, 143, 217 and 353~GHz maps demonstrate the success of this model. 
 
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=0.85\linewidth]{figures/residuals_plotres.pdf}
-    \caption{Residuals (Data minus model) for the \planck\ HFI bands. Units are in $\mu K_\mathrm{CMB}$. The residuals hint at some uncorrected zodiacal light along the ecliptic plane, as well as potentially some offsets to the gain of the 545 channels.}
-    \label{fig:residuals}
-\end{figure*}
 
+
+\clearpage
 
 \section{Grid search tests}
 \label{app:GridSearchTests}
-We plot several of the maps from the grid search in \cref{sec:results}. Since the \Ha\ dust and near dust are templates they do not change by eye (only scaling by a set factor for each frequency given a set of $T,\beta,a$) so they are not plotted here. Thus, we plot the amplitudes of the cold and hot dust for each of the grid points. We show a sample for each of the grids in \cref{fig:SEDGridContours} with the central map the fiducial point and varying the spectral index along the vertical axis and temperature along the y-axis. We do not show values for varying the amplitude scale of the near and \Ha\ dust (\cref{fig:SEDGridAmplitude}) but we found that had negligible effect on the $\chi^2$ and while it does change the correlation with the hot and cold dust we chose to omit them for space considerations. 
 
-\subsection{Cold dust}
-As can be seen in \cref{fig:SEDGridContours}, there is an unphysical space mapped by the hottest and highest spectral indices in the cold dust grid. This corresponds to large over-subtraction and negative areas in the hot dust amplitudes as can be seen in \cref{fig:cold_hot_dust_set}.  When shifting the $T_c$ and $\beta_c$ we find the shape of the amplitude maps are visually similar to the fiducial map (see \cref{fig:dust_figures}), so we show the monopole subtracted ratio of the grid position to the fiducial value in \cref{fig:cold_cold_dust_set2}. 
-\begin{figure*}[htbp]
+\noindent\begin{minipage}{\textwidth}
+\vspace*{-3mm}
+
+\centering
+\hspace*{1.5cm}\includegraphics[width=0.75\textwidth]{figures/hotDust_cold_Grid.pdf}
+\captionof{figure}{Hot dust amplitudes for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps ratios can be seen in \cref{fig:cold_cold_dust_set2}.}
+\label{fig:cold_hot_dust_set}
+
+\centering
+\hspace*{1.5cm}\includegraphics[width=0.75\textwidth]{figures/coldDust_cold_Grid_ratio.pdf}
+\captionof{figure}{Monopole subtracted ratio of the cold dust amplitudes compared to the fiducial value (central panel) for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$. The corresponding hot dust maps can be seen in \cref{fig:cold_hot_dust_set}.}
+\label{fig:cold_cold_dust_set2}
+\end{minipage}
+
+
+%\begin{figure*}[b]
+%\end{figure*}
+
+\begin{figure*}[t]
     \centering
-    \includegraphics[width=\linewidth]{figures/hotDust_cold_Grid.pdf}
-    \caption{Hot dust amplitudes for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps ratios can be seen in \cref{fig:cold_cold_dust_set2}. }
-    \label{fig:cold_hot_dust_set}
+    \includegraphics[width=0.85\linewidth]{figures/coldDust_hot_Grid.pdf}
+    \caption{Cold dust amplitudes for varying $T_\mathrm{h}$ and $\beta_\mathrm{h}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps ratios can be seen in \cref{fig:hot_hot_dust_ratio}.}
+    \label{fig:hot_cold_dust_set}
+
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/hotDust_hot_Grid_ratio.pdf}
+    \caption{Monopole subtracted ratio of the hot dust amplitudes compared to the fiducial value (central panel) for varying $T_\mathrm{h}$ and $\beta_\mathrm{h}$. The corresponding cold dust maps can be seen in \cref{fig:hot_cold_dust_set}}
+    \label{fig:hot_hot_dust_ratio}    
+\end{figure*}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/hotDust_near_Grid.pdf}
+    \caption{Hot dust amplitudes for varying $T_\mathrm{near}$ and $\beta_\mathrm{near}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:near_cold_dust_set}. }
+    \label{fig:near_hot_dust_set}
+
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/coldDust_near_Grid.pdf}
+    \caption{Cold dust amplitudes for varying $T_\mathrm{near}$ and $\beta_\mathrm{near}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:near_hot_dust_set}.}
+    \label{fig:near_cold_dust_set}
+\end{figure*}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/hotDust_wham_Grid.pdf}
+    \caption{Hot dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other grid parameters set to the fiducial values in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:hot_cold_dust_set}. This explores only $a_\mathrm{H\alpha}=1$.}
+    \label{fig:Ha_hot_dust_set}
+
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/coldDust_wham_Grid.pdf}
+    \caption{Cold dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other parameters set to the fiducial values. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set}.}
+    \label{fig:Ha_cold_dust_set}    
+\end{figure*}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/hotDust_wham_Grid_ratio.pdf}
+    \caption{Monopole subtracted hot dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding cold dust maps can be seen in \cref{fig:Ha_cold_dust_set_r}.}
+    \label{fig:Ha_hot_dust_set_r}
+
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/coldDust_wham_Grid_ratio.pdf}
+    \caption{Monopole subtracted cold dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set_r}.}
+    \label{fig:Ha_cold_dust_set_r}
+
 \end{figure*}
 
 % \begin{figure*}
@@ -826,12 +948,12 @@ As can be seen in \cref{fig:SEDGridContours}, there is an unphysical space mappe
 %     \label{fig:cold_cold_dust_set}
 % \end{figure*}
 
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/coldDust_cold_Grid_ratio.pdf}
-    \caption{Monopole subtracted ratio of the cold dust amplitudes compared to the fiducial value (central panel) for varying $T_\mathrm{c}$ and $\beta_\mathrm{c}$. The corresponding hot dust maps can be seen in \cref{fig:cold_hot_dust_set}.}
-    \label{fig:cold_cold_dust_set2}
-\end{figure*}
+
+We plot several of the maps from the grid search in \cref{sec:results}. Since the \Ha\ dust and near dust are templates they do not change by eye (only scaling by a set factor for each frequency given a set of $T,\beta,a$) so they are not plotted here. Thus, we plot the amplitudes of the cold and hot dust for each of the grid points. We show a sample for each of the grids in \cref{fig:SEDGridContours} with the central map the fiducial point and varying the spectral index along the vertical axis and temperature along the y-axis. We do not show values for varying the amplitude scale of the near and \Ha\ dust (\cref{fig:SEDGridAmplitude}) but we found that had negligible effect on the $\chi^2$ and while it does change the correlation with the hot and cold dust we chose to omit them for space considerations. 
+
+\subsection{Cold dust}
+As can be seen in \cref{fig:SEDGridContours}, there is an unphysical space mapped by the hottest and highest spectral indices in the cold dust grid. This corresponds to large over-subtraction and negative areas in the hot dust amplitudes as can be seen in \cref{fig:cold_hot_dust_set}.  When shifting the $T_c$ and $\beta_c$ we find the shape of the amplitude maps are visually similar to the fiducial map (see \cref{fig:dust_figures}), so we show the monopole subtracted ratio of the grid position to the fiducial value in \cref{fig:cold_cold_dust_set2}. 
+
 
 \subsection{Hot dust}
 Similar to with the cold dust, in \cref{fig:SEDGridContours}, there is an unphysical space mapped by the coldest and lowest spectral index in the hot dust grid. This corresponds to large over-subtraction and negative areas in the cold dust amplitudes as can be seen in \cref{fig:hot_cold_dust_set}. Similar to the cold dust, when shifting the $T_h$ and $\beta_h$ we find the shape of the amplitude maps are visually similar to the fiducial map (see \cref{fig:dust_figures}), so we show the monopole subtracted ratio of the grid position to the fiducial value in \cref{fig:hot_hot_dust_ratio}.
@@ -842,81 +964,32 @@ Similar to with the cold dust, in \cref{fig:SEDGridContours}, there is an unphys
 %     \label{fig:hot_hot_dust_set}
 % \end{figure*}
 
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/coldDust_hot_Grid.pdf}
-    \caption{Cold dust amplitudes for varying $T_\mathrm{h}$ and $\beta_\mathrm{h}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps ratios can be seen in \cref{fig:hot_hot_dust_ratio}.}
-    \label{fig:hot_cold_dust_set}
-\end{figure*}
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/hotDust_hot_Grid_ratio.pdf}
-    \caption{Monopole subtracted ratio of the hot dust amplitudes compared to the fiducial value (central panel) for varying $T_\mathrm{h}$ and $\beta_\mathrm{h}$. The corresponding cold dust maps can be seen in \cref{fig:hot_cold_dust_set}}
-    \label{fig:hot_hot_dust_ratio}
-\end{figure*}
-
 \subsection{Near Dust}
 The near dust was found to have unphysical regions banded both by the cold dust amplitudes and the hot dust amplitudes. We additionally aimed to minimized correlations between the cold and near, and hot and near, dust, such that the dust population described by the near dust was an independent dust component. For regions with lower $\beta_\mathrm{near}$ and lower $T_\mathrm{near}$ the cold dust starts to behave unphysically and this corresponds also to a higher correlation between the near dust and the hot dust (as can be seen by eye in the lower left panels of \cref{fig:near_hot_dust_set}). 
 Conversely, for regions with higher $\beta_\mathrm{near}$ and higher $T_\mathrm{near}$ the hot dust starts to behave unphysically and this corresponds also to a higher correlation between the near dust and the cold dust (as can be seen by eye in the upper right panels of \cref{fig:near_cold_dust_set}). 
 
 % As can be seen in \cref{fig:near_cold_dust_set,fig:near_hot_dust_set} the hottest points in the nearby dust grid lead to high correlations with the hot dust and anti-correlations with the cold dust, and vise versa for the coldest points. 
 
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/hotDust_near_Grid.pdf}
-    \caption{Hot dust amplitudes for varying $T_\mathrm{near}$ and $\beta_\mathrm{near}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:near_cold_dust_set}. }
-    \label{fig:near_hot_dust_set}
-\end{figure*}
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/coldDust_near_Grid.pdf}
-    \caption{Cold dust amplitudes for varying $T_\mathrm{near}$ and $\beta_\mathrm{near}$ values with all other grid parameters set to the fiducial values as recorded in \cref{tab:SEDs}. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:near_hot_dust_set}.}
-    \label{fig:near_cold_dust_set}
-\end{figure*}
 
 
 \subsection{\texorpdfstring{H$\alpha$}{Ha} dust}
 The parameter space explored for the \Ha\ correlated dust was shown to have a very flat $\chi^2$ profile, and minimal changes to the hot and cold dust amplitudes or correlations. As such we chose to take the DIRBE fit values from \cite{CG02_05} for our fiducial values, as we expect the DIRBE bands to have better control of these SED parameters. 
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/hotDust_wham_Grid.pdf}
-    \caption{Hot dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other grid parameters set to the fiducial values in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:hot_cold_dust_set}. This explores only $a_\mathrm{H\alpha}=1$.}
-    \label{fig:Ha_hot_dust_set}
-\end{figure*}
 
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/coldDust_wham_Grid.pdf}
-    \caption{Cold dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other parameters set to the fiducial values. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set}.}
-    \label{fig:Ha_cold_dust_set}
-\end{figure*}
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/hotDust_wham_Grid_ratio.pdf}
-    \caption{Monopole subtracted hot dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding cold dust maps can be seen in \cref{fig:Ha_cold_dust_set_r}.}
-    \label{fig:Ha_hot_dust_set_r}
-\end{figure*}
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/coldDust_wham_Grid_ratio.pdf}
-    \caption{Monopole subtracted cold dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set_r}.}
-    \label{fig:Ha_cold_dust_set_r}
-\end{figure*}
+\clearpage
 
 \section{Thermal dust map characterization}
 \label{app:dustCharacterization}
-We compare the fraction of each dust component contributing to the total in \cref{fig:dustFrac}. As the \Ha\ dust is a dust extinction (with negative amplitude) it contributes a negative fraction to the final, and is the smallest contributor to the total. The near dust dominates outside the plane of the galaxy (which is to be expected, since further dust will be closer to the galactic plane due to geometry). The hot dust is clustered near the galactic center and shows some anti-correlation with the \Ha\ dust. Finally, the cold dust is dominant in the galactic plane further from the galactic center. This further cements the notion that this updated dust model is more physical motivated than previous models, tracing known physical regions within the Milky Way Galaxy. 
 
-\begin{figure*}[htbp]
+\begin{figure*}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figures/dustFrac_plcmap.pdf}
     \caption{Average dust from each component contributing to the total dust signal. }
     \label{fig:dustFrac}
 \end{figure*}
+
+
+We compare the fraction of each dust component contributing to the total in \cref{fig:dustFrac}. As the \Ha\ dust is a dust extinction (with negative amplitude) it contributes a negative fraction to the final, and is the smallest contributor to the total. The near dust dominates outside the plane of the galaxy (which is to be expected, since further dust will be closer to the galactic plane due to geometry). The hot dust is clustered near the galactic center and shows some anti-correlation with the \Ha\ dust. Finally, the cold dust is dominant in the galactic plane further from the galactic center. This further cements the notion that this updated dust model is more physical motivated than previous models, tracing known physical regions within the Milky Way Galaxy. 
+
 
 
 \end{document}
