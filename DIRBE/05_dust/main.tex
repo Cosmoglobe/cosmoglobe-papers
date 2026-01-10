@@ -124,6 +124,7 @@
 \def\Te{\ifmmode T_{\mathrm{e}}\else $T_{\mathrm{e}}$\fi} 
 \def\kB{\ifmmode k_\mathrm{B}\else $k_{\mathrm{B}}$\fi} 
 
+\newcommand{\aism}[1]{\textcolor{red}{\textbf{AISM:} #1}}
 
 \begin{document} 
 
@@ -301,7 +302,7 @@ data analysis techniques to handle this challenge optimally.
   \includegraphics[width=0.49\textwidth]{figures/extinctions_515.pdf}
   \includegraphics[width=0.49\textwidth]{figures/lambda_WHAM_1_256.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/lambda_wco_dht2001.pdf}
-  \caption{Input thermal dust tracers used for low-resolution template fitting. }
+  \caption{Input maps of each of the following thermal dust tracers (from left to right and top to bottom): \CII\ 158\,$\mu$m line emission from \COBE-FIRAS, \HI\ line emission from HI4PI, dust extinction from \GAIA, H$\alpha$ line emission from WHAM, and CO line emission from \citet{dame:2001}. All maps are smoothed to the FIRAS beam and then used for the low-resolution template fitting. \aism{I added the part about FIRAS but I'm not sure if it's this true? I think I've heard about this but please double check. Also is TBD to be decided or am I stupid? If I'm not stupid then this is a reminder to update this figure}}
   \label{fig:tempfit_inputs}
 \end{figure*}
 
@@ -456,8 +457,8 @@ c}$ (and monopole) that jointly minimize the residual
 where we define $s_i$ to be all the terms on the right hand side of \cref{eq:datamodel} except the white noise term.
 
 This kind of minimization for a linear problem has a well-known solution. We
-annotate our solution vector at each frequency band as $\mathbf{a}_i$ (which in
-this case is an $n+1$-dimensional vector, the extra dimension being due to the
+annotate our solution vector at each frequency band as $\mathbf{a}_i$ (which, in
+this case, is an $n+1$-dimensional vector, the extra dimension being due to the
 monopole contribution), and we can then write
 \begin{equation}
     \boldsymbol{a}_i = (\mathsf{T}^T \mathsf{T})^{-1} (\mathsf{T}^T\boldsymbol{d}) ,
@@ -466,10 +467,10 @@ monopole contribution), and we can then write
 where we define $\mathsf{T}$ as a $n_\mathrm{pix}$ by $n+1$ matrix such that matrix
 column $c$ contains component template $\boldsymbol{t}_c$ (and the final column
 is a constant, representing the monopole). Implicit in this way of solving for
-the amplitudes is the assumption that the noise RMS is constant from pixel to
-pixel -- at the resolutions used for this analysis, this is a fair assumption,
+the amplitudes is the assumption that the noise root mean squared (RMS) is constant from pixel to
+pixel. At the resolutions used for this analysis, this is a fair assumption,
 as large-scale instrumental features are dominated by systematic effects rather
-than white noise. Applying this equation, the solution vector will then have as
+than white noise. Solving this equation, the solution vector will then have as
 its $n+1$ elements the best-fit amplitudes for each component (and best-fit
 monopole).
 
@@ -477,11 +478,10 @@ monopole).
 
 \section{Data}
 \label{sec:data}
-Since we are in this papers mostly concerned with economical dust modelling, we
+As, in this paper and its companions, we are mostly concerned with economical dust modelling, we
 use the most accurate data available in the frequency ranges where dust
-dominates. More specifically, we here use \Planck\ HFI data from 353 GHz
-upwards, as well as DIRBE data from the 6 longest-wavelength bands 
-(from 240\,$\mu\mathrm m$  to $12\,\mu\mathrm m$).
+dominates. More specifically, we use the 353, 545 and 857 GHz frequency bands from \Planck\ HFI, as well as the six longest wavelength bands 
+(from 240\,$\mu\mathrm m$ to $12\,\mu\mathrm m$) from the DIRBE data.
 
 We use five known or derived dust tracers as component templates: The
 \COBE-FIRAS \CII\ observations, the HI4PI neutral hydrogen map, the Dame CO
@@ -491,40 +491,40 @@ procedure described in \cref{sec:tempfit} does not require that we use
 the same templates for all data bands, and because some of these five templates
 are only expected to be relevant at lower frequencies, we will restrict the
 number of templates used for each band according to \cref{tab:bands}. We
-provide justification for these restrictions below, on a per-component basis.
+provide justification for these restriction in the following sections, on a per-component basis.
 
-Below, we first describe the DIRBE and \Planck\ HFI data before describing the
+We will first describe the DIRBE and \Planck\ HFI data sets, before describing the
 dust tracing templates in more detail, and for which frequencies they are
-enabled in the analysis. Finally, we describe the preprocessing
-and masking used for this analysis.
+relevant. Finally, we describe the preprocessing
+and masking steps used for this analysis.
 
 \subsection{Frequency maps}
 
 \subsubsection{DIRBE}
-The Diffuse InfraRed Explorer DIRBE, whose main goal was the mapping out of the
+The Diffuse InfraRed Explorer (DIRBE), whose main goal was the mapping of the
 CIB, was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
-measured the sky in ten frequency bands from $1\,\mathrm{\mu m}$ to
+measured the sky in ten frequency bands, from $1\,\mathrm{\mu m}$ to
 $240\,\mathrm{\mu m}$. 
 
 In this analysis, we started from the $\nside=512$ maps
 created with the procedure described in \cite{CG02_01} from the DIRBE CIO
 (Calibrated Individual Observations). The shortest-wavelength features of thermal
-dust are the PAH features, which are expected to be detectable in the the
-spectrum down to a few microns \citep{Hensley2021}; we therefore here include the 8
-longest-wavelength bands of DIRBE, ranging from $240\,\mu\mathrm m$ to $3.5\,\mu\mathrm m$.
+dust are the polycyclic aromatic hydrocarbon features, which are expected to be detectable in the the
+spectrum down to a few microns \citep{Hensley2021}. We, therefore, include the eight
+longest wavelength bands of DIRBE, ranging from $240\,\mu\mathrm m$ to $3.5\,\mu\mathrm m$.
 
 \subsubsection{Planck HFI}
 The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed
 the sky in six frequency channels from 100 GHz to 857 GHz, with the primary
-purpose being characterizing temperature fluctuations in the CMB to
+purpose of characterizing temperature fluctuations in the CMB to
 unprecedentedly small scales. As it also was able to target the far-infrared
-sky, it is able to shed light on the dust component
+sky, it is able to shed some light on the dust population of the sky
 \citep{planck2013-XVII,planck2014-a12,planck2016-l03}.
 
 Since this work is primarily concerned with dust modeling, we attempt to avoid
-contamination from especially the CMB signal which starts to dominate at the
+contamination from (especially) the CMB signal, which dominates at the
 lower \Planck\ frequencies. To that end, we use only the HFI data from
-353-857\,GHz. All the frequency maps are from the \Planck\ PR4 data release
+353 to 857\,GHz. All of the input frequency maps are taken from the \Planck\ PR4 data release
 \citep{npipe}.
 
 %The \Planck\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10\arcm--\,4\arcm. While the primary purpose of the \Planck\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
@@ -536,8 +536,10 @@ lower \Planck\ frequencies. To that end, we use only the HFI data from
 
 \subsection{Thermal dust tracers}
 
-\paragraph{Ionized carbon --- \COBE-FIRAS \CII}
-The \COBE-FIRAS instrument is still the only full-sky spectrometric survey in
+In this work, we take from legacy and state-of-the-art data sets in order to find reliable maps for the tracers of thermal dust emission we are looking for. Below, we describe each of these data sets in turn, and in \cref{fig:tempfit_inputs}, we show the input maps used for the template fitting.
+
+\subsubsection{Ionized carbon --- \COBE-FIRAS \CII}
+The \COBE-FIRAS instrument is the only full-sky spectrometric survey in
 the radio and infrared electromagnetic wavelengths, and as such, it provides
 the best full-sky measurement of spectral line emission. The $157.7\,\mu\mathrm m$ \CII\
 line emission has previously been recognized as a gas tracer; here, we
@@ -547,17 +549,17 @@ We use the \COBE-FIRAS \CII\ map, available on the LAMBDA website.\footnote{\url
 analysis, we do not perform any preprocessing on the map before using it as a
 template.
 
-\paragraph{Neutral hydrogen -- HI4PI}
+\subsubsection{Neutral hydrogen -- HI4PI}
 The HI4PI HI survey \citep{HI4PI:2016} is a full-sky survey of the 21 cm
 hydrogen line, performed by a combination of data from EBHIS and GASS. The 21
 cm line has been used as a tracer for dust structures \citep{planck2011-7.12},
 and is typically associated with low-intensity regions of the sky (as it
 requires the hydrogen to not be ionized, and be in its lowest energy state).
 
-\paragraph{Near-by dust through extinction -- Gaia}
+\subsubsection{Nearby dust through extinction -- Gaia}
 One source of important information about the 3-dimensional structure of dust
 is starlight extinction. By comparing expected stellar spectra with observed
-ones, Edenhofer et al. (REFERENCE) was able to reconstruct such dust structures
+ones, \cite{edenhofer:2024} was able to reconstruct such dust structures
 up to a distance of (TBD), represented by a series of maps for each distance
 bin. Using the accompanying software, we integrated these maps out to their
 furthest distance, which still represents relatively close dust structures,
@@ -568,7 +570,7 @@ seems to be the best way of utilizing the available additional information
 about the dust morphology that these maps represent.
 
 
-\paragraph{Ionized hydrogen -- WHAM}
+\subsubsection{Ionized hydrogen -- WHAM}
 The Wisconsin H-Alpha Mapper (WHAM) \citep{wham_north:2003, wham_south:2010}
 surveyed the intensity of the H$\alpha$ line over the whole sky, with a
 resolution of 1 degree, and a velocity resolution of 12 km/s. This line is
@@ -580,7 +582,7 @@ on the sky and the fact that the galactic center is not discernible, must be
 relatively close).
 
 
-\paragraph{Carbon monoxide -- Dame CO\,$J=1$-0}
+\subsubsection{Carbon monoxide -- Dame CO\,$J=1$-0}
 \citet{dame:2001} surveyed about 45\% of the sky for the $J=1$-0 CO line within
 30 degrees of the Galactic equator. As dust is expected to be located in
 molecular clouds, the CO line would be a natural tracer for such dust
