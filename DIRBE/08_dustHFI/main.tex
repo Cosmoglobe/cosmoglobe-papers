@@ -202,7 +202,7 @@ Aside from the aforementioned dust, the Milky Way contains gas (generating emiss
 
 The dust in the Milky Way will act to absorb radiation at frequencies close to its particle size and re-emit as an imperfect blackbody. Historically, this has been modeled with a modified blackbody spectrum (MBB) characterized by a temperature, $T$, and a `tilt' to the spectrum, called the spectral index and denoted by $\beta$. These, along with an amplitude ($a$), define how much radiation at a particular frequency, $\nu$, is produced (see \citet{Hensley2023} for a recent review of dust and the interstellar medium). During the \planck\ analysis the dust in the Milky Way was often modelled with a single modified blackbody fit for each pixel, or direction, in the sky. However, it is known that there are different dust populations \citep{finkbeiner1999}, and with enough data it should be possible to make distinct templates modelling each independently. A significant challenge that \planck\ faced in their analysis was that there was insufficient data to distinguish these populations; in particular, there is a clear degeneracy between the dust temperature and the dust spectral index maps \citep{juvela:2012,planck2014-a12}.
 
-In the current paper, we revisit the model introduced by \citet{CG02_05}. In that paper, the authors found that thermal dust emission in the \Planck\ HFI and \COBE-DIRBE data on large angular scales could be very well described by a sum of five external dust templates, namely 1) COBE-FIRAS \ion{C}{ii}; 2) HI4PI \citep{HI4PI2016}; 3) \Gaia\ extinction \citep{edenhofer:2024}; 4) WHAM \Ha\ \citep{wham:2003,2016WHAM}; and 5) CO\,$J$=$1-0$ \citep{dame2001}. They furthermore noted that the \ion{C}{ii} map template associated with a higher temperature than the HI4PI and CO templates; that the near-by \Gaia\ extinction template corresponded to an intermediate temperature; and that the \Ha\ template was observed in absorption (i.e., having a negative template amplitude). The main goal of the current paper is to establish a corresponding  multi-component model for \Planck\ HFI at full angular resolution. Since the FIRAS \ion{C}{ii} map has a very low angular resolution of $7^{\circ}$ FWHM, this means that the morphology of the hotter dust component has to be derived directly from the \Planck\ data, rather than traced by an already existing template. Furthermore, the HI4PI and Dame et al.\ templates also issues that prevent their direct use as a template (e.g., lower resolution and/or incomplete sky coverage). The key operational step in the current analysis is therefore to establish separate maps of cold and hot dust directly from the \Planck\ HFI data themselves.
+In the current paper, we revisit the model introduced by \citet{CG02_05}. In that paper, the authors found that thermal dust emission in the \Planck\ HFI and \COBE-DIRBE data on large angular scales could be very well described by a sum of five external dust templates, namely 1) COBE-FIRAS \ion{C}{ii}; 2) HI4PI \citep{HI4PI2016}; 3) \Gaia\ extinction \citep{edenhofer:2024}; 4) WHAM \Ha\ \citep{wham:2003,2016WHAM}; and 5) CO\,$J$=$1-0$ \citep{dame2001}. They furthermore noted that the \ion{C}{ii} map template associated with a higher temperature than the HI4PI and CO templates; that the near-by \Gaia\ extinction template corresponded to an intermediate temperature; and that the \Ha\ template was observed in absorption (i.e., having a negative template amplitude). The main goal of the current paper is to establish a corresponding  multi-component model for \Planck\ HFI at full angular resolution. Since the FIRAS \ion{C}{ii} map has a very low angular resolution of $7^{\circ}$ FWHM, this means that the morphology of the hotter dust component has to be derived directly from the \Planck\ data, rather than traced by an already existing template. Furthermore, the HI4PI and Dame et al.\ templates also have issues that prevent their direct use as a template (e.g., lower resolution and/or incomplete sky coverage). The key operational step in the current analysis is therefore to establish separate maps of cold and hot dust directly from the \Planck\ HFI data themselves.
 
 Following \cite{CG02_05}, we adopt the maps produced by \cite{edenhofer:2024} with \textit{Gaia} data \citep{gaia:2016} to trace near-by dust in the Milky Way, and the \Ha\ map produced by the Wisconsin H-$\alpha$ mapper (WHAM) \citep{wham:2003,2016WHAM} to trace a sub-dominant level of dust absorption. These two data sets are used as templates, fixing the relative amplitudes between pixels, but allowing the overall amplitudes of the maps, as well as the temperature and spectral indices, to vary globally. We introduce two additional dust components, here called the hot and the cold dust, which have freely varying amplitudes per pixel, but a global temperature and spectral index. Compared to the previous \planck\ analysis, which had three free parameters per pixel, we instead have ten global parameters, with only two free parameters per pixel, the hot and cold dust amplitudes. At high resolutions this represents a significant reduction in the number of model parameters, and has the additional advantage of producing clear correlations between the cold dust and the HI4PI maps (a known cold dust tracer), and the hot dust and \ion{C}{ii}. 
 
@@ -216,8 +216,8 @@ The rest of the paper is organized as follows. In \cref{sec:data} we discuss the
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/all_masks_descriptive.pdf}
-	\caption{All masks used for different stages of the analysis. \emph{Gains:} Mask used during the gain calculations for the 857~GHz maps. \emph{FIRAS:} Mask used during the FIRAS Gibbs sampling routine for the monopoles, dipoles and $\chi^2$ evaluation. \emph{Gibbs sampl:} Mask used during the HFI Gibbs sampling routine for the monopoles, dipoles and $\chi^2$ evaluation. {Grid search:} Mask used to compare the $\chi^2$ in the grid search.}
+	\includegraphics[width=0.9\linewidth]{figures/all_masks.pdf}
+	\caption{All masks used for different stages of the analysis. \emph{HFI:} Mask used during the HFI Gibbs sampling routine for the monopoles, dipoles and $\chi^2$ evaluation. \emph{FIRAS:} Mask used during the FIRAS Gibbs sampling routine for the monopoles, dipoles and $\chi^2$ evaluation. \emph{857 GHz:} Mask used during the 857~GHz gain Gibbs sampling routine. \emph{$\chi^2$:} Mask used to compare the $\chi^2$ in the grid search.}
 	\label{fig:all_masks}
 \end{figure}
 
@@ -228,19 +228,19 @@ Building on the work of \cite{CG02_05}, this analysis uses the \planck\ PR4 data
 \subsection{\Planck\ HFI}
 \label{sec:planckhfi}
 The \planck\ PR4 (also known as \npipe) maps are the final \planck\ data release, improving on previous data releases by jointly analyzing the low-frequency instrument (LFI) and the  high-frequency instrument (HFI) data in a single pipeline, in addition to numerous other improvements (for details see \cite{planck2020-LVII}). 
-For this analysis we use the single-bolometer HFI maps, chosen because HFI offers strong constraining power on the dust and the single-bolometer maps are able to better control the gain fluctuations and model components such as the CO-emission.\footnote{The 100~GHz and 143~GHz maps are at an \nside\ of 2048, the other frequencies are at an \nside\ of 4096.} 
+For this analysis we use the single-bolometer HFI maps, chosen because HFI offers strong constraining power on the dust and the single-bolometer maps are able to better control the gain fluctuations and model components such as the CO-emission.\footnote{The 100~GHz and 143~GHz maps are at an \nside\ of 2048, the other frequencies are at an \nside\ of 4096.} Specifically we use the 100--\{1-4\}, 143--\{1-7\}, 217--\{1-8\}, 353--\{1-8\}, 545--\{1,2,4\} and 857--\{1-4\}.\footnote{The 143-8 and 545-3 maps were never released by the \planck\ collaboration due to non-Gaussian noise in the data, known as random telegraphic signal \citep{planck2013-p03}.}
 In a pre-processing step we correct all maps for the zodiacal light emission, using the \Planck\ PR2 zodiacal light model \citep{planck2014-a09, planck2013-pip88, maris2006c}, and apply a correction for the CIB to the 857, 545 and 353 GHz maps from the GNILC CIB results \cite{planck2016-XLVIII}.
 We apply a scaling correction to the root-mean squared (RMS) maps, such that the tail of the map power spectra match the white-noise level from the RMS maps.\footnote{The published individual bolometer frequency RMS maps have known residual offsets from the analysis pipeline, evident when comparing the map and RMS power-spectra.} 
 %Finally, the gain for 545 GHz is set to a static shift of 0.99145 for 545-1, 1.00487 for 545-2, and 1.00830 for 545-4 (see \cref{tab:gains}) and we sample the 857~GHz gains.\footnote{The uncertainty on the 545~GHz gain is 2\% from the \NPIPE\ analysis.} All other gains and bandpass' are fixed to the \NPIPE\ values. 
 
 \subsection{FIRAS}
 \label{sec:firas}
-FIRAS was a cosmology telescope, launched in 1989 as part of the COBE mission, with the goal of measuring the blackbody spectrum of the CMB to unprecedented precision \citep{fixsen1997}. The FIRAS maps have very low calibration uncertainties, and so we use them to help calibrate the map amplitudes. The FIRAS 857, 1251, 1809, 2081, 2135 and 2802 GHz maps are used for this analysis in conjunction with the HFI maps. 
+FIRAS was a cosmology telescope, launched in 1989 as part of the COBE satellite mission, with the goal of measuring the blackbody spectrum of the CMB to unprecedented precision \citep{fixsen1997}. The FIRAS maps have very low calibration uncertainties, and so we use them to help calibrate the map amplitudes. The FIRAS 857, 1251, 1809, 2081, 2135 and 2802 GHz maps are used for this analysis in conjunction with the HFI maps. 
 
 \subsection{Ancillary data}
 \label{sec:otherdata}
-The near dust relative amplitudes are fixed to the \GAIA-based dust extinction template produced by \citet{edenhofer:2024}, which covers distances up to 1.25 kpc. This primarily uses \GAIA\ distances and extinction estimates to build a 3D map of the near dust from \citet{2023Zhang}, which also leverages the two micron all sky survey (2MASS), the wide-field infrared survey explorer (WISE and unWISE), the large sky area multi-object fibre spectroscopic telescope (LAMOST). We use the total integrated dust map as our model in this analysis. 
-Additionally, we use the Wisconsin H-$\alpha$ mapper data as a template for the \Ha\ correlated dust, and the results from \citep{CG02_05} as the fiducial values for the \Ha\ MBB, since we find that it is poorly constrained by the \planck\ bands (see \cref{sec:results}). As with DIRBE, the \Ha\ dust is a small extinction component in the \Planck\ bands.  
+The near dust relative amplitudes are fixed to the \GAIA-based dust extinction template produced by \citet{edenhofer:2024}, which covers distances up to 1.25 kpc. This primarily uses \GAIA\ distances and extinction estimates to build a 3D map of the near dust from \citet{2023Zhang}, which also leverages the two Micron All Sky Survey (2MASS), the Wide-field Infrared Survey Explorer (WISE and unWISE), the Large sky Area Multi-Object fibre Spectroscopic Telescope (LAMOST). We use the total integrated dust map as our model in this analysis. 
+Additionally, we use the Wisconsin H-$\alpha$ Mapper (WHAM) data as a template for the \Ha\ correlated dust, and the results from \citep{CG02_05} as the fiducial values for the \Ha\ MBB, since we find that it is poorly constrained by the \planck\ bands (see \cref{sec:results}). As with DIRBE, the \Ha\ dust is a small extinction component in the \Planck\ bands.  
 When considering our summary statistics in \cref{sec:correlations} we compare the new dust templates with the 157.7$\mu$m \ion{C}{ii} line emission as measured by the FIRAS \ion{C}{ii} map, available on the LAMBDA\footnote{\url{lambda.gsfc.nasa.gov}} website, and to the HI4PI data \citep{HI4PI2016}. 
 
 \subsection{Masks}
@@ -273,7 +273,7 @@ During the Gibbs sampling (see \cref{sec:sampling}), we apply a 30 degree galact
 The data model for this analysis can be written as
 \begin{align}
     \vec{d}=&\mathsf{G}\left[\mathsf{B}\sum_s \mathsf{M}_{s}\vec{a}_{s}\right]+\vec{n}\nonumber\\
-    \equiv & \vec{s}+ \vec{n}
+    \equiv & \vec{s}+ \vec{n},
 \label{equ:dataModel}
 \end{align}
 where $\mathsf{G}$ is the instrumental gain matrix for each detector, $\mathsf{B}$ the instrumental beam convolution, $\mathsf{M}_{s}a_{s}$ is the foregrounds mixing matrix which extrapolates the sky component $s$ to the given frequency (including bandpass and the spectral shape of the particular component) and amplitudes $\vec{a}_{s}$ per pixel for the various sky components ($s$), and $\vec{n}$ is the noise. 
@@ -282,20 +282,20 @@ The \planck\ HFI bands contain several relevant sky components in addition to du
  As such, the sky model used for this analysis may be written as a vector per pixel
 \begin{align}
     \vec{s}_\nu=&u_\nu 
-    \left[\vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\vec{a} _\mathrm{cmb}\gamma(\nu) \right. &\mathrm{(CMB)} \nonumber \\
-    &+\left(\frac{\nu_{0,\mathrm{ff}}}{\nu}\right)^2\frac{g_\mathrm{ff}(\nu;T_\mathrm{e})}{g_\mathrm{ff}(\nu_{0,\mathrm{ff}};T_\mathrm{e})}\vec{t}_\mathrm{ff} & \textrm{(Free-free)}\nonumber \\
+    \left[\vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\vec{a} _\mathrm{CMB}\gamma(\nu) \right. &\mathrm{(CMB)} \nonumber \\
+    &+\vec{t}_\mathrm{ff}\left(\frac{\nu_{0,\mathrm{ff}}}{\nu}\right)^2\frac{g_\mathrm{ff}(\nu;T_\mathrm{e})}{g_\mathrm{ff}(\nu_{0,\mathrm{ff}};T_\mathrm{e})} & \textrm{(Free-free)}\nonumber \\
     &+\vec{a}_\mathrm{c}\left(\frac{\nu}{\nu_\mathrm{c}}\right)^{\beta_\mathrm{c}+1}\left(\frac{e^{h\nu_\mathrm{c}/k_\mathrm{B}T_\mathrm{c}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{c}}-1}\right) &\textrm{(Cold\ dust)}\nonumber \\
     &+\vec{a}_\mathrm{h}\left(\frac{\nu}{\nu_\mathrm{h}}\right)^{\beta_\mathrm{h}+1}\left(\frac{e^{h\nu_\mathrm{h}/k_\mathrm{B}T_\mathrm{h}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{h}}-1}\right) &\textrm{(Hot\ dust)}\nonumber \\
     &+a_\mathrm{near}\vec{t}_\mathrm{near}\left(\frac{\nu}{\nu_\mathrm{near}}\right)^{\beta_\mathrm{near}+1}\left(\frac{e^{h\nu_\mathrm{near}/k_\mathrm{B}T_\mathrm{near}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{near}}-1}\right)&\textrm{(Near\ dust)}\nonumber \\
     &+a_\mathrm{H\alpha}\vec{t}_\mathrm{H\alpha}\left(\frac{\nu}{\nu_\mathrm{H\alpha}}\right)^{\beta_\mathrm{H\alpha}+1}\left(\frac{e^{h\nu_\mathrm{H\alpha}/k_\mathrm{B}T_\mathrm{H\alpha}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{H\alpha}}-1}\right) &\textrm{(H$\alpha$\ dust)}\nonumber \\
 &+\vec{a}^{100}_\mathrm{co}h_\nu^{100}+\vec{a}^{217}_\mathrm{co}h_\nu^{217} +\vec{a}^{353}_\mathrm{co}h_\nu^{353}\left. \vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\right] & \textrm{(CO)}\nonumber\\
-    &+m_\nu &\textrm{(Monopole)}
+    &+m_\nu, &\textrm{(Monopole)}
 \label{equ:model}
 \end{align}
 where $u_\nu$ is a unit scaling conversion factor to go from brightness temperature to thermodynamic temperature, $\gamma(\nu)$ represents the CMB fluctuation spectrum in brightness temperature (including the CMB dipole and associated effects),
-$\vec{a}_{s}$ are the amplitudes sampled per-pixel for the CMB ($\vec{a}_\mathrm{cmb}$), cold dust ($\vec{a}_\mathrm{c}$), hot dust ($\vec{a}_\mathrm{h}$), and the CO lines (($\vec{a}^{\{100,217,353\}}_\mathrm{co}$)). We keep the CO line-ratios ($h_\nu^{\{100,217,353\}}$) fixed for this analysis to the \planck\ results \cite{planck2020-LVI}. We also keep the free-free component fixed due to the low constraining power of the HFI bands on the free-free emission. The template we use has electron temperature ($T_e$) of 7000 K and amplitudes ($\vec{t}_\mathrm{ff}$) and Gaunt factor ($g_\mathrm{ff}$) from the Beyond Planck analysis \cite{bp01}. $a_\mathrm{near}$ and $a_\mathrm{H\alpha}$ are amplitude scale value applied to templates ($\vec{t}_\mathrm{near}$ based on \cite{edenhofer:2024} and $\vec{t}_\mathrm{H\alpha}$ based on \cite{wham:2003,2016WHAM}) for the near dust ($\mathrm{near}$) and \Ha\ correlated (\Ha) dust respectively.   
+$\vec{a}$ are the amplitudes sampled per-pixel for the CMB ($\vec{a}_\mathrm{CMB}$), cold dust ($\vec{a}_\mathrm{c}$), hot dust ($\vec{a}_\mathrm{h}$), and the CO lines ($\vec{a}^{\{100,217,353\}}_\mathrm{co}$). We keep the CO line-ratios ($h_\nu^{\{100,217,353\}}$) fixed for this analysis to the \planck\ results \cite{planck2020-LVI}. We also keep the free-free component fixed due to the low constraining power of the HFI bands on the free-free emission. The template we use has electron temperature ($T_e$) of 7000 K and amplitudes ($\vec{t}_\mathrm{ff}$) and Gaunt factor ($g_\mathrm{ff}$) from the Beyond Planck analysis \cite{bp01}. We apply amplitude scale values, $a_\mathrm{near}$ and $a_\mathrm{H\alpha}$ to the templates ($\vec{t}_\mathrm{near}$ based on \cite{edenhofer:2024} and $\vec{t}_\mathrm{H\alpha}$ based on \cite{wham:2003,2016WHAM}) for the near dust ($\mathrm{near}$) and \Ha\ correlated (\Ha) dust respectively.   
 Finally, the monopoles ($m_\nu$) are sampled for each frequency band. As mentioned in \cref{sec:planckhfi} we have corrected the maps for the CIB and zodiacal light, so these are not included here. We also omit synchrotron and anomalous microwave emission (AME) which are subdominant in the HFI frequency range. 
-Note that while in \cite{CG02_05} we fit a five-component dust model, of which one is the carbon monoxide correlated dust, in this case the true CO emission is highly correlated with the CO dust component and since we don't include the DIRBE sensitive CO channels it is effectively merged with the cold dust component. 
+Note that, while in \cite{CG02_05} we fit a five-component dust model, of which one is the carbon monoxide correlated dust, in this case we only have the four-components. Since the true CO emission is highly correlated with the CO dust component and since we don't include the DIRBE sensitive CO channels it is effectively merged with the cold dust component. 
 
 
 
@@ -305,7 +305,7 @@ Note that while in \cite{CG02_05} we fit a five-component dust model, of which o
 
 \begin{figure*}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{figures/SEDGrid_withOneColourbar.pdf}
+    \includegraphics[width=\linewidth]{figures/SEDGrid_withOneColourbar_MathewEdit.pdf}
     \caption{Contour plot of relevant statistical tests and $\chi^2$ for (clockwise from top left) cold dust, hot dust, \Ha\ dust and near dust. The black dot shows the fiducial point used for all parameters. Maps of a subset of the grid points can be found in \cref{app:GridSearchTests}. }
     \label{fig:SEDGridContours}
 \end{figure*}
@@ -441,22 +441,49 @@ Near dust& $ 18 \pm 2$ & $ 1.7 \pm 0.1 $& $\le 1^\mathrm{b}$\cr
 %\label{tab:gains}
 %\end{table}
 
-\begin{table}
-    \centering
-    \begin{tabular}{l | c c c c}
-    \hline
-    \hline
-    Band & 545-1 & 545-2 & & 545-4\\ 
-    Gain & 0.99145 & 1.00487 & & 1.00830 \\
-    \hline
-	\\
-    \hline
-    Band & 857-1 & 857-2 & 857-3 & 857-4\\
-    Gain & 0.99362 & 1.10242 & 1.02393 & 1.13470\\
-    \hline
-    \end{tabular}
-    \caption{Gain values for 545 and 857~GHz bands. The gains for 857 GHz were sampled during the Gibbs loop, the 545 gains were fixed to input values.}
-    \label{tab:gains}
+% \begin{table}
+%     \centering
+%     \begin{tabular}{l | c c c c}
+%     \hline
+%     \hline
+%     Band & 545-1 & 545-2 & & 545-4\\ 
+%     Gain & 0.99145 & 1.00487 & & 1.00830 \\
+%     \hline
+% 	\\
+%     \hline
+%     Band & 857-1 & 857-2 & 857-3 & 857-4\\
+%     Gain & 0.99362 & 1.10242 & 1.02393 & 1.13470\\
+%     \hline
+%     \end{tabular}
+%     \caption{Gain values for 545 and 857~GHz bands. The gains for 857 GHz were sampled during the Gibbs loop, the 545 gains were fixed to input values.}
+%     \label{tab:gains}
+% \end{table}
+
+\begin{table}[tbp!]
+\begingroup
+\newdimen\tblskip \tblskip=5pt
+\nointerlineskip
+\vskip -3mm
+\footnotesize
+\setbox\tablebox=\vbox{
+\halign{\tabskip 0pt \hbox to 0.35\linewidth{#\leaderfil}\tabskip 0pt&
+\hbox to 0.15\linewidth{\hfil#}\tabskip 0pt&
+\hbox to 0.15\linewidth{\hfil#}\tabskip 0pt&
+\hbox to 0.15\linewidth{\hfil#}\tabskip 0pt&
+\hbox to 0.15\linewidth{\hfil#}\tabskip 0pt\cr
+\noalign{\doubleline\vskip 1pt}
+Band& 545-1 & 545-2 & & 545-4\cr
+Gain scale& 0.99145 & 1.00487 & & 1.00830 \cr
+\noalign{\vskip 4pt\hrule\vskip 6pt}
+\noalign{\vskip 3pt}
+Band & 857-1 & 857-2 & 857-3 & 857-4\cr
+Gain & 0.99362 & 1.10242 & 1.02393 & 1.13470\cr
+\noalign{\vskip 3pt}
+\noalign{\vskip 3pt\hrule\vskip 4pt}}}
+\endPlancktable
+\endgroup
+\caption{Gain values for 545 and 857~GHz bands. The gains for 857 GHz were sampled during the Gibbs loop, the 545 gains were fixed to input values.}
+\label{tab:gains}
 \end{table}
 
 
@@ -558,14 +585,14 @@ Our Gibbs sampler for this case employs the algorithm
 \begin{alignat}{2}
 \vec{a}_s &\leftarrow P(\vec{a}_s &|{\bf d}, \phantom{\vec{a}_s ,} \mathsf{G_{857}},m)\\
 \mathsf{G_{857}} &\leftarrow P(\mathsf{G_{857}} &|{\bf d}, \vec{a}_s,\phantom{\mathsf{G_{857}},}m)\\ 
-m &\leftarrow P(m &|{\bf d}, \vec{a}_s,\mathsf{G_{857}}\phantom{m}) 
+m &\leftarrow P(m &|{\bf d}, \vec{a}_s,\mathsf{G_{857}}\phantom{m}) ,
 \end{alignat}
 where the arrow operator $\leftarrow$ indicates updating the variable on the left with a sample drawn from the conditional distribution on the right. First, the amplitudes for all the components $s$ (including dust, CMB, and CO, as discussed in \cref{sec:skymodel}) are sampled while holding the 857~GHz gains and monopoles fixed, and proceeding through the subsequent two steps before looping back to the first stage, obtaining samples for each free parameter. We do not sample the gains for bands other than the 857~GHz frequency channels, as their effects on the rest of the chain were negligible. The amplitudes $\vec{a}_s$ are by far the most expensive step, as they represent per-pixel parameters across the full sky at high resolution, whereas the gains and monopoles are a single parameter per channel. For a detailed discussion of the Gibbs sampling see \cite{bp01,eriksen2008} and references therein. This approach is the foundation of the \cosmoglobe\ framework, based on the \texttt{Commander} software \citep{bp03} used throughout this data release. 
 
 
 \subsection{Summary statistics and optimization strategy}
 \label{sec:statistics}
-We found that the four dust components were highly correlated, which meant that the Gibbs sampler was unable to efficiently explore the parameter space when the spectral indices were also sampled in the Gibbs loop of \cref{sec:sampling}. To mitigate this, we performed an extensive grid search to explore the parameter space instead, while imposing a physicality prior that required the large scale amplitudes of the hot and cold dust to be positive. We also required that the temperatures of the dust component's MBB did not exceed 35~K or go below 10~K, based on existing studies of dust environments which strongly disfavour more extreme conditions \citep{something here so we don't sound like idiots}. Additionally, the near dust and the \Ha\ dust should be maximally uncorrelated with the hot and the cold dust. A highly correlated hot and near dust model might indicate, for example, that the near dust is too low, leaving near dust to leak into the hot dust. Lastly, we expect that the cold dust and the \ion{H}{i} signal as seen by HI4PI should be more highly correlated, so we keep that in mind while exploring the parameter space (though we do not force such a correlation). 
+We found that the four dust components were highly correlated, which meant that the Gibbs sampler was unable to efficiently explore the parameter space when the spectral indices were also sampled in the Gibbs loop of \cref{sec:sampling}. To mitigate this, we performed an extensive grid search to explore the parameter space instead, while imposing a physicality prior that required the large scale amplitudes of the hot and cold dust to be positive. We also required that the temperatures of the dust component's MBB did not exceed 35~K or go below 10~K, based on existing studies of dust environments which strongly disfavour more extreme conditions \RS{add cite something here so we don't sound like idiots}. Additionally, the near dust and the \Ha\ dust should be maximally uncorrelated with the hot and the cold dust. A highly correlated hot and near dust model might indicate, for example, that the near dust is too low, leaving near dust to leak into the hot dust. Lastly, we expect that the cold dust and the \ion{H}{i} signal as seen by HI4PI should be more highly correlated, so we keep that in mind while exploring the parameter space (though we do not force such a correlation). 
 
 Each step in the grid search used Gibbs sampling to fit the per-channel 857 gains, the amplitudes per pixel of the hot and cold dust, the CMB and the CO amplitudes, as well as monopoles and dipoles, for a set of fixed spectral parameters. These amplitudes are fit through the conjugate gradient sampling routine implemented in the \texttt{Commander 3} \citep{bp03} framework and as described above given a fixed $\beta$ and $T$ for each dust component and a fixed amplitude scale for the templates. We then compare the $\chi^2$ from the residuals, the correlations between the near-hot, near-cold, \Ha-hot and \Ha-cold maps, the correlation between the cold and HI4PI maps, and inspect the hot and cold maps for large scale negative amplitudes. We use this grid to find our best fit results and error estimates (see \cref{fig:SEDGridContours,fig:SEDGridAmplitude,app:GridSearchTests}). 
 
@@ -578,14 +605,14 @@ Broadly speaking we have very little constraining power on the \Ha\ correlated d
 
 MG: \cref{fig:SEDGridAmplitude} is something that should be discussed here but I don't understand what it shows.
 
-\begin{figure}[t]
-    \centering
-        \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}\\
-    \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}\\
-    \caption{\emph{Top:} Scatter plot between the hot dust and FIRAS \ion{C}{ii} maps; both maps are smoothed to a common resolution of 420' FWHM, and pixelated at \nside=16. \emph{Bottom:} Scatter plot between the cold dust and HI4PI maps; both maps are smoothed to a common resolution of 16.2' FWHM, and pixelated at \nside=1024.%\RS{full size of each is also available, but not sure it adds much info compared to this smaller version - if full size preferred uncomment below}
-    }
-    \label{fig:hotCiiCorr}
-\end{figure}
+% \begin{figure}[t]
+%     \centering
+%         \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}\\
+%     \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}\\
+%     \caption{\emph{Top:} Scatter plot between the hot dust and FIRAS \ion{C}{ii} maps; both maps are smoothed to a common resolution of 420' FWHM, and pixelated at \nside=16. \emph{Bottom:} Scatter plot between the cold dust and HI4PI maps; both maps are smoothed to a common resolution of 16.2' FWHM, and pixelated at \nside=1024.%\RS{full size of each is also available, but not sure it adds much info compared to this smaller version - if full size preferred uncomment below}
+%     }
+%     \label{fig:hotCiiCorr}
+% \end{figure}
 
 
 
@@ -696,13 +723,13 @@ To quantify this residual level, \cref{fig:efficiency}   compares the summed dus
 %     \item Discuss correlation coeff between Hi4Pi and cold dust (mention masks), maybe mention CO
 % \end{itemize}
 
-One of the great successes of this four-component dust model is the high degree of correlation between the \ion{H}{i} emission, a known dust tracer, and the cold dust, with a Pearson's correlation coefficient of 93\%, as well as the correlation between the new dust tracer \ion{C}{ii}, which traditionally maps the hot ionized medium but is found here to trace the hot dust component with a correlation of 94\% \cref{fig:hotCiiCorr} shows per-pixel scatter plots between our dust maps and these tracers. The top panel shows a the hot dust and Firas \ion{C}{ii}, downgraded to the $7^\circ$ resolution of the Firas maps, and the bottom pane shows the cold dust and HI4PI column density maps at $N_{\mathrm{side}}=1024$. Both show strong correlation, which is further evidence that they trace similar regions of the Galaxy. 
+One of the great successes of this four-component dust model is the high degree of correlation between the \ion{H}{i} emission, a known dust tracer, and the cold dust, with a Pearson's correlation coefficient of 92\%, as well as the correlation between the new dust tracer \ion{C}{ii}, which traditionally maps the hot ionized medium but is found here to trace the hot dust component with a correlation of 94\% \cref{fig:hotCiiCorr} shows per-pixel scatter plots between our dust maps and these tracers. The top panel shows a the hot dust and Firas \ion{C}{ii}, downgraded to the $7^\circ$ resolution of the Firas maps, and the bottom pane shows the cold dust and HI4PI column density maps at $N_{\mathrm{side}}=1024$. Both show strong correlation, which is further evidence that they trace similar regions of the Galaxy. 
 
 Visually, we can also consider the top two panels of \cref{fig:dust_figures} and compare by eye with the bottom two sub-panels. Several striking features can be seen to be present both in the cold dust and the HI4PI, as well as in the hot dust and the FIRAS \ion{C}{ii} maps. It is evident that these are tracers  of our dust components, and potentially future analysis could use \ion{C}{ii} maps to even better constrain the hot dust, as an additional external data set. 
 
 Evidence for this correlation is further supported by the observation of an interesting feature in the hot and cold dust grids (\cref{fig:SEDGridContours}). The areas where the resulting maps looked unphysical also trace regions in parameter space where the correlation between the dust and their relevant tracer were lower (e.g. the 95\% Hot-\ion{C}{ii} contour line traces the grey gridded region in the cold dust $\chi^2$ contour plot, and the 92\% Cold-\ion{H}{i} contour line also maps the excluded region in the hot dust plot). Since these tracers are not included in the fitting, and are simply calculated from the resulting maps, it appears that these phenomena arise in tandem. Dust models which have lower levels of physical correlations between the dust and the tracers produce unphysical results elsewhere in the model, further supporting the conclusion that these correlations are an important and physical part of the model.
 
-\Cref{fig:correlationSquare} shows the full set of spatial correlations between the different dust components and tracers, and we can see that we have a low degree of correlation between the near dust and the hot and cold dust. As previously mentioned, the hot and \ion{C}{ii} components show 94\% correlation, and the cold and HI4PI maps are correlated at the 93\% level, but we also see that the hot and cold components are correlated at the NUMBER\% level. This spacial correlation could be caused by SOMETHING ABOUT DUST HERE
+\Cref{fig:correlationSquare} shows the full set of spatial correlations between the different dust components and tracers, and we can see that we have a low degree of correlation between the near dust and the hot and cold dust. As previously mentioned, the hot and \ion{C}{ii} components show 94\% correlation, and the cold and HI4PI maps are correlated at the 92\% level, but we also see that the hot and cold components are correlated at the NUMBER\% level. This spacial correlation could be caused by SOMETHING ABOUT DUST HERE
 
 
 % \begin{figure}
@@ -787,7 +814,7 @@ above, the CIB contamination is now gone from the $T$ map, but the $\beta$
 map is varying more on the sky.
 
 In the bottom of \cref{fig:beta_T} we have used \Commander1 to fit a
-1-component MBB with varing spectral indices to the 4-component dust
+1-component MBB with varying spectral indices to the 4-component dust
 model with spatially flat spectral parameters developed in this
 paper. We see that an underlying simple 4-component dust model appears
 very similar as a 1-component model with a close to constant $\beta$
@@ -920,30 +947,30 @@ We can see the fidelity of the sky model by looking at the difference between th
     \label{fig:near_cold_dust_set}
 \end{figure*}
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.9\linewidth]{figures/hotDust_wham_Grid.pdf}
-    \caption{Hot dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other grid parameters set to the fiducial values in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:hot_cold_dust_set}. This explores only $a_\mathrm{H\alpha}=1$.}
-    \label{fig:Ha_hot_dust_set}
+% \begin{figure*}[t]
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{figures/hotDust_wham_Grid.pdf}
+%     \caption{Hot dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other grid parameters set to the fiducial values in \cref{tab:SEDs}. The center panel is the fiducial map. The corresponding cold dust maps can be seen in \cref{fig:hot_cold_dust_set}. This explores only $a_\mathrm{H\alpha}=1$.}
+%     \label{fig:Ha_hot_dust_set}
 
-    \centering
-    \includegraphics[width=0.9\linewidth]{figures/coldDust_wham_Grid.pdf}
-    \caption{Cold dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other parameters set to the fiducial values. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set}.}
-    \label{fig:Ha_cold_dust_set}    
-\end{figure*}
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{figures/coldDust_wham_Grid.pdf}
+%     \caption{Cold dust amplitudes for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$ values with all other parameters set to the fiducial values. The central panel is the fiducial map. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set}.}
+%     \label{fig:Ha_cold_dust_set}    
+% \end{figure*}
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.9\linewidth]{figures/hotDust_wham_Grid_ratio.pdf}
-    \caption{Monopole subtracted hot dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding cold dust maps can be seen in \cref{fig:Ha_cold_dust_set_r}.}
-    \label{fig:Ha_hot_dust_set_r}
+% \begin{figure*}[t]
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{figures/hotDust_wham_Grid_ratio.pdf}
+%     \caption{Monopole subtracted hot dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding cold dust maps can be seen in \cref{fig:Ha_cold_dust_set_r}.}
+%     \label{fig:Ha_hot_dust_set_r}
 
-    \centering
-    \includegraphics[width=0.9\linewidth]{figures/coldDust_wham_Grid_ratio.pdf}
-    \caption{Monopole subtracted cold dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set_r}.}
-    \label{fig:Ha_cold_dust_set_r}
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{figures/coldDust_wham_Grid_ratio.pdf}
+%     \caption{Monopole subtracted cold dust amplitudes ratios compared to the fiducial map (central panel) for varying $T_\mathrm{H\alpha}$ and $\beta_\mathrm{H\alpha}$. The corresponding hot dust maps can be seen in \cref{fig:Ha_hot_dust_set_r}.}
+%     \label{fig:Ha_cold_dust_set_r}
 
-\end{figure*}
+% \end{figure*}
 
 % \begin{figure*}
 %     \centering
@@ -977,14 +1004,14 @@ Conversely, for regions with higher $\beta_\mathrm{near}$ and higher $T_\mathrm{
 
 
 \subsection{\texorpdfstring{H$\alpha$}{Ha} dust}
-The parameter space explored for the \Ha\ correlated dust was shown to have a very flat $\chi^2$ profile, and minimal changes to the hot and cold dust amplitudes or correlations. As such we chose to take the DIRBE fit values from \cite{CG02_05} for our fiducial values, as we expect the DIRBE bands to have better control of these SED parameters. 
+The parameter space explored for the \Ha\ correlated dust was shown to have a very flat $\chi^2$ profile, and minimal changes to the hot and cold dust amplitudes or correlations. Since there is no perceivable difference then in the cold and hot dust amplitudes during the grid search we do not include those plots here. As a reminder, we chose to take the DIRBE fit values from \cite{CG02_05} for our fiducial values since the HFI have so little control of this dust component and as we expect the DIRBE bands to have better control of these SED parameters. 
 
-\clearpage
+% \clearpage
 
 \section{Thermal dust map characterization}
 \label{app:dustCharacterization}
-
-\begin{figure*}[t]
+We compare the fraction of each dust component contributing to the total in \cref{fig:dustFrac}. As the \Ha\ dust is a dust extinction (with negative amplitude) it contributes a negative fraction to the final, and is the smallest contributor to the total. The near dust dominates outside the plane of the galaxy (which is to be expected, since further dust will be closer to the galactic plane due to geometry). The hot dust is clustered near the galactic center and shows some anti-correlation with the \Ha\ dust. Finally, the cold dust is dominant in the galactic plane further from the galactic center. This further cements the notion that this updated dust model is more physical motivated than previous models, tracing known physical regions within the Milky Way Galaxy. 
+\begin{figure*}[h]
     \centering
     \includegraphics[width=0.9\linewidth]{figures/dustFrac_plcmap.pdf}
     \caption{Average dust from each component contributing to the total dust signal. }
@@ -992,50 +1019,5 @@ The parameter space explored for the \Ha\ correlated dust was shown to have a ve
 \end{figure*}
 
 
-We compare the fraction of each dust component contributing to the total in \cref{fig:dustFrac}. As the \Ha\ dust is a dust extinction (with negative amplitude) it contributes a negative fraction to the final, and is the smallest contributor to the total. The near dust dominates outside the plane of the galaxy (which is to be expected, since further dust will be closer to the galactic plane due to geometry). The hot dust is clustered near the galactic center and shows some anti-correlation with the \Ha\ dust. Finally, the cold dust is dominant in the galactic plane further from the galactic center. This further cements the notion that this updated dust model is more physical motivated than previous models, tracing known physical regions within the Milky Way Galaxy. 
-
-
-
 \end{document}
-%%%% End of aa.dem
 
-
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=\columnwidth]{figures/chisq_353_alpha.pdf}
-%   \caption{$\chi^2$ distribution for $\alpha$, the conversion factor from GAIA-based extinction to thermal dust emission at 545\,GHz, as evaluated from \Planck\ 353\,GHz data. The dashed vertical line indicates the best-fit value, and the dotted lines indicate the uncertainties. }
-%   \label{fig:chisq_353_alpha}
-% \end{figure}
-
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=\columnwidth]{figures/res_353-1_alpha097.pdf}\\
-%   \includegraphics[width=\columnwidth]{figures/res_353-1_alpha099.pdf}\\
-%   \includegraphics[width=\columnwidth]{figures/res_353-1_alpha101.pdf}
-%   \caption{Residual maps at 353\,GHz as a function of $\alpha$. The middle panel corresponds to the best-fit value found in Fig.~\ref{fig:chisq_353_alpha}, while the upper and lower panels correspond to $\pm2\sigma$ deviations.}
-%   \label{fig:res_353_alpha}
-% \end{figure}
-
-
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=\columnwidth]{figures/res_100-1_1deg_v1.pdf}\\
-%   \includegraphics[width=\columnwidth]{figures/res_143_1deg_v1.pdf}\\
-%   \includegraphics[width=\columnwidth]{figures/res_217-1_1deg_v1.pdf}\\
-%   \includegraphics[width=\columnwidth]{figures/res_545_1deg_v1.pdf}
-%   \caption{Residual maps for each \Planck\ frequency channel that is included in the fit, evaluated for the best-fit scaling factor of $\alpha=625\,\mu\mathrm{K}_{\mathrm{CMB}}/\mathrm{ext}$. For the 100 and 217\,GHz channels, only the first horn maps are shown for brevity; the others appear visually similar.}
-%   \label{fig:res_353_alpha}
-% \end{figure}
-
-
-% \begin{figure*}
-%   \centering
-%   \includegraphics[width=0.49\textwidth]{figures/dust_353-1_c0001_k000003.png}
-%   \includegraphics[width=0.49\textwidth]{figures/ratio_353-1_dust_tot_2deg.png}\\
-%   \includegraphics[width=0.49\textwidth]{figures/dust_cii_353-1_c0001_k000003.png}
-%   \includegraphics[width=0.49\textwidth]{figures/ratio_353-1_dust_cii_tot_2deg.png}\\
-%   \includegraphics[width=0.49\textwidth]{figures/hotPAH_353-1_c0001_k000003.png}
-%   \includegraphics[width=0.49\textwidth]{figures/ratio_353-1_hotPAH_tot_2deg.png}
-%   \caption{Comparison of the cold (\emph{top}), hot (\emph{middle}), and nearby (\emph{bottom}) thermal dust components as evaluated at 353\,GHz. The left column shows the absolute amplitude on a common linear color scale, while the right column shows the fraction of the given component relative to the sum of the three components. All maps are smoothed to an angular resolution of $2^{\circ}$ FWHM.   }
-%   \label{fig:dust_353_ratio}
-% \end{figure*}
