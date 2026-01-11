@@ -450,14 +450,13 @@ giving an independent confirmation of the appropriateness of assuming a
 morphological correlation between those astrophysical templates and dust populations.
 
 Encouraged by these results, the main \Cosmoglobe\ DR2 analysis employs a
-similar four-component thermal dust model, given by the first four terms
-of Eq. (\ref{eq:skymodel}), similar to the four
-dust components used in \citet{CG02_06}. Three of the components (hot, cold and
-H$\alpha$-correlated dust) are allowed to have a freely varying amplitude on
-the sky, whereas the nearby dust component is constrained morphologically to
-the nearby dust template. This template, used in both \citet{CG02_05} and \citet{CG02_06}, was derived
-from the \citet{edenhofer:2024} extinction maps (see \citealt{CG02_05} for
-more details on how this template was constructed).
+similar four-component thermal dust model, in which four spatial templates
+are used for the first four terms of Eq. (\ref{eq:skymodel}), constraining
+these components morphologically. One of these templates, used in both
+\citet{CG02_05} and \citet{CG02_06}, was derived from the
+\citet{edenhofer:2024} extinction maps (see \citealt{CG02_05} for more details
+on how this template was constructed), while the three others were the best-fit
+solutions arrived at in \citet{CG02_06}.
 
 The SEDs of these components are not directly modelled as
 modified blackbodies, as they were in \citet{CG02_06}. Rather, we define a set
@@ -484,127 +483,8 @@ per component, which are then sampled over in the Gibbs chain.
     \end{tabular} 
 \end{table*}
 
-%One natural distinction that has been made is between ``hot'' and ``cold''
-%dust. If we are able to divide the interstellar dust into components of high
-%and low energy, such components could lend themselves to be traced by
-%independent probes of interstellar matter. For the low-energy component, a
-%natural tracer would be the H I column density as measured by experiments such
-%as HI4PI. The hot dust component, similarly, could be traced by other measures
-%of high-energy regions, with the traditional candidates being either the
-%H$\alpha$ or C II spectral lines.
-%
-%In addition to this, we may also use known distance information to infer
-%various dust populations. As an example, \cite{edenhofer:2024} constructed a
-%series of high-resolution (\nside 256) extinction maps using data from GAIA and
-%
-%MORE HERE ON HALPHA
-
-%\subsection{The \Cosmoglobe DR2 analysis}
-%\subsubsection{Four-component dust model}
-%As mentioned above, we here adopt a model for thermal dust that comprises three
-%distinct components, represented by the first four terms of Eq.
-%(\ref{eq:skymodel}). All four components are modelled as having a continuous
-%modified blackbody behaviour between 100 and 1050~GHz, i.e. below the DIRBE
-%frequencies, multiplied by an amplitude per pixel, which for two of the
-%components is allowed to vary as a free parameter in the Gibbs chain, and for
-%the last component is defined as full-sky template.
-%
-%The spectral parameters -- that is, $\beta$ and $T$ in Eq. (\ref{eq:mbb}) -- of
-%this model are set to be constant across the sky for each of the three
-%components. Thus, each of the component has a different spectral parameter pair
-%than the others, but it is not allowed to vary spatially.
-%
-%For the frequencies covered by DIRBE bands 3-10, we extend this model in the
-%following way: We define a set of SED bins, each of which is chosen to
-%correspond to the width of the DIRBE bands, as shown in table \ref{tab:bins}.
-%Each of these bins are associated with a free parameter for that dust
-%component; namely, the amplitude of the SED in that bin. In other words, the
-%SED for a given component for a given SED bin is a constant, but the exact
-%value of this constant is allowed to vary in the Gibbs chain.
-
-%Since the phenomenology of thermal dust gets more complicated above 1050~GHz
-%(see sec. \ref{sec:current_dust}), instead of adopting a model based on
-%underlying physics, we define a set of bins, each of which is chosen to roughly
-%correspond to the width of DIRBE bands 3-10, respectively, as shown in Table
-%\ref{tab:bins}. Each of the bins is assigned an amplitude for each dust
-%component, and the SED of that component for the frequencies encompassed by a
-%given bin is given by the amplitude assigned to that bin\footnote{Only one of
-%    the three components are allowed to have nonzero amplitudes at DIRBE band 3
-%and 4 -- see below}. We do not define such bins for DIRBE bands 1 and 2, and we
-%force the total dust SED to be zero at these bands, since the thermal dust
-%emission is expected to be negligible at these frequenies.
-
-%The first component we call ``nearby dust''. We define this component in order
-%to properly utilize the available knowledge about nearby dust structure --
-%several works, such as \citet{Dharmawardena:2024} and \citet{edenhofer:2024}
-%use extinction data from catalogues such as Gaia to infer the dust structure
-%out to 1-3~kpc. We define a template (see Section \ref{sec:data} for a detailed
-%explanation of this template) which traces these nearby dust structures. The
-%complete SED of this component is thus defined as
-%\begin{equation}
-%    \label{eq:nearby_dust}
-%    s(\nu) = \begin{cases} a\t\nu^{\beta} B(\nu, T) & \nu \in [100,
-%        1050~\text{GHz}] \\
-%        a^i_{\textrm{bin}}\t & \nu \in [\nu_{\textrm{bin, start}}^i,
-%        \nu_{\textrm{bin, end}}^i]
-%            \end{cases},
-%\end{equation}
-%where $a$ is a scaling parameter, $\t$ is the nearby dust template, and the
-%remaining parameters on the first line are the same as in Eq.~(\ref{eq:mbb}),
-%and $\nu_{\textrm{bin, start}}^i$ and $\nu_{\textrm{bin, end}}^i$ are the start
-%and end frequencies of bin $i$, respectively.
-%
-%The two next components are not constrained spatially by templates; rather,
-%their amplitudes are allowed to vary from pixel to pixel. We call these
-%components ``cold'' and ``hot'' dust, respectively, and their SEDs can both be
-%expressed as follows,
-%\begin{equation}
-%    \label{eq:coldhotdust}
-%    s(\nu) = \begin{cases} \a\nu^{\beta} B(\nu, T) & \nu \in [100,
-%        1050~\text{GHz}] \\
-%        a^i_{\textrm{bin}} & \nu \in [\nu_{\textrm{bin, start}}^i,
-%        \nu_{\textrm{bin, end}}^i]
-%            \end{cases},
-%\end{equation}
-%where $\a$ is the vector of per-pixel amplitudes. The only difference between
-%the two components is that SED amplitude of the hot dust component is allowed
-%to be nonzero for bins 7 and 8 (DIRBE bands 3 and 4), while the cold dust
-%(as well as the nearby dust) SEDs are only allowed to be nonzero for bins 1-6
-%(DIRBE bands 10 through 5).
-%
-%With this model, we are effectively operating with roughly two degrees of
-%freedom per pixel -- namely, the hot and cold dust amplitudes. The rest of the
-%parameters are all spatially constant, and so adds just fractional degrees of
-%freedom to the total dust model.
-%
-%We emphasize that this model is mostly phenomenological, and we are already
-%planning several improvements to the model to be published in the future.
-%However, already with this relatively crude model the results are of sufficient
-%interest for the community that we think it worthwhile to report.
-%
-%
-%\subsection{Gibbs sampling}
-
-%\FloatBarrier
 \section{Data}
 \label{sec:data}
-%This paper concerns itself with a subset of the total global analysis which is
-%described more fully in \cite{CG02_01}; namely, the part of the analysis that
-%models the three thermal dust components. Describing the data that goes into
-%this part of the analysis is two-tiered, in the sense that there may be (and in
-%this case, is) data that is used in the total global analysis which is not
-%directly impacting the dust models, and there is data that does impact it. 
-%
-%directly used for this purpose. However, even the data that is not directly
-%used to fit our dust models still affect the total analysis by
-%affecting the overall data model fit (eq.~\ref{eq:skymodel}).
-%
-%Below, we first describe the data that directly impacts the dust fitting --
-%namely, the DIRBE and \Planck\ HFI data -- before describing the ancillary data
-%that is used in the global the analysis. All of the data used is described in
-%more detail in \cite{CG02_01}, and we refer the interested reader to that
-%paper.
-
 There are two datasets used directly in the \Cosmoglobe\ DR2 analysis: low-level data
 from \COBE-DIRBE, and starlight data from \WISE\ \citep{wright:2010} and
 \GAIA\ \citep{gaia:2016,gaia:2018}. They are supplemented by our dust templates, which are drawn from the analysis performed in \citet{CG02_06}, and incorporate data from \Planck\ HFI and \Gaia. Below we give a succinct description of these
@@ -653,15 +533,20 @@ As discussed in \citet{CG02_01}...
 %\FloatBarrier
 \section{Results}
 
-The analysis consisted of five Gibbs chains, each of j
-In what follows, we have discarded the first N samples of the Gibbs chain as
-burn-in.
+The analysis consisted of five Gibbs chains, each of which consisted of
+approximately 250 samples. Out of these, in what follows (except for the
+traceplots), the first 100 samples are considered the burn-in period, since (as
+explained below) all chains seem to have converged by then.
 \subsection{Markov chains, correlations and convergence}
 In \cref{fig:trace_colddust,fig:trace_hotdust,fig:trace_hacorr_dust,fig:trace_nearbydust}, we plot the Gibbs
 chain traceplots for all the five Gibbs chains used in the analysis, for all
-four dust components. Despite some residual burnin, the chains are generally
-well mixed, with a slightly longer correlation length for the two first bins of
-the H$\alpha$-correlated component.
+four dust components. After a period of reaching equilibrium -- which varies
+from almost instantly (for the cold dust amplitude, for example) to around 100
+samples at the most (particularly evident for the hot dust and
+H$\alpha$-correlated dust 25 and 12 $\mu $m bins) -- the chains generally do not
+exhibit any long correlations and seem to mix fairly well. The only exception
+is the 240 and 120 $\mu$m H$\alpha$-correlated dust bins, where we see more
+long-term trends that indicate a slower traversal through parameter space.
 
 \begin{figure}[htb]
   \centering
@@ -690,7 +575,17 @@ the H$\alpha$-correlated component.
 \end{figure}
 
 In Fig. \ref{fig:corrmat}, we show the correlations between the various SED
-bins (WAIT TO SEE WHAT IT LOOKS LIKE WITH LESS BURNIN).
+bins in the run, calculated over all five chains after discarding burn-in. The
+strongest correlations are internally between the near dust bins. Most of them
+are correlated with each other, but they are anticorrelated with the 12 $\mu$ m
+amplitude. Those same bins, and in particular the 100$\mu$m one, are also
+anticorrelated with the 100 $\mu$m hot dust amplitude. Thus, it might seem that
+the morphologies of hot dust and nearby dust are similar enough that whenever the
+one increases, the other can decrease to compensate for the change. Since the
+morphology of the nearby dust component is just defined by mapping dust that is
+close to us, it makes sense that this component ends up being less
+``orthogonal'' to the others -- this might indicate that \emph{some} of the
+nearby dust have spectral characteristics more similar to hot dust, perhaps.
 
 %\begin{figure}
 %  \centering
