@@ -353,7 +353,7 @@ these calculations, before we conclude in \cref{sec:conclusions}.
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/firas_beam.pdf}
-  \caption{The \COBE-FIRAS beam, with which all maps in this analysis were smoothed. The beam diameter is around $7^\circ$ on the sky, which limits this analysis to \nside=16.}
+  \caption{\COBE-FIRAS beam response as a function of anglular distance, with which all maps in this analysis were smoothed. The beam diameter is around $7^\circ$ on the sky. The maps were published in the QuadCube pixelization scheme, but they have now been converted to HEALPix with \nside=16, which then limits this analysis to that \nside.}
   \label{fig:firasbeam}
 \end{figure}
 
@@ -389,7 +389,7 @@ vector of $n_\mathrm{pix}$ HEALPix pixels), the basic data model we employ is
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_545_v2.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/map_tempfit_857_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_857_v2.pdf}
-  \caption{Comparison between full (left column) and template cleaned (right) maps for the three dust-dominated \Planck\ HFI channels. The grey pixels are masked by the common analysis mask. All maps are convolved with the FIRAS beam. }
+  \caption{Comparison between original maps (left) and the template subtracted maps, weighted by the fitted amplitudes (right), for the three dust-dominated \Planck\ HFI channels. All maps are convolved with the FIRAS beam and dowgraded to \nside=16. The grey pixels are masked by the common analysis mask. }
   \label{fig:tempfit_map_vs_res1}
 \end{figure*}
 
@@ -402,7 +402,7 @@ vector of $n_\mathrm{pix}$ HEALPix pixels), the basic data model we employ is
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_2100_v2.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/map_tempfit_3000_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_3000_v2.pdf}
-  \caption{Same as \cref{fig:tempfit_map_vs_res1} but for the three lowest frequency DIRBE channels (240$\mu$m - 100 $\mu$m).}
+  \caption{Same as \cref{fig:tempfit_map_vs_res1}, but for the three lowest frequency DIRBE channels (240$\mu$m - 100 $\mu$m).}
   \label{fig:tempfit_map_vs_res2}
 \end{figure*}
 
@@ -414,14 +414,14 @@ vector of $n_\mathrm{pix}$ HEALPix pixels), the basic data model we employ is
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_12000_v2.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/map_tempfit_25000_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/res_tempfit_25000_v2.pdf}
-  \caption{Same as \cref{fig:tempfit_map_vs_res1} but for the three intermediate frequency DIRBE channels (60 $\mu$m - 12 $\mu$m).}
+  \caption{Same as \cref{fig:tempfit_map_vs_res1}, but for the three intermediate frequency DIRBE channels (60 $\mu$m - 12 $\mu$m).}
   \label{fig:tempfit_map_vs_res3}
 \end{figure*}
 
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figures/template_signal_rms_v1.pdf}
-  \caption{Efficiency of the dust model at describing the data at at each frequency. We subtract the squared residuals from the squared map, and normalize by the amplitude of the map. The five component template-based dust model is able to recover more than 80\% of the total map power at all frequencies, including those with known residual zodiacal contamination like 25$\mu$m.}
+  \caption{Efficiency of the dust model at describing the data at at each frequency. We subtract the squared residuals from the squared map, and normalize by the squared amplitude of the map. The five component template-based dust model is able to recover more than 80\% of the total map power at all frequencies, including those with known residual zodiacal contamination, such as 25$\mu$m.}
   \label{fig:temprms}
 \end{figure}
 
@@ -597,12 +597,12 @@ templates might bias the fit at larger scales. Out of all the data and
 templates used in this analysis, the \COBE-FIRAS \CII\ map is the one
 with the lowest native resolution. We therefore convolve all maps with
 the \COBE-FIRAS beam, shown in \cref{fig:firasbeam}, taking into
-account the drift along the Ecliptic ({\bf cite Odegaard or similar}),
+account the drift along the Ecliptic \citep{odegard:2019},
 and we repixelate all maps to a HEALPix resolution of $\nside=16$.
 
 
 \subsection{Processing mask}
-The FIRAS CII map in particular contains systematic effects, which we mask in this analysis. In addition, due to the complexity of the galactic center, as well as certain high-activity complexes (TBD), we mask these as well. 
+The FIRAS \CII\ map in particular contains systematic effects, which we mask in this analysis. In addition, due to the complexity of the galactic center, as well as certain high-activity complexes (TBD), we mask these as well. 
 
 \section{Results}
 \label{sec:results}
@@ -612,8 +612,7 @@ The FIRAS CII map in particular contains systematic effects, which we mask in th
 
 The fit template amplitudes per frequency band are shown in \cref{fig:tempamp}. As is evident, the spectra of all templates show a
 characteristic bump, which is the expected behavior of modified blackbody SEDs
-with temperatures in the typical thermal dust temperature range (see below for
-actual temperature estimations of these spectra).
+with temperatures in the typical thermal dust temperature range. Below, we estimate the temperatures for each of these spectra.
 
 We also see that the H$\alpha$ component has a negative SED, showing that it
 indeed functions as a dust extinction template.
@@ -623,12 +622,12 @@ indeed functions as a dust extinction template.
 \subsection{Model efficiency and goodness-of-fit}
 \label{sec:residuals}
 In \cref{fig:tempfit_map_vs_res1,fig:tempfit_map_vs_res2,fig:tempfit_map_vs_res3}, we show a
-comparison between the original data (left columns) and the template cleaned
-maps (right columns). Clearly, the template fitting performs well on all
+comparison between the original data (left columns) and the template subtracted
+maps, weighted by the fitted amplitudes (right columns). The template fitting performs well on all
 frequencies, leaving residual signals that are associated with high-activity
 regions of the Milky Way (especially evident in the 857\,GHz and 3000\,GHz
 residuals), as well as unmodelled zodiacal emission from the Solar System
-(evident in the two highest frequency maps). Overall, a by-eye survey seems to
+(evident in the two highest frequency maps). Overall, a first inspection of the maps seems to
 indicate that the template fitting is an efficient procedure for accounting for
 most of the dust.
 
@@ -638,12 +637,15 @@ is ``explained'' by the template fit. It is constructed by taking the RMS of
 the pixel values in the original map, as well as those of the residual map
 after template subtraction, and subtracting these values from each other,
 normalizing the value by the original RMS. We see that the fraction of
-unexplained RMS left in the map ranges from about 2\% (for the lower
-frequencies) to around 15\%, and we note that the only two maps that have more
+unexplained RMS left in the map ranges from as low as 2\% (for the lower
+frequencies) to around 15\%, and we note that the only two maps that are left with more
 than 5\% of unexplained RMS are the two maps where the imprint of remaining
 zodiacal light is the strongest.
 
-
+Additionally, in \cref{fig:tempfract}, we show the relative contribution of each
+template to the total dust model amplitude at each frequency. Showing, once again, that the
+two most dominant components are the \CII\ and \HI\ templates, with the former
+dominating at higher frequencies, and the latter at lower frequencies.
 
 
 \subsection{Modified blackbody fits}
@@ -654,7 +656,7 @@ to the template fitting SEDs:
 \begin{equation}
     s(\nu) = A \frac{\nu^{\beta + 3}}{\exp{(\frac{h\nu}{k_b T})} - 1}.
 \end{equation}
-Here, A is an arbitrary scaling factor, T is the blackbody temperature, and
+Here, A is some amplitude scaling factor, T is the blackbody temperature, and
 $\beta$ is the spectral index of the modified blackbody. It is especially
 interesting to compare the two strongest SEDs -- those associated with the CII
 template and the HI template, respectively, as we see that they correspond to
@@ -662,7 +664,6 @@ significantly different temperatures. Thus, the dust that the CII template
 traces morphologically (which we \emph{a priori} would assume to be associated
 with high-energy regions because of the high transitional energy of this
 line) also seems to exhibit a high intrinsic temperature.
-
 Similarly, we may draw the opposite conclusions regarding the dust traced by
 the HI template: As expected, this dust exhibits a much lower temperature,
 consonant with the picture of it being located in low-intensity regions.
@@ -696,8 +697,8 @@ the HI4PI survey; a ``nearby dust'' template constructed from integrated GAIA
 extinction maps made by Edenhofer et al., the Dame CO template; and a WHAM
 H$\alpha$ template.
 
-We fit these to data (downgraded to the FIRAS beam) from \Planck\ HFI and
-DIRBE, from 353\,GHz to 12$\mu$ m, where thermal dust emission is one of the
+We fit these to data from \Planck\ HFI and
+DIRBE, from 353\,GHz to 12\,$\mu$m, downgraded to the FIRAS resolution, where thermal dust emission is one of the
 main sources of foreground contamination. We show that this template fit is
 both able to account for at least 95\% of the dust RMS for all but the two
 highest frequency bands, and that the resulting SEDs follow modified blackbody
