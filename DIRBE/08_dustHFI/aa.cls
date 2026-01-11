@@ -7,7 +7,7 @@
 %% aa.dtx  (with options: `aa')
 %% 
 %% aa.dtx
-%% Copyright EDP Sciences (2024), J.-C. Charpentier (2010), all rights reserved.
+%% Copyright EDP Sciences, E-press (2016), J.-C. Charpentier (2010), all rights reserved.
 %% Class `aa' to use with LaTeX 2e
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -25,9 +25,9 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 %%
-\def\filedate{2024/08/08}
+\def\filedate{2016/09/01}
 \let\aafiledate\filedate
-\def\fileversion{9.2}
+\def\fileversion{9.1}
 \let\aafileversion\fileversion
 \NeedsTeXFormat{LaTeX2e}[1995/06/01]
 \ProvidesClass{aa}
@@ -135,7 +135,7 @@
 }
 \DeclareOption{bibauthoryear}{%
   \def\aa@biblio{%
-    \RequirePackage[nonamebreak]{natbib}
+    \RequirePackage{natbib}
     \bibpunct{(}{)}{;}{a}{}{,}%
     \def\bibfont{\aa@bibliographyfont}%
     \setlength{\bibsep}{\z@}%
@@ -167,10 +167,10 @@
 \@ifpackageloaded{hyperref}%
 {\newcommand{\LEm}[1]{\texorpdfstring{\protect\stepcounter{lenote}{\normalfont\textbf{\color{red}[Note \arabic{lenote}] }}
 \protect\marginnote{\baselineskip3ex{\normalsize{\normalfont\textbf{\color{red}[Note \arabic{lenote}: #1]}}}}}{}}
-\newcommand{\LEt}[1]{\texorpdfstring{\protect\stepcounter{lenote}{\normalfont\textbf{\color{red}[Note \arabic{lenote}: #1] }}}{}}}%
+\newcommand{\LEt}[1]{\texorpdfstring{\protect\stepcounter{lenote}\normalfont\textbf{\color{red}[Note \arabic{lenote}: #1] }}{}}}%
 {\newcommand{\LEm}[1]{\protect\stepcounter{lenote}{\normalfont\textbf{\color{red}[Note \arabic{lenote}] }}
 \protect\marginnote{\baselineskip3ex{\normalsize{\normalfont\textbf{\color{red}[Note \arabic{lenote}: #1]}}}}}
-\newcommand{\LEt}[1]{\protect\stepcounter{lenote}{\normalfont\textbf{\color{red}[Note \arabic{lenote}: #1] }}}}%
+\newcommand{\LEt}[1]{\protect\stepcounter{lenote}\normalfont\textbf{\color{red}[Note \arabic{lenote}: #1] }}}%
 }
   \renewcommand*\aa@column{onecolumn}
   \aa@twocolumnfalse
@@ -234,15 +234,12 @@
 \def\@hangfrom##1{\setbox\@tempboxa\hbox{{##1}}%
       \hangindent \parindent\noindent\box\@tempboxa}
 \def\sectcounterend{:}
-\def\@seccntformat##1{\csname theap##1\endcsname%
+\def\@seccntformat##1{\appendixname\ \csname the##1\endcsname\sectcounterend%
                       \hskip\betweenumberspace}
   \setcounter{section}{0}%
   \setcounter{subsection}{0}%
   \setcounter{figure}{0}%
   \setcounter{table}{0}%
-  \newcommand\theapsection{\appendixname\ \@Alph\c@section\sectcounterend}%
-  \newcommand\theapsubsection{\@Alph\c@section.\@arabic\c@subsection.}%
-  \newcommand\theapsubsubsection{\theapsubsection\@arabic\c@subsubsection.}%
   \renewcommand\thesection{\@Alph\c@section}%
   \renewcommand\thesubsection{\@Alph\c@section.\@arabic\c@subsection}%
   \renewcommand\thesubsubsection{\thesubsection.\@arabic\c@subsubsection}%
@@ -419,7 +416,7 @@
   }%
   \copy0%
 }
-\newcommand*\aa@pageof{, page \thepage{}}
+\newcommand*\aa@pageof{, page \thepage{} of \pageref{LastPage}}
 \newcommand*{\aa@publishlink}{\hfil%
  Article published by EDP Sciences%
  \hfil}
@@ -867,13 +864,10 @@
 \def\aainstitutename{\par
   \begingroup
   \renewcommand*\and{%
-      \ifaa@longauth\\\else\par\fi%
-      \refstepcounter{aa@institutecnt}%
+      \par\refstepcounter{aa@institutecnt}%
       \hangindent\aa@instituteindent
       \noindent
-      \ifaa@longauth\hbox to-0.001\aa@instituteindent\else%
-      \hbox to\aa@instituteindent\fi%
-      {%
+      \hbox to\aa@instituteindent{%
         \hss
         \hbox{\@textsuperscript{\normalfont\theaa@institutecnt}}%
         \enspace
@@ -1321,6 +1315,41 @@
   \setcounter{table}{#1}
 \fi
 }
+\renewcommand*\enddocument{%
+   \let\AtEndDocument\@firstofone
+   \@enddocumenthook
+   \clearpage
+   \advance\c@page \m@ne
+   \immediate\write\@auxout{\string\newlabel{LastPage}{{\thepage}{\thepage}{}{}{}}}
+   \@checkend{document}%
+   \clearpage
+   \begingroup
+     \if@filesw
+       \immediate\closeout\@mainaux
+       \let\@setckpt\@gobbletwo
+       \let\@newl@bel\@testdef
+       \@tempswafalse
+       \makeatletter \input\jobname.aux
+     \fi
+     \@dofilelist
+     \ifdim \font@submax >\fontsubfuzz\relax
+       \@font@warning{Size substitutions with differences\MessageBreak
+                  up to \font@submax\space have occurred.\@gobbletwo}%
+     \fi
+     \@defaultsubs
+     \@refundefined
+     \if@filesw
+       \ifx \@multiplelabels \relax
+         \if@tempswa
+           \@latex@warning@no@line{Label(s) may have changed.
+               Rerun to get cross-references right}%
+         \fi
+       \else
+         \@multiplelabels
+       \fi
+     \fi
+   \endgroup
+   \deadcycles\z@\@@end}
 \newcommand*\aa@defineentry{%
   \newcommand{\entry}[3]{%
     \par\noindent
@@ -1652,11 +1681,6 @@
   \ignorespaces
   #2\ \ignorespaces%
 }
-% Numbering lines in PDF for all options author's versions
-\RequirePackage[modulo,mathlines,switch,running,columnwise,pagewise]{linenoaa}
-\columnwiselinenumbersfalse%
-\runningpagewiselinenumbers%
-%
 \setlength\bibindent{1em}
 \renewenvironment{thebibliography}[1]{%
   \begingroup
@@ -1685,8 +1709,7 @@
   \sfcode`\.\@m
 }{%
   \endlist\par\endgroup%
-  \ifaa@longauth\nolinenumbers%
-  \kern6pt\hrule\kern6pt\aainstitutename\aa@longauthfalse\fi%
+  \ifaa@longauth\kern6pt\hrule\kern6pt\aainstitutename\aa@longauthfalse\fi%
   \ifaa@referee\if!\csname appendix\endcsname!\relax\else\listofobjects\fi\fi
   \def\@noitemerr{\ClassWarning{aa}{Empty `thebibliography' environment}}%
 }
@@ -2006,9 +2029,6 @@
   \newcommand*\bbbx{\ensuremath{\mathbf{X}}}
   \newcommand*\bbby{\ensuremath{\mathbf{Y}}}
   \newcommand*\bbbz{\ensuremath{\mathbf{Z}}}}
-%\@ifpackageloaded{hyperref}%
-%{}{\RequirePackage[colorlinks=true,
-%    linkcolor=blue, citecolor=blue, filecolor=blue, urlcolor=blue]{hyperref}}%
 }
 \setlength\leftmargini  {\parindent}
 \leftmargin  \leftmargini
@@ -2043,12 +2063,6 @@
 \newcommand{\eprint}[2][]{%
 {\tt\if!#1!#2\else#1\arxivprefixesep\ignorespaces#2\fi}%
 }
-% \corr : Mute tag used by LE
-\newcommand{\corr}[1]{#1}
-%
-% Package required for complexed name figure files
-\RequirePackage{grffile}
-%
 \endinput
 %%
 %% End of file `aa.cls'.
