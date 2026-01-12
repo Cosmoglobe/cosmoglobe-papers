@@ -50,7 +50,10 @@
 \Crefname{section}{Sect.}{Sects.}
 \Crefname{table}{Table}{Tables}
 \Crefname{equation}{Eq.}{Eqs.}
-\Crefname{appsec}{appendix}{appendices}
+\Crefname{appendix}{appendix}{appendices}
+\makeatletter
+\AddToHook{cmd/appendix/before}{\def\cref@section@alias{appendix}}
+\makeatother
 
 \usepackage{caption}
 \usepackage{subcaption}
@@ -209,6 +212,7 @@ The rest of the paper is organized as follows. In \cref{sec:data} we discuss the
 \section{Data}
 \label{sec:data}
 Building on the work of \cite{CG02_05}, this analysis uses the \planck\ PR4 data (\ref{sec:planckhfi}), several FIRAS maps (\ref{sec:firas}), and additional ancillary data (\ref{sec:otherdata}) to constrain a new high resolution four component dust model. We discuss our masks in \cref{sec:masks}. 
+
 \subsection{\Planck\ HFI}
 \label{sec:planckhfi}
 The \planck\ PR4 (also known as \npipe) maps are the final \planck\ data release, improving on previous data releases by jointly analyzing the low-frequency instrument (LFI) and the  high-frequency instrument (HFI) data in a single pipeline, in addition to numerous other improvements (for details see \cite{planck2020-LVII}). 
@@ -223,7 +227,7 @@ FIRAS was a cosmology telescope, launched in 1989 as part of the COBE satellite 
 
 \subsection{Ancillary data}
 \label{sec:otherdata}
-The near dust relative amplitudes are fixed to the \GAIA-based dust extinction template produced by \citet{edenhofer:2024}, which covers distances up to 1.25 kpc. This primarily uses \GAIA\ distances and extinction estimates to build a 3D map of the near dust from \citet{2023Zhang} and GAIA \citep{2019GAIA,2023gaia}, which also leverages the two Micron All Sky Survey (2MASS,\cite{2006AJ_2mass}), the Wide-field Infrared Survey Explorer (WISE and unWISE; \cite{allwise_ES,2010AJ_wise}), the Large sky Area Multi-Object fibre Spectroscopic Telescope (LAMOST; \cite{2023yCatp038060301X_lamost,2022A&A_lamost,2022ApJS_lamost,2022yCat_lamost}). We use the total integrated dust map as our model in this analysis. 
+The near dust relative amplitudes are fixed to the \GAIA-based dust extinction template produced by \citet{edenhofer:2024}, which covers distances up to 1.25 kpc. This primarily uses \GAIA\ distances and extinction estimates to build a 3D map of the near dust from \citet{2023Zhang} and \GAIA\ \citep{2019GAIA,2023gaia}, which also leverages the two Micron All Sky Survey (2MASS,\cite{2006AJ_2mass}), the Wide-field Infrared Survey Explorer (WISE and unWISE; \cite{allwise_ES,2010AJ_wise}), the Large sky Area Multi-Object fibre Spectroscopic Telescope (LAMOST; \cite{2023yCatp038060301X_lamost,2022A&A_lamost,2022ApJS_lamost,2022yCat_lamost}). We use the total integrated dust map as our model in this analysis. 
 Additionally, we use the Wisconsin H-$\alpha$ Mapper (WHAM) data \citep{wham:2003,2016WHAM} as a template for the \Ha\ correlated dust and the results from \citep{CG02_05} as the fiducial values for the \Ha\ MBB, since we find that it is poorly constrained by the \planck\ bands (see \cref{sec:results}). As with DIRBE, the \Ha\ dust is a small extinction component in the \Planck\ bands.  
 When considering our summary statistics in \cref{sec:correlations} we compare the new dust templates with the 157.7$\mu$m \ion{C}{ii} line emission as measured by the FIRAS \ion{C}{ii} map, available on the LAMBDA\footnote{\url{lambda.gsfc.nasa.gov}} website, and to the HI4PI data \citep{HI4PI2016}. 
 
@@ -455,7 +459,7 @@ Broadly speaking, we have very little constraining power on the \Ha\ correlated 
 
 The amplitude maps for the fiducial model can be seen in the top two panels of \cref{fig:dust_figures} and for the templates in \cref{fig:dust_template_figures}. It is striking that even though the amplitudes were free to vary and take on any morphology they preferred, the shape of the cold dust closely resembles the \ion{H}{i} map, shown in the bottom left panel. The cold dust is concentrated in the plane of the galaxy, but is still significant at high galactic latitudes. The shape of the hot dust also bears a striking resemblance to the lower resolution \ion{C}{ii} map in the bottom right panel. There is a clear excess closer to the galactic center, with small bubbles (e.g. the gum nebula at $l=256^\circ,b=-9^\circ$) matching in both maps. This will be discussed further in \cref{sec:correlations}. 
 
-The best fit MBB parameters are recorded in \cref{tab:SEDs}, where the error bars are interpreted from the grid search results in \cref{fig:SEDGridContours}. In \cite{CG02_05} we found cold dust temperatures (corresponding to the CO and \ion{H}{i} dust) of 12 and 16~K, with spectral indices of 1.9 and 1.4, so we find consistency between the HFI channels and the CO correlated dust of that analysis. The hot dust as fit by HFI is slightly hotter (at 30~K) than the fit from DIRBE templates (found to be 24.7~K), but with a relatively wide error bar they are still consistent. As mentioned previously, the \Ha\ correlated dust parameters were taken directly from the DIRBE template fits, and thus are consistent by construction. Lastly, the near dust (known as the GAIA extinction in \cite{CG02_05}) was found to have a slightly hotter fit for the HFI channels, at 18~K with spectral index of 1.7 compared to 14.9~K and 2.37 from the DIRBE templates. This dust, unlike the cold and hot dust, is much less concentrated near the galactic plane, as is expected (see \cref{app:dustTemplates} for the template fits and discussion). 
+The best fit MBB parameters are recorded in \cref{tab:SEDs}, where the error bars are interpreted from the grid search results in \cref{fig:SEDGridContours}. In \cite{CG02_05} we found cold dust temperatures (corresponding to the CO and \ion{H}{i} dust) of 12 and 16~K, with spectral indices of 1.9 and 1.4, so we find consistency between the HFI channels and the CO correlated dust of that analysis. The hot dust as fit by HFI is slightly hotter (at 30~K) than the fit from DIRBE templates (found to be 24.7~K), but with a relatively wide error bar they are still consistent. As mentioned previously, the \Ha\ correlated dust parameters were taken directly from the DIRBE template fits, and thus are consistent by construction. Lastly, the near dust (known as the \GAIA\ extinction in \cite{CG02_05}) was found to have a slightly hotter fit for the HFI channels, at 18~K with spectral index of 1.7 compared to 14.9~K and 2.37 from the DIRBE templates. This dust, unlike the cold and hot dust, is much less concentrated near the galactic plane, as is expected (see \cref{app:dustTemplates} for the template fits and discussion). 
 
 \Cref{fig:dustSED} shows the MBB fits as a function of frequency, with amplitudes set by the RMS amplitude of the map for sky cuts about the galactic plane (94\% and 70\% $f_\mathrm{sky}$). This emphasizes both the challenge of doing such a fit with only HFI data (since within the bands fit by HFI the spectra are relatively flat) but also the incredible power additional data sets (such as the \cite{edenhofer:2024} and \cite{wham:2003,2016WHAM}) bring, allowing us to effectively separate these dust components. A different visualization of the SEDs (spectral energy densities), the relative fraction of each dust component at 545~GHz, can be seen in \cref{fig:dustFrac} and discussion in \cref{app:dustCharacterization}.
 
@@ -572,7 +576,7 @@ This paper and related research have been conducted during and with the support 
 \clearpage
 \appendix
 \onecolumn
-\crefalias{section}{appendix}
+% \crefalias{section}{appendix}
 
 \section{RMS scaling}
 \label{app:RMSScale}
