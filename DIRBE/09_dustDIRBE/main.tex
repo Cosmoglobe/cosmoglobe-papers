@@ -55,7 +55,10 @@
 \Crefname{section}{Sect.}{Sects.}
 \Crefname{table}{Table}{Tables}
 \Crefname{equation}{Eq.}{Eqs.}
-\Crefname{appsec}{appendix}{appendices}
+\Crefname{appendix}{Appendix}{Appendices}
+\makeatletter
+\AddToHook{cmd/appendix/before}{\def\cref@section@alias{appendix}}
+\makeatother
 
 \input{Planck}
 
@@ -148,7 +151,7 @@
    \date{\today} 
    
    \abstract{
-     We fit a four-component thermal dust model to \COBE-DIRBE data between 3.5 and 240\,$\mu$m within the global Bayesian end-to-end \Cosmoglobe\ DR2 reanalysis. Following a companion analysis of \Planck\ HFI, the four components of this model correspond to ``hot dust'', ``cold dust'', ``nearby dust'', and ``H$\alpha$ correlated dust'', respectively, and each component is modelled in terms of a fixed spatial template and a spatially isotropic spectral energy density (SED) defined by an overall free amplitude for each DIRBE channel. The H$\alpha$ dust is an extinction component and, as such, has a negative amplitude. Except for the cold dust amplitude, which is only robustly detected in the 240\,$\mu$m channel, we measure statistically significant template amplitudes for all components in all DIRBE channels between 3.5 and $240\,\mu\mathrm{m}$. However, the two highest frequency channels are too dominated by starlight emission to allow robust dust detections. The total number of DIRBE-specific degrees of freedom in this model is thus only 25. Despite this low dimensionality, the resulting total SED agrees well with recent astrodust predictions, and the overall model efficiency is high although with a notable wavelength dependency. At both low and high frequencies, more than 95\,\% of the signal root mean squared is captured by the model, while at 60 and $100\,\mu\mathrm{m}$ about 70\,\% of the signal is successfully accounted for. The hot dust component, which was previously found to correlate strongly with \ion{C}{II} emission, has the highest absolute amplitude in all DIRBE frequency channels; at 3.5\,$\mu$m, which is known to be dominated by polycyclic aromatic hydrocarbon emission, this component accounts for at least 80\,\% of the total signal. This analysis represents an important step towards establishing a joint concordance model of thermal dust emission applicable to both the microwave and infrared regimes, and we conclude by outlining a roadmap to a future joint analysis of AKARI, DIRBE, IRAS, and \Planck.
+     We fit a four-component thermal dust model to \COBE-DIRBE data between 3.5 and 240\,$\mu$m within the global Bayesian end-to-end \Cosmoglobe\ DR2 reanalysis. Following a companion analysis of \Planck\ HFI, the four components of this model correspond to ``hot dust'', ``cold dust'', ``nearby dust'', and ``H$\alpha$ correlated dust'', respectively, and each component is modelled in terms of a fixed spatial template and a spatially isotropic spectral energy density (SED) defined by an overall free amplitude for each DIRBE channel. The H$\alpha$ dust is an extinction component and, as such, has a negative amplitude. Except for the cold dust amplitude, which is only robustly detected in the 240\,$\mu$m channel, we measure statistically significant template amplitudes for all components in all DIRBE channels between 3.5 and $240\,\mu\mathrm{m}$. However, the two highest frequency channels are too dominated by starlight emission to allow robust dust detections. The total number of DIRBE-specific degrees of freedom in this model is thus only 25. Despite this low dimensionality, the resulting total SED agrees well with recent astrodust predictions, and the overall model efficiency is high, although with a notable wavelength dependency. At both low and high frequencies, more than 95\,\% of the signal root mean squared is captured by the model, while at 60 and $100\,\mu\mathrm{m}$ about 70\,\% of the signal is successfully accounted for. The hot dust component, which was previously found to correlate strongly with \ion{C}{II} emission, has the highest absolute amplitude in all DIRBE frequency channels; at 3.5\,$\mu$m, which is known to be dominated by polycyclic aromatic hydrocarbon emission, this component accounts for at least 80\,\% of the total signal. This analysis represents an important step towards establishing a joint concordance model of thermal dust emission applicable to both the microwave and infrared regimes, and we conclude by outlining a roadmap to a future joint analysis of AKARI, DIRBE, IRAS, and \Planck.
    }
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
@@ -162,7 +165,7 @@
 \section{Introduction}
 
 In a series of seven companion papers, within which this is the last,
-we have reanalyzed the 30-year old \COBE-DIRBE data using modern
+we have reanalyzed the 30-year-old \COBE-DIRBE data using modern
 end-to-end Bayesian statistical techniques as implemented in the
 \Cosmoglobe\footnote{\url{http://cosmoglobe.uio.no}} framework. From this work, a set of 10
 full-sky DIRBE frequency maps emerge, presented in \citet{CG02_01}, covering the infrared frequency range
@@ -173,20 +176,20 @@ they suffer far less from zodiacal light contamination
 \citep{K98,CG02_02}. As a result they can be used for more detailed
 astrophysics applications. A few examples of this are presented in the
 current analysis, including improved estimates of the cosmic infrared
-background spectrum \citep{CG02_03} and large-scale starlight emission
-\citet{CG02_04}.
+background (CIB) spectrum \citep{CG02_03} and large-scale starlight emission
+\citep{CG02_04}.
 
-The main topic of the last three papers in the series is modelling thermal dust radiation efficiently on large angular
-scales in the microwave and infrared frequency regimes. This issue has
-been the focus of intense scrutiny ever since the groundbreaking IRAS
-measurements were published in 1982, and its scientific importance has
-only increased through the release of a series of increasingly
-sensitive data sets, such as \COBE-DIRBE and \Planck\ HFI. Today,
-detailed dust modelling plays a key role in many of the most
-competitive fields of cosmology, from the search for inflationary
-gravitational waves in cosmic microwave background (CMB) $B$-mode
-polarization data \citep{bicep2021} to measurements of dark energy using distant
-supernovae \citep{popovic:2025}.
+The main topic of the last three papers in the series (\citet{CG02_05, CG02_06};
+and the present paper)  is modelling thermal dust radiation efficiently on
+large angular scales in the microwave and infrared frequency regimes. This
+issue has been the focus of intense scrutiny ever since the groundbreaking IRAS
+measurements were published in 1982, and its scientific importance has only
+increased through the release of a series of increasingly sensitive data sets,
+such as \COBE-DIRBE and \Planck\ HFI. Today, detailed dust modelling plays a
+key role in many of the most competitive fields of cosmology, from the search
+for inflationary gravitational waves in cosmic microwave background (CMB)
+$B$-mode polarization data \citep{bicep2021} to measurements of dark energy
+using distant supernovae \citep{popovic:2025}.
 
 As of today, \Planck\ HFI defines the state-of-the-art for full-sky thermal
 dust mapping, both in terms of signal-to-noise ratio as well as systematic
@@ -197,7 +200,7 @@ polarization
 and these now form the basis for much of the dust modelling efforts in
 the field \citep[e.g.,][]{pysm2,pysm3}. However, at the same time, the
 limited frequency range of \Planck, covering only 30-857\,GHz,
-implies that the applicability of these models are currently quite
+implies that the applicability of these models is currently quite
 limited. Furthermore, the absolute calibration of the 857\,GHz \Planck\
 channel, which is nominally the most sensitive \Planck\ dust channel,
 is uncertain at the $\sim$10\,\% level \citep{planck2016-l03,npipe},
@@ -216,7 +219,7 @@ blackbody (MBB) SEDs with spatially
 constant spectral parameters, and in this paper we show that the same
 spatial morphologies also trace dust in the DIRBE frequencies very
 well, although with more complicated SED behaviour. The combined
-result is an global model that jointly describes both microwave and
+result is a global model that jointly describes both microwave and
 infrared frequencies.
 
 So far, this model has only been developed for and applied to
@@ -225,7 +228,7 @@ plays a key role in modern astrophysics and cosmology. For instance,
 massive resources are currently being spent on searching for and
 constraining the amplitude of inflationary gravitational waves through
 deep CMB $B$-mode polarization experiments \citep{litebird2022, SO2019}, and polarized thermal dust
-emission represents a key challenge for these. Given the high
+emission represents a key challenge for these \citep{fuskeland:2023}. Given the high
 efficiency of the \Cosmoglobe\ DR2 four-component dust model for
 intensity data, it is reasonable to expect a similar performance for
 polarization observations. We therefore conclude this paper by
@@ -239,7 +242,7 @@ thermal dust emission in both intensity and polarization.
   \includegraphics[width=0.49\linewidth]{figures/CosmoglobeDR2_VII_545-1_dust_hot_v1.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/CosmoglobeDR2_VII_545-1_dust_near_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/CosmoglobeDR2_VII_545-1_dust_Ha_v1.pdf}
-  \caption{Dust amplitude maps used in the \Cosmoglobe\ DR2 sky model, as evaluated for the \Planck\ HFI 545-1 bolometer channel. From left to right and top to bottom, the four panels show 1) the cold dust amplitude, $\a_{\mathrm{cold}}$; 2) the hot dust amplitude, $\a_{\mathrm{hot}}$; 3) the nearby dust amplitude, $\a_{\mathrm{near}}$; and 4) the (absolute value of the) H$_{\alpha}$-correlated dust extinction amplitude, $\a_{\mathrm{H}\alpha}$. All panels employ the \Planck\ non-linear high dynamic range color scheme, defined by $\log_{10}((\a + \sqrt{4+\a^2})/2)$, which results in a nearly linear behaviour for small values and exponential for large values.  }
+  \caption{Dust template maps used in the \Cosmoglobe\ DR2 sky model, whose units are defined with the \Planck\ HFI 545-1 bolometer channel as the reference frequency. From left to right and top to bottom, the four panels show 1) the cold dust template, $\t_{\mathrm{cold}}$; 2) the hot dust template, $\t_{\mathrm{hot}}$; 3) the nearby dust template, $\t_{\mathrm{nearby}}$; and 4) the (absolute value of the) H$_{\alpha}$-correlated dust extinction template, $\a_{\mathrm{H}\alpha}$. All panels employ the \Planck\ non-linear high dynamic range color scheme, defined by $\log_{10}((\t + \sqrt{4+\t^2})/2)$, which results in a nearly linear behaviour for small values and exponential for large values.  }
   \label{fig:templates}
 \end{figure*}
 
@@ -253,7 +256,7 @@ used. Hence, we will give here a recap of the data model used, as presented in
 \citep{CG02_01}, after which we will devote a subsection to how the thermal
 dust part of the global model is described.
 
-\subsection{Data model and posterior distribution}
+\subsection{Data model}
 In the \Cosmoglobe\ framework, the standard modus operandi is to begin with an
 explicit parametric model incorporating all known aspects of the dataset with
 which we are working -- including both instrumental effects as well as a
@@ -271,21 +274,157 @@ $\G$ is an overall gain factor, $\P$ is the pointing matrix which projects the
 pixelated sky onto a $n_{\mathrm{tod}}$-sized space, $\B$ is the instrumental
 beam convolution operator, and $\n$ is the instrumental noise. The physical sky
 is represented by three terms. Firstly, a sum over sky components that can be
-modelled as constant at every point in time. We sum HEALPix\footnote{\url{http://healpix.sourceforge.net/}} \citep{healpix,Zonca2019} maps of
+modelled as constant at every point in time. We sum HEALPix\footnote{\url{http://healpix.sourceforge.net/}} \citep{HEALPIX,Zonca2019} maps of
 amplitudes for each sky component ($\a_c$) multiplied by a mixing matrix $\M_c$ which
 extrapolates the given component to the frequencies observed. Secondly, there
-is a term representing the zodiacal emission, which cannot be treated as a time
-constant. Finally there is a term representing a component that is static in
+is a term representing the zodiacal emission, which cannot be treated as being
+constant in time (which for most other components is an unproblematic
+assumption). Finally there is a term representing a component that is static in
 solar coordinates, which may either be related to the DIRBE sidelobes, or be
 genuine excess radiation originating in the Solar System. These two last terms
-are treated in \citet{CG02_02} and \citet{CG02_03}, and what concerns us in the
-present work is the first of the three terms, which will be expaned on in what
-follows.
+are treated in \citet{CG02_02} and \citet{CG02_03}. In the
+present work we focus on the first of the three terms, which will be expanded on in \cref{sec:bayseian,sec:modelling}.
 
 
 %As it stands, this is a ``complete'' model for the frequency domain we are interested in this paper, but we expect that it will have to expand as additional data is added and more discoveries are made.
 
-\subsubsection{Bayesian end-to-end analysis}
+
+\subsection{Multi-component thermal dust modelling}
+\label{sec:modelling}
+%\section{Dust modelling}
+%\subsection{Current status}
+%\label{sec:current_dust}
+Interstellar dust -- amorphous particles of silicate and carbonaceous materials
+-- makes its presence known on practically all astrophysically relevant
+wavelengths. Understanding this material is interesting in its own right,
+however, it is also crucial to improve astrophysical foreground removal,
+especially when interstellar dust emission contaminates other signals of
+interest.\footnote{For a recent review, see \citet{Hensley2021}.}.
+
+Recently, the ``astrodust+PAH'' model \citep{Hensley2023} was introduced, wherein
+the diffuse interstellar medium (ISM) is hypothesized to be made up of a single
+composite material (the eponymous astrodust) for scales larger than
+$\sim0.02~\mu$m, and a distinct variety of materials -- including so-called
+polycyclic aromatic hydrocarbons (PAH) -- on scales smaller than this.
+
+In the wavelength regime between $3000-100~\mu$m, this model is described well
+ by an MBB SED \footnote{The actual
+ astrodust model is made up of a composite MBB which has a transition between
+353 and 217 GHz}, i.e., an SED that follows
+\begin{equation}
+s(\nu) \propto \nu^\beta B(\nu, T),
+\label{eq:mbb}
+\end{equation}
+where $\nu$ is the frequency, $B$ is the Planck law for a perfect blackbody at a
+certain frequency $\nu$ and temperature $T$, and $\beta$ is the spectral index.
+Typical temperatures of this blackbody in the diffuse ISM are around $\sim$ 20
+K, meaning that the distribution typically peaks around 150\,$\mu$m ($\sim
+2000$ GHz).
+
+At lower wavelengths (2.5\,$\mu$m -- 12\,$\mu$m), the astrodust+PAH model is
+mostly dominated by the nanoscale particle emission, and exhibits strong
+emission lines at various wavelengths (see Fig.~10 in \citealt{Hensley2023}).
+
+\subsubsection{The four-component dust model}
+\label{sec:fourcompmodel}
+The astrodust model provides a general picture. Typically, in a given line-of-sight, the relative
+contribution of various dust components will vary. At the same time, the degree
+to which such variations can be detected and described is limited by the
+resolution and signal-to-noise ratios of the available data at the wavelengths
+involved. Thus, classifying populations of interstellar dust
+with common spectral parameters has been of high importance.
+
+It was demonstrated by \citet{CG02_05} that a natural and highly
+effective classification of such populations can be achieved through the use of
+templates derived from surveys of spectral line emission (\CII, H$\alpha$, CO
+and \HI) and from inference of nearby dust structures via starlight extincion
+\citep{edenhofer:2024}. In this paper, we showed that using the linear minimization of
+five such templates we can explain more than 95\% of the signal variance at dust-dominated
+frequencies in \Planck\ (353--857\,GHz) and DIRBE (240--60 $\mu$m), while still accounting for more than 80\% of the signal variance at the
+starlight-dominated DIRBE bands (25 and 12 $\mu$m).
+
+\citet{CG02_06} applied the main idea behind that
+result to all \Planck\ HFI data using an extensive search of the full parameter space. It was shown
+that, by using the \GAIA\ extinction template, and the H$\alpha$ template and by assuming two other
+components with freely varying amplitudes per pixel, but with fixed global
+temperatures and spectral indices per component, we arrived at a dust model
+that could explain between 98.5\% and 99.9\% of the non-CMB signal in these
+channels. Furthermore, the resulting dust amplitude maps exhibited morphologies that
+turned out to be very similar to the templates used in \citet{CG02_05},
+giving an independent confirmation of the appropriateness of assuming a
+morphological correlation between those astrophysical templates and dust populations.
+
+Encouraged by these results, the main \Cosmoglobe\ DR2 analysis employs a
+similar four-component thermal dust model, in which four spatial templates are
+used to model the morphology of the thermal dust.
+
+Two of these templates, used in both \citet{CG02_05} and \citet{CG02_06}, were
+derived from the \citet{edenhofer:2024} extinction maps and from the WHAM H$\alpha$ \citep{wham:2003} (see \citealt{CG02_05}
+for more details on how these templates were constructed),  while the other two
+were the best-fit solutions obtained in \citet{CG02_06}. We plot these
+templates in \cref{fig:templates}.
+
+The SEDs of these components are not directly modelled as
+modified blackbodies, as they were in \citet{CG02_06}. Rather, we define a set
+of SED bins, each of which is chosen to correspond to the width of a DIRBE
+band, as shown in \cref{tab:bands}. Each dust component is then set to have a
+constant amplitude within a given bin, meaning that there is one free parameter
+per bin per component, and each amplitude scales one of the four component
+templates. These amplitudes are then sampled over in the Gibbs chain.
+
+With this, then, the total sky model (the third term of \cref{eq:model}) in
+the frequency domain of DIRBE can be written,
+
+\begin{equation}
+\label{eq:skymodel}
+\begin{aligned}
+  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c(\nu) \a_c  = 
+    &[a]_{\mathrm{cold}}(\nu)\t_{\mathrm{cold}} && \textrm{(Cold dust)} \\
+    + & [a]_{\mathrm{hot}}(\nu)\t_{\mathrm{hot}} && \textrm{(Hot dust)}\\
+    + & [a]_{\mathrm{nearby}}(\nu)\t_{\mathrm{nearby}} && \textrm{(Nearby dust)} \\
+    + & [a]_{\mathrm{H\alpha}}(\nu)\t_{\mathrm{H\alpha}} && \textrm{(H$\alpha$ correlated dust)} \\
+  + &\left(\frac{\nuzeroff}{\nu}\right)^2
+  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
+  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  f_{\mathit{Gaia},j} a_{\mathrm{s},j} &\quad&
+  \textrm{(Bright stars)} \\
+  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j} &\quad&
+  \textrm{(Faint stars)} \\  
+  + &m_{\nu} && \textrm{(Monopole)}. 
+\end{aligned}
+\end{equation}
+In this equation, the bracketed amplitudes, $[a](\nu)$, indicate amplitudes
+that are constant within each frequency range that corresponds to a DIRBE band
+(i.e. the abovementioned bins).
+
+The first four terms form the complete model of thermal dust, which is the main
+focus of this work. The fifth term models the free-free emission, which is
+expected to contribute moderately at all relevant frequencies without becoming
+a dominant term. Then, there are two point source terms, all of which are dealt
+with in \citet{CG02_04}. Finally, the last term represents the monopole at each
+frequency, which is treated in \citet{CG02_03}.
+
+
+\begin{table*}[htb]
+    \centering
+    \caption{Components enabled for each frequency band. The dust band widths represent the width of each dust band used in this analysis, not the instrumental bandwidths.}
+    \begin{tabular}{c|c|c|c|c|c|c}
+        \label{tab:bands}
+        Band & \makecell{Dust Band\\Width (GHz)} & Hot dust & Cold dust & Nearby dust & H$\alpha$-correlated dust \\
+        \hline
+        DIRBE 240 $\mu\mathrm m$ & 617   &\x &\x &\x &\x \\
+        DIRBE 140 $\mu\mathrm m$ & 873   &\x & &\x &\x \\
+        DIRBE 100 $\mu\mathrm m$ & 1524  &\x & &\x &\x \\
+        DIRBE 60  $\mu\mathrm m$ & 4936  &\x & &\x &\x \\
+        DIRBE 25  $\mu\mathrm m$ & 9100  &\x & &\x &\x \\
+        DIRBE 12  $\mu\mathrm m$ & 27400 &\x & &\x &\x \\
+        DIRBE 4.9 $\mu\mathrm m$ & 24715 &\x & & & \\
+        DIRBE 3.5 $\mu\mathrm m$ & 39275 &\x & & & \\
+    \end{tabular} 
+\end{table*}
+
+\subsection{Bayesian end-to-end analysis}
 In this analysis, we draw samples from the \emph{posterior}
 distribution of the full set of parameters of our model
 \citep{CG02_01} -- in formulaic terms, we are mapping out $P(\theta | \dv)$,
@@ -311,7 +450,7 @@ sampling each parameter (or a subset of parameters) from their respective
 marginal distributions with respect to all other parameters. The theory of Gibbs sampling
 then says that by combining these samples into a full set for all the
 parameters involved, this set will represent a proper sample from the joint
-distribution. Applied to Eq. \ref{eq:model}, we get a sequence of operations as
+distribution. For the Cosmoglobe DR2 analysis, the Gibbs chain looks as
 follows:
 
 %\begin{equation}
@@ -339,10 +478,10 @@ follows:
     \label{eq:gibbschain}
 \begin{aligned}
 \G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
 &\,\a_{\mathrm{static}})\\
 \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
 &\,\a_{\mathrm{static}})\\
 \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
 \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
@@ -357,7 +496,8 @@ follows:
 \end{aligned}
 \end{equation}
 Here, the symbol $\leftarrow$ indicates the operation of drawing a sample from
-the distribution on the right-hand side. After some burn-in period, the
+the distribution on the right-hand side (see \citet{CG02_01} for a complete
+overview of all the symbols in this equation) . After some burn-in period, the
 resulting joint parameter sets will correspond to samples drawn from the true
 underlying joint posterior.
 
@@ -366,142 +506,11 @@ parameters are ``given'', we can now treat a highly interconnected problem
 (i.e. sampling from the joint posterior of all parameters involved in our data
 model) as a highly modular one -- meaning that we can perform each
 ``sub-analysis'' without being concerned with the other parts of the problem.
-Hence, in this paper, we mainly focus on the three first components of Eq.
-(\ref{eq:skymodel}), leaving the treatment of stars to \citet{CG02_04}, monopoles to \citet{CG02_02}, and condition on free-free emission as determined by \citet{planck2014-a12}.
+Hence, in this paper, we mainly focus on the four first components of Eq.
+(\ref{eq:skymodel}), leaving the treatment of stars to \citet{CG02_04},
+monopoles to \citet{CG02_01}, zodiacal light to \citet{CG02_02}, and condition
+on free-free emission as determined by \citet{planck2014-a12}.
 
-
-\subsection{Multi-component thermal dust modelling}
-
-%\section{Dust modelling}
-%\subsection{Current status}
-%\label{sec:current_dust}
-Interstellar dust -- amorphous particles of silicate and carbonaceous materials
--- makes its presence known on practically all astrophysically relevant
-wavelengths. The efforts to classify and describe this material is significant
-in its own right, but knowing its properties is critical for better and more
-precise astrophysical foreground removal in cases where interstellar dust
-emission contaminate the other signals of interest\footnote{For a recent
-review, see \citet{Hensley2021}.}.
-
-Recently, the ``astrodust+PAH'' model \citep{Hensley2023} was introduced, wherein
-the diffuse interstellar medium (ISM) is hypothesised to be made up of a single
-composite material (the eponymous astrodust) for scales larger than
-$\sim0.02~\mu$m, and a distinct variety of materials -- including so-called
-polycyclic aromatic hydrocarbons (PAH) -- on scales smaller than this.
-
-In the wavelength regime between $3000-100~\mu$m, this model is described well
- by an MBB SED \footnote{The actual
- astrodust model is made up of a composite MBB which has a transition between
-353 and 217 GHz}, i.e., an SED that follows
-\begin{equation}
-s(\nu) \propto \nu^\beta B(\nu, T),
-\label{eq:mbb}
-\end{equation}
-where $\nu$ is frequency, $B$ is the Planck law for a perfect blackbody at a certain frequency $\nu$ and temperature $T$,
-and $\beta$ is the spectral index. Typical temperatures of this blackbody in
-the diffuse ISM are around $\sim$ 20 K, meaning that the distribution typically
-peaks around 150\,$\mu$m ($\sim 2000$ GHz).
-
-At lower wavelengths (2.5\,$\mu$m -- 12\,$\mu$m), the astrodust+PAH model is
-mostly dominated by the nanoscale particle emission, and exhibits strong
-emission lines at various wavelengths (see Fig.~10 in \citealt{Hensley2023}).
-
-\subsubsection{The four-component dust model}
-The astrodust model provides a general picture. Typically, in a given line-of-sight, the relative
-contribution of various dust components will vary. At the same time, the degree
-to which such variations can be detected and described is limited by the
-resolution and signal-to-noise ratios of the available data at the wavelengths
-involved. Thus, classifying populations of interstellar dust
-with common spectral parameters has been of high importance.
-
-It was demonstrated by \citet{CG02_05} that a natural and highly
-effective classification of such populations can be achieved through the use of
-templates derived from surveys of spectral line emission (\CII, H$\alpha$, CO
-and \HI) and from inference of nearby dust structures via starlight extincion
-\citep{edenhofer:2024}. In this paper, we showed that using the linear minimization of
-five such templates we can explain more than 95\% of the signal variance at dust-dominated
-frequencies in \Planck\ (353--857\,GHz) and DIRBE (240--60 $\mu$m), while still accounting for more than 80\% of the signal variance at the
-starlight-dominated DIRBE bands (25 and 12 $\mu$m).
-
-\citet{CG02_06} applied the main idea behind that
-result to all \Planck\ HFI data using an extensive search of the full parameter space. It was shown
-that, by only using the \GAIA\ extinction template, and by assuming three other
-components with freely varying amplitudes per pixel, but with fixed global
-temperatures and spectral indices per component, we arrived at a dust model
-that could explain between 98.5\% and 99.9\% of the non-CMB signal in these
-channels. Furthermore, the resulting dust amplitude maps exhibited morphologies that
-turned out to be very similar to the templates used in \citet{CG02_05},
-giving an independent confirmation of the appropriateness of assuming a
-morphological correlation between those astrophysical templates and dust populations.
-
-Encouraged by these results, the main \Cosmoglobe\ DR2 analysis employs a
-similar four-component thermal dust model, in which four spatial templates are
-used to model the morphology of the thermal dust.
-
-One of these templates, used in both \citet{CG02_05} and \citet{CG02_06}, was
-derived from the \citet{edenhofer:2024} extinction maps (see \citealt{CG02_05}
-for more details on how this template was constructed), while the three others
-were the best-fit solutions arrived at in \citet{CG02_06}. We plot these
-templates in Fig. \ref{fig:templates}.
-
-The SEDs of these components are not directly modelled as
-modified blackbodies, as they were in \citet{CG02_06}. Rather, we define a set
-of SED bins, each of which is chosen to correspond to the width of a DIRBE
-band, as shown in \cref{tab:bands}. Each dust component is then set to be
-constant within a given bin, meaning that there is one free parameter per bin
-per component, which are then sampled over in the Gibbs chain.
-
-With this, then, the total sky model (the third term of Eq. \ref{eq:model}) in
-the frequency domain of DIRBE can be written,
-
-\begin{equation}
-\label{eq:skymodel}
-\begin{aligned}
-  \sum_{c=1}^{n_{\mathrm{comp}}} \M_c(\nu) \a_c  = 
-    &[a]_{\mathrm{cold}}(\nu)\t_{\mathrm{cold}} && \textrm{(Cold dust)} \\
-    + & [a]_{\mathrm{hot}}(\nu)\t_{\mathrm{hot}} && \textrm{(Hot dust)}\\
-    + & [a]_{\mathrm{nearby}}(\nu)\t_{\mathrm{nearby}} && \textrm{(Nearby dust)} \\
-    + & [a]_{\mathrm{H\alpha}}(\nu)\t_{H\alpha} && \textrm{(H$\alpha$ correlated dust)} \\
-  + &\left(\frac{\nuzeroff}{\nu}\right)^2
-  \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
-  \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
-  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
-  f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
-  \textrm{(Bright stars)} \\
-  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
-  \textrm{(Faint stars)} \\  
-  + &m_{\nu} && \textrm{(Monopole)}. 
-\end{aligned}
-\end{equation}
-In this equation, the bracketed amplitudes, $[a](\nu)$, indicate amplitudes
-that are constant within each frequency range that corresponds to a DIRBE band
-(i.e. the abovementioned bins).
-
-The first four terms form the complete model of thermal dust, which is the main
-focus of this work. The fifth term models the free-free emission, which is
-expected to contribute moderately at all relevant frequencies without becoming
-a dominant term. Then, there are two point source terms, all of which are dealt
-with in \citet{CG02_04}. Finally, the last term represents the monopole at each
-frequency, which is treated in \citet{CG02_03}.
-
-
-\begin{table*}[htb]
-    \centering
-    \caption{Components enabled for each frequency band. Band widths correspond to the width of the corresponding dust band used in this analysis, not the instrumental bandwidths. }
-    \begin{tabular}{c|c|c|c|c|c|c}
-        \label{tab:bands}
-        Band & \makecell{Dust Band\\Width (GHz)} & Hot dust & Cold dust & Nearby dust & H$\alpha$-correlated dust \\
-        \hline
-        DIRBE 240 $\mu\mathrm m$ & 617   &\x &\x &\x &\x \\
-        DIRBE 140 $\mu\mathrm m$ & 873   &\x & &\x &\x \\
-        DIRBE 100 $\mu\mathrm m$ & 1524  &\x & &\x &\x \\
-        DIRBE 60  $\mu\mathrm m$ & 4936  &\x & &\x &\x \\
-        DIRBE 25  $\mu\mathrm m$ & 9100  &\x & &\x &\x \\
-        DIRBE 12  $\mu\mathrm m$ & 27400 &\x & &\x &\x \\
-        DIRBE 4.9 $\mu\mathrm m$ & 24715 &\x & & & \\
-        DIRBE 3.5 $\mu\mathrm m$ & 39275 &\x & & & \\
-    \end{tabular} 
-\end{table*}
 
 \section{Data}
 \label{sec:data}
@@ -512,24 +521,24 @@ data sets and the preprocessing performed; for a more in-depth description,
 see \citet{CG02_01} and \citet{CG02_04}.
 
 \subsection{\COBE-DIRBE}
-The Diffuse InfraRed Explorer (DIRBE), whose main goal was the mapping out of the cosmic infrared background
-(CIB), was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
-measured the sky in ten frequency bands from $1\,\mathrm{\mu m}$ to
+The Diffuse InfraRed Explorer (DIRBE), whose main goal was the mapping out of
+the cosmic infrared background, was part of the \COBE\ satellite
+\citep{boggess92, silverberg93}, and
+measured the sky in ten frequency bands from $1.25\,\mathrm{\mu m}$ to
 $240\,\mathrm{\mu m}$. In this analysis, we have converted the original DIRBE
 CIO (Calibrated Individual Observations), whose pointing information is given
-in terms of Quadcube pixels with a resolution of 20\arcs\ into HEALPix
+in terms of Quadcube pixels with a resolution of 20\arcs\, into HEALPix
 \nside=512 pixelation maps, giving an approximate resolution of 42\arcm. Following
 the nomenclature of \cite{CG02_01}, we refer to the DIRBE CIOs as
-``time-ordered data'' (TOD). Including DIRBE TOD in the analysis in this way
+``time-ordered data'' (TOD). Performing our analysis on DIRBE TOD directly
 allows us to target the zodiacal light \citep{CG02_02}, which, as mentioned
-above, must be analysed as a time-varying component on the sky, in contrast to
-other astrophysical components.
+above, must be treated as a time-dependent sky component, in contrast to other
+astrophysical sources.
 
 The use of DIRBE data also allows a fuller exploration of the scales relevant
 for interstellar dust modelling; in particular, we are able to capture the peak
 of the MBB's and their exponential fall-off at shorter wavelengths. Although
-these data introduce additional modeling complexity, namely PAH emission, these
-data can break key degeneracies between $T$ and $\beta$.
+these data introduce additional modeling complexity, namely PAH emission, they can break key degeneracies between $T$ and $\beta$.
 
 \subsection{\WISE\ and \GAIA}
 At the higher DIRBE frequency bands (25--1.25 $\mu$m), starlight emission
@@ -539,16 +548,16 @@ crossmatched the brighest stars in the \textit W1 band against \Gaia\ DR2, and u
 estimated physical parameters from that catalogue to model the bright stars. In
 addition, we created a general faint source template, similar to that used in
 \citet{hauser1998}, based on the stars
-that were not part of the bright star component. Together, these two components
-comprise the sixth and seventh component in \cref{eq:skymodel}.
+that were not part of the bright star component (see \citet{CG02_04} for more
+details). Together, these two components comprise the sixth and seventh
+component in \cref{eq:skymodel}.
 
 \subsection{Data selection}
 As noted in \citet{CG02_05}, not all thermal dust components are expected to
 contribute to the DIRBE bands we are considering in this paper (i.e.
 240--12$\mu$m). 
 Following the same logic as in that paper, we restrict the dust
-components to be active in the various DIRBE bands as indicated in Table
-\ref{tab:bands}. In particular, the cold dust component peaks at 1 THz, and
+components to be active in the various DIRBE bands as indicated in \cref{tab:bands}. In particular, the cold dust component peaks at 1 THz, and
 falls off exponentially, making it vastly subdominant to all other components.
 In contrast, the hot dust component is visible until the 3.5\,$\mathrm{\mu m}$
 channel, and must be included to obtain a satisfactory fit. The nearby and
@@ -585,21 +594,21 @@ four dust components. After a period of reaching equilibrium -- which varies
 from almost instantly (for the cold dust amplitude, for example) to around 100
 samples at the most (particularly evident for the hot dust and
 H$\alpha$-correlated dust 25 and 12 $\mu $m bins) -- the chains generally do not
-exhibit any long correlations and seem to mix fairly well. The only exception
-is the 240 and 120 $\mu$m H$\alpha$-correlated dust bins, where we see more
+exhibit any long correlations and seem to mix fairly well. The only exceptions
+are the 240 and 120 $\mu$m H$\alpha$-correlated dust bins, where we see more
 long-term trends that indicate a slower traversal through parameter space.
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{figures/traceplots_dust_seds_cold_dust.pdf}
-  \caption{Cold dust amplitude as a function of iteration for the 240$\mu$m channel where it is included. The five lines correspond to the five independent sampling chains in the analysis. We see robust mixing in all chains.}
+  \caption{Cold dust amplitude as a function of iteration for the 240 $\mu$m channel where it is included. The five lines correspond to the five independent sampling chains in the analysis. We see robust mixing in all chains.}
   \label{fig:trace_colddust}
 \end{figure}
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{figures/traceplots_dust_seds_hot_dust.pdf}
-  \caption{Hot dust amplitudes as a function of iteration for the eight lowest frequency DIRBE channels, with all five sampling chains overplotted. We see that the 3.5$\mu$m and 4.9$\mu$m channels exhibit slower mixing than the others, but still manage to explore the full parameter space.}
+  \caption{Hot dust amplitudes as a function of iteration for the eight lowest frequency DIRBE channels, with all five sampling chains overplotted. We see that the 3.5 $\mu$m and 4.9 $\mu$m channels exhibit slower mixing than the others, but still manage to explore the full parameter space.}
   \label{fig:trace_hotdust}
 \end{figure}
 \begin{figure}[htb]
@@ -611,20 +620,29 @@ long-term trends that indicate a slower traversal through parameter space.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{figures/traceplots_dust_seds_ha-correlated_dust.pdf}
-  \caption{H$\alpha$ dust amplitudes as a function of the iteration for the six lowest frequency DIRBE channels, with all five sampling chains overplotted. Wee see that the 25 and 12$\mu$m channels exhibit slower mixing than the others, but still manage to explore the full parameter space.}
+  \caption{H$\alpha$ dust amplitudes as a function of the iteration for the six
+	lowest frequency DIRBE channels, with all five sampling chains
+	overplotted. The 25 and 12 $\mu$m channels exhibit slower mixing than the others, but still manage to explore the full parameter space.}
   \label{fig:trace_hacorr_dust}
 \end{figure}
 
-In Fig. \ref{fig:corrmat}, we show the correlations between the various SED
+In \cref{fig:corrmat}, we show the correlations between the various SED
 bins in the run, calculated over all five chains after discarding burn-in. The
-strongest correlations are internally between the near dust bins. Most of them
-are correlated with each other, but they are anticorrelated with the 12 $\mu$m
-amplitude. Those same bins, and in particular the 100 $\mu$m one, are also
-anticorrelated with the 100 $\mu$m hot dust amplitude. It seems reasonable
-enough, looking at Fig. \ref{fig:templates}, that there is overlap between the components, and as long as 
-the morphologies of hot dust and nearby dust are similar enough that whenever the
-one increases, the other can decrease to compensate for the change. The same
+strongest correlations are internally between the nearby dust bins. Most of the
+bins are correlated with each other, but they are anticorrelated with the 12
+$\mu$m amplitude. The correlation of the nearby dust component's amplitude
+between different bins is due to indirect interactions of the parameters in the
+model, as the morphology of the nearby dust is fixed, and the amplitudes are
+sampled separately. Based on our understanding of the model, correlation
+matrices, and residuals, we do not identify a physical mechanism for this
+correlation. The most reasonable possibility is correlation with zodiacal dust,
+although we have not been able to confirm this quantitatively.
+
+Those same bins, and in particular the 100 $\mu$m bin, are also
+anticorrelated with the 100 $\mu$m hot dust amplitude. 
+This is not unexpected, as there is morphological overlap between the hot dust and nearby dust components, as displayed in \cref{fig:templates}. Therefore, a negative correlation would be expected to model the same total amplitude in the DIRBE map itself. The same
 phenomenon can be seen between hot and cold dust at 240 $\mu$m.
+
 %\begin{figure}
 %  \centering
 %  \includegraphics[width=\columnwidth]{figures/traceplots.pdf}
@@ -636,21 +654,23 @@ phenomenon can be seen between hot and cold dust at 240 $\mu$m.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{figures/corrmat.pdf}
-  \caption{Correlations between the dust amplitudes at each frequency, as computed over the full sample set. We see that they are largely uncorrelated, but we see some structures within some bands as the sampler trades off between components (eg. 240$\mu$m in the upper left). We also see some fainter structure in the nearby dust amplitudes across channels.}
+  \caption{Correlations between the dust amplitudes at each frequency, as
+	computed over the full sample set. They are largely
+	uncorrelated, but there are some structures within some bands as the
+	sampler trades off between components (e.g., 240 $\mu$m in the upper
+	left).There is also some fainter structure in the nearby dust amplitudes across channels.}
   \label{fig:corrmat}
 \end{figure}
 
 \subsection{Multi-component thermal dust SED posteriors}
 
-In Table \ref{tab:tempamp}, we summarize the thermal dust SED posteriors
+In \cref{tab:tempamp}, we summarize the thermal dust SED posteriors
 resulting from the above analysis as the mean value and variance of the chain
 samples (including all five chains of the analysis, discarding burn-in).
-Similarly, we plot the posterior mean values per bin in Fig.
-\ref{fig:total_sed}, where the thickness of the line indicates the standard
+Similarly, we plot the posterior mean values per bin in \cref{fig:total_sed}, where the thickness of the line indicates the standard
 deviation of that amplitude.
-
-In the same plot, we also plot posterior total SED, when all four components
-are summed up, and we also show the Astrodust+PAH model that is the best fit to
+In the same plot, we also show the posterior total SED, wherein all four components
+are summed up, as well as the Astrodust+PAH model that is the best fit to
 the mean total dust SED.\footnote{Specifically,
     we fit an overall amplitude $A$, as well as the
     $\log_{10}{U}$ parameter used in \citet{Hensley2023}, with the total model
@@ -712,23 +732,30 @@ function returning the emission as a function of $\log_{10}{U}$.}
   \label{fig:total_sed}
 \end{figure}
 
-Clearly, both the hot dust and nearby dust components follow a typical thermal
+Both the hot dust and nearby dust components follow a typical thermal
 dust modified blackbody curve, mirroring the results found in \citet{CG02_05}.
-At higher frequencies, we also see that they exhibit the characteristic rise in
+At higher frequencies, they exhibit the characteristic rise in
 the SED, where models like Astrodust+PAH predicts emission lines from the
-nanoscale particles. The figure also shows that fitting the total (i.e. the
+nanoscale particles. The figure also shows that fitting the total (i.e., the
 sum of all the components) dust model to the Astrodust+PAH model yields a
-version of the latter that seems to fit very well with the posterior mean SED
+curve that fits very well with the posterior mean SED
 values.
 
 We cannot draw any such conclusions about the the cold dust component, as it is
-only active for the lowest SED bin; in any case, the hot dust component clearly
-dominates this bin.
+only active for the lowest SED bin. The amplitude of the cold dust being of
+order ten times smaller than the hot and nearby dust at 1 THz is consistent with
+the results of \citet{CG02_05}. In principle, the component could be fit as
+well, but in practice the bin values are consistent with zero, and increase the
+uncertainty and degeneracies of other higher signal-to-noise components. Future
+work, in conjunction with higher sensitivity datasets, such as \IRAS\ and AKARI,
+will be useful in further determing the SED of this component.
 
 The H$\alpha$ component, as in the previous analyses, exhibits a negative SED,
 and is thus responsible for dust extinction rather than emission, but it
 exhibits the same blackbody spectrum with a hint of a rise towards the PAH
-emission region.
+emission region. Again, this is consistent with the results in \citet{CG02_05}.
+In addition, the existence of a rise towards shorter wavelengths is consistent
+with the Astrodust+PAH model.
 
 %\begin{figure}
 %  \centering
@@ -763,10 +790,40 @@ frequency maps with starlight and free-free signal subtracted -- as well as the
 residual maps after subtracting the four-component dust model used in this
 analysis. The grey pixels indicate the masks used at each frequency, as
 described in \cref{sec:masks}. In all the bands to some degree, we see in the
-residuals a weak pattern of over-and-undersubtractions in the galactic plane,
+residuals a weak pattern of over-and-undersubtractions in the Galactic plane,
 suggesting that there is room for further sophistication of the template model.
-At the higher frequencies, the model is clearly struggling to account for
-emission from the galactic center.
+For example, the Galactic plane is exactly the region where we would expect true
+spatial variations within a single dust component, which we have not allowed for
+in this work. To quantify this, we estimate the reduction of the RMS of the
+residuals with respect to the original map in \cref{fig:efficiency}.
+
+The 240--60 $\,\mathrm{\mu m}$ channels have $\gtrsim90\,\%$ of their emission
+explained by the four component model. The first two channels are
+the cleanest, in part due to their relatively high noise. 
+Between 140 and 60\,$\mathrm{\mu m}$, the model is clearly struggling to account for
+emission from the Galactic center, with similar excesses and oversubtractions,
+characteristic of temperature variations. This indicates a consistent mismodeled
+component affecting the fit throughout this region. One possible contaminant not
+explicitly modeled in this work is the $158\,\mathrm{\mu m}$ \ion{C}{ii} cooling
+line as measured in, e.g., \citet{1999ApJ...526..207F}. This emission, brightest
+in the Galactic plane, could lead to degeneracies with continuum emission
+sources, biasing results. A full joint analysis with FIRAS data will be
+necessary to properly account for this emission.
+
+The 25 and 12 $\mathrm{\mu m}$ channels have only $\sim$60\,\% of their emission
+explained by the dust model. This can partially be explained by incomplete
+zodiacal dust subtraction, as evidenced by negative regions in both the signal
+and residual maps. Much of the residual structure is uncorrelated with the
+Galactic plane, indicating that dust modeling is not the primary cause of the
+excess residuals.
+
+At $4.9$ and $3.5\,\mathrm{\mu m}$, most of the residuals show clear imprints of
+starlight emission. Here, we are limited by the variation of the starlight SEDs,
+detailed knowledge of the starlight SEDs, incomplete extinction corrections,
+and the resolution of DIRBE \citep{CG02_04}. Because this work is focused on
+thermal dust, we leave these residuals for future work. In particular, the
+SPHEREx satellite will be able to resolve and directly measure the SED of most
+of the infreared-bright point sources close to the Galactic plane.
 
 \begin{figure*}[htb]
   \centering
@@ -790,12 +847,10 @@ emission from the galactic center.
   \label{fig:dustmaps}
 \end{figure*}
 
-IS THE EFFICIENCY FIGURE ACCURATE? \cref{fig:efficiency}
-
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{figures/template_signal_rms_v1.pdf}
-  \caption{Dust model efficiency as a function of frequency, as defined in terms of variance reduction. The red line shows results for DIRBE, as evaluated from the maps shown in Fig.~\ref{fig:dustmaps}, while the blue line shows results for \Planck\ HFI, as presented by \citet{CG02_06}. Vertical bands indicate the position and bandwidth of each DIRBE (orange) and HFI (cyan) frequency channel.}
+  \caption{Dust model efficiency as a function of frequency, as defined in terms of variance reduction. The red line shows results for DIRBE, as evaluated from the maps shown in \cref{fig:dustmaps}, while the blue line shows results for \Planck\ HFI, as presented by \citet{CG02_06}. Vertical bands indicate the position and bandwidth of each DIRBE (orange) and HFI (cyan) frequency channel.}
   \label{fig:efficiency}
 \end{figure}
 
@@ -810,9 +865,14 @@ IS THE EFFICIENCY FIGURE ACCURATE? \cref{fig:efficiency}
 %\FloatBarrier
 \section{\Cosmoglobe\ DR2 sky model}
 
+Up until now, we have focused on the infrared regime of sky modeling, largely
+decoupled from the microwave region where \Cosmoglobe\ was primarily developed.
+Here, we unite the microwave and infrared regimes to present an integrated sky
+model that will be the foundation of future work.
+
 \subsection{Summary of global sky model}
 
-In Fig. \ref{fig:SED_overview} we show the best-fit \Cosmoglobe\ sky model,
+In \cref{fig:SED_overview} we show the best-fit \Cosmoglobe\ sky model,
 derived from the first and second data releases,
 including the four-component dust model presented in this paper. Although the
 amplitudes chosen are relatively arbitrary (every line of sight in the sky will
@@ -837,27 +897,26 @@ effort to create a common sky model derived with the same data pipeline.
 
 Finally, in \cref{fig:comp_vs_freq}, we show the amplitude maps of all the
 components involved in the \Cosmoglobe\ DR2 analysis, including zodiacal light,
-dust, starlight, and free-free emission. These maps represent the Cosmoglobe
+dust, starlight, and free-free emission. These maps represent the \Cosmoglobe\
 sky model as applied to the DIRBE bands, and in the final column we see the
 residual maps at each band. At the two lowest bands, where the thermal dust is
-the dominant sky component (see Fig. \ref{fig:SED_overview}), the model is
+the dominant sky component (see \cref{fig:SED_overview}), the model is
 performing quite well (with the same caveats as for the pure dust residual
 maps), especially given that we essentially treat the thermal dust as a model
 with $\sim$20 free parameters, instead of fitting two spectral parameters per
 pixel on the sky.
 
-At higher frequencies, the model struggles more (as also seen in Figs.
-\ref{fig:dustmaps} and \ref{fig:efficiency}). There is clearly residual
+At higher frequencies, the model struggles more (as also seen in \cref{fig:dustmaps, fig:efficiency}). There is clearly residual
 zodiacal light at the intermediate frequencies, whereas at the highest
-frequencies we see there is residual starlight in the maps (evident also in
-Fig. \ref{fig:efficiency}), where band 2, which is the one where the starlight
+frequencies we see there is residual starlight in the maps (evident also in \cref{fig:efficiency}), where band 2, which is the one where the starlight
 SED peaks, is where the sky model currently performs the worst.
        \begin{figure*}[htb]
          \centering
          \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_10_v02.pdf}
          \includegraphics[width=0.16\linewidth]{figures/compfreq_zodi_10_v02.pdf}
          \includegraphics[width=0.16\linewidth]{figures/compfreq_dusttot_10_v02.pdf}
-         \includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         %\includegraphics[width=0.16\linewidth]{figures/compfreq_white_nobar.pdf}
+         \includegraphics[width=0.16\linewidth]{figures/stars_label.pdf}
          \includegraphics[width=0.16\linewidth]{figures/compfreq_ff_10_v02.pdf}
          \includegraphics[width=0.16\linewidth]{figures/compfreq_todres_10_v02.pdf}\\
          \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_09_v02.pdf}
@@ -969,7 +1028,7 @@ otherwise data-poor part of the electromagnetic spectrum; and 4) \IRAS, to provi
  The current work has received funding from the European
   Union’s Horizon 2020 research and innovation programme under grant
   agreement numbers 819478 (ERC; \textsc{Cosmoglobe}) and 772253 (ERC;
-  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{HEALPIX} package.
+  \textsc{bits2cosmology}). Some of the results in this paper have been derived using the HEALPix \citep{healpix} package.
   We acknowledge the use of the Legacy Archive for Microwave Background Data
   Analysis (LAMBDA), part of the High Energy Astrophysics Science Archive Center
   (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science Division at
