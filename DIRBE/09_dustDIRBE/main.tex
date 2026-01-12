@@ -627,7 +627,15 @@ resulting from the above analysis as the mean value and variance of the chain
 samples (including all five chains of the analysis, discarding burn-in).
 Similarly, we plot the posterior mean values per bin in Fig.
 \ref{fig:total_sed}, where the thickness of the line indicates the standard
-deviation of that amplitude. 
+deviation of that amplitude.
+
+In the same plot, we also plot posterior total SED, when all four components
+are summed up, and we also show the Astrodust+PAH model that is the best fit to
+the mean total dust SED.\footnote{Specifically,
+    we fit an overall amplitude $A$, as well as the
+    $\log_{10}{U}$ parameter used in \citet{Hensley2023}, with the total model
+to fit being $A\cdot\mathrm{EM}(\log_{10}{U})$, where $EM$ is their tabulated
+function returning the emission as a function of $\log_{10}{U}$.}
 
 \begin{table*}[htb]
 \newdimen\tblskip \tblskip=5pt
@@ -698,7 +706,9 @@ only active for the lowest SED bin; in any case, the hot dust component clearly
 dominates this bin.
 
 The H$\alpha$ component, as in the previous analyses, exhibits a negative SED,
-and is thus responsible for dust extinction rather than emission.
+and is thus responsible for dust extinction rather than emission, but it
+exhibits the same blackbody spectrum with a hint of a rise towards the PAH
+emission region.
 
 %\begin{figure}
 %  \centering
@@ -783,8 +793,13 @@ IS THE EFFICIENCY FIGURE ACCURATE? \cref{fig:efficiency}
 \subsection{Summary of global sky model}
 
 In Fig. \ref{fig:SED_overview} we show the best-fit \Cosmoglobe\ sky model,
-derived from the first and second data releases, including the four-component
-dust model presented in this paper.
+derived from the first and second data releases (\textbf{is this true?}),
+including the four-component dust model presented in this paper. Although the
+amplitudes chosen are relatively arbitrary (every line of sight in the sky will
+potentially have different scalings), the spectral shape of the lines are
+directly taken from the Gibbs chains as presented in \citet{CG01_01} and
+\citet{CG02_01}. This plot represents the current state of the Cosmoglobe
+effort to create a common sky model derived with the same data pipeline.
 
 
 \begin{figure*}[htb]
@@ -802,7 +817,21 @@ dust model presented in this paper.
 
 Finally, in \cref{fig:comp_vs_freq}, we show the amplitude maps of all the
 components involved in the \Cosmoglobe\ DR2 analysis, including zodiacal light,
-dust, starlight, and free-free emission.
+dust, starlight, and free-free emission. These maps represent the Cosmoglobe
+sky model as applied to the DIRBE bands, and in the final column we see the
+residual maps at each band. At the two lowest bands, where the thermal dust is
+the dominant sky component (see Fig. \ref{fig:SED_overview}), the model is
+performing quite well (with the same caveats as for the pure dust residual
+maps), especially given that we essentially treat the thermal dust as a model
+with $\sim$20 free parameters, instead of fitting two spectral parameters per
+pixel on the sky.
+
+At higher frequencies, the model struggles more (as also seen in Figs.
+\ref{fig:dustmaps} and \ref{fig:efficiency}). There is clearly residual
+zodiacal light at the intermediate frequencies, whereas at the highest
+frequencies we see there is residual starlight in the maps (evident also in
+Fig. \ref{fig:efficiency}), where band 2, which is the one where the starlight
+SED peaks, is where the sky model currently performs the worst.
        \begin{figure*}[htb]
          \centering
          \includegraphics[width=0.16\linewidth]{figures/compfreq_mapzodi_10_v02.pdf}
