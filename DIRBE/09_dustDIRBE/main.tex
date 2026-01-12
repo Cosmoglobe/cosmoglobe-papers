@@ -176,8 +176,8 @@ they suffer far less from zodiacal light contamination
 \citep{K98,CG02_02}. As a result they can be used for more detailed
 astrophysics applications. A few examples of this are presented in the
 current analysis, including improved estimates of the cosmic infrared
-background spectrum \citep{CG02_03} and large-scale starlight emission
-\citet{CG02_04}.
+background (CIB) spectrum \citep{CG02_03} and large-scale starlight emission
+\citep{CG02_04}.
 
 The main topic of the last three papers in the series (\citet{CG02_05, CG02_06};
 and the present paper)  is modelling thermal dust radiation efficiently on
@@ -228,7 +228,7 @@ plays a key role in modern astrophysics and cosmology. For instance,
 massive resources are currently being spent on searching for and
 constraining the amplitude of inflationary gravitational waves through
 deep CMB $B$-mode polarization experiments \citep{litebird2022, SO2019}, and polarized thermal dust
-emission represents a key challenge for these. Given the high
+emission represents a key challenge for these \citep{fuskeland:2023}. Given the high
 efficiency of the \Cosmoglobe\ DR2 four-component dust model for
 intensity data, it is reasonable to expect a similar performance for
 polarization observations. We therefore conclude this paper by
@@ -242,7 +242,7 @@ thermal dust emission in both intensity and polarization.
   \includegraphics[width=0.49\linewidth]{figures/CosmoglobeDR2_VII_545-1_dust_hot_v1.pdf}\\
   \includegraphics[width=0.49\textwidth]{figures/CosmoglobeDR2_VII_545-1_dust_near_v1.pdf}
   \includegraphics[width=0.49\textwidth]{figures/CosmoglobeDR2_VII_545-1_dust_Ha_v1.pdf}
-  \caption{Dust amplitude maps used in the \Cosmoglobe\ DR2 sky model, as evaluated for the \Planck\ HFI 545-1 bolometer channel. From left to right and top to bottom, the four panels show 1) the cold dust amplitude, $\a_{\mathrm{cold}}$; 2) the hot dust amplitude, $\a_{\mathrm{hot}}$; 3) the nearby dust amplitude, $\a_{\mathrm{near}}$; and 4) the (absolute value of the) H$_{\alpha}$-correlated dust extinction amplitude, $\a_{\mathrm{H}\alpha}$. All panels employ the \Planck\ non-linear high dynamic range color scheme, defined by $\log_{10}((\a + \sqrt{4+\a^2})/2)$, which results in a nearly linear behaviour for small values and exponential for large values.  }
+  \caption{Dust template maps used in the \Cosmoglobe\ DR2 sky model, whose units are defined with the \Planck\ HFI 545-1 bolometer channel as the reference frequency. From left to right and top to bottom, the four panels show 1) the cold dust template, $\t_{\mathrm{cold}}$; 2) the hot dust template, $\t_{\mathrm{hot}}$; 3) the nearby dust template, $\t_{\mathrm{nearby}}$; and 4) the (absolute value of the) H$_{\alpha}$-correlated dust extinction template, $\a_{\mathrm{H}\alpha}$. All panels employ the \Planck\ non-linear high dynamic range color scheme, defined by $\log_{10}((\t + \sqrt{4+\t^2})/2)$, which results in a nearly linear behaviour for small values and exponential for large values.  }
   \label{fig:templates}
 \end{figure*}
 
@@ -256,7 +256,7 @@ used. Hence, we will give here a recap of the data model used, as presented in
 \citep{CG02_01}, after which we will devote a subsection to how the thermal
 dust part of the global model is described.
 
-\subsection{Data model and posterior distribution}
+\subsection{Data model}
 In the \Cosmoglobe\ framework, the standard modus operandi is to begin with an
 explicit parametric model incorporating all known aspects of the dataset with
 which we are working -- including both instrumental effects as well as a
@@ -274,11 +274,12 @@ $\G$ is an overall gain factor, $\P$ is the pointing matrix which projects the
 pixelated sky onto a $n_{\mathrm{tod}}$-sized space, $\B$ is the instrumental
 beam convolution operator, and $\n$ is the instrumental noise. The physical sky
 is represented by three terms. Firstly, a sum over sky components that can be
-modelled as constant at every point in time. We sum HEALPix\footnote{\url{http://healpix.sourceforge.net/}} \citep{healpix,Zonca2019} maps of
+modelled as constant at every point in time. We sum HEALPix\footnote{\url{http://healpix.sourceforge.net/}} \citep{HEALPIX,Zonca2019} maps of
 amplitudes for each sky component ($\a_c$) multiplied by a mixing matrix $\M_c$ which
 extrapolates the given component to the frequencies observed. Secondly, there
-is a term representing the zodiacal emission, which cannot be treated as a time
-constant. Finally, there is a term representing a component that is static in
+is a term representing the zodiacal emission, which cannot be treated as being
+constant in time (which for most other components is an unproblematic
+assumption). Finally there is a term representing a component that is static in
 solar coordinates, which may either be related to the DIRBE sidelobes, or be
 genuine excess radiation originating in the Solar System. These two last terms
 are treated in \citet{CG02_02} and \citet{CG02_03}. In the
@@ -288,93 +289,6 @@ follows.
 
 %As it stands, this is a ``complete'' model for the frequency domain we are interested in this paper, but we expect that it will have to expand as additional data is added and more discoveries are made.
 
-\subsubsection{Bayesian end-to-end analysis}
-In this analysis, we draw samples from the \emph{posterior}
-distribution of the full set of parameters of our model
-\citep{CG02_01} -- in formulaic terms, we are mapping out $P(\theta | \dv)$,
-the probability distribution of the set of parameters $\theta$ given the
-observed data $\dv$. Bayes' theorem allows us to write that
-\begin{equation}
-    \label{eq:bayestheorem}
-    P(\theta|\dv) = \frac{P(\dv|\theta)P(\theta)}{P(\dv)},
-\end{equation}
-and, since $P(\dv)$ typically only enters as a normalizing term, as long as the
-parameter space does not change, sampling from $P(\theta|\dv)$ is (modulo a
-prior term) is equivalent to sampling from
-$P(\dv|\theta)\equiv\mathcal{L}(\theta)$, the so-called \emph{likelihood}
-function.
-
-The number of parameters involved in our model (Eq. \ref{eq:model}) is of the
-order of millions, making sampling from the likelihood function a non-trivial
-task. The \Cosmoglobe\ framework is based on the \Commander software
-\citep{eriksen:2004,seljebotn:2019,bp03}, which maps out the posterior
-parameter distribution through a process called \emph{Gibbs sampling}
-\citep[e.g.,][]{geman:1984}, a Monte-Carlo method based on sequentially
-sampling each parameter (or a subset of parameters) from their respective
-marginal distributions with respect to all other parameters. The theory of Gibbs sampling
-then says that by combining these samples into a full set for all the
-parameters involved, this set will represent a proper sample from the joint
-distribution. For the Cosmoglobe DR2 analysis, the Gibbs chain looks as
-follows:
-
-%\begin{equation}
-%\begin{alignat}{11}
-%\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
-%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-%&\,\a_{\mathrm{static}})\\ \nonumber
-%\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
-%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-%&\,\a_{\mathrm{static}})\\ \nonumber
-%\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-%\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
-%\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-%\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-%&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
-%\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-%&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\ \nonumber
-%\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
-%\end{alignat}
-%\end{equation}
-
-\begin{equation}
-    \label{eq:gibbschain}
-\begin{aligned}
-\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}})\\
-\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}})\\
-\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\
-\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})
-\end{aligned}
-\end{equation}
-Here, the symbol $\leftarrow$ indicates the operation of drawing a sample from
-the distribution on the right-hand side (see \citet{CG02_01} for a complete
-overview of all the symbols in this equation) . After some burn-in period, the
-resulting joint parameter sets will correspond to samples drawn from the true
-underlying joint posterior.
-
-Since every step of the Gibbs sampling process assumes that all other
-parameters are ``given'', we can now treat a highly interconnected problem
-(i.e. sampling from the joint posterior of all parameters involved in our data
-model) as a highly modular one -- meaning that we can perform each
-``sub-analysis'' without being concerned with the other parts of the problem.
-Hence, in this paper, we mainly focus on the three first components of Eq.
-(\ref{eq:skymodel}), leaving the treatment of stars to \citet{CG02_04},
-monopoles to \citet{CG02_01}, zodiacal light to \citet{CG02_02}, and condition
-on free-free emission as determined by \citet{planck2014-a12}.
-
 
 \subsection{Multi-component thermal dust modelling}
 
@@ -383,10 +297,10 @@ on free-free emission as determined by \citet{planck2014-a12}.
 %\label{sec:current_dust}
 Interstellar dust -- amorphous particles of silicate and carbonaceous materials
 -- makes its presence known on practically all astrophysically relevant
-wavelengths. The efforts to classify and describe this material are significant
-in their own right, but knowing its properties is critical for better and more
-precise astrophysical foreground removal in cases where interstellar dust
-emission contaminate the other signals of interest\footnote{For a recent
+wavelengths. 
+Understanding this material is interesting in its own right, however, it is
+also crucial to improve astrophysical foreground removal, especially when
+interstellar dust emission contaminates other signals of interest.\footnote{For a recent
 review, see \citet{Hensley2021}.}.
 
 Recently, the ``astrodust+PAH'' model \citep{Hensley2023} was introduced, wherein
@@ -403,7 +317,7 @@ In the wavelength regime between $3000-100~\mu$m, this model is described well
 s(\nu) \propto \nu^\beta B(\nu, T),
 \label{eq:mbb}
 \end{equation}
-where $\nu$ is frequency, $B$ is the Planck law for a perfect blackbody at a
+where $\nu$ is the frequency, $B$ is the Planck law for a perfect blackbody at a
 certain frequency $\nu$ and temperature $T$, and $\beta$ is the spectral index.
 Typical temperatures of this blackbody in the diffuse ISM are around $\sim$ 20
 K, meaning that the distribution typically peaks around 150\,$\mu$m ($\sim
@@ -469,14 +383,14 @@ the frequency domain of DIRBE can be written,
     &[a]_{\mathrm{cold}}(\nu)\t_{\mathrm{cold}} && \textrm{(Cold dust)} \\
     + & [a]_{\mathrm{hot}}(\nu)\t_{\mathrm{hot}} && \textrm{(Hot dust)}\\
     + & [a]_{\mathrm{nearby}}(\nu)\t_{\mathrm{nearby}} && \textrm{(Nearby dust)} \\
-    + & [a]_{\mathrm{H\alpha}}(\nu)\t_{H\alpha} && \textrm{(H$\alpha$ correlated dust)} \\
+    + & [a]_{\mathrm{H\alpha}}(\nu)\t_{\mathrm{H\alpha}} && \textrm{(H$\alpha$ correlated dust)} \\
   + &\left(\frac{\nuzeroff}{\nu}\right)^2
   \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
   \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \\
   + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
-  f_{\mathit{Gaia},j} a_{\mathrm{s},j}, &\quad&
+  f_{\mathit{Gaia},j} a_{\mathrm{s},j} &\quad&
   \textrm{(Bright stars)} \\
-  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j}, &\quad&
+  + &U_{\mathrm{mJy}} f_{\mathit{Gaia},j} \a_{\mathrm{fs},j} &\quad&
   \textrm{(Faint stars)} \\  
   + &m_{\nu} && \textrm{(Monopole)}. 
 \end{aligned}
@@ -511,6 +425,94 @@ frequency, which is treated in \citet{CG02_03}.
     \end{tabular} 
 \end{table*}
 
+\subsection{Bayesian end-to-end analysis}
+In this analysis, we draw samples from the \emph{posterior}
+distribution of the full set of parameters of our model
+\citep{CG02_01} -- in formulaic terms, we are mapping out $P(\theta | \dv)$,
+the probability distribution of the set of parameters $\theta$ given the
+observed data $\dv$. Bayes' theorem allows us to write that
+\begin{equation}
+    \label{eq:bayestheorem}
+    P(\theta|\dv) = \frac{P(\dv|\theta)P(\theta)}{P(\dv)},
+\end{equation}
+and, since $P(\dv)$ typically only enters as a normalizing term, as long as the
+parameter space does not change, sampling from $P(\theta|\dv)$ is (modulo a
+prior term) is equivalent to sampling from
+$P(\dv|\theta)\equiv\mathcal{L}(\theta)$, the so-called \emph{likelihood}
+function.
+
+The number of parameters involved in our model (Eq. \ref{eq:model}) is of the
+order of millions, making sampling from the likelihood function a non-trivial
+task. The \Cosmoglobe\ framework is based on the \Commander software
+\citep{eriksen:2004,seljebotn:2019,bp03}, which maps out the posterior
+parameter distribution through a process called \emph{Gibbs sampling}
+\citep[e.g.,][]{geman:1984}, a Monte-Carlo method based on sequentially
+sampling each parameter (or a subset of parameters) from their respective
+marginal distributions with respect to all other parameters. The theory of Gibbs sampling
+then says that by combining these samples into a full set for all the
+parameters involved, this set will represent a proper sample from the joint
+distribution. For the Cosmoglobe DR2 analysis, the Gibbs chain looks as
+follows:
+
+%\begin{equation}
+%\begin{alignat}{11}
+%\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
+%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%&\,\a_{\mathrm{static}})\\ \nonumber
+%\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
+%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%&\,\a_{\mathrm{static}})\\ \nonumber
+%\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
+%\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+%&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\ \nonumber
+%\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+%&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\ \nonumber
+%\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static}.
+%\end{alignat}
+%\end{equation}
+
+\begin{equation}
+    \label{eq:gibbschain}
+\begin{aligned}
+\G &\,\leftarrow P(\G&\,\mid &\,\dv,&\, &\,\phantom{\G} &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+&\,\a_{\mathrm{static}})\\
+\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\G, &\,\phantom{\xi_n} &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+&\,\a_{\mathrm{static}})\\
+\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\\
+\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\G, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})
+\end{aligned}
+\end{equation}
+Here, the symbol $\leftarrow$ indicates the operation of drawing a sample from
+the distribution on the right-hand side (see \citet{CG02_01} for a complete
+overview of all the symbols in this equation) . After some burn-in period, the
+resulting joint parameter sets will correspond to samples drawn from the true
+underlying joint posterior.
+
+Since every step of the Gibbs sampling process assumes that all other
+parameters are ``given'', we can now treat a highly interconnected problem
+(i.e. sampling from the joint posterior of all parameters involved in our data
+model) as a highly modular one -- meaning that we can perform each
+``sub-analysis'' without being concerned with the other parts of the problem.
+Hence, in this paper, we mainly focus on the four first components of Eq.
+(\ref{eq:skymodel}), leaving the treatment of stars to \citet{CG02_04},
+monopoles to \citet{CG02_01}, zodiacal light to \citet{CG02_02}, and condition
+on free-free emission as determined by \citet{planck2014-a12}.
+
+
 \section{Data}
 \label{sec:data}
 There are two datasets used directly in the \Cosmoglobe\ DR2 analysis: low-level data
@@ -520,8 +522,9 @@ data sets and the preprocessing performed; for a more in-depth description,
 see \citet{CG02_01} and \citet{CG02_04}.
 
 \subsection{\COBE-DIRBE}
-The Diffuse InfraRed Explorer (DIRBE), whose main goal was the mapping out of the cosmic infrared background
-(CIB), was part of the \COBE\ satellite \citep{boggess92, silverberg93}, and
+The Diffuse InfraRed Explorer (DIRBE), whose main goal was the mapping out of
+the cosmic infrared background, was part of the \COBE\ satellite
+\citep{boggess92, silverberg93}, and
 measured the sky in ten frequency bands from $1.25\,\mathrm{\mu m}$ to
 $240\,\mathrm{\mu m}$. In this analysis, we have converted the original DIRBE
 CIO (Calibrated Individual Observations), whose pointing information is given
@@ -546,8 +549,9 @@ crossmatched the brighest stars in the \textit W1 band against \Gaia\ DR2, and u
 estimated physical parameters from that catalogue to model the bright stars. In
 addition, we created a general faint source template, similar to that used in
 \citet{hauser1998}, based on the stars
-that were not part of the bright star component. Together, these two components
-comprise the sixth and seventh component in \cref{eq:skymodel}.
+that were not part of the bright star component (see \citet{CG02_04} for more
+details). Together, these two components comprise the sixth and seventh
+component in \cref{eq:skymodel}.
 
 \subsection{Data selection}
 As noted in \citet{CG02_05}, not all thermal dust components are expected to
