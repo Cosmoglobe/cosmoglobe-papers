@@ -778,8 +778,8 @@ adopt the following model,
 \begin{align}
 	\label{eq:model}
 	\dv &=\G\B\left[\P\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
-          \s_{\mathrm{static}}\right] + \n \nonumber\\
-        &\equiv \s^{\mathrm{tot}} + \n,
+          \s_{\mathrm{static}}\right] + \n_\mathrm{corr} + \n_\mathrm{w} \nonumber\\
+        &\equiv \s^{\mathrm{tot}} + \n_\mathrm{w},
 \end{align}
 where $\dv$ denote observed data; $\G$ denotes an overall calibration
 factor; $\P$ and $\B$ represent the instrumental pointing and beam,
@@ -787,8 +787,10 @@ respectively; the sum over components $c$ represents the contribution
 from astrophysical components (thermal dust, free-free, starlight
 emission etc.), each described by an overall amplitude (which may be a
 pixelized map) and a mixing matrix, $\M$, which depends on some set of
-unknown SED parameters, $\beta$; and $\n$ denotes instrumental
-noise. We further define $\a_{\mathrm{sky}}$ and
+unknown SED parameters, $\beta$; \textbf{and $\n=\n_\mathrm{corr} + \n_\mathrm{w}$ denotes instrumental
+noise. The latter is a sum of correlated noise ($\n_\mathrm{corr}$) and white noise ($\n_\mathrm{w}$).} 
+
+We further define $\a_{\mathrm{sky}}$ and
 $\beta_{\mathrm{sky}}$ to be the set of all astrophysical component
 amplitudes and spectral parameters, and $\xi_{\mathrm{n}}$ to be the
 set of all free instrumental noise parameters. We also define
@@ -819,16 +821,19 @@ is possible to sample from, while the marginal distribution does not;
 for early CMB applications of this two-stage approach, see
 \citet{jewell2004,wandelt2004,eriksen:2004}.
 
-
-In order for this to work, we have to assume that the instrumental
-noise, $\n=\dv-\s_{\mathrm{tot}}$, is Gaussian, \textbf{distributed with 
-zer mean and a covariance matrix $\N_{\mathrm{w}}$ that also has free parameters. 
-For most instruments that is an excellent approximation.} In that case, we can
+In order for this to work, \textbf{we have to define $\s_{\mathrm{tot}}$ as the sum 
+of all components but $\n_\mathrm{w}$, so that $\n_\mathrm{w}=\dv-\s_{\mathrm{tot}}$, 
+is Gaussian, distributed with 
+zero mean and a covariance matrix $\N_{\mathrm{w}}$ that also has free parameters. 
+For most instruments this is an excellent approximation. With this assumption,} we can
 write the likelihood, $\mathcal{L}(\omega) \equiv P(\dv|\omega)$, as \textbf{\textit{check this!!!}}
-\begin{equation}
--2\ln\mathcal{L}(\omega) = (\dv-\s^{\mathrm{tot}}(\omega))^t
-  \N_{\mathrm{w}}^{-1}(\dv-\s^{\mathrm{tot}}(\omega)) \equiv \chi^2(\omega),
-\end{equation}
+\textbf{
+\begin{align}
+-2\ln\mathcal{L}(\omega) &= (\dv-\s^{\mathrm{tot}}(\omega))^t
+  \N_{\mathrm{w}}^{-1}(\dv-\s^{\mathrm{tot}}(\omega)) +\ln|\N_{\mathrm w}| \nonumber \\
+  &\equiv \chi^2(\omega) +\ln|\N_{\mathrm w}|,
+\end{align}
+}
 and the posterior distribution is then defined by Bayes' theorem,
 \begin{equation}
 P(\omega\mid\dv) = \frac{P(\dv\mid\omega) P(\omega)}{P(\dv)} \propto
@@ -837,6 +842,7 @@ P(\omega\mid\dv) = \frac{P(\dv\mid\omega) P(\omega)}{P(\dv)} \propto
 Here $P(\omega)$ is called the prior, which may be used to inject
 prior knowledge about given parameters, while $P(\dv)$ is called the
 evidence, which for our purposes is just a normalization constant.
+\textbf{\textit{Here something about this additional logN should be said!!}}
 
 In order to map out this full joint posterior, we use a statistical
 method called Gibbs sampling \citep[e.g.,][]{geman:1984}, which allows
