@@ -400,8 +400,7 @@ Gain scale$^b$ & 0.99362 & 1.10242 & 1.02393 & 1.13470\cr
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.85\linewidth]{figures/AvgDust_Grid_plotres.pdf}
-    \caption{Left column shows the sum of the dust maps averaged for each band (plus their residuals), and the middle column the corresponding residuals (with the same colour bar range). The final column shows the residuals with the colour bar scaled down by a factor of 100 to more easily see the structure in the residuals. 
-    All the maps have been smoothed by 2 degrees for clarity.}
+    \caption{Left column shows HFI frequency maps from which all non-dust components have been subtracted, while the middle column shows the full residuals at each frequency using the same colour bar range. The right column shows the same residuals but with a 100 times smaller range. All maps have been smoothed to $2^{\circ}$ for clarity.}
     \label{fig:MapsVsResiduals}
 \end{figure*}
 
@@ -416,6 +415,14 @@ Gain scale$^b$ & 0.99362 & 1.10242 & 1.02393 & 1.13470\cr
 
 \begin{figure}[t]
     \centering
+    \includegraphics[width=\linewidth]{figures/correlation_plot_fs_nodame.pdf}
+    \caption{Pearson's correlation coefficient between dust components and tracers. The correlation between the hot dust and the \ion{C}{ii} emission seen in FIRAS, as well as the cold dust and the HI4PI \ion{H}{i} emission are very strong.
+    }
+    \label{fig:correlationSquare}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
     \includegraphics[width=\linewidth]{figures/cold_hi4pi_corr.pdf}\\
     \includegraphics[width=\linewidth]{figures/hot_cii_corr.pdf}
     \caption{\emph{Top:} Scatter plot between the cold dust and HI4PI maps; both maps are smoothed to a common resolution of 16.2' FWHM, and pixelated at \nside=1024. \emph{Bottom:} Scatter plot between the hot dust and FIRAS \ion{C}{ii} maps; both maps are smoothed to a common resolution of 420' FWHM, and pixelated at \nside=16. 
@@ -424,18 +431,11 @@ Gain scale$^b$ & 0.99362 & 1.10242 & 1.02393 & 1.13470\cr
 \end{figure}
 
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/correlation_plot_fs_nodame.pdf}
-    \caption{Pearson's correlation coefficient between dust components and tracers. The correlation between the hot dust and the \ion{C}{ii} emission seen in FIRAS, as well as the cold dust and the HI4PI \ion{H}{i} emission are very strong.
-    }
-    \label{fig:correlationSquare}
-\end{figure}
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/commander1_dustComp.pdf}
-    \caption{Comparison of the temperature $T$ and spectral index $\beta$ sky fits between \planck\ 2015, GNILC 2015 and the new \cosmoglobe\ DR2 results. Priors for the top and bottom plots are the same.}
+    \caption{Comparison of the temperature $T$ and spectral index $\beta$ sky fits between \planck\ 2015, GNILC 2015 and the new \cosmoglobe\ DR2 results.}
     \label{fig:beta_T}
 \end{figure*}
 
@@ -482,7 +482,7 @@ The bottom left panel show a similar $(T,\beta)$ grid for the nearby dust compon
 
 Finally, the bottom right panel shows the same quantities for the H$\alpha$ component. In this case, we see that both the $\chi^2$ and the correlations are virtually independent of the spectral parameters. This is due to a combination of the overall low amplitude of this component, and the fact that much of the template power is removed by the analysis mask. Given the current analysis setup, we therefore fix all H$\alpha$ parameters to the best-fit values derived in the DIRBE+HFI analysis by \citet{CG02_05}. At the same time, we also note that if we exclude this template entirely from the fit (as indeed was done in the early stages of the analysis), a negative residual appears with the same morphology as the WHAM template; its presence in the model does visually improve the overall fit, even though it is challenging to define a robust statistical sampling algorithm using HFI data alone.
 
-\cref{fig:SEDGridAmplitude} shows corresponding one-dimensional distributions for the overall scaling amplitudes, $a_i$, of the nearby and H$\alpha$ components. In both cases, we normalize the template scaling such that $a=1$ by construction, and then explore values around this to probe the overall stability. First, we note that the $\chi^2$ range is very small. Since the MBB temperature of both these components lie between those of the cold and hot dust components, nearly any change in $a_i$  can be countered by adjusting the cold and hot dust amplitude maps. At some point, however, too extreme variations lead to negative values in those freely fitted amplitude maps, and the resulting solution is excluded by the physicality prior. Specifically, values larger than $a_{\mathrm{near}} \gtrsim 1.1$ are excluded in the bottom panel of \cref{fig:SEDGridAmplitude}. We also note that values close to unity are preferred over, say, $a_{\mathrm{near}} \gtrsim 1.1$, due to the lower correlation with the hot and cold component map, implying a cleaner separation between the nearby, hot, and cold components.
+\cref{fig:SEDGridAmplitude} shows corresponding one-dimensional distributions for the overall scaling amplitudes, $a_i$, of the nearby and H$\alpha$ components. In both cases, we normalize the template scaling such that $a=1$ by construction, and then explore values around this to probe the overall stability. First, we note that the $\chi^2$ range is very small. Since the MBB temperature of both these components lie between those of the cold and hot dust components, nearly any change in $a_i$  can be countered by adjusting the cold and hot dust amplitude maps. At some point, however, too extreme variations lead to negative values in those freely fitted amplitude maps, and the resulting solution is excluded by the physicality prior. Specifically, values larger than $a_{\mathrm{near}} \gtrsim 1.05$ are excluded in the top panel of \cref{fig:SEDGridAmplitude}. We also note that values close to unity are preferred over, say, $a_{\mathrm{near}} \gtrsim 1.1$, due to the lower correlation with the hot and cold component map, implying a cleaner separation between the nearby, hot, and cold components.
 
 The actual best-fit cold and hot amplitude maps are shown in the top two panels of \cref{fig:dust_figures}, while the two external templates are shown in \cref{fig:dust_template_figures}. The bottom two panels of \cref{fig:dust_figures} show the HI4PI and FIRAS \ion{C}{ii} maps. Already at a visual level, the correlations between these and the two amplitude maps in the top panels are striking: The cold dust component is strongly correlated with \ion{H}{i}, while the hot dust component is strongly correlated with \ion{C}{ii}, in agreement with \citet{CG02_05}. This will be discussed further in \cref{sec:correlations}. 
 
@@ -506,38 +506,33 @@ Overall, we see that the efficiency is very high, with more than 99\,\% of the 5
 \section{Correlations with external line emission maps}
 \label{sec:correlations}
 
-The key result emerging in the low-resolution analysis of \citet{CG02_05} was that a large fraction of the large-scale thermal dust emission in HFI could be traced by the HI4PI \ion{H}{i} and FIRAS \ion{C}{ii} maps. In this paper, we have turned this observation around, and simply fitted two components per pixel with free global parameters, and this  
+The key result emerging in the low-resolution analysis of \citet{CG02_05} was that a large fraction of the large-scale thermal dust emission in HFI could be traced by the HI4PI \ion{H}{i} and FIRAS \ion{C}{ii} maps. In this paper, we have turned this observation around, and simply fitted two components per pixel with free global parameters, while imposing no priors on the resulting spatial distribution. Yet, in \cref{fig:dust_figures} we noted that the resulting sky maps indeed appeared visually similar to HI4PI and FIRAS. We now quantify these obsevations in terms of Pearson's correlation coefficient, as shown in \cref{fig:correlationSquare} for the full set of dust components and tracers.
 
-As originally noted by \citet{CG02_05}, and confirmed in \cref{fig:dust_figures}, the cold and hot dust components correlate strongly 
+First, we note that all maps are non-trivially correlated with all others. This is expected, given that they all trace the same overall Galactic ISM. Still, some combinations exhibit stronger correlations than other. Specifically, the hot and \ion{C}{ii} components correlate at the 95\% level, while the cold dust and HI4PI maps correlate at the 92\% level. For comparison, the hot and cold components correlate internally at the 80\% level. Correlations between \ion{C}{ii} and \ion{H}{i} have been known for a long time, and discussed regarding gas populations in the Milky Way Galaxy \citep{2014_CII,2010_CII,2013_CII}, so seeing the same effect between the hot and cold dust here is not unexpected.
 
-One of the great successes of this four-component dust model is the high degree of correlation between the dust components and physical tracers. The \ion{H}{i} emission, a known dust tracer, and the cold dust have a Pearson's correlation coefficient of 92\%, and the hot dust and the new dust tracer \ion{C}{ii}, which traditionally maps the hot ionized medium, have a correlation of 95\%. \Cref{fig:hotCiiCorr} shows per-pixel scatter plots between our dust maps and these tracers. The top panel shows the hot dust and FIRAS \ion{C}{ii}, downgraded to the $7^\circ$ resolution of the FIRAS maps, and the bottom panel shows the cold dust and HI4PI column density maps at $N_{\mathrm{side}}=1024$. Both show strong correlation, which is further evidence that they trace similar regions of the Galaxy. 
-
-Visually, we can also consider the top two panels of \cref{fig:dust_figures} and compare by eye with the bottom two sub-panels. Several striking features can be seen to be present both in the cold dust and the HI4PI, as well as in the hot dust and the FIRAS \ion{C}{ii} maps. It is evident that these are tracers  of our dust components, and potentially future analysis could use \ion{C}{ii} maps to even better constrain the hot dust, as an additional external data set. 
-
-Evidence for this correlation is further supported by the observation of an interesting feature in the hot and cold dust grids (\cref{fig:SEDGridContours}). The areas where the resulting maps looked unphysical also trace regions in parameter space where the correlation between the dust and their relevant tracer were lower (e.g. the 95\% Hot-\ion{C}{ii} contour line traces the grey gridded region in the cold dust $\chi^2$ contour plot, and the 92\% Cold-\ion{H}{i} contour line also maps the excluded region in the hot dust plot). Since these tracers are not included in the fitting, and are simply calculated from the resulting maps, it appears that these phenomena arise in tandem. Dust models which have lower levels of physical correlations between the dust and the tracers produce unphysical results elsewhere in the model, further supporting the conclusion that these correlations are an important and physical part of the model.
-
-\Cref{fig:correlationSquare} shows the full set of spatial correlations between the different dust components and tracers, and we can see that we have a low degree of correlation between the nearby dust and the hot and cold dust. As previously mentioned, the hot and \ion{C}{ii} components show 95\% correlation, and the cold and HI4PI maps are correlated at the 92\% level, but we also see that the hot and cold components are correlated at the 80\% level. Correlations between \ion{C}{ii} and \ion{H}{i} have been known and discussed regarding gas populations in the Milky Way Galaxy \citep{2014_CII,2010_CII,2013_CII}, so seeing the same effect between the hot and cold dust here is not unexpected.  
-
+\Cref{fig:hotCiiCorr} shows per-pixel scatter plots between our cold and hot dust maps and the respective primary physical tracers. The top panel shows the hot dust and FIRAS \ion{C}{ii}, downgraded to the $7^\circ$ resolution of the FIRAS maps, and the bottom panel shows the cold dust and HI4PI column density maps at $N_{\mathrm{side}}=1024$. 
 
 \section{Modified blackbody fit to multi-component dust model}
 \label{sec:mbb}
-So far we have fit our four-component dust to the \Planck\ data, each
-modelled as an MBB with free global spectral parameters $T$
-and $\beta$ (constant across the sky). We now want to compare
-this to the \Planck\ 2015 \citep{planck2014-a12} analysis where only
-one MBB dust component was fit to the \Planck\ data, but with spatial variations of $T$ and $\beta$ allowed. The \Planck\ 2015 maps are
-plotted at the top of \cref{fig:beta_T}. Here both $T$, $\beta$, and
-the dust amplitude are fitted per HEALPix $N_{\mathrm{side}}=256$
-pixel using \texttt{Commander1}
+
+So far we have fit a four-component dust model to the \Planck\ HFI
+data, where each component is modelled in terms of an MBB spectrum
+with free global spectral parameters $T$ and $\beta$. In this section,
+we compare this to the \Planck\ 2015 \citep{planck2014-a12} analysis,
+where only one MBB dust component was fit to a combination of \Planck,
+\WMAP \citep{bennett:2013}, and Haslam \citep{haslam1982} data, while
+allowing spatial variations in $T$ and $\beta$. The \Planck\ 2015 maps
+are plotted in the top panel of \cref{fig:beta_T}. In this case, both
+$T$, $\beta$, and the dust amplitude are fitted per HEALPix
+$N_{\mathrm{side}}=256$ pixel using \texttt{Commander1}
 \citep{eriksen2008}.\footnote{\texttt{Commander1} is distinct from
-\texttt{Commander3} in that it uses a per-pixel Gibbs sampling
-routine, compared to the \texttt{Commander3}, which mixes harmonic and
-map space analysis allowing for multi-resolution analysis. \texttt{Commander3} additionally implements full end-to-end support for time ordered data and is the foundation for the \cosmoglobe\ analysis.}  While $\beta$ is relatively flat on the sky, we
-see that $T$ varies significantly. Note that in 
-\citet{planck2014-a12}, the CIB was not fitted separately, and the CIB
-fluctuations, therefore, mostly went into the thermal dust
-component. The hot areas at high Galactic latitudes corresponds to CIB
-mixing in the dust component.
+\texttt{Commander3} in that it assumes a uniform beam across all
+channels, while \texttt{Commander3} allows for multi-resolution data}
+While $\beta$ is relatively flat on the sky, we see that $T$ varies
+significantly. Note that in \citet{planck2014-a12}, the CIB was not
+fitted separately, and the CIB fluctuations, therefore, mostly went
+into the thermal dust component. The hot areas at high Galactic
+latitudes corresponds to CIB mixing in the dust component.
 
 \citet{planck2016-XLVIII} fit separate CIB and thermal dust
 components to the \Planck\ data using GNILC, a needlet internal linear combination code with
@@ -562,14 +557,13 @@ model, which in fact has fewer free parameters per pixel.
 
 \section{Conclusions}
 \label{sec:conc}
-In \cite{CG02_05} we showed that the thermal dust in the microwave and infrared regimes could be described well by a multi-component model, in which each component is tracing a specific physical environment. Namely, we use templates to trace \ion{H}{i} correlated dust, \ion{C}{ii} correlated dust, stellar extinction dust, CO correlated dust and \Ha\ correlated dust, and perform a low-resolution analysis with these templates. We found that this fit a modified blackbody across most of the included bands and had little spatial SED variations. Two dominant components found in \cite{CG02_05} were the \ion{C}{ii} correlated dust (hot dust) and the \ion{H}{i} correlated dust (cold dust). The correlation between \ion{C}{ii} emission and dust had not been previously known to us, but represented an exciting new tracer. 
 
-Here, we present the first high resolution four-component dust maps produced using the \planck\ HFI data. We generate two novel dust maps, corresponding to the hot and cold dust populations, which have global temperature and spectral indices of $T_\mathrm{h}=30$~K, $\beta_{h}=1.75$, and $T_\mathrm{c}=11$~K, $\beta_{c}=1.85$ respectively. These maps have a 92\% correlation between the cold dust and the HI4PI map \citep{HI4PI2016} and a striking 95\% correlation between the hot dust and the FIRAS \ion{C}{ii} map. This new dust model is able to successfully map physical tracers of hot and cold regions in the Milky Way, with fewer free parameters than previous dust models, and with more physical meaning to the parameters. We believe that this model represents a strict improvement over the established 3-parameter MBB description of dust and should be used preferentially for future simulations of Milky Way dust.
+In \cite{CG02_05} we found that large-scale thermal dust emission in the microwave and infrared regimes may be accurately described by a multi-component model that includes \ion{H}{i} correlated dust, \ion{C}{ii} correlated dust, stellar extinction dust, CO correlated dust and \Ha\ correlated dust. Motivated by these results, in this paper we fit a corresponding four-component dust maps to the full-resolution \planck\ HFI data. This analysis results in two novel dust maps, corresponding to the hot and cold dust populations, respectively, which have global temperatures and spectral indices of $T_\mathrm{h}=30$\,K, $\beta_{h}=1.75$, and $T_\mathrm{c}=11$\,K, $\beta_{c}=1.85$. The cold dust amplitude map has a 92\% correlation coefficient with the HI4PI map \citep{HI4PI2016}, while the hot dust component has a striking 95\% correlation with the FIRAS \ion{C}{ii} map. With only two free parameters per pixel, this dust model explains more than 99\,\% of the signal variance at 545 and 857\,GHz, and more than 85\,\% at 100\,GHz. Not only is this model statistically more compact than previous efforts, which ultimately should translate into stronger CMB and CIB fluctuation constraints from HFI, but the resulting component maps also trace known physical effects.  
 
-When compared to previous \planck\ dust maps, by combining the four dust templates into a single dust component, we see similar results, without large spatial SED variations. This strongly suggests that previous analyses that modelled dust as a one-component MBB with spatially varying spectral indices have actually been averaging over different effects that ideally should not be averaged over. As such, by using multiple components with simpler spatial variations, our model is simpler, more physical, and more economical. Furthermore, as it is computationally much easier to fit for linear (amplitude) parameters than for non-linear (spectral) parameters, this will also provide speed-ups to future dust simulations and analysis. 
+When fitting a single MBB component to the sum of the four dust templates, we observe similar morphologies in the resulting spectral maps as in the \planck\ 2015 dust model, although without CIB contamination at high latitudes. This strongly suggests that previous analyses that modelled dust as a one-component MBB with spatially varying spectral indices have actually been averaging over different effects that ideally should not be averaged over. As such, by using multiple components with simpler spatial variations, our model is simpler, more physical, and more economical. Furthermore, as it is computationally much easier to fit for linear (amplitude) parameters than for non-linear (spectral) parameters, this will also provide speed-ups to future dust simulations and analysis. 
 
 In the future, this work should be extended through joint analyses with DIRBE, AKARI, WISE, SPHEREx, and others, to produce even higher resolution dust maps with greater sensitivity and longer frequency coverage. 
-This result is also critically important for $B$-mode polarization experiments, as it may suggest that future $B$-mode polarization experiments should implement capabilities to disentangle hot and cold dust efficiently, which suggest requiring data with their highest frequency around 800-1000 GHz. 
+This result is also critically important for $B$-mode polarization experiments, as it may suggest that future $B$-mode polarization experiments should implement capabilities to disentangle hot and cold dust efficiently, which suggest requiring data with their highest frequency around 800-1000\,GHz. 
 
 
 \begin{acknowledgements}
