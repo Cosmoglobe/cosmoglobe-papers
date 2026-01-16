@@ -199,21 +199,21 @@ linkcolor=linkcolor,citecolor=citecolor,pdfencoding=auto]{hyperref}
 
 % write an abstract 
 
-   \abstract{We present an improved zodiacal light (ZL) model for \textit{COBE}-DIRBE 
+   \abstract{We present an improved zodiacal light (ZL) model for \textit{COBE}-DIRBE, 
    derived through global Bayesian analysis within the \cosmoglobe\ Data Release~2 (DR2) 
    framework. The parametric form of the ZL model is \textbf{inspired by that introduced by 
    \citet{kelsall1998} (K98 model)}, but the specific best-fit parameter values are re-derived 
-   using the combination of DIRBE Calibrated Individual Observations (CIO), \Planck\ HFI 
+   using the combination of DIRBE Calibrated Individual Observations, \Planck\ HFI 
    sky maps, and WISE and \textit{Gaia} compact object catalogs. Furthermore, the ZL 
    parameters are fitted jointly with astrophysical parameters, such as thermal dust and 
    starlight emission, and the new model takes into account excess radiation that appears 
-   stationary in solar-centric coordinates as reported in a companion paper. The relative 
+   stationary in solar-centric coordinates, as reported in a companion paper. The relative 
    differences between the predicted signals from K98 and our new model \textbf{are $\lesssim\,3\,\%$ in} 
    the 12 and 25$\,\mu\mathrm{m}$ channels over the full sky. The zero-levels of the cleaned DR2 
    maps are lower than those of the K98 Zodiacal light Subtracted Mission Average (ZSMA) maps 
    by \textbf{$\sim$\,30\,kJy/sr at 1.25--3.5\,$\mu\mathrm{m}$}, which is larger than the entire predicted 
    contribution from high-redshift galaxies to the Cosmic Infrared Background (CIB) at the same 
-   wavelengths. \textbf{At high Galactic latitudes the total rms of each DR2 map is lower than the corresponding 
+   wavelengths. \textbf{At high Galactic latitudes, the total root-mean square of each DR2 map is lower than the corresponding 
    DIRBE ZSMA map of $\sim$\,30\,\% at wavelengths up to and including $3.5\,\mu\mathrm{m}$, and
    $\sim$\,80\,\% at wavelengths 4.9--25\,$\mu\mathrm{m}$.}
    The cleaned DR2 maps at 4.9 and 12\,$\mu\mathrm{m}$ are now, for the first time, 
@@ -286,8 +286,8 @@ the first step toward such a concordance model by leveraging recent
 computational advances in Bayesian cosmological data analysis by the
 \BP\ \citep[][and references therein]{BP2023,Galloway2023} and
 \cosmoglobe\ \citep{Watts2023} collaborations. The computer code
-implementation is called \commanderthree\ \citep{Galloway2023}, which
-is a Bayesian Gibbs sampler that was originally designed for
+implementation is called \commander\ \citep{eriksen:2004,seljebotn:2019,bp03}, which
+is a Bayesian Gibbs sampler that was originally designed for component separation, but has now evolved into a complete framework for
 end-to-end analysis of cosmic microwave background (CMB) experiments,
 in particular \Planck\ LFI \citep{planck2016-l02} and \WMAP\
 \citep{bennett2012}. However, as demonstrated in the current work, the
@@ -296,9 +296,8 @@ applicable to infrared measurements.
 
 One of the most important generalizations required for application of
 \commanderthree\ to the infrared sky is the implementation of an
-accurate ZL model to remove the time-varying ZL. In this paper we therefore implement 
-in \commanderthree\ support for \textbf{the K98 model combined with the scattering phase function described 
-by \citet{Hong},} and we apply this to the time-domain DIRBE data. 
+accurate ZL model to remove the time-varying ZL. In this paper, we therefore implement support for \textbf{the K98 model, combined with the scattering phase function described 
+by \citet{Hong} in \commanderthree\,} and we apply this to the time-domain DIRBE data. 
 This new code implementation is based on ZodiPy \citep{San2024}, which is an Astropy-affiliated 
 Python package for ZL simulations.\footnote{\url{https://cosmoglobe.github.io/zodipy/}} As an early application of this framework, \cite{San2022} 
 demonstrated the removal of ZL from the DIRBE time-ordered data (TOD) with ZodiPy using the 
@@ -326,7 +325,7 @@ ZL is commonly modeled sample-by-sample in time-domain by performing
 line-of-sight integration at each observation through a parametric
 three-dimensional model of the IPD distribution. \textbf{We adopt a modified version of the 
 general parametrization as introduced by K98} for the current
-\commanderthree\ implementation, and in this section we briefly review
+\commanderthree\ implementation, and, in this section, we briefly review
 the main aspects of this model, aiming to build intuition about the
 underlying parametric model. \textbf{For full
 details of this model, we refer the interested reader to
@@ -1130,7 +1129,7 @@ reach the nearest local posterior maximum. We then iterate through all
 non-ZL Gibbs steps, to obtain a new foreground and instrument model
 given the new ZL model. When returning to the ZL sampler, we add a
 Gaussian random fluctuation to each $\zeta_{\mathrm{z}}$ parameter,
-which for now is defined by an rms of 1\,\% of its original value. We
+which for now is defined by a root-mean square (RMS) of 1\,\% of its original value. We
 then run a new Powell optimization to identify a new local ZL
 parameter maximum. This new model is then accepted or rejected based
 on the following Metropolis-like accept probability,
@@ -1146,7 +1145,7 @@ $\chi_{\mathrm{red}}^2$, it is accepted with probability $a$. We
 comment below on the reason this definition uses $\chi^2_{\mathrm{red}}$
 rather than the absolute $\chi^2$, as well as how we set $a$.
 
-In practice, many adjustments have been made gradually over the course
+In practice, many adjustments have been made gradually, over the course
 of many months and hundreds of short individual test runs to the
 \cosmoglobe\ DR2 data selection, analysis masks, and parametric data
 model. In each case, the new job has been restarted on the previous
@@ -1243,7 +1242,7 @@ $\chi^2$ are shown in the right and left $y$-axes. The point is simply
 that the main uncertainties in these evaluations is not white
 instrumental noise, but rather model errors and residual
 systematics. As far as overall goodness of fit is concerned, all
-models that are derived in the post-burn-in phase appear visually
+models that are derived in the post-burn-in phase appear visually to be
 equally good, despite the fact that the absolute $\chi^2$ varies with
 $\mathcal{O}(10^5)$ from model to model. This quantity is therefore a
 very poor measure for overall acceptability. In contrast, the reduced
@@ -1517,7 +1516,7 @@ kept fixed at 286\,K. The same approach was already adopted by \citet{kelsall199
 with the shape parameters for the dominant cloud component shown in
 the leftmost column in Fig.~\ref{fig:trace-ipd}, we see that many
 parameters appear to drift slightly during the first 30--50 samples or so, 
-but after that, they look more stationary. We also
+but after that, they become more stationary. We also
 see that the mixing between different chains for $\gamma$ and $\mu$ is notably slower than
 what is common for most Monte Carlo methods discussed in the
 literature, and this indicates rather long correlation lengths. A similar behavior is observed for the 
@@ -1795,7 +1794,7 @@ priors imposed on each parameter in the DR2 analysis.}
     %}
       \\
     \caption{\textbf{\textit{(Left column):} Mission-averaged frequency maps containing ZL after data 
-    selection. \textit{(Middle column):} DIRBE ZSMA maps. \textit{(Right column):} Our ZL subtracted mission-average 
+    selection. \textit{(Middle column):} Official DIRBE ZSMA maps. \textit{(Right column):} Our ZL subtracted mission-average 
     maps. All the maps are at our native HEALPix resolution of $N_\mathrm{side} = 512$. Rows show, from top to 
     bottom, DIRBE channels from 1.25 to 60$\,\mu$m. } 
     }
@@ -1911,7 +1910,7 @@ foregrounds, and instrumental noise.
 \newdimen\tblskip \tblskip=5pt
 \caption{\textbf{Reduced goodness-of-fit ($\chi_\mathrm{red}^2$) values for one arbitrarily 
 selected Gibbs sample, along with the number of TOD samples used to fit the ZL parameters ($N_{\mathrm{samp}}$) 
-and the instrument white noise rms per 8\,Hz sample for each DIRBE channel ($\sigma_0$). 
+and the instrument white noise RMS per 8\,Hz sample for each DIRBE channel ($\sigma_0$). 
 Note that the 1.25--3.5$\,\mu$m and the 12--60$\,\mu$m channels are analyzed jointly; 
 therefore, the values of $N_{\mathrm{samp}}$ and $\chi^2_{\mathrm{red}}$ refer to the combined groups.}}
 \label{tab:chisq}
@@ -2012,7 +2011,7 @@ processed jointly when fitting the parameters, and
 $\chi^2_{\mathrm{red}}$ is therefore only properly defined for the two groups.} 
 For completeness, the second column lists the number of
 TOD samples used to fit the ZL parameters, and the third column lists
-the instrumental white noise rms per TOD sample.
+the instrumental white noise RMS per TOD sample.
 
 For ideal data, with a perfectly fitting model, we would
 expect $\chi^2_{\mathrm{red}}\sim 1$, with a standard deviation given
@@ -2023,7 +2022,7 @@ very close to unity, namely \textbf{140 and 240$\,\mu$m}.
 
 The biggest outliers are  the \textbf{12--60$\,\mu$m} channels, which
 have the highest signal-to-noise ratio to ZL emission. In this case,
-the reduced $\chi^2$ \textbf{is 2.17}, which indicates that the white noise rms
+the reduced $\chi^2$ \textbf{is 2.17}, which indicates that the white noise RMS
 accounts for only about 40\,\% of the total variation seen in the residual
 TOD; the rest is most naturally explained in terms of ZL modeling
 errors. However, in this respect it is worth noting that our estimates
@@ -2120,9 +2119,9 @@ implications of these differences in terms of the CIB monopole, we
 refer the interested reader to \citet{CG02_03}.
 
 Fig.~\ref{fig:zsma_rms} shows the results from a similar
-calculation, but this time in the form of the rms ratio of the ZSMA
+calculation, but this time in the form of the RMS ratio of the ZSMA
 maps evaluated outside the same masks. \textbf{Here we see that the DR2 maps
-have lower rms than the K98 maps in all the channels between 1.25 and 25\,$\mu$m, which once
+have lower RMS than the K98 maps in all the channels between 1.25 and 25\,$\mu$m, which once
 again indicates that more ZL emission has been removed from the new maps.}
 %Here we see that the DR2 maps
 %have $\sim$\,30\,\% lower rms than the K98 maps, which once
@@ -2153,7 +2152,7 @@ maps should use the \cosmoglobe\ DR2 maps.
 These large improvements stem from two foundational features of the
 \cosmoglobe\ framework. First, the new analysis used external
 observations from \Planck\, WISE and \GAIA\ to model Galactic signals,
-and thereby break, or at least minimize, overall parameter
+and thereby breaks, or at least minimizes, overall parameter
 degeneracies. Second, the current framework fits all parameters
 simultaneously, both those of astrophysical and instrumental
 nature. This is achieved through a process called Gibbs sampling,
