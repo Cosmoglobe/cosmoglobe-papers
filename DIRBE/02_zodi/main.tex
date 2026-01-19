@@ -287,7 +287,7 @@ the first step toward such a concordance model by leveraging recent
 computational advances in Bayesian cosmological data analysis by the
 \BP\ \citep[][and references therein]{BP2023} and
 \cosmoglobe\ \citep{Watts2023} collaborations. The computer code
-implementation is called \commander\ \citep{eriksen:2004,seljebotn:2019,bp03}, which
+implementation is called \commander\ \citep{eriksen:2004, seljebotn:2019, bp03}, which
 is a Bayesian Gibbs sampler that was originally designed for component separation, but has now evolved into a complete framework for
 end-to-end analysis of cosmic microwave background (CMB) experiments,
 in particular \Planck\ LFI \citep{planck2016-l02} and \WMAP\
@@ -732,12 +732,15 @@ component shape parameters, such as $\Omega_{\mathrm{C}}$ or $\delta$,
 is vastly dominated by the \textbf{12, 25, and 60\,$\mu$m channels}. At the same
 time, the emissivity and albedo for a given channel depend only on that
 same channel, and it is therefore not necessary to process, say, the
-1.25\,$\mu$m TOD when estimating the 4.9\,$\mu$m albedo. In practice,
+1.25\,$\mu$m TOD when estimating the 4.9\,$\mu$m \textbf{emissivity. In practice,
 we therefore first estimate all ZL shape parameters (and the
-corresponding emissivities, albedos and monopoles) using only the 
-\textbf{12, 25, and 60\,$\mu$m channels}, and then we estimate the emissivity, albedo,
-and monopole for each of the remaining channels separately --- but now
-conditionally on the shape parameters derived \textbf{before}. 
+corresponding emissivities and monopoles) using only the 
+12, 25, and 60\,$\mu$m channels. We then estimate the emissivity
+and monopole for each of the higher-wavelength channels separately --- now
+conditionally on the shape parameters derived before. Finally, 
+we estimate the phase function parameters, the albedoes, the emissivities, and 
+the monopoles for the 1.25--3.5\,$\mu$m channels jointly, always using the 
+previously derived shape parameters.} 
 The cost of this approach is slightly higher statistical
 uncertainties on the shape parameters, since the other channels could
 have contributed with some information for these parameters as well,
@@ -779,7 +782,7 @@ adopt the following model,
           \s_{\mathrm{static}}\right] + \n_\mathrm{corr} + \n_\mathrm{w} \nonumber\\
         &\equiv \s^{\mathrm{tot}} + \n_\mathrm{w},
 \end{align}
-where $\dv$ denote observed data; $\G$ denotes an overall calibration
+where $\dv$ denotes observed data; $\G$ denotes an overall calibration
 factor; $\P$ and $\B$ represent the instrumental pointing and beam,
 respectively; the sum over components $c$ represents the contribution
 from astrophysical components (thermal dust, free-free, starlight
@@ -819,9 +822,9 @@ for early CMB applications of this two-stage approach, see
 \citet{jewell2004,wandelt2004,eriksen:2004}.
 
 In order for this to work, \textbf{we have to define $\s_{\mathrm{tot}}$ as the sum 
-of all components but $\n_\mathrm{w}$, so that $\n_\mathrm{w}=\dv-\s_{\mathrm{tot}}$, 
-is Gaussian distribution with 
-zero mean and a covariance matrix $\N_{\mathrm{w}}$ that also has free parameters. 
+of all components but $\n_\mathrm{w}$, so that $\n_\mathrm{w}=\dv-\s_{\mathrm{tot}}$ 
+is a Gaussian distribution with 
+zero mean and covariance matrix $\N_{\mathrm{w}}$ that also has free parameters. 
 For most instruments this is an excellent approximation. With this assumption,} we can
 write the likelihood, $\mathcal{L}(\omega) \equiv P(\dv|\omega)$, as 
 \textbf{
@@ -877,7 +880,7 @@ Based on the data model in Eq.~\eqref{eq:model}, we can define the
 following residual
 \begin{equation}
 \r = \dv - (\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c +
-          \s_{\mathrm{static}}),
+          \s_{\mathrm{static}} + \n_\mathrm{corr}),
 \end{equation}
 and this should ideally only contain ZL and white instrumental noise.
 %
@@ -961,7 +964,7 @@ appeared to be stationary in solar-centric coordinates; see their
 Fig.~54. Such radiation can in principle be created through several
 different physical mechanisms. For instance, a yet unknown zodiacal
 component could create a signal that appears stationary in
-solar-centric coordinates, just like the circular-solar ring described
+solar-centric coordinates, just like the circumsolar ring described
 in Sect.~\ref{sec:ring}, or it could also be caused by stray-light
 contamination in the DIRBE optics. However, even though this radiation
 was first noted more than two decades ago, it was never mapped out
@@ -993,7 +996,7 @@ for the excess radiation has been established.
 
 Before describing the practical numerical implementation used for
 sampling from Eq.~\eqref{eq:gibbs_zodi} in this paper, it is worth
-first considering the more important fundamental differences between
+considering the more important fundamental differences between
 our approach and that adopted by the DIRBE team as described by
 \citet{kelsall1998}. The first difference worth noting in this respect
 is that while our $\chi^2$ statistic is defined directly in terms of
@@ -1092,7 +1095,7 @@ non-idealities.
 To complete the algorithm in Sect.~\ref{sec:gibbs}, we still need to
 specify the details of the algorithm used to draw samples from
 Eq.~\eqref{eq:gibbs_zodi}. A broad range of Bayesian sampling methods
-can be envisioned used for this purpose, from simple
+can be envisioned for this purpose, from simple
 Metropolis-Hastings (MH) accept-reject samplers to various
 incarnations of Hamiltonian samplers that exploit derivative
 information. Indeed, our very first implementation employed a simple
@@ -1173,9 +1176,9 @@ samples distributed over multiple chains were produced.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figs/powell_T0_vs_chisq.pdf}
-    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$ for the same run shown 
+    \caption{Reduced $\chi^2$ as a function of the temperature at 1\,AU, $T_0$, for the same run shown 
     in Fig.~\ref{fig:powell_chisq_iter}. Each curve shows the full set of parameter trials within one 
-    single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iteration. 
+    single main Gibbs iteration (or Powell call), and different colors indicate different Gibbs iterations. 
     Redder colors are earlier in the chain.}
     \label{fig:powell_T0}
 \end{figure}
@@ -1183,7 +1186,7 @@ samples distributed over multiple chains were produced.
 The overall behavior of this hybrid MCMC+optimization algorithm is
 illustrated in Fig.~\ref{fig:powell_chisq_iter}, which shows the
 $\chi^2$ obtained from the first $10^6$ Powell likelihood evaluations
-in \textbf{a preliminary analysis run} for the 12+25\,$\mu$m ZL sampling
+in \textbf{a preliminary analysis run} for a 12+25\,$\mu$m ZL sampling
 group; we show \textbf{the preliminary} chain here rather than the final
 production run to illustrate the burn-in phase. Each discrete jump
 corresponds to one new main Gibbs iteration, while the smooth descent
@@ -1277,7 +1280,7 @@ than the absolute $\chi^2$, as dictated by the traditional
 Metropolis-Hastings rule. The reason for this is illustrated in
 Fig.~\ref{fig:powell_chisq_iter}, as both the absolute and reduced
 $\chi^2$ are shown in the right and left $y$-axes. The point is simply
-that the main uncertainties in these evaluations is not white
+that the main uncertainties in these evaluations are not given by white
 instrumental noise, but rather model errors and residual
 systematics. As far as overall goodness of fit is concerned, all
 models that are derived in the post-burn-in phase appear visually to be
@@ -1298,7 +1301,7 @@ formally satisfy the mathematical demands to a Monte Carlo Markov
 Chain sampler in terms of ergodicity or reversibility. It is therefore
 not guaranteed to converge to the true posterior distribution, even in
 the limit of an infinite number of samples. Rather, this algorithm is
-essentially simply a pragmatic solution that allow the previous strict
+essentially simply a pragmatic solution that allows the previous strict
 $\chi^2$ optimization algorithm used by \citet{kelsall1998} to evade
 local posterior maxima, and explore larger regions of parameter space
 without getting trapped. Significant additional algorithm development
