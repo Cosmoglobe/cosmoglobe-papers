@@ -175,6 +175,7 @@
 % 	% N.B.: floatpagefraction MUST be less than topfraction !!
 %     \renewcommand{\dblfloatpagefraction}{0.9}	% require fuller float pages
 
+\newcommand{\aism}[1]{\textcolor{red}{\textbf{AISM:} #1}}
 
 
 \begin{document} 
@@ -222,9 +223,9 @@ Despite these massive efforts in terms of astrophysical modeling, the final fore
 
 Since the DIRBE data were made public in 1996, many other experiments have dramatically improved our knowledge of the $4\pi$ infrared sky, including WISE \citep{wright:2010}, \Planck\ HFI \citep{planck2016-l03}, and \Gaia\ \citep{gaia:2016}. Each of these provide key ancillary information that may be useful to extract CIB information from  DIRBE. For instance, \Planck\ provides an unprecedented view of Galactic thermal dust, both in terms of sensitivity and angular resolution; WISE provides the location and normalization of Galactic compact objects in the same infrared wavelengths as DIRBE; while \Gaia\ provides a detailed parameter library which can be used to model the spectral energy distribution (SED) of many of the stars in their catalogue, and either through direct use of these models, or reasonable extrapolation to similar stars, the SED of virtually every star measured by DIRBE can be modeled \citep{CG02_04}.
 
-Not only has there been made great observational breakthroughs since the time of the DIRBE release, but this progress has also been accompanied closely by corresponding efforts in algorithm development. One striking example of this is the field of cosmic microwave background (CMB) analysis, which during more than three decades have established a wide range of highly efficient tools to search for weak signals in data that are contaminated by instrumental noise, astrophysical foregrounds, and systematics \citep[e.g.,][]{bennett2012,pb2015,planck2016-l01}. One specific branch of this community-wide effort focused on so-called global Bayesian analysis \citep{jewell2004,wandelt2004}, ultimately culminating in the \cosmoglobe\footnote{\url{https://cosmoglobe.uio.no}}  project which aims to create a single coherent sky model from as many complementary state-of-the-art experiments as possible. The first application of this framework was described in \cosmoglobe\ Data Release 1 (DR1; \citealp{watts2023_dr1}), which performed the first joint analysis of time-ordered data from both the \textit{Wilkinson} Microwave Anisotropy Probe (WMAP; \citealp{bennett2012}) and \Planck\ LFI \citep{planck2016-l02,bp01}. 
+Not only has there been made great observational breakthroughs since the time of the DIRBE release, but this progress has also been accompanied closely by corresponding efforts in algorithm development. One striking example of this is the field of CMB analysis, which during more than three decades have established a wide range of highly efficient tools to search for weak signals in data that are contaminated by instrumental noise, astrophysical foregrounds, and systematics \citep[e.g.,][]{bennett2012,pb2015,planck2016-l01}. One specific branch of this community-wide effort focused on so-called global Bayesian analysis \citep{jewell2004,wandelt2004}, ultimately culminating in the \cosmoglobe\footnote{\url{https://cosmoglobe.uio.no}}  project, which aims to create a single coherent sky model from as many complementary state-of-the-art experiments as possible. The first application of this framework was described in \cosmoglobe\ Data Release 1 (DR1; \citealp{watts2023_dr1}), which performed the first joint analysis of time-ordered data from both the \textit{Wilkinson} Microwave Anisotropy Probe (WMAP; \citealp{bennett2012}) and \Planck\ LFI \citep{planck2016-l02,bp01}. 
 
-In the current \cosmoglobe\ DR2 data release, we apply the same process to the DIRBE data with the goal of characterizing the CIB monopole spectrum from 1 to 240$\,\mu\mathrm{m}$. Even after this work, several key problems remain that will require further investigation, both in terms of astrophysical and instrumental modeling. The following results therefore are not the definitive results that ultimately can be derived from DIRBE. Rather, they are the first step in a long process, in which the CIB is gradually being harnessed through the same Bayesian end-to-end methods that have proven effective for analyzing CMB experiments, with the ultimate goal of seamlessly merging the two fields. Two natural next steps in this process are, first, to include high-resolution experiments such as IRAS \citep{neugebauer:1984} and AKARI \citep{murakami:2007} that can break important degeneracies in the current zodiacal light model, and, second, to reprocess the \Planck\ HFI measurements at the level of raw TOD; preliminary steps towards both of these projects have recently been made, and volunteers are welcome to join this Open Source effort.
+In the current \cosmoglobe\ DR2 data release, we apply the same process to the DIRBE data with the goal of characterizing the CIB monopole spectrum from 1 to 240$\,\mu\mathrm{m}$. Even after this work, several key problems remain that will require further investigation, both in terms of astrophysical and instrumental modeling. The following results therefore are not the definitive results that ultimately can be derived from DIRBE. Rather, they are the first step in a long process, in which the CIB is gradually being harnessed through the same Bayesian end-to-end methods that have proven effective for analyzing CMB experiments, with the ultimate goal of seamlessly merging the two fields. Two natural next steps in this process are, first, to include high-resolution experiments such as IRAS \citep{neugebauer:1984} and AKARI \citep{murakami:2007} that can break important degeneracies in the current zodiacal light model, and, second, to reprocess the \Planck\ HFI measurements at the level of raw time-ordered data (TOD); preliminary steps towards both of these projects have recently been made, and volunteers are welcome to join this Open Source effort.
 
 
 The rest of the paper is organized as follows.
@@ -243,8 +244,7 @@ briefly review the algorithm that was used to generate these maps.
 %\subsection{Global data model}
 
 The first task in any end-to-end Bayesian \cosmoglobe-style analysis
-is to write down an explicit parametric model for the raw time-ordered
-data. For the current DIRBE-targeted analysis, we adopt the following
+is to write down an explicit parametric model for the raw TOD. For the current DIRBE-targeted analysis, we adopt the following
 model \citep{CG02_01},
 \begin{align}
 	\label{eq:model}
@@ -254,7 +254,7 @@ model \citep{CG02_01},
 \end{align}
 In this expression, $\dv$ denotes a stacked vector of the DIRBE
 Calibrated Individual Observations (CIO) for each frequency band; in
-the following, we will refer to these as time-ordered data (TOD),
+the following, we will refer to these as TOD,
 following the CMB nomenclature. Next, $\G$ is in principle an
 $n_{\mathrm{tod}}\times n_{\mathrm{tod}}$ diagonal matrix with an
 overall constant gain calibration factor per frequency channel; unless
@@ -286,7 +286,7 @@ rms's per time sample for each band.
 
 
 To complete the data model, we need to specify the astrophysical sky
-contribution. In the current analysis, we adopt the following sky model
+contribution. In the current analysis, we adopt the following sky model: \aism{the equation needs to be updated (add Halpha correlated dust and I guess all dust are from templates?)}
 \begin{alignat}{4}
   \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
   &\M_{\mathrm{mbb}}(\bcold,\Tcold,\nuzerocold)\vec{a}_{\mathrm{cold}}
@@ -331,11 +331,11 @@ Finally, we define $\omega = \{\G,\xi_{\mathrm{n}},
 to be the set of all free parameters in the model. Since this model involves
 a free amplitude per pixel for each foreground model, over
 hundreds of millions of parameters are being fitted simultaneously,
-all of which interact non-trivially.
+all of which interact non-trivially. \aism{the dust are all templates, right? not a free amplitude per pixel?}
 
 
 The \cosmoglobe\ framework is designed to perform classical Bayesian
-parameter estimation with a data model such as Eq.~\eqref{eq:model},
+parameter estimation with a data model, such as Eq.~\eqref{eq:model},
 and the main goal is then the full joint posterior distribution,
 $P(\omega\mid\dv)$, which is given by Bayes' theorem,
 \begin{equation}
@@ -344,7 +344,7 @@ P(\omega\mid\dv) = \frac{P(\dv\mid\omega) P(\omega)}{P(\dv)} \propto
 \end{equation}
 Here $P(\dv\mid\omega) = \mathcal{L}(\omega)$ is called the likelihood,
 $P(\omega)$ denotes a set of priors, and $P(\dv)$ is called the evidence,
-which for our parameter estimation purposes is a 
+which, for our parameter estimation purposes, is a 
 normalization constant. The likelihood is defined by the key assumption that
 the instrumental noise is Gaussian distributed,
 \begin{equation}
@@ -367,7 +367,7 @@ including \Planck\ \citep{planck2014-a12,bp01} and WMAP
 application to infrared wavelengths.
 
 Rather than drawing samples
-directly from a large and complicated joint distribution, in Gibbs sampling one
+directly from a large and complicated joint distribution, in Gibbs sampling, one
 draws samples iteratively from each conditional distribution. For the
 data model described above, this translates into the following
 so-called Gibbs chain:
@@ -397,7 +397,7 @@ samples drawn from the true underlying joint posterior.
 
 Each sampling step in this algorithm is described by \citet{CG02_01}
 and references therein. In some cases, important 
-approximations are made that strictly speaking violate the Gibbs
+approximations are made that, strictly speaking, violate the Gibbs
 rule, either with the goal of increasing robustness with respect to
 systematic errors at the cost of increased statistical uncertainties,
 or simply for algorithmic robustness. A prime example of the former is
@@ -410,7 +410,7 @@ parameter degeneracies, and a strict Gibbs sampling algorithm may
 easily become trapped. For this particular sampling step, we have
 therefore instead opted for a simple non-linear Powell algorithm that
 is initialized some random parameter distance away from the previous
-sample, and then searches for the local minimum. This algorithm is
+sample, and then searches for the local minimum. \aism{it's searching for the global minimum, right? otherwise i guess it should be "local minima"} This algorithm is
 able to escape local minima, but it comes at the cost of larger
 uncertainties than what would result from an ideal posterior mapper.
 
@@ -473,24 +473,24 @@ part of $\dv$ \citep{CG02_01}.
   spectral resolution information from FIRAS with high spatial
   resolution information from DIRBE 140\,$\mu\mathrm{m}$, a novel
   full-sky \cii\ template is derived as part of the current data
-  release. This component has to our knowledge never been accounted
+  release. \aism{should it be a hot dust template instead of cii?} This component has to our knowledge never been accounted
   for in previous CIB studies of the DIRBE 140\,$\mu\mathrm{m}$ channel.
 
 The computational cost for producing one single Gibbs sample according
 to the algorithm described in Sect.~\ref{sec:algorithm} is about
 500\,CPU-hrs or 4~wall-hours when run on a 128-core cluster node. In
 total, we have produced 930 samples for the current analysis,
-parallelized over six chains, for a total computational cost of
+parallelized over five chains, for a total computational cost of
 470k\,CPU-hrs. The first 20~samples are removed as burn-in from each
 chain \citep{CG02_02}, leaving a total of 810~samples for scientific
-analysis. The total wall time was one month.
+analysis. \aism{the numbers probably need to be updated? i thought there was also different burn-ins for different things} The total wall time was one month.
 
 
 \subsection{Implications of excess static radiation}
 \label{sec:excessrad}
 
 The parametric model described in Sect.~\ref{sec:algorithm} includes a
-component denoted $\s_{\mathrm{static}}$ which describes a
+component denoted $\s_{\mathrm{static}}$, which describes a
 contribution from excess radiation that appears stationary in
 solar-centric coordinates. The existence of such excess radiation in
 the DIRBE data was reported already by \citet{leinert:1998}, and
@@ -526,7 +526,7 @@ have now mapped its spatial structure and amplitude for each DIRBE
 frequency band by binning the residual TOD, $\dv - \s^{\mathrm{tot}}$,
 into solar-centric coordinates. The strongest signal is found at the
 25\,$\mu\mathrm{m}$ channel, and this is reproduced in the top panel
-of Fig.~\ref{fig:sidelobe}. In this figure, the Sun is located in the
+of Fig.~\ref{fig:sidelobe}. \aism{the figure was commented out} In this figure, the Sun is located in the
 center, and the equator is aligned with the Ecliptic plane. Dark blue
 pixels indicate directions that are not observed by the DIRBE
 instrument. For reference, \citet{kelsall1998} noted that their
@@ -534,7 +534,7 @@ zodiacal light model showed significant residuals for solar elongation
 angles smaller than $68^{\circ}$ and larger than $125^{\circ}$, and
 those observations were excluded from their zodiacal light mission
 average (ZSMA) maps; those limits are marked as gray lines in
-Fig.~\ref{fig:sidelobe}. Based on the updated analysis of
+Fig.~\ref{fig:sidelobe}. \aism{the figure was commented out} Based on the updated analysis of
 \citet{CG02_01}, it is now in retrospect clear that all the excess
 signal seen between the two gray lines is in fact present in the final
 legacy DIRBE ZSMA maps, and has affected all scientific results
@@ -558,7 +558,7 @@ data prior to mapmaking. Given the complex structures seen in
 Fig.~\ref{fig:sidelobe}, it does not appear satisfactory simply to exclude
 a fixed range of solar elongations from the final mapmaking, given
 that the excess reaches several $\mathrm{MJy\,sr^{-1}}$ even at moderate solar
-elongations.
+elongations. \aism{the figure was commented out}
 
   \begin{figure*}
   \centering
@@ -602,7 +602,7 @@ $\a_{\mathrm{static}}$ and the CIB monopole for the affected channels.
 If one adds an arbitrary offset to the map in the top panel in
 Fig.~\ref{fig:sidelobe}, and subtracts exactly the same value from the
 CIB monopole at the same channel, the total goodness-of-fit at that
-channel is unchanged.
+channel is unchanged. \aism{the figure was commented out}
 
 As a temporary solution to this problem, we opted in the current data
 processing to set the zero-level of the $\a_{\mathrm{static}}$ map at
@@ -612,7 +612,7 @@ for this is simplicity of interpretation. Whether the excess signal is
 due to zodiacal light emission or sidelobes, it should either way be
 positive, and setting it to the lowest possible value ensures that the
 final CIB constraints translate into strict upper limits. This is
-illustrated in the bottom panel of Fig.~\ref{fig:sidelobe}. In this
+illustrated in the bottom panel of Fig.~\ref{fig:sidelobe}. \aism{the figure was commented out} In this
 case, we have added an extra offset of 0.8\,$\mathrm{MJy\,sr^{-1}}$ to
 $\a_{\mathrm{static}}$ at $25\,\mu\mathrm{m}$, or
 96$\,\mathrm{nW}\,\mathrm{m}^{-2}\,\mathrm{sr}^{-1}$. Both versions of
@@ -627,7 +627,7 @@ negative offset of $-0.8$\,$\mathrm{MJy\,sr^{-1}}$, since the template
 will then become significantly negative beyond what is allowed by
 instrumental noise.
 
-At the same time, the ``lowest possible zero-level'' is not a uniqely
+At the same time, the ``lowest possible zero-level'' is not a uniquely
 defined quantity, but is rather itself uncertain. Indeed, as described
 by \citet{CG02_01}, the specific numerical values adopted for the
 absolute zero level, $\a_{\mathrm{static,min}}$, in the final
@@ -656,13 +656,13 @@ a preliminary run, and then project out the modes that are orthogonal
 to the zodiacal light signal by linear regression, as well as
 determine its lowest possible zero-level. This results in the template
 seen in the top panel of Fig.~\ref{fig:sidelobe} for the 25$\,\mu$m
-channel. In the final production analysis, this component is then kept
+channel. \aism{the figure was commented out} In the final production analysis, this component is then kept
 fixed; for full discussion about this procedure, see \citet{CG02_01}.
 
 As illustrated in Fig.~\ref{fig:sidelobe}, this template is a high
 signal-to-noise ratio contribution, and its inclusion does not
 significantly increase the overall noise level of the main
-higher-level products. However, since the zero-level of this signal is
+higher-level products. \aism{the figure was commented out} However, since the zero-level of this signal is
 unknown -- up to the requirement that it must be positive -- all CIB
 monopole results derived for the wavelength range between 4.9 and
 60$\,\mu\mathrm{m}$, for which this correction is applied, are
@@ -872,7 +872,7 @@ at the pivot frequency of 545\,$\mathrm{MJy\,sr^{-1}}$; this removes 32\,\% of t
 Figures~\ref{fig:hmhs_zoom} and \ref{fig:hmhd_zoom} shows zoom-ins
 around the North Ecliptic Pole of the same HMHS and HMHD maps plotted
 in Figs.~\ref{fig:hmhs} and \ref{fig:hmhd}, but with the new and more
-conservative analysis masks applied. Similar zoom-ins of around the South Ecliptic Pole are shown in Figs.~\ref{fig:hmhs_zoom_south} and \ref{fig:hmhd_zoom_south}. Again, when comparing the HMHS
+conservative analysis masks applied. \aism{zoom-in figures were commented out} Similar zoom-ins of around the South Ecliptic Pole are shown in Figs.~\ref{fig:hmhs_zoom_south} and \ref{fig:hmhd_zoom_south}. \aism{the zoom-in figures were commented out} Again, when comparing the HMHS
 and HMHD maps in these figures, the 1.25, 2.2, 140, and
 240$\,\mu\mathrm{m}$ channels all appear to provide a highly
 significant detection of an isotropic signal. Indeed, with these more
@@ -889,11 +889,11 @@ the 12 and 60$\,\mu\mathrm{m}$ channels. Such a rapidly changing
 monopole spectrum is obviously very difficult to explain in terms of
 either astrophysics or a cosmological signal. A far more compelling
 explanation is the uncertainty in the zero-level of the static
-component shown in Fig.~\ref{fig:sidelobe}. The current results are
+component shown in Fig.~\ref{fig:sidelobe}. \aism{the figure was commented out} The current results are
 derived with the default low zero-level template shown in the top
 panel. However, if the true zero-level of the 25$\,\mu$m channel
 should happen to be 0.8\,$\mathrm{MJy\,sr^{-1}}$, the excess seen in
-Fig.~\ref{fig:hmhs_zoom} would vanish entirely.
+Fig.~\ref{fig:hmhs_zoom} would vanish entirely. \aism{the figure was commented out}
 
 \begin{table*}
 \newdimen\tblskip \tblskip=5pt
@@ -984,7 +984,7 @@ Fig.~\ref{fig:hmhs_zoom} would vanish entirely.
 the gain uncertainty in Table~2 of \citet{hauser1998} with the
 \cosmoglobe\ posterior mean.\par
 \tablenote {{\rm d}} Statistical Monte Carlo uncertainty estimated as the standard deviation of all accepted Gibbs samples.\par
-\tablenote {{\rm e}} Rms of the HMHD maps in Fig.~\ref{fig:hmhd}, downgraded to a HEALPix resolution of $N_{\mathrm{side}}=4$.\par
+\tablenote {{\rm e}} RMS of the HMHD maps in Fig.~\ref{fig:hmhd}, downgraded to a HEALPix resolution of $N_{\mathrm{side}}=4$.\par
 \tablenote {{\rm f}} Uncertainty due to the hot dust zero-level, estimated to be $1\,\mu\mathrm{K}_{\mathrm{RJ}}$ at 545\,GHz.\par %; see Appendix~\ref{app:fgmono} for details.\par
 \tablenote {{\rm g}} Total monopole uncertainty obtained by adding the individual uncertainties in columns (b)--(f) in quadrature.\par
 \tablenote {{\rm h}} Official DIRBE monopole constraints reproduced from Table~2 of \citet{hauser1998}.\par
@@ -999,7 +999,7 @@ the gain uncertainty in Table~2 of \citet{hauser1998} with the
 	\includegraphics[width=\textwidth]{figs/CIB_mono.pdf}
 	\caption{
 		Comparison of theoretical and observational constraints on the CIB monopole. Black lines include models of integrated galactic background line \citep{finke2022} and Population III stars \citep{santos:2002}. Black points show the measurements and upper limits from this work. The orange, blue, red, and dark purple points show independent analyses of the legacy DIRBE maps \citep{hauser1998,gorjian:2000,cambresy:2001,sano:2020}, while the cyan and red points show results from \textit{Spitzer} \citep{bethermin:2010} and \textit{JWST} \citep{stone:2024}. Gray points \citep{matsuoka:2011} are from the \textit{Pioneer 10} IPP, light purple \citep{mattila:2017} from ESO VLT, pink \citep{matsuura:2017} from \textit{CIBER}, and brown \citep{symons:2023} and yellow \citep{postman:2024} from New Horizons.
-		All upper limits are denoted by downward-facing triangles at the 95\,\% upper limit as calculated in Table \ref{tab:CIB_monopole}, while all error bars are 68\,\% confidence intervals.
+		All upper limits are denoted by downward-facing triangles at the 95\,\% upper limit as calculated in Table \ref{tab:CIB_monopole}, while all error bars are 68\,\% confidence intervals. \aism{so does that mean we're claming all detections, no upper limits? that doesn't match with the text}
 	}
 	\label{fig:CIB_monopoles}
 \end{figure*}
@@ -1011,9 +1011,9 @@ channels for which the static template is applied, namely
 4.9--60$\,\mu\mathrm{m}$. By increasing the zero-level of the
 respective static template, the monopole seen in
 Fig.~\ref{fig:hmhs_zoom} can be decreased all the way to
-zero. However, since the static template has to be positive, the monopole
+zero. \aism{the figure was commented out} However, since the static template has to be positive, the monopole
 cannot be increased significantly compared to what is seen in
-Fig.~\ref{fig:hmhs_zoom}. These maps do therefore impose strong upper
+Fig.~\ref{fig:hmhs_zoom}. \aism{the figure was commented out} These maps do therefore impose strong upper
 limits on the CIB monopole in this wavelength range, despite the
 presence of the static component.
 
@@ -1030,12 +1030,11 @@ state, and once it does that, it has to explore the full joint
 posterior distribution for sufficiently long to ensure that the
 posterior standard deviation is well measured.
 
-
 Figure~\ref{fig:traceplot} shows the mean monopole as a function of
 Gibbs iteration for each DIRBE channel as evaluated over the
 confidence masks defined in Sect.~\ref{sec:masks}, after removing the
-first 20 samples in each chain as suggested by \citet{CG02_02}. The
-colored lines show results from the six independent Gibbs
+first 20 samples in each chain as suggested by \citet{CG02_02}. \aism{the figure says 15 samples, not 20} The
+colored lines show results from the five independent Gibbs
 chains. Based on this plot, we do not see any significant evidence for
 remaining burn-in, as the chains appear stationary from the very
 beginning.
@@ -1050,12 +1049,12 @@ also have a low signal-to-noise ratio with respect to zodiacal light,
 and there is therefore a strong degeneracy between the band monopole
 and the zodiacal light emissivity that takes a long time to explore
 with Gibbs sampling. At the same time, the same analysis also shows
-that the combination of the six chains does cover the physically
+that the combination of the five chains does cover the physically
 plausible range for the zodiacal light emissivities, and the range
-covered by the monopole chains seen in Fig.~\ref{fig:traceplot}
-therefore also provide a useful estimate of the corresponding
+covered by the monopole chains seen in Fig.~\ref{fig:traceplot},
+therefore, also provide a useful estimate of the corresponding
 physically meaningful monopole uncertainty, despite the long
-correlation length. Indeed, in a future update of this analysis it
+correlation length. Indeed, in a future update of this analysis, it
 might be prudent to impose a physically motivated prior on the
 zodiacal light emissivity by extrapolating from the
 12--60\,$\mu\mathrm{m}$ channels, and this will then significantly
@@ -1086,7 +1085,7 @@ we therefore propagate this directly as provided. (2) However, the gain
 uncertainty is a multiplicative value in units of percent, and we
 therefore multiply those uncertainties with our best-fit monopole
 values for each channel.
-(3) The third contribution is simply the posterior RMS as
+(3) The third contribution is simply the posterior root-mean square (RMS) as
 evaluated from the Gibbs samples; this quantifies statistical
 uncertainties that are directly described by the parametric model in
 Eqs.~\eqref{eq:model}--\eqref{eq:skymodel}. The most important
@@ -1099,10 +1098,10 @@ of the DIRBE survey. (5) Lastly, we include a term that describes residual
 uncertainties in the zero-level of the static component. As discussed
 above, the zero-level of these templates have been set as low as
 possible without introducing large negative regions. However, this
-value itself is not unique, but rather depends for instance on the
+value itself is not unique, but rather depends, for instance, on the
 intrinsic noise level of the data and the smoothing operator used in
-the zero-level determination. We therefore assign a residual
-uncertainty to this value as described by \citet{CG02_01}.  For channels without a positive detection, we define the
+the zero-level determination. We, therefore, assign a residual
+uncertainty to this value, as described by \citet{CG02_01}.  For channels without a positive detection, we define the
 upper 95\,\% confidence limit as the sum of the posterior mean value
 and two times the total uncertainty.
 
@@ -1123,7 +1122,7 @@ column (h). As a simple validation test, column (i) lists constraints
 that are derived directly from the monopole Gibbs samples, $m_{\nu}$,
 and these are therefore based on a less conservative masking procedure
 than the main results. 
-As a further consistency test, we have started an extra Monte Carlo chain splitting the data in even- and odd-numbered scans rather than first and second half of the mission.
+As a further consistency test, we have started an extra Monte Carlo chain splitting the data in even- and odd-numbered scans, rather than first and second half of the mission.
 This led to a larger spatial overlap between the two halves, allowing us to obtain HMHS and HMHD maps of the so-called Southern Hole region. 
 From these we have computed a new set of CIB constraints, reported in the last three rows of Table~\ref{tab:CIB_monopole} together with the associated uncertainties, derived through the same steps described above.
 Overall, the results from these methods are
@@ -1256,12 +1255,12 @@ estimated by \citet{finke2022}.
 In this work, we have derived improved constraints on the CIB monopole spectrum as observed by DIRBE. This was achieved through global end-to-end Bayesian sampling, in which the monopoles were sampled jointly with both zodiacal and Galactic emission and instrumental parameters. The reprocessed DIRBE maps, as presented by \citet{CG02_01}, have been improved from the legacy processing in large part due to improved zodiacal dust modeling \citep{CG02_02}, deeper stellar modeling \citep{CG02_04}, and a novel thermal dust model \citep{CG02_05}. Notably, the presence of excess radiation that appears static in solar-centric coordinates was identified and removed in the 4.9, 12, 25, and $60\,\mathrm{\mu m}$ bands.
 
 
-In the current paper we have analyzed a set of data-minus-model residual maps that resulted from this process, which ideally should contain only CIB signal and instrumental noise. Overall, our monopole estimates derived from these maps are significantly lower than those derived from the legacy DIRBE maps. This is true across the entire wavelength band, even at those channels where significant detections were already reported in the literature. Based on the results presented by \citet{CG02_01} and \citet{CG02_02}, we interpret this primarily as improved zodiacal light modeling in the current processing. We anticipate that these improved results and products will have non-trivial implications for many astrophysical and cosmological analyses that were based on the original DIRBE measurements, and stronger limits may now be imposed on a wide range of physical effects.
+In the current paper, we have analyzed a set of data-minus-model residual maps that resulted from this process, which ideally should contain only CIB signal and instrumental noise. Overall, our monopole estimates derived from these maps are significantly lower than those derived from the legacy DIRBE maps. This is true across the entire wavelength band, even at those channels where significant detections were already reported in the literature. Based on the results presented by \citet{CG02_01} and \citet{CG02_02}, we interpret this primarily as improved zodiacal light modeling in the current processing. We anticipate that these improved results and products will have non-trivial implications for many astrophysical and cosmological analyses that were based on the original DIRBE measurements, and stronger limits may now be imposed on a wide range of physical effects.
 
 This progress has been enabled primarily by two defining features of the \cosmoglobe\ framework. The first of these is simply joint analysis of multiple complementary state-of-the-art experiments. In the case of DIRBE, the combination of \Planck\ HFI, WISE and \Gaia\ data has established a new view of emission from the Milky Way in the form of a single sky model that spans $100\,\mathrm{GHz}$ to $1\,\mathrm{\mu m}$, and this has in turn allowed a deeper mapping of the zodiacal light emission than previously possible. The second defining feature of \cosmoglobe\ is the use of modern statistical methods and computing power, which enables global end-to-end modeling of full time-ordered data sets. Intuitively speaking, fitting all parameters at once leads to better estimates of each parameter individually, and such global modeling was simply not computationally feasible when the original DIRBE analysis was performed in the 1990's.
 
 
-Despite these improvements, there are still outstanding problems and degeneracies that cannot be broken with the data used in this study. The most important of these is the existence of solar-centric excess radiation in the wavelength channels between 4.9, 12, 25, and 60\,$\mathrm{\mu m}$. A natural next step towards understanding this is to establish a detailed straylight model for the DIRBE instrument, for instance using GRASP \citep{grasp}. If a detailed physical optics analysis excludes a straylight-based explanation, more complicated zodiacal light models must be considered. Irrespective of the origin of this effect, the addition of time-ordered data from other experiments at similar frequencies and with complementary scan strategies can be used to better determine the 3D structure and absolute brightness of zodiacal dust. In particular, IRAS \citep{boggess92} created nearly full-sky maps at 12, 25, 60, and 100 $\mathrm{\mu m}$ with resolution between 0.5$\arcm$ and $2\arcm$ FWHM. A full end-to-end joint analysis of IRAS and DIRBE will leverage the unique properties of both datsets, and enable robust characterization of the CIB monopole spanning the entire infrared spectrum. Similarly, other full-sky experiments, including the AKARI \citep{murakami:2007} and the upcoming SPHEREx \citep{dore:2014} satellites, will be essential for determining the three-dimensional structure of the zodiacal dust and determining the spectrum of the CIB, and we argue that all of these should ideally be analyzed jointly within a common end-to-end framework like \Cosmoglobe. 
+Despite these improvements, there are still outstanding problems and degeneracies that cannot be broken with the data used in this study. The most important of these is the existence of solar-centric excess radiation in the wavelength channels between 4.9, 12, 25, and 60\,$\mathrm{\mu m}$. A natural next step towards understanding this is to establish a detailed straylight model for the DIRBE instrument, for instance using GRASP \citep{grasp}. If a detailed physical optics analysis excludes a straylight-based explanation, more complicated zodiacal light models must be considered. Irrespective of the origin of this effect, the addition of time-ordered data from other experiments at similar frequencies and with complementary scan strategies can be used to better determine the 3D structure and absolute brightness of zodiacal dust. In particular, IRAS \citep{boggess92} created nearly full-sky maps at 12, 25, 60, and 100 $\mathrm{\mu m}$ with resolution between 0.5$\arcm$ and $2\arcm$ FWHM. A full end-to-end joint analysis of IRAS and DIRBE will leverage the unique properties of both datsets, and enable robust characterization of the CIB monopole spanning the entire infrared spectrum. Similarly, other full-sky experiments, including the AKARI \citep{murakami:2007} and the ongoing SPHEREx \citep{dore:2014} satellites, will be essential for determining the three-dimensional structure of the zodiacal dust and determining the spectrum of the CIB, and we argue that all of these should ideally be analyzed jointly within a common end-to-end framework like \Cosmoglobe. 
 
 
 \begin{acknowledgements}
