@@ -718,7 +718,7 @@ All bands observe the same $0\fdg7\times0\fdg7$  field simultaneously, with smal
   \label{fig:bandpass}
 \end{figure}
 
-The used symmetrized beam, shown in the top panel of Fig.~\ref{fig:beams}, resembles a tophat with a slow falloff. The harmonic-space representation of the beam is therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$. For a band-limited signal to be characterized fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully characterized in harmonic space, a requirement for the \commanderthree\ multi-resolution component separation, the pixelization scheme must have support up to $\ell\lesssim1500$. The original DIRBE maps have pixel size of 21\arcm, insufficient for harmonic space analysis.
+The DIRBE scanning beam has a rather unusual squared shape, caused by Field Stop no.~2 in Fig.~\ref{fig:optics_model}. Fully accounting for this shape in each sample is computationally very expensive. Instead, following experiments such as \WMAP\ \citep{bennett2012} and \Planck\ \citep{planck2016-l01}, we operate with the azimuthally symmetrized beams shown in the top panel of Fig.~\ref{fig:beams}. These are obtained by radially averaging the original 2D DIRBE beams around their center-of-mass. In general, these radial beam profiles resemble a tophat with a slow falloff, and the corresponding harmonic-space representations, $b_{\ell}$, are therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$; these are obtained through a Legendre transform of the radial beams, and the results shown in the bottom panel. For a band-limited signal to be characterized fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully characterized in harmonic space, a requirement for the \commanderthree\ multi-resolution component separation, the pixelization scheme must have support up to $\ell\lesssim1500$. The original DIRBE maps have pixel size of 21\arcm, insufficient for harmonic space analysis.
 Neither the original maps in Quadcube\footnote{
 	Quadrilateralized Spherical Cube \url{https://lambda.gsfc.nasa.gov/product/cobe/skymap\_info\_new.html}
 }
@@ -735,7 +735,7 @@ pixelization (resolution 9, pixel size 21\arcm) nor the CADE\footnote{Centre d'A
 \end{figure}
 
 
-The DIRBE central bandpasses, given in terms of central frequency and central wavelength, are given in Table \ref{tab:summary}, and the full bandpass responses as reported in \citet{cobe_exsupp} are shown in Fig.~\ref{fig:bandpass}.
+The DIRBE central bandpasses, given in terms of central frequency and central wavelength, are given in Table \ref{tab:summary}, and the full bandpass responses as reported in \citet{cobe_exsupp} are shown in Fig.~\ref{fig:bandpass}. All bandpass and unit conversion quantities  are evaluated through full integration with respect to these bandpass profiles, as described by \citep[e.g.,][]{planck2013-p03d,bp01,bp09}
 The different detector technology for each band accounts for the different performances and systematics found in each of the bands. \citet{silverberg93} in particular highlight the Ge:Ga photoconductors' (bands 7 and 8) response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
 
 \subsection{Data selection and masking}
@@ -812,6 +812,7 @@ The different detector technology for each band accounts for the different perfo
   \endPlancktablewide \endgroup
 \end{table}
 
+
 \begin{table*}[t]
   \begingroup
   \newdimen\tblskip \tblskip=5pt
@@ -865,21 +866,6 @@ The different detector technology for each band accounts for the different perfo
   \endPlancktablewide \endgroup
 \end{table*}
 
-In order to produce maps with full multipole support, we analyze the TOD directly and convert the pointing into 7\arcm\  $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered TOD.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from TOD pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in the Python preprocessing script \texttt{quadcube}.\footnote{\url{https://github.com/MetinSa/quadcube}}
-
-The delivered TOD are organized into 285 single-day files, with the datapoints ordered by Quadcube pixel index. The primary processing step was converting the pointing into $N_\mathrm{side}=512$ pixels using \texttt{quadcube}. The data are sampled at 8\,Hz and labeled by time index in seconds since January 1, 1981 00:00 UTC. Because the data are pre-calibrated and bad data are already removed, there are some gaps in the data, which we fill manually with an appropriate flag. Additional flags, such as excess noise, orbit and attitude errors, and presence of the SAA, are additionally extracted. In total, the data are placed in one \texttt{hdf5} file per band, following the format enumerated in \citet{bp03}.
-The planet{, comet, and asteroid} flags are not present in the TOD, and are regenerated beforehand. Using the radii as defined in Table~\ref{tab:planet_flags}, we mark data points within the pointing of each pixel. \textbf{These moving objects are the same as tabulated in \citet{arendt:2014}, including the comets first detected in \citet{lisse:1998}.} Note that this is not strictly optimal due to the non-circular beam shape, and can be optimized in future analyses. In total, the TOD data selection is is summarized in Table~\ref{tab:data_selection}.
-
-
-
-
-
-
-In order to model the TOD accurately, we make use of processing masks depending on the band and component being modeled. In particular, estimating the instrumental noise properties and the zodiacal emission require a sufficiently accurate model, which can be easily biased in regions of excessively high emission.
-
-For zodiacal emission, masking out the Ecliptic plane is necessary for all bands. As discussed in Sect.~\ref{sec:excess} and elaborated on in \citet{CG02_02}, the Ecliptic plane has a complex structure that is not well fit by current parametric models. In addition, incorrectly modeled Galactic emission in the form of thermal dust and stars can bias measurements as well. As shown in Fig.~\ref{fig:masks}, this mask, shown in blue, is wavelength-dependent, and is most aggressive in regions where zodiacal emission is brightest, and where point sources are brightest.
-Conversely, at very long and very short wavelengths, a more aggressive Galactic mask is required. These are shown in green in Fig.~\ref{fig:masks}, and are defined again by regions in which the foregrounds are bright and not modeled sufficiently well. {The specific values for masks are chosen based on smoothed residual masks from preliminary runs, with brightnesses determined by the overall signal-to-noise level within each band.}
-
 \begin{figure*}
   \centering
   \includegraphics[width=0.235\linewidth]{figs/solarmap_01a_v4.pdf}\hspace*{2mm}
@@ -905,6 +891,24 @@ Conversely, at very long and very short wavelengths, a more aggressive Galactic 
   \caption{{Half-mission} solar-centric residuals maps, two for each bandpass, derived by co-adding the residual TOD, $\r = \dv - \s_{\mathrm{fg}} - \s_{\mathrm{zodi}} - \n_{\mathrm{corr}}$, into solar-centric coordinates. The Sun is located in the center of each panel, and the equator is aligned with the Ecliptic plane. All maps have been smoothed with a $1^{\circ}$ FWHM Gaussian kernel. The gray boundaries indicate the solar-centric exclusion masks used for each channel; no masks are applied for 140 and 240\,$\mu$m.}
   \label{fig:solarmaps}
 \end{figure*}
+
+
+
+In order to produce maps with full multipole support, we analyze the TOD directly and convert the pointing into 7\arcm\  $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered TOD.\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from TOD pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in the Python preprocessing script \texttt{quadcube}.\footnote{\url{https://github.com/MetinSa/quadcube}}
+
+The delivered TOD are organized into 285 single-day files, with the datapoints ordered by Quadcube pixel index. The primary processing step was converting the pointing into $N_\mathrm{side}=512$ pixels using \texttt{quadcube}. The data are sampled at 8\,Hz and labeled by time index in seconds since January 1, 1981 00:00 UTC. Because the data are pre-calibrated and bad data are already removed, there are some gaps in the data, which we fill manually with an appropriate flag. Additional flags, such as excess noise, orbit and attitude errors, and presence of the SAA, are additionally extracted. In total, the data are placed in one \texttt{hdf5} file per band, following the format enumerated in \citet{bp03}.
+The planet{, comet, and asteroid} flags are not present in the TOD, and are regenerated beforehand. Using the radii as defined in Table~\ref{tab:planet_flags}, we mark data points within the pointing of each pixel. \textbf{These moving objects are the same as tabulated in \citet{arendt:2014}, including the comets first detected in \citet{lisse:1998}.} Note that this is not strictly optimal due to the non-circular beam shape, and can be optimized in future analyses. In total, the TOD data selection is is summarized in Table~\ref{tab:data_selection}.
+
+
+
+
+
+
+In order to model the TOD accurately, we make use of processing masks depending on the band and component being modeled. In particular, estimating the instrumental noise properties and the zodiacal emission require a sufficiently accurate model, which can be easily biased in regions of excessively high emission.
+
+For zodiacal emission, masking out the Ecliptic plane is necessary for all bands. As discussed in Sect.~\ref{sec:excess} and elaborated on in \citet{CG02_02}, the Ecliptic plane has a complex structure that is not well fit by current parametric models. In addition, incorrectly modeled Galactic emission in the form of thermal dust and stars can bias measurements as well. As shown in Fig.~\ref{fig:masks}, this mask, shown in blue, is wavelength-dependent, and is most aggressive in regions where zodiacal emission is brightest, and where point sources are brightest.
+Conversely, at very long and very short wavelengths, a more aggressive Galactic mask is required. These are shown in green in Fig.~\ref{fig:masks}, and are defined again by regions in which the foregrounds are bright and not modeled sufficiently well. {The specific values for masks are chosen based on smoothed residual masks from preliminary runs, with brightnesses determined by the overall signal-to-noise level within each band.}
+
 
 
 \section{Excess radiation model}
@@ -1334,7 +1338,7 @@ indeed able to account for all main effects.
 
 It is also important to note that we sampled the time-variable gain for the 12 and 25$\,\mu$m
 channels, as shown in Fig.~\ref{fig:gain}, with the corresponding 3-$\sigma$ uncertainties,
-derived from their sampling, as shown in Fig.~\ref{fig:gain_trace}. On this regard, to give a better idea of the actual effect of gain sampling on the instrumental modeling included in our analysis, we have computed the map shown in Fig.~\ref{fig:diff_res_gain}. It consists of the two half mission realization of the difference between residuals in two different Commander runs, with and without gain sampling, coadded as an inverse-variance-weighted average.
+derived from their sampling, as shown in Fig.~\ref{fig:gain_trace}. Overall, we see that the resulting gain corrections vary with about 1\,\% during the course of the mission, which confirms the original DIRBE calibration procedure. At the same time, it is important to recall that the zodiacal light signal at 12 and 25\,$\mu$m is very bright, and 1\,\% variations correspond to residuals of about 0.5\,MJy/sr. Figure~\ref{fig:diff_res_gain} illustrates the spatial impact of these gain variations in the form of a difference map between the 25\,$\mu$m frequency maps derived with and without time-varying gains. The main features in this plot are coherent large-scale structures that primarily correlate with the long-term behaviour DIRBE scanning strategy, and without a time-variable gain correction, these residuals are impossible to eliminate with only zodiacal light or Galactic parameters.
 
 While Fig.~\ref{fig:sigma0} shows the white noise level in
 time-domain, Fig.~\ref{fig:sigma0_map} shows the corresponding noise
