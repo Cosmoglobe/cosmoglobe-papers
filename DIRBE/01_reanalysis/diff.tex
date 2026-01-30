@@ -1,7 +1,7 @@
 %                                                                 aa.dem
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL submitted.tex   Mon Oct  7 11:01:54 2024
-%DIF ADD main.tex        Thu Jan 29 14:24:19 2026
+%DIF ADD main.tex        Thu Jan 29 14:28:11 2026
 % AA vers. 9.1, LaTeX class for Astronomy & Astrophysics
 % demonstration file
 %                                                       (c) EDP Sciences
@@ -397,13 +397,18 @@ as ``TOD''.
 
 We adopt the following high-level parametric data model for the DIRBE
 TOD,
-\begin{align}
+\DIFdelbegin %DIFDELCMD < \begin{align}
+%DIFDELCMD < 	\label{eq:model}
+%DIFDELCMD < 	\dv &=\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+%DIFDELCMD <           \s_{\mathrm{static}} + \n_\mathrm{corr} + \n_\mathrm w\\
+%DIFDELCMD <         &\equiv \s_{\mathrm{tot}} + \n_{\mathrm{w}},
+%DIFDELCMD < \end{align}%%%
+\DIFdelend \DIFaddbegin \begin{align}
 	\label{eq:model}
 	\dv &=\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
           \s_{\mathrm{static}} + \n_\mathrm{corr} + \n_\mathrm w\\
-        &\equiv \s_{\mathrm{tot}} + \n_{\mathrm{w}}\DIFdelbegin \DIFdel{,
-}\DIFdelend \DIFaddbegin \DIFadd{.
-}\DIFaddend \end{align}
+        &\equiv \s_{\mathrm{tot}} + \n_{\mathrm{w}}.
+\end{align}\DIFaddend 
 \DIFdelbegin \DIFdel{where }\DIFdelend \DIFaddbegin \DIFadd{Here }\DIFaddend $\dv$ denotes a stacked vector of all DIRBE TOD for all
 frequency bands\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend $\G$ is an $n_{\mathrm{tod}}\times
 n_{\mathrm{tod}}$ diagonal matrix with an overall constant gain
@@ -505,73 +510,66 @@ and wavelength units which would be more natural for DIRBE. This has,
 however, no actual effect on the final results, but only requires
 appropriate unit conversions to be applied during input and output
 operations. }
-\begin{alignat}{4}
+\DIFdelbegin %DIFDELCMD < \begin{alignat}{4}
+%DIFDELCMD <   \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
+%DIFDELCMD <   &\M_{\mathrm{mbb}}(\bcold,\Tcold, q_i;\nuzerocold,\{\Delta\nu_i\})\vec{a}_{\mathrm{cold}}
+%DIFDELCMD <   && \textrm{(Cold dust)}\nonumber\\ %\label{eq:skymodel}\\
+%DIFDELCMD <   + &\M_{\mathrm{mbb}}(\bhot,\Thot, q_i;\nuzerohot,\{\Delta\nu_i\})
+%DIFDELCMD <   \vec{a}_{\mathrm{hot}} && \textrm{(Hot dust)}\nonumber \\
+%DIFDELCMD <   + &\M_{\mathrm{mbb}}(\bnear,\Tnear,q_i;\nuzeronear,\{\Delta\nu_i\}) \t_{\mathrm{near}}
+%DIFDELCMD <   a_{\nu} && \textrm{(Nearby dust)} \nonumber \\
+%DIFDELCMD <   + &\left(\frac{\nuzeroff}{\nu}\right)^2
+%DIFDELCMD <   \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
+%DIFDELCMD <   \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \nonumber\\
+%DIFDELCMD <   + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+%DIFDELCMD <   h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
+%DIFDELCMD < 	+ &\delta(\nu-\nu_{0,\CII}) \a_{\CII}
+%DIFDELCMD <   h^{\CII}_{\nu} && (\CII) \nonumber\\
+%DIFDELCMD <   + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+%DIFDELCMD <   f_{\GAIA,j} a_{\mathrm{s},j}, &\quad&
+%DIFDELCMD <   \textrm{(Bright stars)} \nonumber\\
+%DIFDELCMD <   + &U_{\mathrm{mJy}} \t_{\gaia,\mathrm{fs}}\, a_{\mathrm{fs},\nu}, &\quad&
+%DIFDELCMD <   \textrm{(Faint stars)} \nonumber\\  
+%DIFDELCMD <     + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
+%DIFDELCMD <   M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
+%DIFDELCMD <   T_{\mathrm{e},j})
+%DIFDELCMD <   a_{\mathrm{e},j} && \textrm{(FIR sources)}\nonumber\\
+%DIFDELCMD <   + &m_{\nu} && \textrm{(Monopole)}. \nonumber
+%DIFDELCMD < \end{alignat}%%%
+\DIFdelend \DIFaddbegin \begin{alignat}{4}
   \sum_{c=1}^{n_{\mathrm{comp}}} \M_c \a_c  = \,
-  &\DIFdelbegin %DIFDELCMD < \M%%%
-\DIFdel{_{\mathrm{mbb}}(}%DIFDELCMD < \bcold%%%
-\DIFdel{,}%DIFDELCMD < \Tcold%%%
-\DIFdel{, }\DIFdelend q\DIFaddbegin \DIFadd{^{\mathrm{cold}}}\DIFaddend _i\DIFdelbegin \DIFdel{;}%DIFDELCMD < \nuzerocold%%%
-\DIFdel{,\{\Delta\nu_i\})}%DIFDELCMD < \vec{a}%%%
-\DIFdelend \DIFaddbegin \DIFadd{\,\t}\DIFaddend _{\mathrm{cold}}
+  &q^{\mathrm{cold}}_i\,\t_{\mathrm{cold}}
   && \textrm{(Cold dust)}\nonumber\\ %\label{eq:skymodel}\\
-  + &\DIFdelbegin %DIFDELCMD < \M%%%
-\DIFdel{_{\mathrm{mbb}}(}%DIFDELCMD < \bhot%%%
-\DIFdel{,}%DIFDELCMD < \Thot%%%
-\DIFdel{, }\DIFdelend q_i\DIFdelbegin \DIFdel{;}%DIFDELCMD < \nuzerohot%%%
-\DIFdel{,\{\Delta\nu_i\})
-  }%DIFDELCMD < \vec{a}%%%
-\DIFdelend \DIFaddbegin \DIFadd{^{\mathrm{hot}}\,
-  \t}\DIFaddend _{\mathrm{hot}} && \textrm{(Hot dust)}\nonumber \\
-  + &\DIFdelbegin %DIFDELCMD < \M%%%
-\DIFdel{_{\mathrm{mbb}}(}%DIFDELCMD < \bnear%%%
-\DIFdel{,}%DIFDELCMD < \Tnear%%%
-\DIFdel{,}\DIFdelend q_i\DIFdelbegin \DIFdel{;}%DIFDELCMD < \nuzeronear%%%
-\DIFdel{,\{\Delta\nu_i\}) }\DIFdelend \DIFaddbegin \DIFadd{^{\mathrm{near}}\, }\DIFaddend \t_{\mathrm{near}}
- \DIFdelbegin \DIFdel{a_{\nu} }\DIFdelend && \textrm{(Nearby dust)} \nonumber \\
-  + &\DIFaddbegin \DIFadd{q_i^{\mathrm{ext}}\,\t_{\mathrm{ext}}
-  }&& \DIFadd{\textrm{(H${\alpha}$ extinction)}}\nonumber\\ %DIF > \label{eq:skymodel}\\
-  \DIFadd{+ }&\DIFaddend \left(\frac{\nuzeroff}{\nu}\right)^2
+  + &q_i^{\mathrm{hot}}\,
+  \t_{\mathrm{hot}} && \textrm{(Hot dust)}\nonumber \\
+  + &q_i^{\mathrm{near}}\, \t_{\mathrm{near}}
+ && \textrm{(Nearby dust)} \nonumber \\
+  + &q_i^{\mathrm{ext}}\,\t_{\mathrm{ext}}
+  && \textrm{(H${\alpha}$ extinction)}\nonumber\\ %\label{eq:skymodel}\\
+  + &\left(\frac{\nuzeroff}{\nu}\right)^2
   \frac{g_{\mathrm{ff}}(\nu;\Te) }{g_{\mathrm{ff}}(\nuzeroff;\Te)}
   \vec{t}_{\mathrm{ff}} && \textrm{(Free-free)} \nonumber\\
-  %DIF > + &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
-  %DIF > h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
-  %DIF > 	+ &\delta(\nu-\nu_{0,\CII}) \a_{\CII}
-  %DIF > h^{\CII}_{\nu} && (\CII) \nonumber\\
-  + &\DIFdelbegin \DIFdel{\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
-  h^{\mathrm{CO}}_{\nu,i} }%DIFDELCMD < && %%%
-\DIFdel{\textrm{(CO)}}%DIFDELCMD < \nonumber\\
-%DIFDELCMD < 	%%%
-\DIFdel{+ }%DIFDELCMD < &%%%
-\DIFdel{\delta(\nu-\nu_{0,\CII}) }%DIFDELCMD < \a%%%
-\DIFdel{_{\CII}
-  h^{\CII}_{\nu} }%DIFDELCMD < && %%%
-\DIFdel{(}%DIFDELCMD < \CII%%%
-\DIFdel{) }%DIFDELCMD < \nonumber\\
-%DIFDELCMD <   %%%
-\DIFdel{+ }%DIFDELCMD < &%%%
-\DIFdelend U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
-  \DIFaddbegin \DIFadd{\epsilon_j(\nu)\,}\DIFaddend f_{\GAIA,j} a_{\mathrm{s},j} \DIFdelbegin \DIFdel{, }\DIFdelend &\quad&
+  %+ &\delta(\nu-\nu_{0,\mathrm{CO}}^i) \t_{\mathrm{CO}}
+  %h^{\mathrm{CO}}_{\nu,i} && \textrm{(CO)}\nonumber\\
+  %	+ &\delta(\nu-\nu_{0,\CII}) \a_{\CII}
+  %h^{\CII}_{\nu} && (\CII) \nonumber\\
+  + &U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{s}}}
+  \epsilon_j(\nu)\,f_{\GAIA,j} a_{\mathrm{s},j} &\quad&
   \textrm{(Bright stars)} \nonumber\\
-  + &U_{\mathrm{mJy}} \t_{\gaia,\mathrm{fs}}\, a_{\mathrm{fs},\nu} \DIFdelbegin \DIFdel{, }\DIFdelend &\quad&
+  + &U_{\mathrm{mJy}} \t_{\gaia,\mathrm{fs}}\, a_{\mathrm{fs},\nu} &\quad&
   \textrm{(Faint stars)} \nonumber\\  
-  + &\DIFdelbegin \DIFdel{U_{\mathrm{mJy}} \sum_{j=1}^{n_{\mathrm{e}}}
-  M_{\mathrm{mbb}}(\beta_{\mathrm{e},j},
-  T_{\mathrm{e},j})
-  a_{\mathrm{e},j} }%DIFDELCMD < && %%%
-\DIFdel{\textrm{(FIR sources)}}%DIFDELCMD < \nonumber\\
-%DIFDELCMD <   %%%
-\DIFdel{+ }%DIFDELCMD < &%%%
-\DIFdelend m_{\nu} && \textrm{(Monopole)}. \nonumber
-\end{alignat}
+  + &m_{\nu} && \textrm{(Monopole)}. \nonumber
+\end{alignat}\DIFaddend 
 In this expression, \DIFdelbegin \DIFdel{we have defined a function of the form
-}\begin{displaymath}
-  \DIFdel{M_{\mathrm{mbb}}(\beta, T, q_i;\nu_0, \{\Delta\nu_i\}) =
-    \begin{cases}
-      q_i & \nu \in \Delta\nu_i\\
-      \left(\frac{\nu}{\nu_0}\right)^{\beta+1}
-  \frac{\e^{h\nu_0/\kB T}-1}{\e^{h\nu/\kB T}-1} & \nu \notin \Delta\nu_i,
-    \end{cases}       
-}\end{displaymath}%DIFAUXCMD
+}%DIFDELCMD < \begin{equation}
+%DIFDELCMD <   M_{\mathrm{mbb}}(\beta, T, q_i;\nu_0, \{\Delta\nu_i\}) =
+%DIFDELCMD <     \begin{cases}
+%DIFDELCMD <       q_i & \nu \in \Delta\nu_i\\
+%DIFDELCMD <       \left(\frac{\nu}{\nu_0}\right)^{\beta+1}
+%DIFDELCMD <   \frac{\e^{h\nu_0/\kB T}-1}{\e^{h\nu/\kB T}-1} & \nu \notin \Delta\nu_i,
+%DIFDELCMD <     \end{cases}       
+%DIFDELCMD < \end{equation}
+%DIFDELCMD < %%%
 \DIFdel{which represents a generalized modified blackbody function. However, in addition to the usual emissivity index and temperature, $\beta$ and $T$, this function takes a set of constant values, }\DIFdelend \DIFaddbegin \DIFadd{$\t$ denotes an external fixed spatial template, and }\DIFaddend $q_i$ \DIFdelbegin \DIFdel{, and corresponding frequency ranges $\Delta\nu_i$. If the requested
 frequency happens to lie in any one of $\Delta\nu_i$, then $q_i$ is
 returned; otherwise the default is to return the standard modified
@@ -812,7 +810,22 @@ free parameters is $\omega = \{\xi_{\mathrm{n}},
 \beta_{\mathrm{sky}},\a_{\mathrm{sky}},\zeta_{\mathrm{z}},\a_{\mathrm{static}}\}$,
 we can immediately write down a corresponding Gibbs sampling chain of
 the following form:
-\begin{alignat}{10}
+\DIFdelbegin %DIFDELCMD < \begin{alignat}{10}
+%DIFDELCMD < \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
+%DIFDELCMD < \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%DIFDELCMD < &\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
+%DIFDELCMD < \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%DIFDELCMD < \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
+%DIFDELCMD < \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%DIFDELCMD < \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+%DIFDELCMD < &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
+%DIFDELCMD < \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%DIFDELCMD < \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+%DIFDELCMD < &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
+%DIFDELCMD < \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%DIFDELCMD < \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&).\label{eq:gibbs_static}
+%DIFDELCMD < \end{alignat}%%%
+\DIFdelend \DIFaddbegin \begin{alignat}{10}
 \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
 \,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
 &\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
@@ -825,8 +838,8 @@ the following form:
 \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
 &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
 \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)\DIFaddbegin &\DIFaddend .\label{eq:gibbs_static}
-\end{alignat}
+	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)&.\label{eq:gibbs_static}
+\end{alignat}\DIFaddend 
 Here, the symbol $\leftarrow$ indicates drawing a sample from the
 conditional distribution on the right-hand side. However, we note that
 our codes are also designed to perform maximum-posterior (or
@@ -867,11 +880,8 @@ posteriors.
 %DIFDELCMD <   \begingroup
 %DIFDELCMD <   \newdimen\tblskip \tblskip%%%
 \DIFdelFL{=5pt
-	}%DIFDELCMD < \caption{%
-{%DIFAUXCMD
-\DIFdelFL{List of celestial body flags.}}
-  %DIFAUXCMD
-%DIFDELCMD < \label{tab:planet_flags}
+	}%DIFDELCMD < \caption{List of celestial body flags.}
+%DIFDELCMD <   \label{tab:planet_flags}
 %DIFDELCMD <   \nointerlineskip
 %DIFDELCMD <   \vskip %%%
 \DIFdelFL{-3mm
@@ -1208,7 +1218,7 @@ Conversely, at very long and very short wavelengths, a more aggressive Galactic 
   }\includegraphics[width=0.235\linewidth]{figs/solarmap_05b_v4.pdf}\DIFaddFL{\hspace*{5mm}
   }\includegraphics[width=0.235\linewidth]{figs/solarmap_10a_v4.pdf}\DIFaddFL{\hspace*{2mm}
   }\includegraphics[width=0.235\linewidth]{figs/solarmap_10b_v4.pdf}
-  \caption{{\DIFaddFL{Half-mission}} \DIFaddFL{solar-centric residuals maps, two for each bandpass, derived by co-adding the residual TOD, $\r = \dv - \s_{\mathrm{fg}} - \s_{\mathrm{zodi}} - \n_{\mathrm{corr}}$, into solar-centric coordinates. The Sun is located in the center of each panel, and the equator is aligned with the Ecliptic plane. All maps have been smoothed with a $1^{\circ}$ FWHM Gaussian kernel. The gray boundaries indicate the solar-centric exclusion masks used for each channel; no masks are applied for 140 and 240\,$\mu$m.}}
+  \caption{{Half-mission} solar-centric residuals maps, two for each bandpass, derived by co-adding the residual TOD, $\r = \dv - \s_{\mathrm{fg}} - \s_{\mathrm{zodi}} - \n_{\mathrm{corr}}$, into solar-centric coordinates. The Sun is located in the center of each panel, and the equator is aligned with the Ecliptic plane. All maps have been smoothed with a $1^{\circ}$ FWHM Gaussian kernel. The gray boundaries indicate the solar-centric exclusion masks used for each channel; no masks are applied for 140 and 240\,$\mu$m.}
   \label{fig:solarmaps}
 \end{figure*}
 \DIFaddend 
@@ -1374,15 +1384,16 @@ sky signal}} \DIFadd{model at long wavelengths}\DIFaddend .
   the DIRBE noise level.}}
 \DIFaddend 
 
-\DIFaddbegin \begin{table*}[t]
+%BEGIN DIFNOMARKUP
+\begin{table*}[t]
   \begingroup
-  \newdimen\tblskip \tblskip\DIFaddFL{=5pt
-  }\caption{\DIFaddFL{Key map-level characteristics of the \cosmoglobe\ DR2 ZSMA maps. The relative calibration, $\alpha$, is defined as the slope of a scatter plot between the old K98 and new DR2 maps, evaluated over either the default DR2 processing mask (``High latitudes'') or full sky. }}
+  \newdimen\tblskip \tblskip=5pt
+  \caption{Key map-level characteristics of the \cosmoglobe\ DR2 ZSMA maps. The relative calibration, $\alpha$, is defined as the slope of a scatter plot between the old K98 and new DR2 maps, evaluated over either the default DR2 processing mask (``High latitudes'') or full sky. }
   \label{tab:summary}
   \nointerlineskip
-  \vskip \DIFaddFL{-3mm
-  }\footnotesize
-  \setbox\tablebox\DIFaddFL{=}\vbox{
+  \vskip -3mm
+  \footnotesize
+  \setbox\tablebox=\vbox{
     \newdimen\digitwidth
     \setbox0=\hbox{\rm 0}
     \digitwidth=\wd0
@@ -1423,10 +1434,12 @@ sky signal}} \DIFadd{model at long wavelengths}\DIFaddend .
       10 & 1.25 & 240  & 0.40 &  0.841 & 1.012 & *860 & *740 \cr
       \noalign{\vskip 4pt\hrule\vskip 5pt} } }
   \endPlancktablewide 
-  \tablenote {{\rm \DIFaddFL{a}}} \DIFaddFL{Reproduced from the DIRBE Explanatory Supplement.}\par
-  \tablenote {{\rm \DIFaddFL{b}}} \DIFaddFL{Noise sensitivity per $0\fdg7\times 0\fdg7$ pixel, averaged over the full sky.}\par
+  \tablenote {{\rm a}} Reproduced from the DIRBE Explanatory Supplement.\par
+  \tablenote {{\rm b}} Noise sensitivity per $0\fdg7\times 0\fdg7$ pixel, averaged over the full sky.\par
 \endgroup
 \end{table*}
+%END DIFNOMARKUP
+\DIFaddbegin 
 
 
 
@@ -1501,11 +1514,9 @@ for not applying the $\s_{\mathrm{static}}$ corrections to the
 \DIFaddend \begin{figure*}
     \centering
     \includegraphics[width=0.9\textwidth]{figs/traceplots.pdf}
-	\DIFdelbeginFL %DIFDELCMD < \caption{%
-{%DIFAUXCMD
-\DIFdelFL{Trace plots of MCMC sampling chains. Each panel shows a series of sampled components for each Gibbs sample, including the ten DIRBE monopoles, the zodiacal dust cloud albedos $A$ and emissivities $E$, the ambient dust temperature at 1 AU $T_0$, and the instrumental parameters for band 10. Monopoles are plotted in units of $\mathrm{kJy\,sr^{-1}}$, $f_\mathrm{knee,10}$ in Hz, $\sigma_0$ in $\mathrm{MJy\,sr^{-1}}$, and $T_0$ in kelvin, while all other parameters are unitless.}}
-    %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \caption{\DIFaddFL{Trace plots of MCMC sampling chains. Each panel shows a series of sampled components for each Gibbs sample, including the ten DIRBE monopoles, the zodiacal dust cloud albedos $A$ and emissivities $E$, and the instrumental parameters for band 10. Monopoles are plotted in units of $\mathrm{kJy\,sr^{-1}}$, $f_\mathrm{knee,10}$ in Hz, and $\sigma_0$ in $\mathrm{MJy\,sr^{-1}}$, while all other parameters are unitless.}}
+	\DIFdelbeginFL %DIFDELCMD < \caption{Trace plots of MCMC sampling chains. Each panel shows a series of sampled components for each Gibbs sample, including the ten DIRBE monopoles, the zodiacal dust cloud albedos $A$ and emissivities $E$, the ambient dust temperature at 1 AU $T_0$, and the instrumental parameters for band 10. Monopoles are plotted in units of $\mathrm{kJy\,sr^{-1}}$, $f_\mathrm{knee,10}$ in Hz, $\sigma_0$ in $\mathrm{MJy\,sr^{-1}}$, and $T_0$ in kelvin, while all other parameters are unitless.}
+%DIFDELCMD <     %%%
+\DIFdelendFL \DIFaddbeginFL \caption{Trace plots of MCMC sampling chains. Each panel shows a series of sampled components for each Gibbs sample, including the ten DIRBE monopoles, the zodiacal dust cloud albedos $A$ and emissivities $E$, and the instrumental parameters for band 10. Monopoles are plotted in units of $\mathrm{kJy\,sr^{-1}}$, $f_\mathrm{knee,10}$ in Hz, and $\sigma_0$ in $\mathrm{MJy\,sr^{-1}}$, while all other parameters are unitless.}
     \DIFaddendFL \label{fig:trace}
 \end{figure*}
 
@@ -1603,36 +1614,40 @@ refer the interested reader there for further details.
 \begin{figure}
 	\centering
 	\includegraphics[width=\columnwidth]{figs/sigma0_bands.pdf}
-	\caption{Instrumental noise $\sigma_0$ for each band, averaged over all Gibbs chains. Data not used in the Gibbs \DIFdelbeginFL \DIFdelFL{chain }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{chains }\DIFaddendFL are not displayed. Bands $12$--$240\,\mathrm{\mu m}$ are plotted in units of $\mathrm{MJy\,sr^{-1}}$, while all others are in $\mathrm{kJy\,sr^{-1}}$.}
-	\label{fig:sigma0}
+	\DIFdelbeginFL %DIFDELCMD < \caption{Instrumental noise $\sigma_0$ for each band, averaged over all Gibbs chains. Data not used in the Gibbs chain are not displayed. Bands $12$--$240\,\mathrm{\mu m}$ are plotted in units of $\mathrm{MJy\,sr^{-1}}$, while all others are in $\mathrm{kJy\,sr^{-1}}$.}
+%DIFDELCMD < 	%%%
+\DIFdelendFL \DIFaddbeginFL \caption{Instrumental noise $\sigma_0$ for each band, averaged over all Gibbs chains. Data not used in the Gibbs chains are not displayed. Bands $12$--$240\,\mathrm{\mu m}$ are plotted in units of $\mathrm{MJy\,sr^{-1}}$, while all others are in $\mathrm{kJy\,sr^{-1}}$.}
+	\DIFaddendFL \label{fig:sigma0}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{figs/ncorr_240a.pdf}
-	\caption{Realization of correlated noise for first half-mission of $240\,\mathrm{\mu m}$ band, from the \DIFdelbeginFL \DIFdelFL{25th }\DIFdelendFL \DIFaddbeginFL {\DIFaddFL{250th}} \DIFaddendFL sample of the first chain.}
-  \label{fig:ncorr_map}
+	\DIFdelbeginFL %DIFDELCMD < \caption{Realization of correlated noise for first half-mission of $240\,\mathrm{\mu m}$ band, from the 25th sample of the first chain.}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \caption{Realization of correlated noise for first half-mission of $240\,\mathrm{\mu m}$ band, from the {250th} sample of the first chain.}
+  \DIFaddendFL \label{fig:ncorr_map}
 \end{figure}
 
 
 \DIFaddbegin \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{figs/gain.pdf}
-  \caption{\DIFaddFL{Average gain for the 12\,$\mu$m and 25\,$\mu$m bands as a function of time, with the corresponding 3-$\sigma$ uncertainties.}}
+  \caption{Average gain for the 12\,$\mu$m and 25\,$\mu$m bands as a function of time, with the corresponding 3-$\sigma$ uncertainties.}
   \label{fig:gain}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{figs/gain_trace.pdf}
-  \caption{\DIFaddFL{Gain at day 117 of the mission for the 12\,$\mu$m and 25\,$\mu$m bands as a function of sample, where each color corresponds to a different chain.}}
+  \caption{Gain at day 117 of the mission for the 12\,$\mu$m and 25\,$\mu$m bands as a function of sample, where each color corresponds to a different chain.}
   \label{fig:gain_trace}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{figs/diff_res_gain.pdf}
-	\caption{\DIFaddFL{Inverse-variance-weighted average of HM1 and HM2 differences in residuals between Commander runs with and without gain sampling, for $25\,\mathrm{\mu m}$ band.}}
+	\caption{Inverse-variance-weighted average of HM1 and HM2 differences in residuals between Commander runs with and without gain sampling, for $25\,\mathrm{\mu m}$ band.}
 	\label{fig:diff_res_gain}
 \end{figure}
 
@@ -1656,11 +1671,12 @@ refer the interested reader there for further details.
   \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_08.pdf}\DIFaddendFL \\       
   \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_09.pdf}
 %DIFDELCMD <   \includegraphics[width=0.37\linewidth]{figs/rms_maps/rms_10.pdf}       
-%DIFDELCMD < 	%%%
+%DIFDELCMD < 	\caption{White noise rms maps for each DIRBE channel. All maps are in units of $\mathrm{MJy\,sr^{-1}}$.}
+%DIFDELCMD <   %%%
 \DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_09.pdf}
   \includegraphics[width=0.35\linewidth]{figs/rms_maps/rms_10.pdf}       
-	\DIFaddendFL \caption{White noise \DIFdelbeginFL \DIFdelFL{rms }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{RMS }\DIFaddendFL maps for each DIRBE channel. All maps are in units of $\mathrm{MJy\,sr^{-1}}$.}
-  \label{fig:sigma0_map}
+	\caption{White noise RMS maps for each DIRBE channel. All maps are in units of $\mathrm{MJy\,sr^{-1}}$.}
+  \DIFaddendFL \label{fig:sigma0_map}
 \end{figure*}
 
        \begin{figure*}
@@ -1683,11 +1699,12 @@ refer the interested reader there for further details.
        	\includegraphics[width=0.35\linewidth]{figs/todres_08.pdf}\DIFaddendFL \\       
        	\DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.35\linewidth]{figs/dirbe_09_todres_3deg_v4.pdf}
 %DIFDELCMD <        	\includegraphics[width=0.35\linewidth]{figs/dirbe_10_todres_3deg_v4.pdf}       
+%DIFDELCMD <        	\caption{Data-minus-model residual maps for each band for one arbitrarily chosen Gibbs sample. The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
 %DIFDELCMD <        	%%%
 \DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.35\linewidth]{figs/todres_09.pdf}
        	\includegraphics[width=0.35\linewidth]{figs/todres_10.pdf}       
-	       \DIFaddendFL \caption{Data-minus-model residual maps \DIFdelbeginFL \DIFdelFL{for each band for one arbitrarily chosen }\DIFdelendFL \DIFaddbeginFL {\DIFaddFL{averaged over all }\DIFaddendFL Gibbs \DIFdelbeginFL \DIFdelFL{sample}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{samples}}\DIFaddendFL . The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
-       	\label{fig:res}
+	       \caption{Data-minus-model residual maps {averaged over all Gibbs samples}. The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
+       	\DIFaddendFL \label{fig:res}
        \end{figure*}
 
        \begin{figure*}
@@ -1710,11 +1727,12 @@ refer the interested reader there for further details.
        	\includegraphics[width=0.35\linewidth]{figs/hmhd_08.pdf}\DIFaddendFL \\       
        	\DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.35\linewidth]{figs/dirbe_09_hmhd_3deg_v4.pdf}
 %DIFDELCMD <        	\includegraphics[width=0.35\linewidth]{figs/dirbe_10_hmhd_3deg_v4.pdf}       
+%DIFDELCMD <        	\caption{Zodi-subtracted half-mission half-difference maps for each channel for one arbitarily chosen Gibbs sample. The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
 %DIFDELCMD <        	%%%
 \DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.35\linewidth]{figs/hmhd_09.pdf}
        	\includegraphics[width=0.35\linewidth]{figs/hmhd_10.pdf}       
-	       \DIFaddendFL \caption{Zodi-subtracted half-mission half-difference maps \DIFdelbeginFL \DIFdelFL{for each channel for one arbitarily chosen }\DIFdelendFL \DIFaddbeginFL {\DIFaddFL{averaged over}} \DIFaddFL{all }\DIFaddendFL Gibbs \DIFdelbeginFL \DIFdelFL{sample}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{samples}\DIFaddendFL . The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
-       	\label{fig:hmhd}
+	       \caption{Zodi-subtracted half-mission half-difference maps {averaged over} all Gibbs samples. The 140 and 240\,$\mu$m channels have been smoothed to an angular resolution of $3^{\circ}$, while all others are shown at their native resolution. }
+       	\DIFaddendFL \label{fig:hmhd}
        \end{figure*}
 
 
@@ -1730,10 +1748,11 @@ refer the interested reader there for further details.
        \begin{figure}
        	\centering
        	\DIFdelbeginFL %DIFDELCMD < \includegraphics[width=\linewidth]{figs/chisq_CG02_c1_v2.pdf}
+%DIFDELCMD <        	\caption{Pixel-space reduced normalized $\chi^2$ in units of $\sigma$. The number of degrees-of-freedom per pixel is here assumed to be 103, which is equal to the sum of the number of observations per $N_{\mathrm{side}}=512$ pixel minus the number of freely fitted Galactic components. }
 %DIFDELCMD <        	%%%
 \DIFdelendFL \DIFaddbeginFL \includegraphics[width=\linewidth]{figs/chisq_Cosmoglobe_DR2_c1_samp301_v4.pdf}
-       	\DIFaddendFL \caption{Pixel-space reduced normalized $\chi^2$ in units of $\sigma$. The number of degrees-of-freedom per pixel is here assumed to be \DIFdelbeginFL \DIFdelFL{103}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{20}\DIFaddendFL , which is equal to the \DIFdelbeginFL \DIFdelFL{sum of the }\DIFdelendFL number of \DIFdelbeginFL \DIFdelFL{observations per $N_{\mathrm{side}}=512$ pixel minus the number of freely fitted Galactic components}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{DIRBE bands}\DIFaddendFL . }
-       	\label{fig:chisq}
+       	\caption{Pixel-space reduced normalized $\chi^2$ in units of $\sigma$. The number of degrees-of-freedom per pixel is here assumed to be 20, which is equal to the number of DIRBE bands. }
+       	\DIFaddendFL \label{fig:chisq}
        \end{figure}
 
 
@@ -2003,12 +2022,8 @@ definitions.
 %DIFDELCMD <   \includegraphics[width=0.40\linewidth]{figs/solarmap_09_v2.pdf}%%%
 \DIFdelFL{\hspace*{5mm}
   }%DIFDELCMD < \includegraphics[width=0.40\linewidth]{figs/solarmap_10_v2.pdf}
-%DIFDELCMD <   %%%
-%DIFDELCMD < \caption{%
-{%DIFAUXCMD
-\DIFdelFL{Solar-centric residual maps, derived by co-adding the residual TOD, $\r = \dv - \s_{\mathrm{fg}} - \s_{\mathrm{zodi}} - \n_{\mathrm{corr}}$, into solar-centric coordinates. The Sun is located in the center of each panel, and the equator is aligned with the Ecliptic plane. All maps have been smoothed with a $1^{\circ}$ FWHM Gaussian kernel. The gray boundaries indicate the solar-centric exclusion masks used for each channel; no masks are applied for 140 and 240\,$\mu$m.}}
-  %DIFAUXCMD
-%DIFDELCMD < \label{fig:solarmaps}
+%DIFDELCMD <   \caption{Solar-centric residual maps, derived by co-adding the residual TOD, $\r = \dv - \s_{\mathrm{fg}} - \s_{\mathrm{zodi}} - \n_{\mathrm{corr}}$, into solar-centric coordinates. The Sun is located in the center of each panel, and the equator is aligned with the Ecliptic plane. All maps have been smoothed with a $1^{\circ}$ FWHM Gaussian kernel. The gray boundaries indicate the solar-centric exclusion masks used for each channel; no masks are applied for 140 and 240\,$\mu$m.}
+%DIFDELCMD <   \label{fig:solarmaps}
 %DIFDELCMD < \end{figure*}
 %DIFDELCMD < 
 
@@ -2217,11 +2232,8 @@ be explained in terms of Galactic residuals.
 %DIFDELCMD <   \begingroup
 %DIFDELCMD <   \newdimen\tblskip \tblskip%%%
 \DIFdelFL{=5pt
-  }%DIFDELCMD < \caption{%
-{%DIFAUXCMD
-\DIFdelFL{Key map-level characteristics of the \cosmoglobe\ DR2 ZSMA maps. The relative calibration, $\alpha$, is defined as the slope of a scatter plot between the old K98 and new DR2 maps, evaluated over either the default DR2 processing mask (``High latitudes'') or full sky. }}
-  %DIFAUXCMD
-%DIFDELCMD < \label{tab:summary}
+  }%DIFDELCMD < \caption{Key map-level characteristics of the \cosmoglobe\ DR2 ZSMA maps. The relative calibration, $\alpha$, is defined as the slope of a scatter plot between the old K98 and new DR2 maps, evaluated over either the default DR2 processing mask (``High latitudes'') or full sky. }
+%DIFDELCMD <   \label{tab:summary}
 %DIFDELCMD <   \nointerlineskip
 %DIFDELCMD <   \vskip %%%
 \DIFdelFL{-3mm
@@ -2431,11 +2443,16 @@ current analysis, but still present in the official DIRBE maps.
   \includegraphics[width=0.37\linewidth]{figs/std_08.pdf}\\       
   \includegraphics[width=0.37\linewidth]{figs/std_09.pdf}
   \includegraphics[width=0.37\linewidth]{figs/std_10.pdf}       
-  \caption{Posterior \DIFdelbeginFL \DIFdelFL{rms }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{RMS }\DIFaddendFL maps for each DIRBE channel. These account
+  \DIFdelbeginFL %DIFDELCMD < \caption{Posterior rms maps for each DIRBE channel. These account
+%DIFDELCMD <     for uncertainties due to model variations in each band, but not
+%DIFDELCMD <     white noise. For white noise maps see Fig.~\ref{fig:sigma0_map}.
+%DIFDELCMD < 	All maps are in units of $\mathrm{kJy\,sr^{-1}}$.}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \caption{Posterior RMS maps for each DIRBE channel. These account
     for uncertainties due to model variations in each band, but not
     white noise. For white noise maps see Fig.~\ref{fig:sigma0_map}.
 	All maps are in units of $\mathrm{kJy\,sr^{-1}}$.}
-  \label{fig:rms}
+  \DIFaddendFL \label{fig:rms}
 \end{figure*}
 
 
@@ -2492,9 +2509,10 @@ for not applying the $\s_{\mathrm{static}}$ corrections to the
 %DIFDELCMD < 	\includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_05_I_n0256_DR2.pdf}
 %DIFDELCMD <         \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_05_1_256.pdf}
 %DIFDELCMD <         \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_05_n256.pdf}
+%DIFDELCMD < 	\caption{Comparison of \Cosmoglobe\ DR2 (\emph{left column}) and K98 (\emph{middle column}) zodiacal light subtracted mission average maps for the 1.25 to 12$\,\mu$m channels. Difference maps are shown in the rightmost column. Full maps are plotted with a non-linear color scale, while difference maps are plotted with a linear and symmetric color range.}
 %DIFDELCMD < 	%%%
-\DIFdelendFL \caption{Comparison of \Cosmoglobe\ DR2 (\emph{left column}) and K98 (\emph{middle column}) zodiacal light subtracted mission average maps for the 1.25 to \DIFdelbeginFL \DIFdelFL{12}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{4.9}\DIFaddendFL $\,\mu$m channels. Difference maps are shown in the rightmost column. Full maps are plotted with a non-linear color scale, while difference maps are plotted with a linear and symmetric color range.}
-	\label{fig:freqmaps_cg_vs_dirbe1}
+\DIFdelendFL \DIFaddbeginFL \caption{Comparison of \Cosmoglobe\ DR2 (\emph{left column}) and K98 (\emph{middle column}) zodiacal light subtracted mission average maps for the 1.25 to 4.9$\,\mu$m channels. Difference maps are shown in the rightmost column. Full maps are plotted with a non-linear color scale, while difference maps are plotted with a linear and symmetric color range.}
+	\DIFaddendFL \label{fig:freqmaps_cg_vs_dirbe1}
 \end{figure*}
 
 
@@ -2518,8 +2536,10 @@ for not applying the $\s_{\mathrm{static}}$ corrections to the
         \includegraphics[width=0.33\linewidth]{figs/CG_DIRBE_10_I_n0256_DR2.pdf}
         \includegraphics[width=0.33\linewidth]{figs/DIRBE_ZSMA_10_1_256.pdf}
         \includegraphics[width=0.33\linewidth]{figs/diff_CG_DIRBE_ZSMA_10_n256.pdf}\\
-	\caption{Same as Fig.~\ref{fig:freqmaps_cg_vs_dirbe1}, but for the \DIFdelbeginFL \DIFdelFL{25--240}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{12--240}\DIFaddendFL $\,\mu$m channels.}
-	\label{fig:freqmaps_cg_vs_dirbe2}
+	\DIFdelbeginFL %DIFDELCMD < \caption{Same as Fig.~\ref{fig:freqmaps_cg_vs_dirbe1}, but for the 25--240$\,\mu$m channels.}
+%DIFDELCMD < 	%%%
+\DIFdelendFL \DIFaddbeginFL \caption{Same as Fig.~\ref{fig:freqmaps_cg_vs_dirbe1}, but for the 12--240$\,\mu$m channels.}
+	\DIFaddendFL \label{fig:freqmaps_cg_vs_dirbe2}
 \end{figure*}
 
 
@@ -2727,9 +2747,9 @@ than }\DIFaddend K98\DIFaddbegin \DIFadd{, and in bands $2.2$ and $3.5\,\mathrm{
 It is }\DIFaddend very
 difficult to determine by eye which of the two reveals a cleaner
 Galactic signal. At 4.9$\,\mu$m, however, there is no longer any
-visual ambiguity: \DIFdelbegin \DIFdel{Here we clearly see that the }\DIFdelend \DIFaddbegin \DIFadd{Herethe }\DIFaddend K98 map exhibits
+visual ambiguity\DIFdelbegin \DIFdel{: Herewe clearly see that }\DIFdelend \DIFaddbegin \DIFadd{. Here, }\DIFaddend the K98 map exhibits
 ZL \DIFdelbegin \DIFdel{residual }\DIFdelend \DIFaddbegin \DIFadd{clear residuals }\DIFaddend while the DR2 model is visually clean. The
-same holds even more \DIFdelbegin \DIFdel{true }\DIFdelend at 12$\,\mu$m.
+same holds even more \DIFdelbegin \DIFdel{true }\DIFdelend \DIFaddbegin \DIFadd{so }\DIFaddend at 12$\,\mu$m.
 
 At 25$\,\mu$m, however, the relative improvements are less
 striking. While the DR2 map does show lower residuals than K98 also in
