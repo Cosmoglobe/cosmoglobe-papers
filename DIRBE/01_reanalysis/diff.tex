@@ -1,7 +1,7 @@
 %                                                                 aa.dem
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL submitted.tex   Mon Oct  7 11:01:54 2024
-%DIF ADD main.tex        Thu Jan 29 14:28:11 2026
+%DIF ADD main.tex        Fri Jan 30 11:31:20 2026
 % AA vers. 9.1, LaTeX class for Astronomy & Astrophysics
 % demonstration file
 %                                                       (c) EDP Sciences
@@ -202,7 +202,7 @@
 %DIF HYPERREF PREAMBLE %DIF PREAMBLE
 \providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
 \providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
-\providecommand{\DIFscaledelfig}{0.5}
+\newcommand{\DIFscaledelfig}{0.5}
 %DIF HIGHLIGHTGRAPHICS PREAMBLE %DIF PREAMBLE
 \RequirePackage{settobox} %DIF PREAMBLE
 \RequirePackage{letltxmacro} %DIF PREAMBLE
@@ -211,8 +211,8 @@
 \newlength{\DIFdelgraphicsheight} %DIF PREAMBLE
 % store original definition of \includegraphics %DIF PREAMBLE
 \LetLtxMacro{\DIFOincludegraphics}{\includegraphics} %DIF PREAMBLE
-\providecommand{\DIFaddincludegraphics}[2][]{{\color{blue}\fbox{\DIFOincludegraphics[#1]{#2}}}} %DIF PREAMBLE
-\providecommand{\DIFdelincludegraphics}[2][]{% %DIF PREAMBLE
+\newcommand{\DIFaddincludegraphics}[2][]{{\color{blue}\fbox{\DIFOincludegraphics[#1]{#2}}}} %DIF PREAMBLE
+\newcommand{\DIFdelincludegraphics}[2][]{% %DIF PREAMBLE
 \sbox{\DIFdelgraphicsbox}{\DIFOincludegraphics[#1]{#2}}% %DIF PREAMBLE
 \settoboxwidth{\DIFdelgraphicswidth}{\DIFdelgraphicsbox} %DIF PREAMBLE
 \settoboxtotalheight{\DIFdelgraphicsheight}{\DIFdelgraphicsbox} %DIF PREAMBLE
@@ -260,10 +260,8 @@
 	columns=fullflexible, %DIF PREAMBLE
 	keepspaces=true %DIF PREAMBLE
 } %DIF PREAMBLE
-\lstnewenvironment{DIFverbatim}[1][]{\lstset{style=DIFverbatimstyle,#1}}{} %DIF PREAMBLE
-\lstnewenvironment{DIFverbatim*}[1][]{\lstset{style=DIFverbatimstyle,showspaces=true,#1}}{} %DIF PREAMBLE
-\lstset{extendedchars=\true,inputencoding=utf8}
-
+\lstnewenvironment{DIFverbatim}{\lstset{style=DIFverbatimstyle}}{} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
 %DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
 
 \begin{document} 
@@ -291,8 +289,11 @@
 
    \maketitle
 
-\setcounter{tocdepth}{2}
-\tableofcontents
+\DIFdelbegin %DIFDELCMD < \setcounter{tocdepth}{2}
+%DIFDELCMD < \tableofcontents
+%DIFDELCMD <    %%%
+\DIFdelend %DIF > \setcounter{tocdepth}{2}
+%DIF > \tableofcontents
 
 % INTRODUCTION
 %-------------------------------------------------------------------
@@ -320,15 +321,18 @@ This line of work was subsequently generalized by \citet{watts2023_dr1} to perfo
 
 The current paper is the first of a series of papers in which we perform a similar analysis for the \COBE-DIRBE data, collectively referred to as \cosmoglobe\ Data Release~2 (DR2). This work is a major step forward in the \Cosmoglobe\ program by expanding the modelled frequency range by three orders of magnitude, and it is a first step towards merging the microwave and infrared fields into one joint effort. The reasons for considering \COBE-DIRBE in this first step, as opposed to \AKARI, \IRAS, or WISE, are two-fold. First and foremost, DIRBE has excellent systematics properties, both in terms of absolute calibration and zero-level determination, thermal stability, and in terms of a highly interconnected scanning strategy. At the same time, both its data volume and angular resolution are relatively modest, which  makes the computational load and debugging cycle very manageable. Overall, DIRBE is an ideal dataset for generalizing the previous CMB-oriented model and computer code into the infrared regime.
 
-At the same time, the fundamental challenges faced by DIRBE are very similar to those faced by any other infrared experiment. In particular, the single most challenging aspect is the zodiacal light (ZL) emission. This is thermal emission and scattered sunlight from interplanetary dust (IPD) grains. The main difficulty when dealing with zodiacal emission contamination in infrared data is that the observed emission is highly dependent on the position of the observer, and as such, it cannot be modeled like a static foreground, as for instance Galactic foregrounds are treated in the CMB community. Rather, the state-of-the-art method to remove zodiacal emission from timestreams today is to use a three-dimensional parametric interplanetary dust model which describes the distribution of interplanetary dust within the solar system, and perform line-of-sight integration for every single time step. The IPD model most widely used today is the so-called K98 model \citep{kelsall1998} produced by the DIRBE team, or variants thereof \citep[e.g.,][]{planck2013-pip88}. \DIFaddbegin {\DIFadd{Another widely used model, developed by \citet{wright:1998} and \citet{gorjian:2000}, was also considered in this analysis. Ultimately, we chose the K98 parameterization for simpler comparison with the fiducial results.}} \DIFaddend In a companion paper, \citet{CG02_02} present a major step forward in terms of ZL modelling for the DIRBE experiment, as a key component of the current \cosmoglobe\ analysis. This progress is enabled by three main components. First, the usage of external data from \Planck, WISE, and \GAIA\ breaks key degeneracies between the ZL and the Galactic parameters. Second, fitting all parameters jointly with a modern Monte Carlo sampler allows the remaining degeneracies to be explored more efficiently than before. Third and finally, the current analysis characterizes and mitigates a source of excess radiation observed in the mid-infrared DIRBE channels that appears static in solar-centric coordinates. This radiation was noted already by \citet{leinert:1998}, but no corrections have until now been implemented and applied to the DIRBE data. The net result is a greatly improved ZL model that should be of great utility to the entire infrared community.
+At the same time, the fundamental challenges faced by DIRBE are very similar to those faced by any other infrared experiment. In particular, the single most challenging aspect is the zodiacal light (ZL) emission. This is thermal emission and scattered sunlight from interplanetary dust (IPD) grains. The main difficulty when dealing with zodiacal emission contamination in infrared data is that the observed emission is highly dependent on the position of the observer, and as such, it cannot be modeled like a static foreground, as for instance Galactic foregrounds are treated in the CMB community. Rather, the state-of-the-art method to remove zodiacal emission from timestreams today is to use a three-dimensional parametric interplanetary dust model which describes the distribution of interplanetary dust within the solar system, and perform line-of-sight integration for every single time step. The IPD model most widely used today is the so-called K98 model \citep{kelsall1998} produced by the DIRBE team, or variants thereof \citep[e.g.,][]{planck2013-pip88}. \DIFaddbegin {\DIFadd{Another widely used model, developed by \citet{wright:1998} and \citet{gorjian:2000}, was also considered in this analysis. Ultimately, we chose the K98 parameterization for this work, both in order to facilitate simpler comparison with the fiducial DIRBE results, and because this model resulted in lower residuals in our analyses.}}
+
+\DIFaddend In a companion paper, \citet{CG02_02} present a major step forward in terms of ZL modelling for the DIRBE experiment, as a key component of the current \cosmoglobe\ analysis. This progress is enabled by three main components. First, the usage of external data from \Planck, WISE, and \GAIA\ breaks key degeneracies between the ZL and the Galactic parameters. Second, fitting all parameters jointly with a modern Monte Carlo sampler allows the remaining degeneracies to be explored more efficiently than before. Third and finally, the current analysis characterizes and mitigates a source of excess radiation observed in the mid-infrared DIRBE channels that appears static in solar-centric coordinates. This radiation was noted already by \citet{leinert:1998}, but no corrections have until now been implemented and applied to the DIRBE data. The net result is \DIFdelbegin \DIFdel{a greatly }\DIFdelend \DIFaddbegin \DIFadd{an }\DIFaddend improved ZL model that should be of great utility to the entire infrared community.
 
 These improvements also lead to better cosmological and astrophysical interpretation with the DIRBE data. For example, as part of the current data release \citet{CG02_03} derive improved constraints on the CIB monopole spectrum with DIRBE data, while \citet{CG02_05}\DIFaddbegin \DIFadd{, \citet{CG02_06}, and \citet{CG02_07} }\DIFaddend present a new \DIFdelbegin \DIFdel{three-component }\DIFdelend \DIFaddbegin {\DIFadd{multi}}\DIFadd{-component }\DIFaddend model of thermal dust emission in the Milky Way that will be of great interest for the CMB community in the search for primordial gravitational waves. Similarly, \citet{CG02_04} construct a new starlight model for DIRBE by combining WISE and \GAIA\ data, that allow for robust modeling of the wavelength channels between 1.25 and 25$\,\mu$m. \DIFdelbegin \DIFdel{Additionally, \citet{CG02_06} derive a full-sky map of ionized carbon (}%DIFDELCMD < \CII%%%
 \DIFdel{) by combining spatial information in the DIRBE 140\,$\mu$m channel with spectral measurements from the }%DIFDELCMD < \COBE%%%
-\DIFdel{-FIRAS instrument. }\DIFdelend While many issues still remain to be solved even after the current analysis, we argue that the products presented in the following redefine\DIFdelbegin \DIFdel{s}\DIFdelend  the standard for full infrared sky modelling, and the most of the methods described in the following are likely to be of direct use for the wide range of other infrared experiments, including \AKARI, \IRAS, and WISE. All products and computer codes are made publicly available\footnote{\url{https://github.com/Cosmoglobe/}} under an Open Source license.
+\DIFdel{-FIRAS instrument. }\DIFdelend While many issues still remain to be solved even after the current analysis, we argue that the products presented in the following \DIFdelbegin \DIFdel{redefines }\DIFdelend \DIFaddbegin \DIFadd{redefine }\DIFaddend the standard for full infrared sky modelling, and the most of the methods described in the following are likely to be of direct use for the wide range of other infrared experiments, including \AKARI, \IRAS, and WISE. All products and computer codes are made publicly available\footnote{\url{https://github.com/Cosmoglobe/}} under an Open Source license.
 
 The rest of the paper is organized as follows\DIFdelbegin \DIFdel{. In }\DIFdelend \DIFaddbegin \DIFadd{: in }\DIFaddend Sect.~\ref{sec:global_modelling}\DIFaddbegin \DIFadd{, }\DIFaddend we review the \cosmoglobe\ data model and algorithms, and discuss the extensions needed for DIRBE analysis\DIFdelbegin \DIFdel{. In }\DIFdelend \DIFaddbegin \DIFadd{; in }\DIFaddend Sect.~\ref{sec:dirbe}\DIFaddbegin \DIFadd{, }\DIFaddend we give an overview of the DIRBE instrument and data, as well as any preprocessing and data selection we apply to these \DIFdelbegin \DIFdel{, and in Sect.~\ref{sec:ancillary} we summarize the ancillary data sets used in the current processing. The }\DIFdelend \DIFaddbegin \DIFadd{---
 %DIF > , and in Sect.~\ref{sec:ancillary} we summarize the ancillary data sets used in the current processing.
-the }\DIFaddend actual results derived through this analysis are summarized in the next four sections\DIFdelbegin \DIFdel{. Section.}\DIFdelend \DIFaddbegin \DIFadd{; section}\DIFaddend ~\ref{sec:chains} discusses the basic Markov chains produced by the algorithm in terms of burn-in and convergence, while Sect.~\ref{sec:noise_gof} focuses on instrumental noise estimation and overall \DIFdelbegin \DIFdel{goodness-of-fit. In }\DIFdelend \DIFaddbegin \DIFadd{goodness of fit; in }\DIFaddend Sect.~\ref{sec:excess}\DIFaddbegin \DIFadd{, }\DIFaddend we provide the first systematic characterization of excess radiation for all DIRBE channels, and\DIFaddbegin \DIFadd{, }\DIFaddend in Sect.~\ref{sec:maps}\DIFaddbegin \DIFadd{, }\DIFaddend we present and characterize the new \cosmoglobe\ DR2 ZSMA maps\DIFdelbegin \DIFdel{. Finally}\DIFdelend \DIFaddbegin \DIFadd{; finally}\DIFaddend , we conclude and discuss avenues for future work in Sect.~\ref{sec:conclusions}. 
+the }\DIFaddend actual results derived through this analysis are summarized in the next four sections\DIFdelbegin \DIFdel{. Section}\DIFdelend \DIFaddbegin \DIFadd{; in Sect.~\ref{sec:excess}, we provide the first systematic characterization of excess radiation for all DIRBE channels; Sect}\DIFaddend .~\ref{sec:chains} discusses the basic Markov chains produced by the algorithm in terms of burn-in and convergence, while Sect.~\ref{sec:noise_gof} focuses on instrumental noise estimation and overall \DIFdelbegin \DIFdel{goodness-of-fit. In Sect.~\ref{sec:excess} we provide the first systematic characterization of excess radiation for all DIRBE channels, and }\DIFdelend \DIFaddbegin \DIFadd{goodness of fit; }\DIFaddend in Sect.~\ref{sec:maps} we present and characterize the new \cosmoglobe\ DR2 ZSMA maps\DIFdelbegin \DIFdel{. Finally}\DIFdelend \DIFaddbegin \DIFadd{; and, finally}\DIFaddend , we conclude and discuss avenues for future work in Sect.~\ref{sec:conclusions}. \DIFaddbegin \DIFadd{All DR2 products and source codes are publicly available from the }\Cosmoglobe\DIFadd{\ web page}\footnote{\DIFadd{https://www.cosmoglobe.uio.no/products/cosmoglobe-dr2.html}}\DIFadd{.
+}\DIFaddend 
 
 \section{Global Bayesian modelling of the infrared sky}
 \label{sec:global_modelling}
@@ -380,7 +384,7 @@ details.
 
 As described in Sect.~\ref{sec:dirbe}, we will in the current analysis
 focus on the so-called DIRBE Calibrated Individual Observations
-(CIO\DIFdelbegin \DIFdel{s}\DIFdelend  ). Ideally, the optimal approach would\DIFdelbegin \DIFdel{in principle }\DIFdelend \DIFaddbegin \DIFadd{, in principle, }\DIFaddend be to start from raw uncalibrated TOD, but those are not
+(\DIFdelbegin \DIFdel{CIOs}\DIFdelend \DIFaddbegin \DIFadd{CIO}\DIFaddend ). Ideally, the optimal approach would\DIFdelbegin \DIFdel{in principle }\DIFdelend \DIFaddbegin \DIFadd{, in principle, }\DIFaddend be to start from raw uncalibrated TOD, but those are not
 publicly available. In addition, the CIO are easier to work with,
 since they have been cleaned from low-level instrumental effects. On
 the other hand, we note that this immediately implies that there are
@@ -390,7 +394,7 @@ and that may need to be revisited at a later stage. On the other hand,
 the main residuals that emerge at the end of the current analysis
 still appear to be dominated by astrophysical confusion rather than
 gain errors, and moving on to uncalibrated TOD is therefore not yet a
-top priority. We will in the following refer to the DIRBE CIO\DIFdelbegin \DIFdel{s}\DIFdelend  simply
+top priority. We will in the following refer to the DIRBE \DIFdelbegin \DIFdel{CIOs }\DIFdelend \DIFaddbegin \DIFadd{CIO }\DIFaddend simply
 as ``TOD''.
 
 \subsubsection{TOD model}
@@ -409,32 +413,33 @@ TOD,
           \s_{\mathrm{static}} + \n_\mathrm{corr} + \n_\mathrm w\\
         &\equiv \s_{\mathrm{tot}} + \n_{\mathrm{w}}.
 \end{align}\DIFaddend 
-\DIFdelbegin \DIFdel{where }\DIFdelend \DIFaddbegin \DIFadd{Here }\DIFaddend $\dv$ denotes a stacked vector of all DIRBE TOD for all
-frequency bands\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend $\G$ is an $n_{\mathrm{tod}}\times
-n_{\mathrm{tod}}$ diagonal matrix with an overall constant gain
-calibration factor per frequency channel\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend $\P$ denotes a satellite
-pointing matrix, which we define in Galactic coordinates\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, and }\DIFaddend $\B$ denotes
-an instrumental beam (or point spread function) convolution operator\DIFdelbegin \DIFdel{;
-the }\DIFdelend \DIFaddbegin \DIFadd{.
-The }\DIFaddend sum runs over $n_{\mathrm{comp}}$ astrophysical components, each
-with a free amplitude $\a_c$ at some reference frequency and a mixing
-matrix $\M_c$ which defines the effective scaling from the reference
-frequency to an observed frequency for each component, taking into account the
-bandpass of each detector\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{. The term }\DIFaddend $\s_{\mathrm{zodi}}$ is a model of zodiacal
-light emission from components that appear time-variable as seen from
-Earth (e.g., the zodiacal cloud and asteroidal bands)\DIFdelbegin \DIFdel{;
-}\DIFdelend \DIFaddbegin \DIFadd{,
-}\DIFaddend $\s_{\mathrm{static}}$ is an excess signal that appears stationary
-with respect to the Earth-Sun system, discussed further in Sect.~\ref{sec:excess}\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend $\n_{\mathrm{corr}}$ is 
-correlated instrumental noise (which for now is only fitted for the
-lowest DIRBE frequency channel)\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend and $\n_{\mathrm{w}}$ denotes white
-instrumental noise. We also define $\s_{\mathrm{tot}}$ to be the sum
-of all terms in the data model except for the white noise.
+\DIFdelbegin \DIFdel{where }\DIFdelend \DIFaddbegin \DIFadd{Here }\DIFaddend $\dv$ denotes a stacked vector of all DIRBE TOD for all frequency
+bands\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend $\G$ is an $n_{\mathrm{tod}}\times n_{\mathrm{tod}}$ diagonal
+\DIFdelbegin \DIFdel{matrix with an overall constant gain calibration factor per frequency channel; }\DIFdelend \DIFaddbegin \DIFadd{gain calibration matrix, }\DIFaddend $\P$ denotes a satellite
+pointing matrix, which we define in Galactic coordinates\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, and }\DIFaddend $\B$
+denotes an instrumental beam (or point spread function) convolution
+operator\DIFdelbegin \DIFdel{;
+the }\DIFdelend \DIFaddbegin \DIFadd{.  The }\DIFaddend sum runs over $n_{\mathrm{comp}}$ astrophysical
+components, each with a free amplitude $\a_c$ at some reference
+frequency and a mixing matrix $\M_c$ which defines the effective
+scaling from the reference frequency to an observed frequency for each
+component, taking into account the bandpass of each detector\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{. The term
+}\DIFaddend $\s_{\mathrm{zodi}}$ is a model of zodiacal light emission from
+components that appear time-variable as seen from Earth (e.g., the
+zodiacal cloud and asteroidal bands)\DIFdelbegin \DIFdel{;
+}\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend $\s_{\mathrm{static}}$ is an
+excess signal that appears stationary with respect to the Earth-Sun
+system, discussed further in Sect.~\ref{sec:excess}\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{,
+}\DIFaddend $\n_{\mathrm{corr}}$ is correlated instrumental noise (which for now
+is only fitted for the lowest DIRBE frequency channel)\DIFdelbegin \DIFdel{; }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend and
+$\n_{\mathrm{w}}$ denotes white instrumental noise. We also define
+$\s_{\mathrm{tot}}$ to be the sum of all terms in the data model
+except for the white noise.
 
-As we work with calibrated TOD, we set $\G=\tens{I}$ for now, but
+As we work with calibrated TOD, we set $\G=\tens{I}$ for \DIFaddbegin \DIFadd{all channels except 12 and $25\,\mu$m for }\DIFaddend now, but
 note that this effective prior should be relaxed in future work, for
 instance by using \COBE-FIRAS data as a calibration source in the
-overlap frequency range between FIRAS and DIRBE. Similarly, both the
+overlap frequency range between FIRAS and DIRBE. \DIFaddbegin \DIFadd{For the 12 and $25\,\mu$m channels, we sample one overall constant value for each operation day under the constraint that the mean averages to unity, using the algorithm described by \citet{bp07}. }\DIFaddend Similarly, both the
 pointing $\P$ and the beam operator $\B$ are provided by the DIRBE
 team, and we do not account for any uncertainties in these. However,
 we do note that the DIRBE beams have an intrinsically square shape,
@@ -502,7 +507,7 @@ $\xi_{\mathrm{n}}$.
 \label{sec:skymodel}
 
 The sky signal defined implicitly by the sum in Eq.~\eqref{eq:model}
-is defined by \citet{CG02_04}\DIFdelbegin \DIFdel{and \citet{CG02_05}, and }\DIFdelend \DIFaddbegin \DIFadd{, \citet{CG02_05}, \citet{CG02_06}, and \citet{CG02_07}, and }\DIFaddend reads as follows in units
+is defined by \citet{CG02_04}\DIFdelbegin \DIFdel{and \citet{CG02_05}, }\DIFdelend \DIFaddbegin \DIFadd{, \citet{CG02_05}, \citet{CG02_06}, and \citet{CG02_07}, }\DIFaddend and reads as follows in units
 of brightness temperature and frequency,\footnote{Due to its
 CMB-oriented origin, \commander\ uses brightness temperature and
 frequency units for internal calculations, rather than flux density
@@ -570,34 +575,49 @@ In this expression, \DIFdelbegin \DIFdel{we have defined a function of the form
 %DIFDELCMD <     \end{cases}       
 %DIFDELCMD < \end{equation}
 %DIFDELCMD < %%%
-\DIFdel{which represents a generalized modified blackbody function. However, in addition to the usual emissivity index and temperature, $\beta$ and $T$, this function takes a set of constant values, }\DIFdelend \DIFaddbegin \DIFadd{$\t$ denotes an external fixed spatial template, and }\DIFaddend $q_i$ \DIFdelbegin \DIFdel{, and corresponding frequency ranges $\Delta\nu_i$. If the requested
-frequency happens to lie in any one of $\Delta\nu_i$, then $q_i$ is
+\DIFdel{which represents a generalized modified blackbody function. However,
+in addition to the usual emissivity index and temperature, $\beta$ }\DIFdelend \DIFaddbegin \DIFadd{$\t$ denotes an external fixed spatial template, }\DIFaddend and \DIFdelbegin \DIFdel{$T$, this function takes a set of constant values, $q_i$, and
+corresponding frequency ranges $\Delta\nu_i$. If the requested
+frequency happens to lie in any one of $\Delta\nu_i$, then }\DIFdelend $q_i$ \DIFdelbegin \DIFdel{is
 returned; otherwise the default is to return the standard modified
 blackbody spectrum. Another point to note in the above equation is
 that if a given amplitude is denoted by $\a$, then it is fitted freely
-to }\DIFdelend \DIFaddbegin \DIFadd{(where relevant) represents its amplitude. The four first terms indicate four physically distinct thermal dust tracers, as discussed by \citet{CG02_05}: The first and second components trace cold }\ion{H}{i} \DIFadd{correlated dust and hot }\ion{C}{ii} \DIFadd{correlated dust with temperatures around $T\sim16\,\mathrm{K}$ and 26\,K, respectively, and we adopt the }\Planck\DIFadd{\ HFI-based templates presented by \citet{CG02_06} for these. The third component corresponds to nearby dust (located closer to }\DIFaddend the \DIFdelbegin \DIFdel{current data; if it is denoted by $\t$, it is fixed to an
-external template}\DIFdelend \DIFaddbegin \DIFadd{Sun than 1.25\,kpc), and we adopt the }\GAIA\DIFadd{-based dust extinction template presented by \citet{edenhofer:2024} for this. Finally, the fourth component corresponds to dust extinction as traced by the WHAM H$\alpha$ sky map \citep{wham:2003}; for a full discussion of this effect, see \citet{CG02_07}. It is important to note that this dust model has, in fact, no degrees of freedom per pixel as far as the current DIRBE-based analysis is concerned}\DIFaddend . 
+to the current data; if it is denoted by $\t$, it is fixed to an external template.
+}%DIFDELCMD < 
 
-As indicated by the above sky model, we fit a novel \DIFdelbegin \DIFdel{three-component
-}\DIFdelend \DIFaddbegin {\DIFadd{four-component}}
-\DIFaddend generalized modified blackbody model to account for thermal dust
-\DIFdelbegin \DIFdel{emission }\DIFdelend across the combined DIRBE and \Planck\ HFI frequency range;
-for full details, see \citet{CG02_05}\DIFdelbegin \DIFdel{. The three }\DIFdelend \DIFaddbegin \DIFadd{, \citet{CG02_06}, and \citet{CG02_07}. The }{\DIFadd{four}} \DIFaddend components correspond
-to cold dust, hot dust, and nearby dust emission, respectively\DIFdelbegin \DIFdel{. All
-three }\DIFdelend \DIFaddbegin \DIFadd{, }{\DIFadd{as
-well as dust extinction traced by the WHAM H$\alpha$ sky map \citep{wham:2003}}}\DIFadd{. All
-four }\DIFaddend are modeled with spatially constant spectral parameters, and
-only the cold and hot component amplitudes are fitted pixel-by-pixel;
-the amplitude of the nearby component is fixed to the \GAIA-based dust
-extinction template covering distances up to 1.25\,kpc produced by
-\citet{edenhofer:2024}.  As such, this dust model has in fact only two
-degrees of freedom per pixel, in addition to fewer than 30 spatially
-constant \DIFdelbegin \DIFdel{SED }\DIFdelend \DIFaddbegin \DIFadd{spectral energy distribution (SED) }\DIFaddend parameters. This is an extremely economical model of
-thermal dust emission, considering the fact that it describes the
-entire combined frequency range covered by both \Planck\ HFI and
-DIRBE, from 100\,GHz to 1\,$\mu$m.
+%DIFDELCMD < %%%
+\DIFdel{As indicated by the above sky model, we fit a novel three-component
+generalized modified blackbody model to account for thermal dust emission across the combined DIRBE and }\DIFdelend \DIFaddbegin \DIFadd{(where relevant) represents its amplitude. The four first terms indicate four physically distinct thermal dust tracers, as discussed by \citet{CG02_05}: The first and second components trace cold }\ion{H}{i} \DIFadd{correlated dust and hot }\ion{C}{ii} \DIFadd{correlated dust with temperatures around $T\sim16\,\mathrm{K}$ and 26\,K, respectively, and we adopt the }\DIFaddend \Planck\ \DIFdelbegin \DIFdel{HFI frequency range;
+for full details, see \citet{CG02_05}. The three components correspond
+to cold dust, hot dust, and nearby dust emission, respectively. All
+three are modeled with spatially constant spectral parameters, and only the cold and hot component amplitudes are fitted pixel-by-pixel;
+the amplitude of the nearby component is fixed to the }\DIFdelend \DIFaddbegin \DIFadd{HFI-based templates presented by \citet{CG02_06} for these. The third component corresponds to nearby dust (located closer to the Sun than 1.25\,kpc), and we adopt the }\DIFaddend \GAIA-based dust extinction template \DIFdelbegin \DIFdel{covering distances up to 1.25\,kpc produced by \citet{edenhofer:2024} .  As such, }\DIFdelend \DIFaddbegin \DIFadd{presented by \citet{edenhofer:2024} for this. Finally, the fourth component corresponds to dust extinction as traced by the WHAM H$\alpha$ sky map \citep{wham:2003}; for a full discussion of this effect, see \citet{CG02_07}. It is important to note that }\DIFaddend this dust model has\DIFdelbegin \DIFdel{in fact only two
+}\DIFdelend \DIFaddbegin \DIFadd{, in fact, no }\DIFaddend degrees of freedom per pixel \DIFdelbegin \DIFdel{, in addition to fewer than 30 spatially
+constant SED parameters. This is an extremely economical model of
+thermal dust emission, considering the fact that it describes the entire combined frequency range covered by both }%DIFDELCMD < \Planck%%%
+\DIFdel{\ HFI and
+DIRBE, from 100\,GHz to 1\,$\mu$m}\DIFdelend \DIFaddbegin \DIFadd{as far as the current DIRBE-based analysis is concerned}\DIFaddend . 
 
-To account for \DIFaddbegin \DIFadd{(a low level of) }\DIFaddend free-free emission, we adopt the model presented by
+%DIF > HKE: Removed, since it duplicates the above paragraph.
+%DIF > As indicated by the above sky model, we fit a novel {four-component}
+%DIF > generalized modified blackbody model to account for thermal dust
+%DIF > across the combined DIRBE and \Planck\ HFI frequency range;
+%DIF > for full details, see \citet{CG02_05}, \citet{CG02_06}, and \citet{CG02_07}. The {four} components correspond
+%DIF > to cold dust, hot dust, and nearby dust emission, respectively, {as
+%DIF > well as dust extinction traced by the WHAM H$\alpha$ sky map \citep{wham:2003}}. All
+%DIF > four are modeled with spatially constant spectral parameters, and
+%DIF > only the cold and hot component amplitudes are fitted pixel-by-pixel;
+%DIF > the amplitude of the nearby component is fixed to the \GAIA-based dust
+%DIF > extinction template covering distances up to 1.25\,kpc produced by
+%DIF > \citet{edenhofer:2024}.  As such, this dust model has in fact only two
+%DIF > degrees of freedom per pixel, in addition to fewer than 30 spatially
+%DIF > constant spectral energy distribution (SED) parameters. This is an extremely economical model of
+%DIF > thermal dust emission, considering the fact that it describes the
+%DIF > entire combined frequency range covered by both \Planck\ HFI and
+%DIF > DIRBE, from 100\,GHz to 1\,$\mu$m.
+\DIFaddbegin 
+
+\DIFaddend To account for \DIFaddbegin \DIFadd{(a low level of) }\DIFaddend free-free emission, we adopt the model presented by
 \citet{planck2014-a11}, both in terms of spatial distribution and
 spectrum. The SED of this component is defined by the Gaunt factor,
 \DIFdelbegin \DIFdel{$g_{\mathrm{ff}}(\nu; T_e)$ }\DIFdelend \DIFaddbegin \DIFadd{$g_{\mathrm{ff}}(\nu; T_\mathrm{e})$ }\DIFaddend \citep{dickinson:2003,draine:2011}, which
@@ -635,7 +655,7 @@ component is thus a fixed correction applied to the relevant
 }%DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdel{Similarly, the fourth component corresponds to }%DIFDELCMD < \CII%%%
+\DIFdel{Similarly, the fourth }\DIFdelend \DIFaddbegin {\DIFadd{bright stars}} \DIFaddend component corresponds to \DIFdelbegin %DIFDELCMD < \CII%%%
 \DIFdel{\ line emission,
 which has a rest frequency of 1900\,GHz. As such, it only affects the
 DIRBE 140\,$\mu$m map in our dataset, in addition to selected FIRAS
@@ -649,7 +669,7 @@ about $1^{\circ}$ FWHM.
 }%DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdel{The fifth and sixth components correspond to }\DIFdelend \DIFaddbegin {\DIFadd{bright stars}} \DIFadd{component corresponds to \textbf{bright} }\DIFaddend starlight emission, which
+\DIFdel{The fifth and sixth components correspond to }\DIFdelend \DIFaddbegin \DIFadd{\textbf{bright} }\DIFaddend starlight emission, which
 is relevant in the frequency range between 1 and 25\,$\mu$m; for full
 details regarding this model, see \citet{CG02_04}. For \DIFdelbegin \DIFdel{these}\DIFdelend \DIFaddbegin {\DIFadd{this component}}\DIFaddend , we first \DIFdelbegin \DIFdel{extract a baseline star catalog by thresholding the AllWISE
 3.5\,$\mu$m catalog at magnitude 8, resulting in a set of about
@@ -658,7 +678,7 @@ found that magnitude 8 provides a good compromise; magnitude 6 results
 in obviously missing sources, while magnitude 10 leads to too many
 unconstrained sources.}} %DIFAUXCMD
 \addtocounter{footnote}{-1}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \DIFadd{\textbf{crossmatch the AllWISE pointsource catalog \citep{CatWISE} agaist Gaia DR2, obtaining corresponding entries for almost all stars brighter than Mag 7 in the W1 band. Then, we construct a unique set of brightest stars that are no closer together than 5 arcseconds, which gives us a set of 424\,829 bright point sources that includes most of the brightest sources on the sky, but which will not be degenerate with one another when sampled.} }\DIFaddend For each of these, we \DIFdelbegin \DIFdel{search the }%DIFDELCMD < \GAIA%%%
+\DIFdelend \DIFaddbegin \DIFadd{\textbf{crossmatch the AllWISE pointsource catalog \citep{CatWISE} against \Gaia\ DR2, obtaining corresponding entries for almost all stars brighter than magnitude 7 in the W1 band. Then, we construct a unique set of the brightest stars that are no closer together than 5', which gives us a set of 424\,829 bright point sources that includes most of the brightest sources on the sky, but which will not be degenerate with one another when sampled.} }\DIFaddend For each of these, we \DIFdelbegin \DIFdel{search the }%DIFDELCMD < \GAIA%%%
 \DIFdel{\ DR2
 catalog, and if this returns a positive star identification within a
 radius of 20~arcsec, we record the object, and }\DIFdelend store the best-fit
@@ -671,7 +691,8 @@ beam-convolved SED is denoted $f_{\GAIA,j}$, which is unique for each
 star. We then fit one overall amplitude for each star to the four
 highest DIRBE frequency bands between 1.25 and 4.9\,$\mu$m; we also
 account for star emission in the 12 and 25\,$\mu$m bands, but these
-bands are not used for the actual fit. \DIFdelbegin \DIFdel{A total of 717\,000 stars are included in the fit of individual stars; these are }\DIFdelend \DIFaddbegin {\DIFadd{These individually fitted sources are }\DIFaddend denoted as ``bright
+bands are not used for the actual fit. \DIFdelbegin \DIFdel{A total of 717\,000 stars are
+included in the fit of individual stars; these }\DIFdelend \DIFaddbegin {\DIFadd{These individually fitted sources }\DIFaddend are denoted as ``bright
 stars'' in the sky model. \DIFaddbegin \DIFadd{For each bright star, we apply a dust extinction correction, $\epsilon(\nu)$. In the current analysis, this is based on the }\Planck\DIFadd{\ 2013 $E(\mathrm{B}-\mathrm{V})$ model, which clearly only represents a first-order approximation, given that it does not take into account the position of each star along each line-of-sight. Generalizing this to a full Galactic 3D dust model lies beyond the scope of the current paper, but we note that very preliminary work in this direction has already started.}}
 \DIFaddend 
 
@@ -682,7 +703,8 @@ stars'' in the sky model. \DIFaddbegin \DIFadd{For each bright star, we apply a 
 %	\label{fig: cios}
 %\end{figure*}
 
-\DIFdelbegin \DIFdel{The remaining 66\,000 bright WISE sources that do not have a }%DIFDELCMD < \GAIA%%%
+\DIFdelbegin \DIFdel{The remaining 66\,000 bright WISE sources that do not have a
+}%DIFDELCMD < \GAIA%%%
 \DIFdel{\ counterpart are fitted with a standard modified blackbody
 spectrum across the same frequency range, as described by the line
 marked by ``FIR sources'' in the sky model. Algorithmically speaking, this component is identical to the bright star component, except for
@@ -707,7 +729,7 @@ become possible due to WISE and \GAIA.
 
 The \DIFdelbegin \DIFdel{tenth and }\DIFdelend final component is simply a monopole per frequency. For
 DIRBE\DIFdelbegin \DIFdel{and FIRAS}\DIFdelend , this should ideally describe the CIB spectrum, but it
-is also sensitive to zodiacal light and Galactic residuals. \DIFaddbegin {\DIFadd{In particular}}\DIFadd{, }\DIFaddend DIRBE was designed to have negligible straylight contamination, while internal thermal sources in FIRAS were explicitly measured by onboard thermistors\DIFdelbegin \DIFdel{e}\DIFdelend  and subtracted before mapmaking.
+is also sensitive to zodiacal light and Galactic residuals. \DIFaddbegin {\DIFadd{In particular}}\DIFadd{, }\DIFaddend DIRBE was designed to have negligible straylight contamination, while internal thermal sources in FIRAS were explicitly measured by onboard \DIFdelbegin \DIFdel{thermistorse }\DIFdelend \DIFaddbegin \DIFadd{thermistors }\DIFaddend and subtracted before mapmaking.
 \DIFdelbegin \DIFdel{For
 }%DIFDELCMD < \Planck%%%
 \DIFdel{, the monopoles account for the arbitrary zero-levels present
@@ -718,12 +740,13 @@ in the }%DIFDELCMD < \Planck%%%
 %DIF > in the \Planck\ PR4 maps. 
 
 Finally, it is worth noting that there is no CMB component present in
-the current sky model\DIFdelbegin \DIFdel{, even though it applies to the }%DIFDELCMD < \Planck%%%
+the current sky model, \DIFdelbegin \DIFdel{even though it applies to the }%DIFDELCMD < \Planck%%%
 \DIFdel{\ HFI as
-well as DIRBE}\DIFdelend . Since the main focus in the current work is DIRBE, we
+well as DIRBE. Since the main focus in the current work is DIRBE , we
 have chosen to pre-subtract any CMB component (including the solar CMB
 dipole and relativistic quadrupole corrections) from each frequency
-map. For this, we use the PR3 \commander\ CMB maps \citep{planck2016-l04}.
+map. For this, we use the PR3 }%DIFDELCMD < \commander%%%
+\DIFdel{\ CMB maps \citep{planck2016-l04}}\DIFdelend \DIFaddbegin \DIFadd{which is negligible in the DIRBE bands}\DIFaddend .
 Similarly, we neglect the impact of synchrotron emission,
 anomalous microwave emission, the Sunyaev-Zeldovich effect, and other
 smaller contributions; these will instead be included in a future
@@ -765,11 +788,11 @@ Regarding $P(\omega)$, we will in this analysis operate primarily with
 three types of priors. First, for zodiacal light parameters we adopt
 uniform priors between pre-defined limits, to avoid the algorithms
 \DIFdelbegin \DIFdel{to
-diverge }\DIFdelend \DIFaddbegin \DIFadd{diverging }\DIFaddend into pathological solutions. Second, for
-astrophysical spectral parameters, such as temperature and spectral
+diverge }\DIFdelend \DIFaddbegin \DIFadd{diverging }\DIFaddend into pathological solutions. Second, for \DIFdelbegin \DIFdel{astrophysical spectral parameters, such as temperature and spectral
 indices, we adopt products of uniform priors with broad limits and
-Gaussian priors with spectral parameters informed by \Planck\ where
-applicable. Finally, for a few select astrophysical components, for
+Gaussian priors with spectral parameters informed by }%DIFDELCMD < \Planck%%%
+\DIFdel{\ where
+applicable. Finally, for }\DIFdelend a few select astrophysical components, for
 instance free-free and carbon monoxide line emission, we adopt
 existing spatial templates as delta function priors on the spatial
 morphology, and only fit overall free amplitudes in the current
@@ -782,8 +805,8 @@ As described in Sect.~\ref{sec:datamodel}, the current data model
 contains millions of strongly correlated parameters, ranging from
 affecting individual time samples (such as the correlated noise,
 $\n_{\mathrm{corr}}$) to describing the astrophysical signal in the
-form of a pixelized map (such as the cold dust amplitude
-$\a_{\mathrm{c}}$) or a catalog (such as the bright star amplitude
+form of a \DIFdelbegin \DIFdel{pixelized map }\DIFdelend \DIFaddbegin \DIFadd{template amplitude }\DIFaddend (such as the cold dust amplitude
+\DIFdelbegin \DIFdel{$\a_{\mathrm{c}}$}\DIFdelend \DIFaddbegin \DIFadd{$q^{\mathrm{cold}}$}\DIFaddend ) or a catalog (such as the bright star amplitude
 $\a_{\mathrm{s}}$), to simultaneously affecting essentially every
 single data point, such as the zodiacal light shape
 parameters. Mapping out this distribution is therefore highly
@@ -932,7 +955,7 @@ posteriors.
 
 %DIFDELCMD < %%%
 \DIFdelend While by far most of the code infrastructure required to process the
-DIRBE TOD already exists, several of the\DIFdelbegin \DIFdel{se}\DIFdelend  steps and models discussed
+DIRBE TOD already exists, several of \DIFdelbegin \DIFdel{these }\DIFdelend \DIFaddbegin \DIFadd{the }\DIFaddend steps and models discussed
 above require slight modifications in order to work efficiently in a
 production environment. In particular, efficient diffuse foreground
 sampling for DIRBE is described by \DIFdelbegin \DIFdel{\citet{CG02_05} }\DIFdelend \DIFaddbegin \DIFadd{\citet{CG02_07} }\DIFaddend and the novel
@@ -1013,7 +1036,7 @@ All bands observe the same $0\fdg7\times0\fdg7$  field simultaneously, with smal
   \label{fig:bandpass}
 \end{figure}
 
-The \DIFaddbegin \DIFadd{used }\DIFaddend symmetrized beam, shown in the top panel of Fig.~\ref{fig:beams}, resembles a tophat with a slow falloff. The harmonic-space representation of the beam is therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$. For a band-limited signal to be characterized fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully characterized in harmonic space, a requirement for the \commanderthree\ multi-resolution component separation, the pixelization scheme must have support up to $\ell\lesssim1500$. The original DIRBE maps have pixel size of 21\arcm, insufficient for harmonic space analysis.
+The \DIFdelbegin \DIFdel{symmetrized beam , }\DIFdelend \DIFaddbegin \DIFadd{DIRBE scanning beam has a rather unusual squared shape, caused by Field Stop no.~2 in Fig.~\ref{fig:optics_model}. Fully accounting for this shape in each sample is computationally very expensive. Instead, following experiments such as }\WMAP\DIFadd{\ \citep{bennett2012} and }\Planck\DIFadd{\ \citep{planck2016-l01}, we operate with the azimuthally symmetrized beams }\DIFaddend shown in the top panel of Fig.~\ref{fig:beams}\DIFdelbegin \DIFdel{, resembles }\DIFdelend \DIFaddbegin \DIFadd{. These are obtained by radially averaging the original 2D DIRBE beams around their center-of-mass. In general, these radial beam profiles resemble }\DIFaddend a tophat with a slow falloff\DIFdelbegin \DIFdel{. The }\DIFdelend \DIFaddbegin \DIFadd{, and the corresponding }\DIFaddend harmonic-space \DIFdelbegin \DIFdel{representation of the beam is }\DIFdelend \DIFaddbegin \DIFadd{representations, $b_{\ell}$, are }\DIFaddend therefore reminiscent of a sinc function, with oscillations about zero above $\ell\gtrsim500$\DIFaddbegin \DIFadd{; these are obtained through a Legendre transform of the radial beams, and the results shown in the bottom panel}\DIFaddend . For a band-limited signal to be characterized fully in map space, the 42\arcm\ DIRBE beams must be represented with a 21\arcm\ or smaller pixelization. However, in order to be fully characterized in harmonic space, a requirement for the \commanderthree\ multi-resolution component separation, the pixelization scheme must have support up to $\ell\lesssim1500$. The original DIRBE maps have pixel size of 21\arcm, insufficient for harmonic space analysis.
 Neither the original maps in Quadcube\footnote{
 	Quadrilateralized Spherical Cube \url{https://lambda.gsfc.nasa.gov/product/cobe/skymap\_info\_new.html}
 }
@@ -1030,22 +1053,22 @@ pixelization (resolution 9, pixel size 21\arcm) nor the CADE\footnote{Centre d'A
 \end{figure}
 
 
-The DIRBE central bandpasses, given in terms of central frequency and central wavelength, are given in Table \ref{tab:summary}, and the full bandpass responses as reported in \citet{cobe_exsupp} are shown in Fig.~\ref{fig:bandpass}.
-The different detector technology for each band accounts for the different performances and systematics found in each of the bands. \citet{silverberg93} in particular highlight the Ge:Ga photoconductors' (bands 7 and 8) response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
+The DIRBE central bandpasses, given in terms of central frequency and central wavelength, are given in Table \ref{tab:summary}, and the full bandpass responses as reported in \citet{cobe_exsupp} are shown in Fig.~\ref{fig:bandpass}. \DIFaddbegin \DIFadd{All bandpass and unit conversion quantities  are evaluated through full integration with respect to these bandpass profiles, as described by \citep[e.g.,][]{planck2013-p03d,bp01,bp09}
+}\DIFaddend The different detector technology for each band accounts for the different performances and systematics found in each of the bands. \citet{silverberg93} in particular highlight the Ge:Ga photoconductors' (bands 7 and 8) response to ionizing radiation in the South Atlantic Anomaly (SAA) being worse than other detectors, requiring long time for the detectors to return to normal. Similarly, the use of a composite Si bolometer for bands 9 and 10 partially explain the over an order of magnitude increase in noise when compared to adjacent bands.
 
 \subsection{Data selection and masking}
 \label{sec:data_selection}
 
-%BEGIN DIFNOMARKUP
-\begin{table}[t]
+%DIF > BEGIN DIFNOMARKUP
+\DIFaddbegin \begin{table}[t]
   \begingroup
-  \newdimen\tblskip \tblskip=5pt
-	\caption{List of celestial body flags. {Comets are flagged with the radius listed if they are within 2~AU of the Sun, otherwise they have a $1^\circ$ exclusion radius.}}
+  \newdimen\tblskip \tblskip\DIFaddFL{=5pt
+	}\caption{List of celestial body flags. {Comets are flagged with the radius listed if they are within 2~AU of the Sun, otherwise they have a $1^\circ$ exclusion radius.}}
   \label{tab:planet_flags}
   \nointerlineskip
-  \vskip -3mm
-  \footnotesize
-  \setbox\tablebox=\vbox{
+  \vskip \DIFaddFL{-3mm
+  }\footnotesize
+  \setbox\tablebox\DIFaddFL{=}\vbox{
     \newdimen\digitwidth
     \setbox0=\hbox{\rm 0}
     \digitwidth=\wd0
@@ -1107,19 +1130,18 @@ The different detector technology for each band accounts for the different perfo
       \noalign{\vskip 4pt\hrule\vskip 5pt} } }
   \endPlancktablewide \endgroup
 \end{table}
-%END DIFNOMARKUP
-\DIFaddbegin 
+%DIF > END DIFNOMARKUP
 
-\DIFaddend %BEGIN DIFNOMARKUP
+%DIF > BEGIN DIFNOMARKUP
 \begin{table*}[t]
   \begingroup
-  \newdimen\tblskip \tblskip=5pt
-	\caption{{Overview of TOD data selection. The total DIRBE survey duration was 285 days; the second column lists the number of days that are actually used for each in this analysis after removing unstable periods. The ``baseline'' column indicates the fraction of samples removed by the official DIRBE processing flags plus the discrete object flags listed in Table~\ref{tab:planet_flags}. The ``solar'' column indicates the fraction removed by a solar-centric mask in the current analysis; see Sect.~\ref{sec:excess}. The ``outliers'' column indicates the fraction of data removed by an extreme outlier cut, probably mostly cosmic ray hits. The ``accept'' column lists the fraction of used data, and the $N_{\mathrm{samp}}$ column lists the actual number of accepted samples.} }
+  \newdimen\tblskip \tblskip\DIFaddFL{=5pt
+	}\caption{{Overview of TOD data selection. The total DIRBE survey duration was 285 days; the second column lists the number of days that are actually used for each in this analysis after removing unstable periods. The ``baseline'' column indicates the fraction of samples removed by the official DIRBE processing flags plus the discrete object flags listed in Table~\ref{tab:planet_flags}. The ``solar'' column indicates the fraction removed by a solar-centric mask in the current analysis; see Sect.~\ref{sec:excess}. The ``outliers'' column indicates the fraction of data removed by an extreme outlier cut, probably mostly cosmic ray hits. The ``accept'' column lists the fraction of used data, and the $N_{\mathrm{samp}}$ column lists the actual number of accepted samples.} }
   \label{tab:data_selection}
   \nointerlineskip
-  \vskip -3mm
-  \footnotesize
-  \setbox\tablebox=\vbox{
+  \vskip \DIFaddFL{-3mm
+  }\footnotesize
+  \setbox\tablebox\DIFaddFL{=}\vbox{
     \newdimen\digitwidth
     \setbox0=\hbox{\rm 0}
     \digitwidth=\wd0
@@ -1163,8 +1185,35 @@ The different detector technology for each band accounts for the different perfo
       \noalign{\vskip 4pt\hrule\vskip 5pt} } }
   \endPlancktablewide \endgroup
 \end{table*}
-%END DIFNOMARKUP
-\DIFaddbegin 
+%DIF > END DIFNOMARKUP
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.235\linewidth]{figs/solarmap_01a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_01b_v4.pdf}\DIFaddFL{\hspace*{5mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_06a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_06b_v4.pdf}\\
+  \includegraphics[width=0.235\linewidth]{figs/solarmap_02a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_02b_v4.pdf}\DIFaddFL{\hspace*{5mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_07a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_07b_v4.pdf}\\
+  \includegraphics[width=0.235\linewidth]{figs/solarmap_03a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_03b_v4.pdf}\DIFaddFL{\hspace*{5mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_08a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_08b_v4.pdf}\\
+  \includegraphics[width=0.235\linewidth]{figs/solarmap_04a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_04b_v4.pdf}\DIFaddFL{\hspace*{5mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_09a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_09b_v4.pdf}\\
+  \includegraphics[width=0.235\linewidth]{figs/solarmap_05a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_05b_v4.pdf}\DIFaddFL{\hspace*{5mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_10a_v4.pdf}\DIFaddFL{\hspace*{2mm}
+  }\includegraphics[width=0.235\linewidth]{figs/solarmap_10b_v4.pdf}
+  \caption{{Half-mission} solar-centric residuals maps, two for each bandpass, derived by co-adding the residual TOD, $\r = \dv - \s_{\mathrm{fg}} - \s_{\mathrm{zodi}} - \n_{\mathrm{corr}}$, into solar-centric coordinates. The Sun is located in the center of each panel, and the equator is aligned with the Ecliptic plane. All maps have been smoothed with a $1^{\circ}$ FWHM Gaussian kernel. The gray boundaries indicate the solar-centric exclusion masks used for each channel; no masks are applied for 140 and 240\,$\mu$m.}
+  \label{fig:solarmaps}
+\end{figure*}
+
+
 
 \DIFaddend In order to produce maps with full multipole support, we analyze the \DIFdelbegin \DIFdel{CIOs }\DIFdelend \DIFaddbegin \DIFadd{TOD }\DIFaddend directly and convert the pointing into 7\arcm\  $N_\mathrm{side}=512$ pixels from the native resolution 15 Quadcube pixels with 20\arcs\ in the delivered \DIFdelbegin \DIFdel{CIOs}\DIFdelend \DIFaddbegin \DIFadd{TOD}\DIFaddend .\footnote{\url{https://lambda.gsfc.nasa.gov/product/cobe/dirbe\_cio\_data\_get.html}} The conversion from \DIFdelbegin \DIFdel{CIO }\DIFdelend \DIFaddbegin \DIFadd{TOD }\DIFaddend pixel indices to Galactic longitude and latitude is detailed in \citet{cobe_exsupp}, and is reimplemented in the Python preprocessing script \texttt{quadcube}.\footnote{\url{https://github.com/MetinSa/quadcube}}
 
@@ -1191,47 +1240,50 @@ The planet\DIFaddbegin {\DIFadd{, comet, and asteroid}} \DIFaddend flags are not
 Conversely, at very long and very short wavelengths, a more aggressive Galactic mask is required. These are shown in green in Fig.~\ref{fig:masks}, and are defined again by regions in which the foregrounds are bright and not modeled sufficiently well. }{\DIFadd{The specific values for masks are chosen based on smoothed residual masks from preliminary runs, with brightnesses determined by the overall signal-to-noise level within each band.}}
 \DIFaddend 
 
+
+
 \DIFdelbegin \section{\DIFdel{Ancillary data sets}}
 %DIFAUXCMD
 \addtocounter{section}{-1}%DIFAUXCMD
 %DIFDELCMD < \label{sec:ancillary}
 %DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{figure*}
-  \centering
-  \includegraphics[width=0.235\linewidth]{figs/solarmap_01a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_01b_v4.pdf}\DIFaddFL{\hspace*{5mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_06a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_06b_v4.pdf}\\
-  \includegraphics[width=0.235\linewidth]{figs/solarmap_02a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_02b_v4.pdf}\DIFaddFL{\hspace*{5mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_07a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_07b_v4.pdf}\\
-  \includegraphics[width=0.235\linewidth]{figs/solarmap_03a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_03b_v4.pdf}\DIFaddFL{\hspace*{5mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_08a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_08b_v4.pdf}\\
-  \includegraphics[width=0.235\linewidth]{figs/solarmap_04a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_04b_v4.pdf}\DIFaddFL{\hspace*{5mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_09a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_09b_v4.pdf}\\
-  \includegraphics[width=0.235\linewidth]{figs/solarmap_05a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_05b_v4.pdf}\DIFaddFL{\hspace*{5mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_10a_v4.pdf}\DIFaddFL{\hspace*{2mm}
-  }\includegraphics[width=0.235\linewidth]{figs/solarmap_10b_v4.pdf}
-  \caption{{Half-mission} solar-centric residuals maps, two for each bandpass, derived by co-adding the residual TOD, $\r = \dv - \s_{\mathrm{fg}} - \s_{\mathrm{zodi}} - \n_{\mathrm{corr}}$, into solar-centric coordinates. The Sun is located in the center of each panel, and the equator is aligned with the Ecliptic plane. All maps have been smoothed with a $1^{\circ}$ FWHM Gaussian kernel. The gray boundaries indicate the solar-centric exclusion masks used for each channel; no masks are applied for 140 and 240\,$\mu$m.}
-  \label{fig:solarmaps}
-\end{figure*}
-\DIFaddend 
-
-
-\DIFdelbegin \DIFdel{As demonstrated by the success of the \bp\ and \cosmoglobe\ projects, the use of complementary datasets with different angular resolution, frequency coverage, and observation strategies, can greatly improve the quality of low-level data processing. In this work, we use }%DIFDELCMD < \Planck%%%
-\DIFdel{\ High Frequency Instrument, }%DIFDELCMD < \WISE%%%
-\DIFdel{, }%DIFDELCMD < \GAIA%%%
-\DIFdel{, and }%DIFDELCMD < \COBE%%%
-\DIFdel{-FIRAS to better constrain our sky model and characterize the DIRBE data. }\DIFdelend \DIFaddbegin \section{\DIFadd{Excess radiation model}}
+\DIFdelend \DIFaddbegin \section{\DIFadd{Excess radiation model}}
 \label{sec:excess}
 \DIFaddend 
 
+
+\DIFdelbegin \DIFdel{As demonstrated by the success of }\DIFdelend \DIFaddbegin \DIFadd{One of the key novel features of the current analysis is the inclusion
+of $\s_{\mathrm{static}}$ in Eq.~\eqref{eq:model}. This component is
+designed to account for excess radiation that appears static in
+solar-centric coordinates. The existence of such radiation was already
+noted by \citet{reach:1995} and \citet{leinert:1998}, but never
+systematically characterized or corrected for in the final DIRBE data
+processing.
+}
+
+\DIFadd{As described in Sect.~\ref{sec:global_modelling}, we model any
+potential excess radiation in the current analysis by subtracting all
+other components from the raw TOD, and bin the residual TOD into
+solar-centric coordinates. Because of this coordinate transformation,
+the resulting component is not degenerate with most other components,
+but only those that actually appear static in the Earth-Sun coordinate
+system. In the current model, that applies only to two components in the
+K98 ZL model, namely the so-called circumsolar ring and }\DIFaddend the
+\DIFdelbegin \DIFdel{\bp\ and \cosmoglobe\ projects, }\DIFdelend \DIFaddbegin \DIFadd{Earth-trailing feature \citep{kelsall1998}. These two physical
+interplanetary dust (IPD) components are trapped in }\DIFaddend the \DIFdelbegin \DIFdel{use of complementary datasets with different angular resolution, frequency coverage, and observation strategies, can greatly improve the quality of low-level data processing. In this work, we use }%DIFDELCMD < \Planck%%%
+\DIFdel{\ High Frequency Instrument, }%DIFDELCMD < \WISE%%%
+\DIFdel{, }%DIFDELCMD < \GAIA%%%
+\DIFdel{, and }%DIFDELCMD < \COBE%%%
+\DIFdel{-FIRAS to better constrain our sky model and characterize the DIRBE data. }\DIFdelend \DIFaddbegin \DIFadd{Earth's
+gravitational field, and follow the Earth's annual motion around the
+Sun. As such, they appear to be static on the sky as seen from the
+Earth, and they are therefore also fully degenerate with
+$\a_{\mathrm{static}}$. For this reason, we make no attempt to refit
+those two ZL components in the current analysis, but rather fix the
+corresponding parameters at the respective K98 values. As a result,
+$\a_{\mathrm{static}}$ captures any excess radiation beyond what is
+described by the K98 model.
+}\DIFaddend 
 
 \DIFdelbegin \subsection{%DIFDELCMD < \Planck%%%
 \DIFdel{\ HFI}}
@@ -1242,57 +1294,15 @@ Conversely, at very long and very short wavelengths, a more aggressive Galactic 
 %DIFDELCMD < %%%
 \DIFdel{The }%DIFDELCMD < \Planck%%%
 \DIFdel{\ High Frequency Instrument (HFI; \citealt{planck2016-l03}) observed the sky in six channels from 100\,GHz to 857\,GHz from May 2009--2013, with angular resolution of 10}%DIFDELCMD < \arcm%%%
-\DIFdel{--\,4}%DIFDELCMD < \arcm%%%
-\DIFdel{.While the primary purpose of the }%DIFDELCMD < \Planck%%%
-\DIFdel{\ mission was to characterize fluctuations in
-the CMB, a large part of its scientific legacy comes from its observations of the far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}}\DIFdelend \DIFaddbegin \DIFadd{One of the key novel features of the current analysis is the inclusion
-of $\s_{\mathrm{static}}$ in Eq.~\eqref{eq:model}. This component is
-designed to account for excess radiation that appears static in
-solar-centric coordinates. The existence of such radiation was already
-noted by \citet{reach:1995} and \citet{leinert:1998}, but never
-systematically characterized or corrected for in the final DIRBE data
-processing}\DIFaddend .
+\DIFdelend \DIFaddbegin \subsection{\DIFadd{Characterization}}
 
-\DIFdelbegin \DIFdel{In addition to its complementary observation strategy, }%DIFDELCMD < \Planck%%%
-\DIFdel{'s frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any
-subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered }%DIFDELCMD < \Planck%%%
-\DIFdel{\ maps have had an estimate of }\DIFdelend \DIFaddbegin \DIFadd{As described in Sect.~\ref{sec:global_modelling}, we model any
-potential excess radiation in the current analysis by subtracting all
-other components from the raw TOD, and bin the residual TOD into
-solar-centric coordinates. Because of this coordinate transformation,
-the resulting component is not degenerate with most other components,
-but only those that actually appear static in the Earth-Sun coordinate
-system. In the current model, that applies only to two components in the
-K98 ZL model, namely the so-called circumsolar ring and }\DIFaddend the
-\DIFdelbegin \DIFdel{zodiacal emission modeled using the 3D model derived by }\DIFdelend \DIFaddbegin \DIFadd{Earth-trailing feature \citep{kelsall1998}. These two physical
-interplanetary dust (IPD) components are trapped in the Earth's
-gravitational field, and follow the Earth's annual motion around the
-Sun. As such, they appear to be static on the sky as seen from the
-Earth, and they are therefore also fully degenerate with
-$\a_{\mathrm{static}}$. For this reason, we make no attempt to refit
-those two ZL components in the current analysis, but rather fix the
-corresponding parameters at the respective }\DIFaddend K98 \DIFdelbegin \DIFdel{with varying emissivities per component . While this technically is redundant information that could contaminate this joint analysis,
-the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work.
-}\DIFdelend \DIFaddbegin \DIFadd{values. As a result,
-$\a_{\mathrm{static}}$ captures any excess radiation beyond what is
-described by the K98 model.
-}\DIFaddend 
-
-\DIFdelbegin \DIFdel{At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the
-HFI data, and are directly visible in 353--857\,GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the
-DIRBE range. In order to avoid this , we remove the GNILC \citep{planck2016-XLVIII} estimate of the
-CIB from the HFI maps before including them in our analysis. }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Characterization}}
-\DIFaddend 
-
-\DIFdelbegin \DIFdel{Since this work is
-primarily concerned with the DIRBE dataset, the modeling of
-CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the }%DIFDELCMD < \commanderthree%%%
-\DIFdel{\ PR3 CMB temperature estimate from the }%DIFDELCMD < \Planck%%%
-\DIFdel{\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.We use single }%DIFDELCMD < \Planck%%%
-\DIFdel{\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, and 353-1 temperature maps and the total 545\,GHz and 857\,GHz maps, all from the PR4 release \citep{npipe}. }\DIFdelend \DIFaddbegin \DIFadd{In order to characterize the spatial morphology of
+\DIFadd{In order to characterize the spatial morphology of
 $\a_{\mathrm{static}}$ as a function of wavelength, we produced a
 preliminary Gibbs chain as described by
-Eqs.~\eqref{eq:gibbs_n}--\eqref{eq:gibbs_static} prior to the main
+Eqs.~\eqref{eq:gibbs_n}}\DIFaddend --\DIFdelbegin \DIFdel{\,4}%DIFDELCMD < \arcm%%%
+\DIFdel{.While the primary purpose of the }%DIFDELCMD < \Planck%%%
+\DIFdel{\ mission was to characterize fluctuations in the CMB, a large part of its scientific legacy comes from its observations of }\DIFdelend \DIFaddbegin \DIFadd{\eqref{eq:gibbs_static} prior to }\DIFaddend the \DIFdelbegin \DIFdel{far-infrared sky, with robust characterization of the Milky Way \citep{planck2013-XVII,planck2014-a12,planck2016-l03} and of CIB fluctuations \citep{planck2014-a12,planck2013-XVII,lenz2019,mccarthy:2024}.
+}\DIFdelend \DIFaddbegin \DIFadd{main
 production run, while imposing no constraints on the effective sky
 coverage of $\a_{\mathrm{static}}$. The main results from this
 calculation are summarized in Fig.~\ref{fig:solarmaps} in terms of
@@ -1307,35 +1317,36 @@ into solar-centric coordinates.
 
 
 
-\DIFdelbegin \subsection{%DIFDELCMD < \GAIA%%%
-\DIFdel{\ and }%DIFDELCMD < \WISE%%%
-}
-%DIFAUXCMD
-\addtocounter{subsection}{-1}%DIFAUXCMD
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdel{In the near-infrared, most of the sky observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source,
-while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the Milky Way comes from the }%DIFDELCMD < \Gaia%%%
-\DIFdel{\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in }%DIFDELCMD < \Gaia%%%
-\DIFdel{\ DR2.
-Despite }%DIFDELCMD < \Gaia%%%
-\DIFdel{\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a
-complete survey of all stars that are detectable within the DIRBE bands}\DIFdelend \DIFaddbegin \DIFadd{Browsing through the various panels, we can immediately make several
+\DIFdelbegin \DIFdel{In addition to its complementary observation strategy, }%DIFDELCMD < \Planck%%%
+\DIFdel{'s frequency coverage has a relatively lower expected amount of zodiacal emission, with a total expected amplitude of $\lesssim1\,\%$ before any
+subtraction \citep{maris2006c,planck2013-pip88}, as compared to almost 100\,\% of the signal in some DIRBE bands. All delivered }%DIFDELCMD < \Planck%%%
+\DIFdel{\ maps have had an estimate of }\DIFdelend \DIFaddbegin \DIFadd{Browsing through the various panels, we can immediately make several
 interesting observations. First, }{\DIFadd{on the positive side}}\DIFadd{, we see
 that }{\DIFadd{the 240$\,\mu$m channel appears}} \DIFadd{for all practical
 purposes consistent with instrumental Gaussian noise. There are no
 signatures of any excess radiation in this channel, which is a
-strong testament to the efficacy of the }{\DIFadd{current compact template based
-sky signal}} \DIFadd{model at long wavelengths}\DIFaddend .
+strong testament to the efficacy of }\DIFaddend the \DIFdelbegin \DIFdel{zodiacal emission modeled using the 3D model derived by K98 with varying emissivities per component . While this technically is redundant information that could contaminate this joint analysis,
+the already low amplitude of zodiacal emission in the HFI maps limits the potential impact of using a technically incorrect zodiacal emission model. A full analysis fitting for zodiacal emission parameters using both HFI and DIRBE will be left for future work. }\DIFdelend \DIFaddbegin {\DIFadd{current compact template based
+sky signal}} \DIFadd{model at long wavelengths.
+}\DIFaddend 
 
-\DIFdelbegin \DIFdel{Conversely, the }%DIFDELCMD < \WISE%%%
-\DIFdel{\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, }\DIFdelend \DIFaddbegin {\DIFadd{However, the same does not hold true in general, as there are
+\DIFdelbegin \DIFdel{At the same time, CIB fluctuations with a similar SED to the Milky Way have been detected with high significance in the
+HFI data, and are directly visible in 353--857}\DIFdelend \DIFaddbegin {\DIFadd{However, the same does not hold true in general, as there are
   many statistically significant features in the shorter-frequency
   channels. First, at low solar elongations $e$ --- that is, pixels
   that lie close to the center --- there is a narrow positive and
   circular excess along the boundary of the observed region in the
-  1.25, 2.2, 12, and 25\,$\mu$m channels. Such an azimuthally symmetric
+  1.25, 2.2, 12, and 25}\DIFaddend \,\DIFdelbegin \DIFdel{GHz maps at high Galactic latitudes. Incorrectly modeled, this could bias the Galactic thermal dust model and lead to an incorrect model of the sky in the
+DIRBE range. In order to avoid this , we remove the GNILC \citep{planck2016-XLVIII} estimate of the
+CIB from the HFI maps before including them in our analysis. }%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdel{Since this work is
+primarily concerned with the DIRBE dataset, the modeling of
+CMB temperature fluctuations gives an unnecessary degree of freedom to be marginalized over. Therefore, we subtract the }%DIFDELCMD < \commanderthree%%%
+\DIFdel{\ PR3 CMB temperature estimate from the }%DIFDELCMD < \Planck%%%
+\DIFdel{\ HFI maps, effectively conditioning the entire Gibbs chain on this CMB estimate.We use single }%DIFDELCMD < \Planck%%%
+\DIFdel{\ detector maps to avoid the complication of subtle bandpass mismatches between nearby detectors. In total, we use the 100-1, 217-1, }\DIFdelend \DIFaddbegin \DIFadd{$\mu$m channels. Such an azimuthally symmetric
   solar-centric signal may be generated by several physical effects,
   including mismodelling of the zodiacal light cloud component and
   detector straylight (symmetrized by the satellite rotation). Second,
@@ -1344,38 +1355,21 @@ sky signal}} \DIFadd{model at long wavelengths}\DIFaddend .
   mismodelling of the asteroidal bands and the Earth-trailing feature
   and ring in the current ZL model. Finally, there are both symmetric
   and asymmetric large-scale features also at high Ecliptic
-  latitudes. The symmetric ones, as for instance seen in the }\DIFaddend 12 \DIFdelbegin \DIFdel{, and
-  22 $\mathrm{\mu m}$, with resolutions of 6}%DIFDELCMD < \farcs11%%%
-\DIFdel{, 6}%DIFDELCMD < \farcs4%%%
-\DIFdel{, 6}%DIFDELCMD < \farcs5%%%
-\DIFdel{, and 12}%DIFDELCMD < \farcs0%%%
-\DIFdel{. This gives a direct estimate of point source brightness and
-  location,
-  }\DIFdelend and
-  \DIFdelbegin \DIFdel{allows for direct cross-matching with the }%DIFDELCMD < \GAIA%%%
-\DIFdel{\ DR2 catalog. In order to
-  leverage the }%DIFDELCMD < \gaia%%%
-\DIFdel{\ data properly, we extract the SED for point sources in both }%DIFDELCMD < \gaia%%%
-\DIFdel{\ and }%DIFDELCMD < \WISE%%%
-\DIFdel{\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the }%DIFDELCMD < \gaia%%%
-\DIFdel{+}%DIFDELCMD < \WISE%%%
-\DIFdel{\ catalog and DIRBE. There are a total of 717}\DIFdelend \DIFaddbegin \DIFadd{25}\DIFaddend \,\DIFdelbegin \DIFdel{454 stars in both catalogs. There are an additional 66}\DIFdelend \DIFaddbegin \DIFadd{$\mu$m channels, are very likely due to mismodelling of the ZL
+  latitudes. The symmetric ones, as for instance seen in the 12 }\DIFaddend and
+  \DIFdelbegin \DIFdel{353-1 temperature maps and the total 545\,GHz and 857}\DIFdelend \DIFaddbegin \DIFadd{25}\DIFaddend \,\DIFdelbegin \DIFdel{GHz maps, all from }\DIFdelend \DIFaddbegin \DIFadd{$\mu$m channels, are very likely due to mismodelling of the ZL
   cloud component. However, the origin of the asymmetric features, as for
-  instance seen in the 4.9}\DIFaddend \,\DIFdelbegin \DIFdel{217 extragalactic sources that exist in }%DIFDELCMD < \WISE%%%
-\DIFdel{\ but not in }%DIFDELCMD < \gaia%%%
-\DIFdel{.
-  These are fit as modified blackbodies per source.
-}\DIFdelend \DIFaddbegin \DIFadd{$\mu$m channel, are not easily explained
+  instance seen in }\DIFaddend the \DIFdelbegin \DIFdel{PR4 release \citep{npipe}.}\DIFdelend \DIFaddbegin \DIFadd{4.9\,$\mu$m channel, are not easily explained
   in terms of ZL mismatch; further study is needed to understand the
   origin of these.
   }}
 \DIFaddend 
 
-\DIFdelbegin \DIFdel{Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all }%DIFDELCMD < \WISE%%%
-\DIFdel{\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the }%DIFDELCMD < \gaia%%%
-\DIFdel{\ catalog. The SED's
-  as derived by }%DIFDELCMD < \gaia%%%
-\DIFdel{\ are then averaged over and used to scale the entire template . Within the Gibbs chain, this is sampled with a total scaling parameter, with a fixed map and relative amplitudes between different frequencies.For afull description of the star model, see the work in companion paper \citet{CG02_04}.}\DIFdelend \DIFaddbegin {\DIFadd{When interpreting these maps physically, it is important to
+\DIFdelbegin \subsection{%DIFDELCMD < \GAIA%%%
+\DIFdel{\ and }%DIFDELCMD < \WISE%%%
+}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin {\DIFadd{When interpreting these maps physically, it is important to
   note that any model error in the Galactic foreground model will turn
   into horizontal stripes in these coordinates, due to the DIRBE's
   annual motion around the Sun. Such features are not easily visible
@@ -1384,16 +1378,17 @@ sky signal}} \DIFadd{model at long wavelengths}\DIFaddend .
   the DIRBE noise level.}}
 \DIFaddend 
 
-%BEGIN DIFNOMARKUP
-\begin{table*}[t]
+\DIFdelbegin \DIFdel{In the near-infrared, most of
+}\DIFdelend %DIF > BEGIN DIFNOMARKUP
+\DIFaddbegin \begin{table*}[t]
   \begingroup
-  \newdimen\tblskip \tblskip=5pt
-  \caption{Key map-level characteristics of the \cosmoglobe\ DR2 ZSMA maps. The relative calibration, $\alpha$, is defined as the slope of a scatter plot between the old K98 and new DR2 maps, evaluated over either the default DR2 processing mask (``High latitudes'') or full sky. }
+  \newdimen\tblskip \tblskip\DIFaddFL{=5pt
+  }\caption{Key map-level characteristics of the \cosmoglobe\ DR2 ZSMA maps. The relative calibration, $\alpha$, is defined as the slope of a scatter plot between the old K98 and new DR2 maps, evaluated over either the default DR2 processing mask (``High latitudes'') or full sky. }
   \label{tab:summary}
   \nointerlineskip
-  \vskip -3mm
-  \footnotesize
-  \setbox\tablebox=\vbox{
+  \vskip \DIFaddFL{-3mm
+  }\footnotesize
+  \setbox\tablebox\DIFaddFL{=}\vbox{
     \newdimen\digitwidth
     \setbox0=\hbox{\rm 0}
     \digitwidth=\wd0
@@ -1434,20 +1429,32 @@ sky signal}} \DIFadd{model at long wavelengths}\DIFaddend .
       10 & 1.25 & 240  & 0.40 &  0.841 & 1.012 & *860 & *740 \cr
       \noalign{\vskip 4pt\hrule\vskip 5pt} } }
   \endPlancktablewide 
-  \tablenote {{\rm a}} Reproduced from the DIRBE Explanatory Supplement.\par
-  \tablenote {{\rm b}} Noise sensitivity per $0\fdg7\times 0\fdg7$ pixel, averaged over the full sky.\par
+  \tablenote {{\rm \DIFaddFL{a}}} \DIFaddFL{Reproduced from the DIRBE Explanatory Supplement.}\par
+  \tablenote {{\rm \DIFaddFL{b}}} \DIFaddFL{Noise sensitivity per $0\fdg7\times 0\fdg7$ pixel, averaged over }\DIFaddendFL the \DIFaddbeginFL \DIFaddFL{full }\DIFaddendFL sky\DIFdelbeginFL \DIFdelFL{observed by DIRBE consists of stars and point sources. We therefore use catalogs derived from external datasets as fixed locations of each source,
+while fitting for the amplitudes in the Gibbs chain. As of this publication, the most complete catalog of stars in the Milky Way comes from the }%DIFDELCMD < \Gaia%%%
+\DIFdelFL{\ mission \citep{gaia:2016,gaia:2018}. In particular, physics models of 100\,million stars are provided in }%DIFDELCMD < \Gaia%%%
+\DIFdelFL{\ DR2.
+Despite }%DIFDELCMD < \Gaia%%%
+\DIFdelFL{\ operating between 330--1050\,nm, these models can be used as informative priors for the amplitude of stars at the DIRBE near-infrared bands. With a limiting magnitude of $G\sim20$ across the entire sky, this star catalog gives a
+complete survey of all stars that are detectable within the DIRBE bands}\DIFdelendFL .\DIFaddbeginFL \par
 \endgroup
 \end{table*}
-%END DIFNOMARKUP
-\DIFaddbegin 
+%DIF > END DIFNOMARKUP
+\DIFaddend 
 
 
 
 
-\DIFaddend \subsection{\DIFdelbegin %DIFDELCMD < \COBE%%%
-\DIFdel{-FIRAS}\DIFdelend \DIFaddbegin \DIFadd{Mitigation through masking and subtraction}\DIFaddend }
+\DIFdelbegin \DIFdel{Conversely, the }%DIFDELCMD < \WISE%%%
+\DIFdel{\ satellite \citep{wright:2010} has mapped the sky at 3.4, 4.6, 12, and 22 $\mathrm{\mu m}$, with resolutions of 6}%DIFDELCMD < \farcs11%%%
+\DIFdel{, 6}%DIFDELCMD < \farcs4%%%
+\DIFdel{, 6}%DIFDELCMD < \farcs5%%%
+\DIFdel{, and 12}%DIFDELCMD < \farcs0%%%
+\DIFdel{. This gives a direct estimate of point source brightness and
+  location,
+  }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Mitigation through masking and subtraction}}
 
-\DIFaddbegin \DIFadd{As far as the current analysis is concerned, determining the true
+\DIFadd{As far as the current analysis is concerned, determining the true
 physical origin of the excess }{\DIFadd{signals seen in
   Fig.~\ref{fig:solarmaps}}} \DIFadd{is only of secondary importance, and we
 choose for now to remain agnostic in this respect. The key point at
@@ -1459,43 +1466,58 @@ strong excess. This is similar to the approach taken by
 \citet{kelsall1998}; while they did not produce detailed maps like
 those in Fig.~\ref{fig:solarmaps}, they plotted residuals as a
 function of solar elongations, and noted that particular strong
-excesses were seen for $e<68^{\circ}$ and $e>120^{\circ}$, and all
+excesses were seen for $e<68^{\circ}$ }\DIFaddend and \DIFdelbegin \DIFdel{allows for direct cross-matching with the }%DIFDELCMD < \GAIA%%%
+\DIFdel{\ DR2 catalog.In order to
+  leverage the }%DIFDELCMD < \gaia%%%
+\DIFdel{\ data properly, we extract the SED for point sources in both }%DIFDELCMD < \gaia%%%
+\DIFdel{\ and }%DIFDELCMD < \WISE%%%
+\DIFdel{\ with $<8$ mag at $3.4\,\mathrm{\mu m}$. These SEDs are then scaled directly per star in the Gibbs chain to correct for absolute calibration differences between the }%DIFDELCMD < \gaia%%%
+\DIFdel{+}%DIFDELCMD < \WISE%%%
+\DIFdel{\ catalog and DIRBE. There are a total of 717\,454 stars in both catalogs. There are an additional 66\,217 extragalactic sources that exist in }%DIFDELCMD < \WISE%%%
+\DIFdel{\ but not in }%DIFDELCMD < \gaia%%%
+\DIFdel{. These are fit as modified blackbodies per source.
+  }\DIFdelend \DIFaddbegin \DIFadd{$e>120^{\circ}$, and all
 those data were therefore excluded from the co-added ZSMA maps. Those
 limits correspond to }{\DIFadd{the two thin}} \DIFadd{concentric circles centered on the Sun in
 Fig.~\ref{fig:solarmaps}. Secondly, for pixels that are only mildly
 affected by the excess, we use $\a_{\mathrm{static}}$ as a template,
 and subtract it from the TOD prior to mapmaking, as indicated in
 Eq.~\eqref{eq:model}.
-}
+}\DIFaddend 
 
 
-\DIFaddend The \DIFdelbegin %DIFDELCMD < \COBE%%%
-\DIFdel{-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}. 
-FIRAS's primary goal was the characterization of the CMB blackbody spectrum \citep{mather:1994}, which motivated much of the experiment's design choices.In particular, its angular resolution of $7^\circ$ was chosen due to its focus on monopole characterization, while still allowing for foreground mitigation. Notably, the calibration for DIRBE and FIRAS were performed independently, although they have been compared explicitly by \citet{fixsen1997}. The possibility of improving the $140$ }\DIFdelend \DIFaddbegin \DIFadd{solar-centric masks used in the current analysis are shown as
+\DIFdelbegin \DIFdel{Within the Galactic plane, there are many stars per single DIRBE pixel. In order to avoid degeneracies between individual point sources, we create a map at $N_\mathrm{side}=512$ that includes all }%DIFDELCMD < \WISE%%%
+\DIFdel{\ point sources that are $>8$ mag at $3.4\,\mathrm{\mu m}$ but have not been identified within the }%DIFDELCMD < \gaia%%%
+\DIFdel{\ catalog. The SED's
+  as derived by }%DIFDELCMD < \gaia%%%
+\DIFdel{\ are then averaged over and used to scale the entire template. Within the Gibbs chain, this is sampled with a total scaling parameter, with a fixed map and relative amplitudes between different frequencies. For a full description of }\DIFdelend \DIFaddbegin \DIFadd{The solar-centric masks used in the current analysis are shown as
 thick gray lines in Fig.~\ref{fig:solarmaps}. These were generated by
 thresholding each excess maps after smoothing to $3^{\circ}$ FWHM. In
 addition, a sharp cut in solar elongation with varying thresholds were
 applied for each channel, similar to the K98 approach. For comparison,
-the thin gray lines show the static solar elongation limits used in the
+}\DIFaddend the \DIFdelbegin \DIFdel{star model , see the work in companion paper \citet{CG02_04}.}\DIFdelend \DIFaddbegin \DIFadd{thin gray lines show the static solar elongation limits used in the
 K98 analysis, and the excess signals seen between the thin and thick
 lines are thus contamination that is entirely eliminated in the
 current analysis, but still present in the official DIRBE maps.
-}
+}\DIFaddend 
 
-%DIF > \input{summary_table.tex}
+\DIFdelbegin \subsection{%DIFDELCMD < \COBE%%%
+\DIFdel{-FIRAS}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend %DIF > \input{summary_table.tex}
 
 
-\DIFadd{While these masks eliminate the worst affected data,
+\DIFdelbegin \DIFdel{The }%DIFDELCMD < \COBE%%%
+\DIFdel{-FIRAS experiment was an absolutely calibrated differential Michelson Fourier transform interferometer that observed the full sky from 68\,GHz--2911\,GHz with 13.6\,GHz frequency resolution \citep{fixsen:1994,mather:1999}.FIRAS's primary goal was the characterization of the CMB blackbody spectrum \citep{mather:1994}, which motivated much of the experiment's design choices.In particular, its angular resolution of $7^\circ$ was chosen due to its focus on monopole characterization, while still allowing for foreground mitigation. Notably, the calibration for DIRBE and FIRAS were performed independently, although they have been compared explicitly by \citet{fixsen1997}. The possibility of improving the $140$ }\DIFdelend \DIFaddbegin \DIFadd{While these masks eliminate the worst affected data,
 highly significant excess radiation may still be seen in the unmasked
 region for the 4.9--60$\,\mu$m channels. For these four channels we
 let $\s_{\mathrm{static}}$ be non-zero in Eq.~\eqref{eq:model}, while
-for the other six channels we set $\s_{\mathrm{static}}$ to zero, }\DIFaddend and
-\DIFdelbegin \DIFdel{$240\,\mathrm{\mu m}$ bands has already been noted to reduce the discrepancy between the two experiments. The possibility of joint determination of gain and
-zodiacal emission using both of these datasets will be explored in future work. }\DIFdelend \DIFaddbegin \DIFadd{only apply the above masking procedure. 
-}\DIFaddend 
+for the other six channels we set $\s_{\mathrm{static}}$ to zero, and
+only apply the above masking procedure. 
+}
 
 %DIF > \subsection{Zero-level determination}
-\DIFaddbegin 
 
 \DIFadd{A side effect of applying a non-zero
 $\s_{\mathrm{static}}$ correction is that the CIB monopole effectively
@@ -1508,10 +1530,11 @@ monopole error in $\a_{\mathrm{static}}$ will propagate directly into
 $m_{\nu}$ in Eq.~\eqref{eq:model} --- those parameters are the CIB
 monopole tracers in this analysis. This degeneracy is the main reason
 for not applying the $\s_{\mathrm{static}}$ corrections to the
-1.25--3.5 and 100--240$\,\mu$m maps.
-}
+1.25--3.5 }\DIFaddend and \DIFdelbegin \DIFdel{$240\,\mathrm{\mu m}$ bands has already been noted to reduce the discrepancy between the two experiments. The possibility of joint determination of gain and
+zodiacal emission using both of these datasets will be explored in future work. }\DIFdelend \DIFaddbegin \DIFadd{100--240$\,\mu$m maps.
+}\DIFaddend 
 
-\DIFaddend \begin{figure*}
+\begin{figure*}
     \centering
     \includegraphics[width=0.9\textwidth]{figs/traceplots.pdf}
 	\DIFdelbeginFL %DIFDELCMD < \caption{Trace plots of MCMC sampling chains. Each panel shows a series of sampled components for each Gibbs sample, including the ten DIRBE monopoles, the zodiacal dust cloud albedos $A$ and emissivities $E$, the ambient dust temperature at 1 AU $T_0$, and the instrumental parameters for band 10. Monopoles are plotted in units of $\mathrm{kJy\,sr^{-1}}$, $f_\mathrm{knee,10}$ in Hz, $\sigma_0$ in $\mathrm{MJy\,sr^{-1}}$, and $T_0$ in kelvin, while all other parameters are unitless.}
@@ -1528,10 +1551,10 @@ for not applying the $\s_{\mathrm{static}}$ corrections to the
 \end{figure*}
 
 \DIFdelbegin \DIFdel{Due to the observation strategy, there are non-negligible correlations between nearby frequencies, and smearing along the scanning direction, corresponding to an effectively nonsymmetric beam. In order to take the beam into account, we explicitly smooth the sky model following the same prescription as in
-\citet{odegard:2019} when comparing with the FIRAS bands.The dense frequency spacing of the FIRAS data makes it ideal for determining the continuum behavior of sky emission and allows for identification of emission lines \citep{bennett:1994}. 
-To avoid the correlation between nearby bands, we used a subset of the FIRAS bands,
+\citet{odegard:2019} when comparing with the FIRAS bands.The dense frequency spacing of the FIRAS data makes it ideal for determining the continuum behavior of sky emission and allows for identification of emission lines \citep{bennett:1994}. To avoid the correlation between nearby bands, we used a subset of the FIRAS bands,
 listed in Table \ref{tab:firas_bands}. A full comparison using the correlation between bands, similar to \citet{bianchini:2022}, will be performed in
-future analysis.}%DIFDELCMD < 
+future analysis.
+}%DIFDELCMD < 
 
 %DIFDELCMD < \input{firas_bands_table.tex}
 %DIFDELCMD < 
@@ -1552,7 +1575,8 @@ future analysis.}%DIFDELCMD <
 %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdel{In order to model the TODs accurately, we make use of processing masks depending on the band and component being modeled.In particular, estimating the instrumental noise properties and the zodiacal emission require a sufficiently accurate model, which can be easily biased in regions of excessively high emission. }%DIFDELCMD < 
+\DIFdel{In order to model the TODs accurately, we make use of processing masks depending on the band and component being modeled. In
+particular, estimating the instrumental noise properties and the zodiacal emission require a sufficiently accurate model, which can be easily biased in regions of excessively high emission. }%DIFDELCMD < 
 
 %DIFDELCMD < %%%
 \DIFdel{For zodiacal emission,
@@ -1586,7 +1610,7 @@ Conversely, at very long and very short wavelengths, a more aggressive Galactic 
 
 With the model in hand, we run \commanderthree\ on the data. We find that an average Gibbs iteration takes \DIFdelbegin \DIFdel{approximatly 500}\DIFdelend \DIFaddbegin \DIFadd{approximately 250}\DIFaddend \,CPU-hrs, excluding initialization time. In order to ensure proper sampling of the full distribution, we run \DIFdelbegin \DIFdel{six }\DIFdelend \DIFaddbegin {\DIFadd{five}} \DIFaddend independent \commanderthree\ runs initialized with their own random seeds. \DIFdelbegin \DIFdel{Each chain has 155, 157, 158, 160, 163, and 160 }\DIFdelend \DIFaddbegin \DIFadd{\textbf{The chains have 244, 246, 246, 242, and 246} }\DIFaddend samples, giving a total of \DIFdelbegin \DIFdel{953 }\DIFdelend \DIFaddbegin \DIFadd{\textbf{1224} }\DIFaddend samples. A total of one month walltime on \DIFdelbegin \DIFdel{416 }\DIFdelend \DIFaddbegin \DIFadd{1920 }\DIFaddend computing cores was required to produce these samples.
 
-In order to assess burn\DIFaddbegin \DIFadd{-}\DIFaddend in and convergence, we plot a range of parameters from the Gibbs chain in Fig.~\ref{fig:trace}. Included in this figure are the sampled monopoles, zodiacal dust albedos and emissivities, and instrumental parameters, including the estimated white noise in bands 1 and 10, and the correlated noise parameters $f_\mathrm{knee}$ and $\alpha$ for band 10. From this figure, some burn\DIFaddbegin \DIFadd{-}\DIFaddend in can be seen in the monopoles, concluding at approximately sample 20.  At the same time, there is still drift within the emissivity and albedos, especially for parameters less strongly expressed in the model, such as $A_{4,\mathrm C}$ and $E_{9/10,\mathrm C}$. \DIFdelbegin \DIFdel{. }\DIFdelend However, since the monopoles are stable beyond this point, this is mainly due to degeneracies within the zodiacal model itself. This is explored in full detail in \citet{CG02_02}.
+In order to assess \DIFdelbegin \DIFdel{burnin }\DIFdelend \DIFaddbegin \DIFadd{burn-in }\DIFaddend and convergence, we plot a range of parameters from the Gibbs chain in Fig.~\ref{fig:trace}. Included in this figure are the sampled monopoles, zodiacal dust albedos and emissivities, and instrumental parameters, including the estimated white noise in bands 1 and 10, and the correlated noise parameters $f_\mathrm{knee}$ and $\alpha$ for band 10. From this figure, some \DIFdelbegin \DIFdel{burnin }\DIFdelend \DIFaddbegin \DIFadd{burn-in }\DIFaddend can be seen in the monopoles, concluding at approximately sample 20.  At the same time, there is still drift within the emissivity and albedos, especially for parameters less strongly expressed in the model, such as $A_{4,\mathrm C}$ and $E_{9/10,\mathrm C}$. \DIFdelbegin \DIFdel{. }\DIFdelend However, since the monopoles are stable beyond this point, this is mainly due to degeneracies within the zodiacal model itself. This is explored in full detail in \citet{CG02_02}.
 
 \DIFdelbegin \DIFdel{Discarding the burnin of 20 samples, we obtain a total of 833 independent Gibbs samples . In our analysis, we truncate all chains to be the length of the shortest chain, giving }\DIFdelend \DIFaddbegin {\DIFadd{Depending on the parameter of interest, 30--50 samples are considered burned in. This gives us }\DIFaddend a total of \DIFdelbegin \DIFdel{810 samples. }\DIFdelend \DIFaddbegin \DIFadd{974--1074 total samples, depending on the parameter.}}
  \DIFaddend Due to the extended burn-in of the zodiacal parameters, individual ZL parameters cannot be considered as fully converged. However, this does not affect the monopoles and frequency maps, which only depend on the sum of all ZL components, which are the main topic in this paper.
@@ -1759,7 +1783,7 @@ refer the interested reader there for further details.
 
 As defined in Sect.~\ref{sec:datamodel}, $\xi_{\mathrm{n}}$ denotes
 the set of all instrumental noise parameters in our data model, and
-for all channels except \DIFaddbegin \DIFadd{140 and }\DIFaddend 240$\,\mu$m this simply consist\DIFaddbegin \DIFadd{s}\DIFaddend  of a white
+for all channels except \DIFaddbegin \DIFadd{140 and }\DIFaddend 240$\,\mu$m this simply \DIFdelbegin \DIFdel{consist }\DIFdelend \DIFaddbegin \DIFadd{consists }\DIFaddend of a white
 noise \DIFdelbegin \DIFdel{rms }\DIFdelend \DIFaddbegin \DIFadd{RMS }\DIFaddend per TOD sample, $\sigma_0$, which is assumed to be constant
 within each 24\,hr data segment. The corresponding posterior mean is
 plotted as a function of observing day in Fig.~\ref{fig:sigma0}. Gaps
@@ -1799,7 +1823,7 @@ levels. However, the behaviour seen in Fig.~\ref{fig:sigma0} appears
 more systematic than what is usually observed for popcorn noise, with
 a very well-defined period of about 2 weeks. This time scale could
 possibly suggest that the Moon plays a role in this behaviour, which
-has a\DIFdelbegin \DIFdel{n}\DIFdelend  rotation period relative to the Earth of about 4~weeks.
+has \DIFdelbegin \DIFdel{an }\DIFdelend \DIFaddbegin \DIFadd{a }\DIFaddend rotation period relative to the Earth of about 4~weeks.
 
 Moving on, the 60$\,\mu$m channel exhibits much larger drifts than any
 of the others, and changes by almost 50\,\% from the beginning to the
@@ -1831,13 +1855,13 @@ $240\,\mathrm{\mu m}$ band. One realization of this correlated noise
 map is shown for the first half-mission split in
 Fig.~\ref{fig:ncorr_map}. Given that this map is derived directly from
 the signal-subtracted frequency map, and therefore essentially acts as
-a ``trash can'' for unmodelled effects, the abs\DIFdelbegin \DIFdel{c}\DIFdelend ence of large coherent
+a ``trash can'' for unmodelled effects, the \DIFdelbegin \DIFdel{abscence }\DIFdelend \DIFaddbegin \DIFadd{absence }\DIFaddend of large coherent
 features provides strong evidence that the adopted signal model is
 indeed able to account for all main effects. 
 
 \DIFaddbegin \DIFadd{It is also important to note that we sampled the time-variable gain for the 12 and 25$\,\mu$m
 channels, as shown in Fig.~\ref{fig:gain}, with the corresponding 3-$\sigma$ uncertainties,
-derived from their sampling, as shown in Fig.~\ref{fig:gain_trace}. On this regard, to give a better idea of the actual effect of gain sampling on the instrumental modeling included in our analysis, we have computed the map shown in Fig.~\ref{fig:diff_res_gain}. It consists of the two half mission realization of the difference between residuals in two different Commander runs, with and without gain sampling, coadded as an inverse-variance-weighted average.
+derived from their sampling, as shown in Fig.~\ref{fig:gain_trace}. Overall, we see that the resulting gain corrections vary with about 1\,\% during the course of the mission, which confirms the original DIRBE calibration procedure. At the same time, it is important to recall that the zodiacal light signal at 12 and 25\,$\mu$m is very bright, and 1\,\% variations correspond to residuals of about 0.5\,MJy/sr. Figure~\ref{fig:diff_res_gain} illustrates the spatial impact of these gain variations in the form of a difference map between the 25\,$\mu$m frequency maps derived with and without time-varying gains. The main features in this plot are coherent large-scale structures that primarily correlate with the long-term behaviour DIRBE scanning strategy, and without a time-variable gain correction, these residuals are impossible to eliminate with only zodiacal light or Galactic parameters.
 }
 
 \DIFaddend While Fig.~\ref{fig:sigma0} shows the white noise level in
@@ -1849,15 +1873,17 @@ nearly symmetric with respect to the Ecliptic poles are simply due to
 the DIRBE scanning strategy, which effectively observe the Ecliptic
 poles more often than the Ecliptic plane. The sharp band of higher
 values along the Ecliptic plane is however not due to the scanning
-strategy as such, but rather by the DIRBE quality flags which remove\DIFdelbegin \DIFdel{s}\DIFdelend  near-planet observations. The 2.2 and 3.5$\,\mu$m channels show very
+strategy as such, but rather by the DIRBE quality flags which \DIFdelbegin \DIFdel{removes
+}\DIFdelend \DIFaddbegin \DIFadd{remove
+}\DIFaddend near-planet observations. The 2.2 and 3.5$\,\mu$m channels show very
 similar behaviour.
 
 In general, the patterns seen in the 4.9--60$\,\mu$m channels also
 appear broadly similar. However, in this case we can also see regions
 with higher noise levels near the Ecliptic poles and south of the
 Galactic center. These are primarily due to the excess radiation masks
-defined in Sect.~\ref{sec:excess}, which remove\DIFdelbegin \DIFdel{s}\DIFdelend  a significant
-fraction of the overall data, and affect\DIFdelbegin \DIFdel{s}\DIFdelend  some parts of the sky more
+defined in Sect.~\ref{sec:excess}, which \DIFdelbegin \DIFdel{removes }\DIFdelend \DIFaddbegin \DIFadd{remove }\DIFaddend a significant
+fraction of the overall data, and \DIFdelbegin \DIFdel{affects }\DIFdelend \DIFaddbegin \DIFadd{affect }\DIFaddend some parts of the sky more
 than others, depending on the specific orientation of the satellite at
 any given time with respect to the Sun.
 
@@ -1904,7 +1930,7 @@ latitudes. The same holds true for most other channels as well.
 The dominant residual at short wavelengths is due to
 residual starlight emission in the Galactic disk. At 1.25$\,\mu$m the starlight emission is
 slightly over-subtracted, while at 2.2\,$\mu$m it is slightly
-under-subtracted. \DIFdelbegin \DIFdel{In this }\DIFdelend \DIFaddbegin {\DIFadd{The relatively larger degree of oversubtraction at 1.25$\,\mathrm{\mu m}$ is due the emissivity, which is applied uniformly for all stars. In practice, this overestimates the effect of extinction in the highest density portions of the Galactic plane.}} \DIFadd{In this }\DIFaddend respect it is important to note that the
+under-subtracted. \DIFaddbegin {\DIFadd{The relatively larger degree of oversubtraction at 1.25$\,\mathrm{\mu m}$ is due the emissivity, which is applied uniformly for all stars. In practice, this overestimates the effect of extinction in the highest density portions of the Galactic plane.}} \DIFaddend In this respect it is important to note that the
 starlight model presented by \citet{CG02_04} is based on the \DIFdelbegin \DIFdel{WISE
 }\DIFdelend \DIFaddbegin {\DIFadd{AllWISE}}
 \DIFaddend catalog, which includes about 747 million sources. While this is a
@@ -1985,8 +2011,7 @@ an exact definition, see \citet{bp10}. \DIFaddbegin {\DIFaddend The number of de
   the total number of individual frequency map pixels\DIFdelbegin \DIFdel{per $N_{\mathrm{side}}=512$
 pixel (which is not equal to the number of data channels, because the
 }%DIFDELCMD < \Planck%%%
-\DIFdel{\ bands have higher resolution than DIRBE) minus the number of
-diffuse components}\DIFdelend \DIFaddbegin \DIFadd{; in the current
+\DIFdel{\ bands have higher resolution than DIRBE) minus the number of diffuse components}\DIFdelend \DIFaddbegin \DIFadd{; in the current
   model there are no degrees of freedom that are fitted freely per
   pixel}\DIFaddend . In this figure, we clearly see both the Galactic and ZL
   residuals, as discussed above. However, there are also \DIFdelbegin \DIFdel{large
@@ -2743,12 +2768,12 @@ maps channel-by-channel, we first note that the three shortest
 wavelength bands appear visually very similar, and it is only through
 the difference map it is possible to distinguish them. Here we see
 that \DIFaddbegin {\DIFadd{the $1.25\,\mathrm{\mu m}$ DR2 channel has a brighter Ecliptic plane
-than }\DIFaddend K98\DIFaddbegin \DIFadd{, and in bands $2.2$ and $3.5\,\mathrm{\mu m}$,}} \DIFadd{K98 }\DIFaddend has a brighter Ecliptic plane than DR2\DIFdelbegin \DIFdel{, but it is still }\DIFdelend \DIFaddbegin \DIFadd{.
+than K98, and in bands $2.2$ and $3.5\,\mathrm{\mu m}$,}} \DIFaddend K98 has a brighter Ecliptic plane than DR2\DIFdelbegin \DIFdel{, but it is still }\DIFdelend \DIFaddbegin \DIFadd{.
 It is }\DIFaddend very
 difficult to determine by eye which of the two reveals a cleaner
 Galactic signal. At 4.9$\,\mu$m, however, there is no longer any
 visual ambiguity\DIFdelbegin \DIFdel{: Herewe clearly see that }\DIFdelend \DIFaddbegin \DIFadd{. Here, }\DIFaddend the K98 map exhibits
-ZL \DIFdelbegin \DIFdel{residual }\DIFdelend \DIFaddbegin \DIFadd{clear residuals }\DIFaddend while the DR2 model is visually clean. The
+\DIFdelbegin \DIFdel{ZL residual }\DIFdelend \DIFaddbegin \DIFadd{clear ZL residuals }\DIFaddend while the DR2 model is visually clean. The
 same holds even more \DIFdelbegin \DIFdel{true }\DIFdelend \DIFaddbegin \DIFadd{so }\DIFaddend at 12$\,\mu$m.
 
 At 25$\,\mu$m, however, the relative improvements are less
@@ -2836,12 +2861,9 @@ compare the average instrumental noise levels of the two analyses,
 in which the K98 values are adopted from Table~1 of
 \citet{hauser1998}. In general, the two estimates agree well, given
 the large algorithmic differences adopted by the two analyses.
-\DIFaddbegin {\DIFadd{The largest discrepancies are the higher noise levels in channels 5 and 6. This is due to the more aggressive masking based on the Solar-centered masking, as indicated in Table~\ref{tab:data_selection}.}}
-\DIFaddend 
+\DIFdelbegin %DIFDELCMD < 
 
-
-
-
+%DIFDELCMD < %%%
 %DIF <        \clearpage
 %DIF <        \section{\Cosmoglobe\ Data Release 2}
 %DIF <        \label{sec:astrophysics}
@@ -2965,10 +2987,13 @@ the large algorithmic differences adopted by the two analyses.
 %DIF <        \subsection{Astrophysical component decomposition}
 %DIF <        
 %DIF <        \subsection{Outstanding issues and future directions}
-\DIFdelbegin %DIFDELCMD < 
+\DIFdelend \DIFaddbegin {\DIFadd{The largest discrepancies are the higher noise levels in channels 5 and 6. This is due to the more aggressive masking based on the Solar-centered masking, as indicated in Table~\ref{tab:data_selection}.}}
+\DIFaddend 
 
-%DIFDELCMD < %%%
-\DIFdelend \section{Conclusions}
+
+
+
+\section{Conclusions}
 \label{sec:conclusions}
 
 In this work, we have presented a joint analysis of DIRBE \DIFdelbegin \DIFdel{CIOs }\DIFdelend \DIFaddbegin \DIFadd{TOD }\DIFaddend in a global Bayesian framework using external \Planck, \Gaia, WISE, and FIRAS data. In combination with an improved zodiacal dust model \citep{CG02_02}, an improved thermal dust model \DIFdelbegin \DIFdel{\citep{CG02_05}}\DIFdelend \DIFaddbegin \DIFadd{\citep{CG02_05,CG02_06,CG02_07}}\DIFaddend , and an infrared stellar model \citep{CG02_04}, we have produced maps using DIRBE data with unprecedented zodiacal dust removal and absolute monopole determination. As shown in \citet{CG02_03}, these have led to improved CIB monopole constraints across all existing DIRBE bands.
