@@ -110,6 +110,7 @@
 \newcommand{\W}[0]{\textit W}
 \newcommand{\e}{\mathrm e}
 \newcommand{\cvar}{\ensuremath{c(\vartheta, \varphi, \psi)}}
+\newcommand{\HI}{\ensuremath{\mathsc{H\ i}}}
 
 
 \def\Tcmb{\ifmmode T_\mathrm{CMB}\else $T_{\mathrm{CMB}}$\fi}
@@ -151,6 +152,7 @@
 \def\Te{\ifmmode T_{\mathrm{e}}\else $T_{\mathrm{e}}$\fi} 
 \def\kB{\ifmmode k_\mathrm{B}\else $k_{\mathrm{B}}$\fi} 
 
+\newcommand{\aism}[1]{\textcolor{red}{{AISM:} #1}}
 
 \begin{document} 
 
@@ -163,9 +165,9 @@
 
    \date{\today} 
    
-   \abstract{We present the SED used for the AKARI reanalysis}
+   \abstract{We present the SED used for the AKARI reanalysis.}
 
-   \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
+   \keywords{ISM: general, dust - Cosmology: observations, diffuse radiation - Infrared: general}
 
    \maketitle
 
@@ -173,132 +175,26 @@
 \tableofcontents
    
 \section{Introduction}
-Here things are introduced \citep{planck2016-l01}.
+\cite{CG02_05} first introduced the high spatial correlation between \CII\ and hot thermal dust emission, along with pointing out that the high frequency DIRBE data can be almost entirely explained by fitting five templates, which have a physically motivated correlation to thermal dust: the aforementioned \CII, as seen by FIRAS \citep{fixsen:1998}; the HI4PI \HI\ line emission map \aism{where does this map come from}; the \Gaia\ dust extinction map \citep{edenhofer:2024}; the WHAM H$\alpha$ line emission map \citep{wham:2003,2016WHAM}; and, lastly, the Dame CO line emission map \citep{dame2001}. Building upon this work, \cite{CG02_06} defined a four component dust model. Two of those components simply follow two of these templates: a nearby dust, following the \gaia\ template, and a  H$\alpha$-correlated dust correction term (following the WHAM H$\alpha$ line emission map), while the other two are defined as cold and hot dust, and a template for each one is built off of the high resolution \hfi\ data, assuming that at the \hfi\ frequency range, each of these dust populations behaves as a modified black body. \cite{CG02_07} then takes these four high resolution templates and applies them to the high frequency DIRBE data. In this paper, we follow from this work and apply this four component dust model to both the DIRBE and FIRAS data, in order to build the SED for the AKARI reanalysis. The full SED is then built as: a modified black body, from the best-fit analysis by \cite{CG02_06} to the \hfi\ data, until 857\,GHz; a spline based on \aism{n} points, fit to the absolutely calibrated FIRAS and DIRBE data, between 857\,GHz and \aism{search when astrodust starts}; and an amplitude fit of the astrodust \aism{cite} SED model to the DIRBE data.
+
+\section{Methodology}
 
 \section{Data}
 
 \subsection{FIRAS}
 
-Only around 5\% of the calibration data was taken with the external calibrator set to 15\,K or above. Furthermore, the thermometers on FIRAS at such high temperatures are highly unreliable, as they do not follow the expected behaviour of having the high current temperature data be affected by self-heating more than the low current data.
+\aism{describe FIRAS calibration}
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
-    \caption{This is just a test figure. }
-	\label{fig:TOBEREMOVED}
-\end{figure*}
+Only around 5\% of the calibration data was taken with the external calibrator set to 15\,K or above. Furthermore, the thermometers on FIRAS at such high temperatures are highly unreliable, as they do not follow the expected behaviour of having the high current temperature data be affected by self-heating more than the low current data. 
 
-\subsection{First subsection}
+\subsection{DIRBE}
+DIRBE has an internal load that it calibrates off of, good to \aism{write here}
 
-A big equation with alignments:
-\begin{alignat}{10}
-\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
-\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
-\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)&.\label{eq:gibbs_static}
-\end{alignat}
-
-\subsubsection{First subsubsection}
-A smaller equation:
-\begin{equation}
-  \r_{\mathrm{static}} = \dv - \left[\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} 
-    + \n_\mathrm{corr}\right],
-\end{equation}
-
-\subsubsection{Second subsubsection}
-\label{sec:somelabel}
-
-\subsection{Second subsection}
-A table could look like this:
-\begin{table}[t]
-  \begingroup
-  \newdimen\tblskip \tblskip=5pt
-	\caption{List of celestial body flags. {Comets are flagged with the radius listed if they are within 2~AU of the Sun, otherwise they have a $1^\circ$ exclusion radius.}}
-  \label{tab:planet_flags}
-  \nointerlineskip
-  \vskip -3mm
-  \footnotesize
-  \setbox\tablebox=\vbox{
-    \newdimen\digitwidth
-    \setbox0=\hbox{\rm 0}
-    \digitwidth=\wd0
-    \catcode`*=\active
-    \def*{\kern\digitwidth}
-    %
-    \newdimen\signwidth
-    \setbox0=\hbox{-}
-    \signwidth=\wd0
-    \catcode`!=\active
-    \def!{\kern\signwidth}
-    %
- \halign{
-      \hbox to 4.0cm{#\leaderfil}\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      #\tabskip 0em\hfil\cr
-    \noalign{\doubleline}
-      \omit Object\hfil&
-      \omit\hfil Radius ($^\circ$) \hfil\cr
-      \noalign{\vskip 4pt\hrule\vskip 4pt}
-      Moon********************** & 10 \cr
-      Mercury******************* & *1 \cr
-      Venus********************* & *2 \cr
-      Mars********************** & *2 \cr
-      Jupiter******************* & *2 \cr
-      Saturn******************** & *1 \cr
-      Uranus******************** & *1 \cr
-      Neptune******************* & *1 \cr
-	{73P/Schwassmann–Wachmann 3} & *2 \cr
-      	{C/1989 Q1*****************} & *2 \cr
-      	{C/1989 T1*****************} & *2 \cr
-      	{C/1989 X1*****************} & 15 \cr
-      	{C/1990 K1*****************} & *1 \cr
-      	{1 Ceres*******************} & *1 \cr
-      	{2 Pallas******************} & *1 \cr
-      	{4 Vesta*******************} & *1 \cr
-      	{15 Eunomia****************} & *1 \cr
-      	{31 Euphrosyne*************} & *1 \cr
-      	{41 Daphne*****************} & *1 \cr
-      	{42 Isis*******************} & *1 \cr
-      	{85 Io*********************} & *1 \cr
-      	{185 Eunike****************} & *1 \cr
-      	{194 Prokne****************} & *1 \cr
-      	{372 Palma*****************} & *1 \cr
-      	{405 Thia******************} & *1 \cr
-      	{511 Davida****************} & *1 \cr
-      	{704 Interamnia************} & *1 \cr
-      	{747 Winchester************} & *1 \cr
-      	{1021 Flammario************} & *1 \cr
-      \noalign{\vskip 4pt\hrule\vskip 5pt} } }
-  \endPlancktablewide \endgroup
-\end{table}
-
-\section{Second section}
-
-\subsection{Another subsection}
-
-\section{And so on}
+\section{Results}
 
 \section{Conclusions}
 \label{sec:conclusions}
-Here things conclude.
+
 
 \input{../common/acknowledgements}
 
