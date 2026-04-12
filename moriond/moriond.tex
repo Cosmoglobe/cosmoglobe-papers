@@ -86,19 +86,19 @@ The Cosmoglobe project is a global effort to jointly analyse complementary cosmo
 The idea behind the Cosmoglobe project is very simple: if all telescopes are looking at the same sky, then, when analysed together, these should have an underlying signal in common. By jointly analysing these datasets, we can better constrain both this underlying signal, as well as any instrumental or otherwise systematic effect that could otherwise be mistaken for cosmological signal. This allows us to take advantage of the complementarity of the different datasets.
 
 In order to do this, we use a Bayesian end-to-end analysis framework, called \Commander~\footnote{Originally named this way as it was meant to be used in combination with the Master algorithm%~\cite{hivon:2002}
-, and after the, at the time, famous film: Master and Commander. Also meant to be an acronym for ``Commander is an Optimal Monte-carlo Markov chAiN Driven EstimatoR''.}~\cite{eriksen:2004,seljebotn:2019,bp03}. \Commander\ is a Gibbs sampling code, which allows us to iteratively sample from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters. This allows us to propagate uncertainties in a consistent way, and to marginalize over any nuisance parameters. A schema of the Cosmoglobe loop is shown in Figure~\ref{fig:cosmoglobe}. 
+, and after the, at the time, famous film: Master and Commander. Also meant to be an acronym for ``Commander is an Optimal Monte-carlo Markov chAiN Driven EstimatoR''.}~\cite{eriksen:2004,seljebotn:2019,bp03}. \Commander\ is a Gibbs sampling code, which allows us to iteratively sample from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters. This allows us to propagate uncertainties in a consistent way, and to marginalize over any nuisance parameters. %A schema of the Cosmoglobe loop is shown in Figure~\ref{fig:cosmoglobe}. 
 
-\begin{figure}[htb]
-\centerline{\includegraphics[width=0.6\linewidth]{figures/cosmoglobe.png}}
-\caption[]{The Cosmoglobe loop. We start with calibrating each of the different datasets; afterwards, we make maps of the sky at each frequency that each experiment is observing; then, we separate the sky into its different components, e.g. CMB, dust, free-free, AME, synchrotron, etc; additionally, we produce power spectra; and then we are able to estimate the values of cosmological parameters from these. Finally, we do it all over again, using what we have learned in the previous iteration to better calibrate the data, and so on, until we have converged to a stable solution and fully explored the viable parameter space.}
-\label{fig:cosmoglobe}
-\end{figure}
+%\begin{figure}[htb]
+%\centerline{\includegraphics[width=0.6\linewidth]{figures/cosmoglobe.png}}
+%\caption[]{The Cosmoglobe loop. We start with calibrating each of the different datasets; afterwards, we make maps of the sky at each frequency that each experiment is observing; then, we separate the sky into its different components, e.g. CMB, dust, free-free, AME, synchrotron, etc; additionally, we produce power spectra; and then we are able to estimate the values of cosmological parameters from these. Finally, we do it all over again, using what we have learned in the previous iteration to better calibrate the data, and so on, until we have converged to a stable solution and fully explored the viable parameter space.}\label{fig:cosmoglobe}
+%\end{figure}
 
 \aism{add bayes etc equations?}
 
 \subsection{\commanderone}
 
-\commanderone, or, at the time, simply \Commander, was first developed as a means for power spectrum estimation for the high resolution maps produced by the \WMAP\ mission~\cite{bennett:2013}. It was later used as one of the main component separation frameworks for the analysis of the \Planck\ data~\cite{planck2014-a12}. A particularly useful feature of \commanderone\ is the ability to sample spatially variable spectral indices~\cite{fuskeland2014}. The \commanderone\ code was developed in Fortran and is not publicly available. \aism{should we use this as an opportunity to add commander 1 and 2 to the github?}
+\commanderone, or, at the time, simply \Commander, was first developed as a means for power spectrum estimation for the high resolution maps produced by the \WMAP\ mission%~\cite{bennett:2013}
+. It was later used as one of the main component separation frameworks for the analysis of the \Planck\ data~\cite{planck2014-a12}. A particularly useful feature of \commanderone\ is the ability to sample spatially variable spectral indices~\cite{fuskeland2014}. The \commanderone\ code was developed in Fortran and is not publicly available. \aism{should we use this as an opportunity to add commander 1 and 2 to the github?}
 
 \subsection{\commandertwo}
 
@@ -109,35 +109,36 @@ In order to do this, we use a Bayesian end-to-end analysis framework, called \Co
 \Commander\ suffered a major rewrite in between its second and third generations, with \commanderthree\ now being able to perform end-to-end analysis, starting from the raw data, all the way to parameter estimation. All of the Cosmoglobe results available at the time of writing have been produced using \commanderthree. The \commanderthree\ code is written in Fortran and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}}. It is also still maintained and developed at the time of writting.
 
 \subsection{\commanderfour}
-\commanderfour\ is the latest generation of the \Commander\ framework, which, once again, meant a major rewrite of the \Commander\ code. This was done in order to be able to efficiently parallelize the processing steps and to run on modern high performance computing architectures, so that we can handle larger, new generation datasets. The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. \commanderfour\ is also designed to be more modular and flexible than its predecessors, specifically to allow new contributors to easily analyse their own datasets with it or even add new features. \commanderfour\ is currently being developed in Python and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
+\commanderfour\ is the latest generation of the \Commander\ framework, which, once again, meant a major rewrite of the \Commander\ code. This was done in order to be able to efficiently parallelize the processing steps and to run on modern high performance computing architectures, so that we can handle larger, new generation datasets. %The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. 
+While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to paralelize tasks across multiple nodes. \commanderfour\ is also designed to be more modular and flexible than its predecessors, specifically to allow new contributors to easily analyse their own datasets with it or even add new features. \commanderfour\ is currently being developed in Python and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
 
-\begin{figure}[htb]
-\centerline{\includegraphics[width=\linewidth]{figures/commander4.pdf}}
-\caption[]{While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to paralelize tasks across multiple nodes. In this scheme, we show dedicated nodes for each step in the analysis, which also allows us to run a second Markov chain at the same time, taking advantage of all of the nodes at all times, and being able to take advantage of double the Gibbs iterations to infer our parameters and their uncertainties from.}
-\label{fig:commander4}
-\end{figure}
+%\begin{figure}[htb]
+%\centerline{\includegraphics[width=\linewidth]{figures/commander4.pdf}}
+%\caption[]{While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to paralelize tasks across multiple nodes. In this scheme, we show dedicated nodes for each step in the analysis, which also allows us to run a second Markov chain at the same time, taking advantage of all of the nodes at all times, and being able to take advantage of double the Gibbs iterations to infer our parameters and their uncertainties from.}\label{fig:commander4}
+%\end{figure}
 
 \section{BeyondPlanck: Global Bayesian analysis of the Planck Low Frequency Instrument data}
 
 Once the project period for \Planck\ was nearing its end, the \Planck\ analysis team was running the data through an iterative process, where each part of the analysis was performed by a different physical node and different people. As such, the process was slower than was needed to get enough iterations to be able to infer robust error bars onto the estimated cosmological parameters. With this in mind, the BeyondPlanck project~\cite{bp01} was created, along with the \commanderthree\ software: an outlet for the \Planck\ LFI data to be iteratively analysed in an end-to-end pipeline, jointly with other relevant datasets. In particular, the 353 and 857\,GHz frequency maps produced in the original analysis from the other instrument aboard \Planck, the High Frequency Instrument (HFI), in order to be able to characterize the thermal dust that is more clear at high frequencies, but still affects the low frequencies that LFI picks up, and the Haslam map was used as a way to constrain synchrotron emission. At the same time, maps in both temperature and polarization from the Ka through V bands produced in the \WMAP\ mission also helped the analysis, pushing on the idea that any instrument, independent of scanning strategy or any instrumental systematics, should be looking at the same sky.
 
-An important product from the BeyondPlanck analysis was the estimation of the optical depth at reionization $\tau$, taking into account systematic effects that had previously been undiscovered and fully propagating the uncertainties from the raw data to the final cosmological parameters. As such, we find bigger uncertainties in the value of $\tau$, as well as a slightly higher value than in previous analyses, as shown in the left side of Figure~\ref{fig:beyondplanck}.
+An important product from the BeyondPlanck analysis was the estimation of the optical depth at reionization $\tau$, taking into account systematic effects that had previously been undiscovered and fully propagating the uncertainties from the raw data to the final cosmological parameters. As such, we find bigger uncertainties in the value of $\tau$, as well as a slightly higher value than in previous analyses%, as shown in the left side of Figure~\ref{fig:beyondplanck}
+.
 
-At the same time, a more complete sky model, ranging a larger frequency range than previously \Planck\ had is delivered, only able to be produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization, as shown in the right side of Figure~\ref{fig:beyondplanck}.
+At the same time, a more complete sky model, ranging a larger frequency range than previously \Planck\ had is delivered, only able to be produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization%, as shown in the right side of Figure~\ref{fig:beyondplanck}
+.
 
-\aism{remove figures for space?}
+\aism{i removed some figures for space}
 
-\begin{figure}
-\begin{minipage}{0.50\linewidth}
-\centerline{\includegraphics[width=\linewidth]{figures/BP10_tau_post.pdf}}
-\end{minipage}
-\hfill
-\begin{minipage}{0.50\linewidth}
-\centerline{\includegraphics[width=\linewidth]{figures/Brightness-temperature-top-panel-and-polarization-amplitude-bottom-panel-rms-as-a.png}}
-\end{minipage}
-\caption[]{Important results from the BeyondPlanck analysis. On the left, the posterior distribution for the optical depth at reionization $\tau$, showing a higher value and larger uncertainties than previous analyses of \Planck\ LFI data. On the right, the sky model delivered by BeyondPlanck, showing a more complete picture of the sky, thanks to the joint analysis of multiple datasets.}
-\label{fig:beyondplanck}
-\end{figure}
+%\begin{figure}
+%\begin{minipage}{0.50\linewidth}
+%\centerline{\includegraphics[width=\linewidth]{figures/BP10_tau_post.pdf}}
+%\end{minipage}
+%\hfill
+%\begin{minipage}{0.50\linewidth}
+%\centerline{\includegraphics[width=\linewidth]{figures/Brightness-temperature-top-panel-and-polarization-amplitude-bottom-panel-rms-as-a.png}}
+%\end{minipage}
+%\caption[]{Important results from the BeyondPlanck analysis. On the left, the posterior distribution for the optical depth at reionization $\tau$, showing a higher value and larger uncertainties than previous analyses of \Planck\ LFI data. On the right, the sky model delivered by BeyondPlanck, showing a more complete picture of the sky, thanks to the joint analysis of multiple datasets.}\label{fig:beyondplanck}
+%\end{figure}
 
 \section{Data Release 1: Improved Wilkinson Microwave Anisotropy Probe maps through Bayesian end-to-end analysis}
 
