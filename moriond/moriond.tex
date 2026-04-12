@@ -51,6 +51,11 @@
 \def\commanderfour{\texttt{Commander4} }
 \def\WMAP{\textit{WMAP}}
 \def\Planck{\textit{Planck}}
+\def\COBE{\textit{COBE}}
+\def\GAIA{\textit{Gaia}}
+\def\gaia{\textit{Gaia}}
+\def\Gaia{\textit{Gaia}}
+\def\AKARI{\textrm{{AKARI}}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,27 +72,21 @@
 \title{Cosmoglobe: Mapping the Universe from the Milky Way to the Big Bang\\\aism{Alternative 1: Cosmoglobe: Past, Present and Future}\\\aism{Alternative 2: Cosmoglobe: A Brief History}}
 
 
-\author{ A.I. Silva Martins, on behalf of theCosmoglobe Collaboration\\\aism{they specifically said to not list the whole collaboration, but here it makes sense to list some other people, maybe the first authors of the overview papers, including obvisouly Ingunn since this was her ERC and HK since Commander was his idea}}
+\author{ A.I. Silva Martins, on behalf of the Cosmoglobe Collaboration\\\aism{they specifically said to not list the whole collaboration, but here it makes sense to list some other people, maybe the first authors of the overview papers, including obvisouly Ingunn since this was her ERC and HK since Commander was his idea}}
 
 \address{Institute of Theoretical Astrophysics, University of Oslo, Sem Sælands vei 13,\\
 0371 Oslo, Norway}
 
 \maketitle\abstracts{
-This is where the abstract should be placed. It should consist of one paragraph
-and give a concise summary of the material in the article below.
-Replace the title, authors, and addresses within the curly brackets
-with your own title, authors, and addresses; please use
-capital letters for the title and the authors. You may have as many authors and
-addresses as you wish. It's preferable not to use footnotes in the abstract
-or the title; the
-acknowledgments for funding bodies etc.are placed in a separate section at
-the end of the text.}
+The Cosmoglobe project is a global effort to jointly analyse complementary cosmological and astrophysical datasets, in order to better understand our Universe and its evolution. This paper describes the main goals and motivations of the project, as well as some of the main results that have been obtained so far, and the future prospects for the project.
+}
 
 \section{Introduction}
 
 The idea behind the Cosmoglobe project is very simple: if all of the instruments we have built so far and are in the process of building are looking at the same sky, then, when analysed together, these should have an underlying signal in common. By jointly analysing these datasets, we can better constrain both this underlying signal, as well as any instrumental or otherwise systematic effects, that could otherwise be mistaken for cosmological signal. This allows us to take advantage of the complementarity of the different datasets.
 
-In order to do this, we use a Bayesian end-to-end analysis framework, called \Commander\footnote{Originally named this way as it was meant to be used in combination with the Master algorithm~\cite{hivon:2002}, and after the at the time famous film: Master and Commander. Also meant to be an acronym for ``Commander is an Optimal Monte-carlo Markov chAiN Driven EstimatoR''.}~\cite{eriksen:2004,seljebotn:2019,bp03}. \Commander\ is a Gibbs sampling code, which allows us to sample from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters, as shown in Figure~\ref{fig:cosmoglobe}. This allows us to propagate uncertainties in a consistent way, and to marginalize over any nuisance parameters.
+In order to do this, we use a Bayesian end-to-end analysis framework, called \Commander~\footnote{Originally named this way as it was meant to be used in combination with the Master algorithm%~\cite{hivon:2002}
+, and after the at the time famous film: Master and Commander. Also meant to be an acronym for ``Commander is an Optimal Monte-carlo Markov chAiN Driven EstimatoR''.}~\cite{eriksen:2004,seljebotn:2019,bp03}. \Commander\ is a Gibbs sampling code, which allows us to sample from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters, as shown in Figure~\ref{fig:cosmoglobe}. This allows us to propagate uncertainties in a consistent way, and to marginalize over any nuisance parameters.
 
 \begin{figure}[htb]
 \centerline{\includegraphics[width=0.6\linewidth]{figures/cosmoglobe.png}}
@@ -107,45 +106,16 @@ In order to do this, we use a Bayesian end-to-end analysis framework, called \Co
 
 \subsection{\commanderthree}
 
-\Commander\ suffered a major rewrite in between its second and third generations, with \commanderthree\ now being able to perform end-to-end analysis, starting from the raw data, all the way to parameter estimation. All of the Cosmoglobe results available at the time of writing have been produced using \commanderthree\. The \commanderthree\ code is written in Fortran and is publicaly available on GitHub\footnote{\url{https://github.com/Cosmoglobe/Commander}}. It is also still maintained and developed at the time of writting.
+\Commander\ suffered a major rewrite in between its second and third generations, with \commanderthree\ now being able to perform end-to-end analysis, starting from the raw data, all the way to parameter estimation. All of the Cosmoglobe results available at the time of writing have been produced using \commanderthree\. The \commanderthree\ code is written in Fortran and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}}. It is also still maintained and developed at the time of writting.
 
 \subsection{\commanderfour}
-\commanderfour\ is the latest generation of the \Commander\ framework, which, once again, meant a major rewrite of the \Commander\ code, in order to be able to efficiently paralelize the code and to be able to run on modern high performance computing architectures, so that we can handle larger, new generation datasets. The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. \commanderfour\ is also designed to be more modular and flexible than its predecessors, specifically to allow new contributors to easily analyse their own datasets using it or even add new features. \commanderfour\ is currently being developed in Python and is publicaly available on GitHub\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
+\commanderfour\ is the latest generation of the \Commander\ framework, which, once again, meant a major rewrite of the \Commander\ code, in order to be able to efficiently paralelize the code and to be able to run on modern high performance computing architectures, so that we can handle larger, new generation datasets. The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. \commanderfour\ is also designed to be more modular and flexible than its predecessors, specifically to allow new contributors to easily analyse their own datasets using it or even add new features. \commanderfour\ is currently being developed in Python and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
 
 \begin{figure}[htb]
 \centerline{\includegraphics[width=\linewidth]{figures/commander4.pdf}}
 \caption[]{While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to paralelize tasks across multiple nodes. In this scheme, we show dedicated nodes for each step in the analysis, which also allows us to run a second Markov chain at the same time, taking advantage of all of the nodes at all times, and being left with more Gibbs iterations to infer our parameters and their uncertainties from.}
 \label{fig:commander4}
 \end{figure}
-
-\begin{table}[t]
-\caption[]{Experimental Data bearing on $\Gamma(K \ra \pi \pi \gamma)$
-for the $\ko_S, \ko_L$ and $K^-$ mesons.}
-\label{tab:exp}
-\vspace{0.4cm}
-\begin{center}
-\begin{tabular}{|c|c|c|l|}
-\hline
-& & & \\
-&
-$\Gamma(\pi^- \pi^0)\; s^{-1}$ &
-$\Gamma(\pi^- \pi^0 \gamma)\; s^{-1}$ &
-\\ \hline
-\mco{2}{|c|}{Process for Decay} & & \\
-\cline{1-2}
-$K^-$ &
-$1.711 \times 10^7$ &
-\begin{minipage}{1in}
-$2.22 \times 10^4$ \\ (DE $ 1.46 \times 10^3)$
-\end{minipage} &
-\begin{minipage}{1.5in}
-No (IB)-E1 interference seen but data shows excess events relative to IB over
-$E^{\ast}_{\gamma} = 80$ to $100MeV$
-\end{minipage} \\
-& & &  \\ \hline
-\end{tabular}
-\end{center}
-\end{table}
 
 \section{BeyondPlanck: Global Bayesian analysis of the Planck Low Frequency Instrument data}
 
@@ -154,6 +124,8 @@ Once the project period for \Planck\ was nearing its end, the \Planck\ analysis 
 An important product from the BeyondPlanck analysis was the estimation of the optical depth at reionization $\tau$, taking into account systematic effects that had previously been undiscovered and fully propagating the uncertainties from the raw data to the final cosmological parameters. As such, we find bigger uncertainties in the value of $\tau$, as well as a slightly higher value than in previous analyses, as shown in the left side of Figure~\ref{fig:beyondplanck}.
 
 At the same time, a more complete sky model, ranging a larger frequency range than previously \Planck\ had is delivered, only able to be produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization, as shown in the right side of Figure~\ref{fig:beyondplanck}.
+
+\aism{cut figures?}
 
 \begin{figure}
 \begin{minipage}{0.50\linewidth}
@@ -167,72 +139,53 @@ At the same time, a more complete sky model, ranging a larger frequency range th
 \label{fig:beyondplanck}
 \end{figure}
 
-\begin{equation}
-\renewcommand{\arraystretch}{1.2}
-\begin{array}{rc@{\,}c@{\,}l}
-%\begin{array}{>{\displaystyle}r>{\displaystyle}c>{\displaystyle}c>{\displaystyle}l}
-
-%\begin{eqnarray}
-\bf{K} & = &&  Im[V_{j, \alpha} {V_{j,\alpha + 1}}^*
-{V_{j + 1,\alpha }}^* V_{j + 1, \alpha + 1} ] \\
-%       &   & + & Im[V_{k, \alpha + 2} {V_{k,\alpha + 3}}^*
-%{V_{k + 1,\alpha + 2 }}^* V_{k + 1, \alpha + 3} ]  \\
-       &   & + & Im[V_{j + 2, \beta} {V_{j + 2,\beta + 1}}^*
-{V_{j + 3,\beta }}^* V_{j + 3, \beta + 1} ]  \\
-       &   & + & Im[V_{k + 2, \beta + 2} {V_{k + 2,\beta + 3}}^*
-{V_{k + 3,\beta + 2 }}^* V_{k + 3, \beta + 3}] \\
-& & \\
-\bf{M} & = &&  Im[{V_{j, \alpha}}^* V_{j,\alpha + 1}
-V_{j + 1,\alpha } {V_{j + 1, \alpha + 1}}^* ]  \\
-%       &   & + & Im[V_{k, \alpha + 2} {V_{k,\alpha + 3}}^*
-%{V_{k + 1,\alpha + 2 }}^* V_{k + 1, \alpha + 3} ]  \\
-       &   & + & Im[{V_{j + 2, \beta}}^* V_{j + 2,\beta + 1}
-V_{j + 3,\beta } {V_{j + 3, \beta + 1}}^* ]  \\
-       &   & + & Im[V_{k + 2, \beta + 2} {V_{k + 2,\beta + 3}}^*
-{V_{k + 3,\beta + 2 }}^* V_{k + 3, \beta + 3}],
-\\ & &
-\end{array}
-%\end{eqnarray}
-\label{eq:spa}
-\end{equation}
-
-\section{Data Release 1}
+\section{Data Release 1: Improved Wilkinson Microwave Anisotropy Probe maps through Bayesian end-to-end analysis}
 
 Once the proof-of-concept BeyondPlanck analysis proved to be so successful, the Cosmoglobe project was born, and its first goal was to reanalyse the \WMAP\ raw data, \textit{together} with the \textit{raw} data from \Planck\ LFI, resulting in what we named the Cosmoglobe Data Release 1~\cite{watts2023_dr1}.
 
-A particularly noteworthy result of DR1 are the new \WMAP\ frequency maps, shown in Figure~\ref{fig:dr1}, which are now have better control of systematic effects, allowing us to exploit the full potential of the \WMAP\ polarization data, which was previously not possible.
+A particularly noteworthy result of DR1 are the new \WMAP\ frequency maps, %shown in Figure~\ref{fig:dr1},
+shown in the overview paper and accessible on the Cosmoglobe website, which are now have better control of systematic effects, allowing us to exploit the full potential of the \WMAP\ polarization data, which was previously not possible.
 
-\begin{figure}
-\begin{minipage}{0.3\linewidth}
-\centerline{\includegraphics[width=\linewidth]{figures/023-WMAP_K_map_I.pdf}}
-\end{minipage}
-\hfill
-\begin{minipage}{0.3\linewidth}
-\centerline{\includegraphics[width=\linewidth]{figures/023-WMAP_K_map_Q.pdf}}
-\end{minipage}
-\hfill
-\begin{minipage}{0.3\linewidth}
-\centerline{\includegraphics[width=\linewidth]{figures/023-WMAP_K_map_U.pdf}}
-\end{minipage}
-\caption[]{Temperature, Q and U maps for the K band of \WMAP\ from the Cosmoglobe Data Release 1. \aism{get Q map with the legend}}
-\label{fig:dr1}
-\end{figure}
-
-\section{Data Release 2}
+\section{Data Release 2: Global Bayesian analysis of COBE-DIRBE}
 
 With two successful analyses at the microwave frequencies, the Cosmoglobe team decided to shift its attention to the infrared frequency range, in order to be able to better characterize the astrophysical foregrounds at those frequencies, which, in turn, will also help us get cleaner (polarized) CMB maps and, thus, better estimation of the cosmological parameters that describe the beginning and evolution of the Universe.
 
+In particular, the Cosmoglobe Data Release 2~\cite{CG02_01} is focused on the joint analysis of the \COBE-DIRBE data, starting from the raw time-ordered data, together with higher frequency information from \Gaia\, as well as templates based on data from \Planck\ HFI, \COBE-FIRAS, HI4PI, WHAM and Dame. From this analysis resulted improved zodiacal-light corrected maps, shown in the overview paper and accessible on the Cosmoglobe website, as well as a better characterization of the thermal dust emission, through the use of a new, simpler model.
+
 \section{Current Status and Future Prospects}
 
-All of the data products developed by Cosmoglobe can be directly accessed through our website\footnote{https://www.cosmoglobe.uio.no/}.
+Since its beginning, the Cosmoglobe project has aimed to bring the community together, not only through the analysis of different datasets together, but also through the sharing of knowledge and, of course, data~\cite{bp05}. As such, all of the data products developed by Cosmoglobe can be directly accessed through our website~\footnote{https://www.cosmoglobe.uio.no/}.
+
+The development of \commanderfour\ means that datasets that were previously inaccessible to us, can now be analysed in a reasonable amount of time. As such the Cosmoglobe team is currently working on the following projects:
+\begin{enumerate}
+\item the re-analysis of \AKARI\ data, with particular focus on better zodiacal light modelling, as well as low level systematics, in order to characterize thermal dust emission at an extremely high angular resolution;
+\item the re-analysis of \COBE-FIRAS data, with particular focus on thermometer calibration and glitch correction, looking to improve upon the current measurement of the CMB temperature, as well as the characterization of the CMB spectral distortions;
+\item the re-analysis of \Planck\ HFI data, with particular focus on better control of systematic effects, in order to be able to exploit the full potential of the HFI polarization data;
+\item the analysis of CHIPASS data, which will unlock the best measurements of synchrotron to date;
+\item the analysis of Simons Observatory data, both in order to get the best high-resolution maps of the sky at millimeter wavelengths, as well as to unlock the first measurement of the tensor-to-scalar ratio $r$;
+\item the analysis of Fermi-LAT data, expanding our frequency range to the gamma-ray sky, and finding its correlation with the microwave and infrared sky.
+
+The Cosmoglobe team is also looking forward to the analysis of data from future experiments, such as LiteBIRD and FOSSIL, and simultaneaously involved in the development of their simulations and data analysis pipelines, in order to be able to hit the ground running once the data starts coming in.
+\end{enumerate}
 
 \section*{Acknowledgments}
+The current work has received funding from the European Union’s Horizon
+  2020 research and innovation programme under grant agreement numbers
+  819478 (ERC; \textsc{Cosmoglobe}), 772253 (ERC;
+  \textsc{bits2cosmology}), 101165647 (ERC, \textsc{Origins}),
+  101141621 (ERC, \textsc{Commander}), and 101007633 (MSCA;
+  \textsc{CMBInflate}).  This article reflects the views of the
+  authors only. The funding body is not responsible for any use that
+  may be made of the information contained therein. This research is
+  also funded by the Research Council of Norway under grant agreement
+  numbers 344934 (YRT; \textsc{CosmoglobeHD}) and 351037 (FRIPRO;
+  \textsc{LiteBIRD-Norway}).
+\aism{is this right?}
 
-
-\section*{Appendix}
-
+\section*{Appendix} 
 
 \section*{References}
+\aism{cut names in bib?}
 \bibliography{moriond}
 
 %%% manually generated bibliography
