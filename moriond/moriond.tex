@@ -96,13 +96,15 @@ The Cosmoglobe project is a global effort to jointly analyze complementary cosmo
 
 \section{Introduction}
 
-The idea behind the Cosmoglobe project is simple: all telescopes are looking at the same sky, so when analyzed together, they have an underlying signal in common. By jointly analyzing these datasets, we constrain both this underlying signal, and any instrumental or other systematic effect that could otherwise be mistaken for cosmological signal. 
+The idea behind the Cosmoglobe project is simple: all telescopes are looking at the same sky, so when analyzed together, they have this underlying signal in common. By jointly analyzing these datasets, we constrain both this underlying signal, and any instrumental or other systematic effects that could otherwise be mistaken for cosmological signal. 
 %This allows us to take advantage of the complementarity of the different datasets.
 
 In order to do this, we use a Bayesian end-to-end analysis framework, called \Commander~\footnote{%Originally named this way as it was meant to be used in combination with the Master algorithm%~\cite{hivon:2002}
 %, and after the, at the time, famous film: Master and Commander. Also meant to be an acronym for 
 ``Commander is an Optimal Monte-carlo Markov chAiN Driven EstimatoR''%.
-}~\cite{eriksen:2004,seljebotn:2019,bp03}. \Commander\ is a Gibbs sampling code, which samples iteratively from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters. This allows us to consistenly propagate uncertainties, and to marginalize over any nuisance parameters. %A schema of the Cosmoglobe loop is shown in Figure~\ref{fig:cosmoglobe}. 
+}~\cite{eriksen:2004,seljebotn:2019,bp03}. \Commander\ 
+%is a Gibbs sampling code, which 
+samples iteratively from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters. This allows us to consistently propagate uncertainties, and to marginalize over any nuisance parameters. %A schema of the Cosmoglobe loop is shown in Figure~\ref{fig:cosmoglobe}. 
 
 %\begin{figure}[htb]
 %\centerline{\includegraphics[width=0.6\linewidth]{figures/cosmoglobe.png}}
@@ -112,34 +114,28 @@ In order to do this, we use a Bayesian end-to-end analysis framework, called \Co
 \aism{add bayes etc equations?}
 
 \subsection{\commanderone}
-
-\commanderone, or, at the time, simply \Commander, was first developed as a means for power spectrum estimation for the high resolution maps produced by the Wilkinson Microwave Anisotropy Probe (\WMAP) mission%~\cite{bennett:2013}
-. It was later used as one of the main component separation frameworks for the analysis of the \Planck\ data~\cite{planck2014-a12}. A particularly useful feature of \commanderone\ is the ability to sample spatially varying spectral indices~\cite{fuskeland2014}. The \commanderone\ code was developed in Fortran and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander1}}.
+\commanderone, or, at the time, simply \Commander, was developed as a power spectrum estimator for the high resolution maps produced by the Wilkinson Microwave Anisotropy Probe (\WMAP) mission%~\cite{bennett:2013}
+. It was later one of the main component separation frameworks for the analysis of the \Planck\ data~\cite{planck2014-a12}. A particularly useful feature of \commanderone\ is its ability to sample spatially varying spectral indices~\cite{fuskeland2014}. The \commanderone\ code was developed in Fortran and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander1}}.
 
 \subsection{\commandertwo\ and \commanderthree}
-
-\commandertwo\ was the second generation of the \Commander\ framework, designed to add  support for multi-resolution datasets to \commanderone. The \commandertwo\ code was also developed in Fortran. 
-\commandertwo\ was superceded by \commanderthree\ which added support for end-to-end analysis, starting from the raw data, all the way to parameter estimation. This is the current state-of-the-art \Commander\ code, and all Cosmoglobe results to date have been produced using \commanderthree. The \commanderthree\ code is written in Fortran and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}} and it is still maintained and developed at the time of writing.
-
+\commandertwo\ was the second generation of the \Commander\ framework, designed to add support for multi-resolution datasets. The \commandertwo\ code was also developed in Fortran. 
+\commandertwo\ was superceded by \commanderthree, which added support for end-to-end analysis, starting from the raw data, all the way to parameter estimation. This is the current state-of-the-art \Commander\ code, and all Cosmoglobe results to date have been produced using \commanderthree. The \commanderthree\ code is written in Fortran and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}} and it is still maintained and developed at the time of writing.
 % \subsection{\commanderthree}
-
 % \Commander\ underwent a major rewrite in between its second and third generations, with \commanderthree\ now being able to perform end-to-end analysis, starting from the raw data, all the way to parameter estimation. All of the Cosmoglobe results available at the time of writing have been produced using \commanderthree. The \commanderthree\ code is written in Fortran and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}}. It is also still maintained and developed at the time of writing.
-
 \subsection{\commanderfour}
-\commanderfour\ is the latest generation of the \Commander\ framework, which, once again, meant a major rewrite of the \Commander\ code. This was done in order to be able to efficiently parallelize the processing steps and to run on modern high performance computing architectures, so that we can handle larger, new generation datasets. %The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. 
-\commanderthree\ has a linear architecture, only parallelizable within one node, whereas \commanderfour\ is parallelizable across multiple nodes. \commanderfour\ is also more modular and flexible than its predecessors, allowing new contributors to analyze their own datasets or contribute new features. \commanderfour\ is being developed in Python and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
-
+\commanderfour\ is the latest generation of the \Commander\ framework, and a significant rewrite of the legacy code. %\commanderfour adds support to efficiently parallelize the processing steps and to run on modern high performance computing architectures, so that we can handle larger, next generation datasets. %The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. 
+Where \commanderthree\ has a linear architecture, only parallelizable within one node, \commanderfour\ is parallelizable across multiple nodes. This is necessary to run on modern high performance computing architectures, so that we can handle larger datasets. It is also more modular and flexible than its predecessors, allowing new contributors to analyze their own datasets or contribute new features. \commanderfour\ is being developed in Python and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
 %\begin{figure}[htb]
 %\centerline{\includegraphics[width=\linewidth]{figures/commander4.pdf}}
 %\caption[]{While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to paralelize tasks across multiple nodes. In this scheme, we show dedicated nodes for each step in the analysis, which also allows us to run a second Markov chain at the same time, taking advantage of all of the nodes at all times, and being able to take advantage of double the Gibbs iterations to infer our parameters and their uncertainties from.}\label{fig:commander4}
 %\end{figure}
 
 \section{\BeyondPlanck : Global Bayesian analysis of the Planck LFI data}
-
-Once the project period for \Planck\ was nearing its end, the \Planck\ analysis team was running the data through an iterative process, where each part of the analysis was performed by a different physical node and different people. As such, the process was slower than was needed to get enough iterations to be able to infer robust error bars onto the estimated cosmological parameters. With this in mind, the \BeyondPlanck\ project~\cite{bp01} was created, along with the \commanderthree\ software: an outlet for the \Planck\ low-frequency instrument (LFI)  data to be iteratively analyzed in an end-to-end pipeline, jointly with other relevant datasets. In particular, the 353 and 857 GHz frequency maps produced by the Planck high-frequency instrument (HFI) helped to characterize the thermal dust, and the Haslam map constrained synchrotron emission. Additionally, both temperature and polarization from the Ka through V bands produced in the WMAP mission were included. Since these cover similar frequencies to the Planck LFI instrument, they were able to be jointly analyzed, and offsetting systematics due to their independent scanning strategy and instrumental systematics
+%Once the project period for \Planck\ was nearing its end, the \Planck\ analysis team was running the data through an iterative process, where each part of the analysis was performed by a different physical node and different people. As such, the process was slower than was needed to get enough iterations to be able to infer robust error bars onto the estimated cosmological parameters. 
+The official \Planck\ analysis was performed across several different groups, physically separated in space, with slow handoff between the groups. These inefficiencies meant the analysis group could only perform a few iterations before the end of the project. With this in mind, the \BeyondPlanck\ project~\cite{bp01} was created, along with the \commanderthree\ software: an outlet for the \Planck\ low-frequency instrument (LFI) data to be iteratively analyzed in an end-to-end pipeline, jointly with other relevant datasets. In particular, the 353 and 857 GHz frequency maps produced by the Planck high-frequency instrument (HFI) to characterize the thermal dust, and the Haslam map to constrain synchrotron emission. Additionally, both temperature and polarization from the Ka through V bands produced in the WMAP mission were included. Since these cover similar frequencies to the Planck LFI instrument, they were able to be jointly analyzed, and offsetting systematics thanks to their independent scanning strategy and instrumental systematics.
 %In particular, the 353 and 857\,GHz frequency maps produced in the original analysis from the other instrument aboard \Planck, the High Frequency Instrument (HFI), in order to be able to characterize the thermal dust that is more clear at high frequencies, but still affects the low frequencies that LFI picks up, and the Haslam map was used as a way to constrain synchrotron emission. At the same time, maps in both temperature and polarization from the Ka through V bands produced in the \WMAP\ mission also helped the analysis, pushing on the idea that any instrument, independent of scanning strategy or any instrumental systematics, should be looking at the same sky.
 
-An important product from the \BeyondPlanck\ analysis was a new estimation of the optical depth at reionization $\tau$. Thanks to our iterative end-to-end pipeline, we took into account systematic effects previously undiscovered and fully propagated the uncertainties from the raw data to the final cosmological parameters. As such, we found bigger (but more physical) uncertainties in the value of $\tau$, and a slightly higher value. %than in previous analyses%, as shown in the left side of Figure~\ref{fig:beyondplanck}
+An important product from the \BeyondPlanck\ analysis was a new estimation of the optical depth to reionization $\tau$. Thanks to our iterative end-to-end pipeline, we took into account systematic effects previously undiscovered and fully propagated the uncertainties from the raw data to the final cosmological parameters. As such, we found bigger (but more physical) uncertainties in the value of $\tau$, and a slightly higher value. %than in previous analyses%, as shown in the left side of Figure~\ref{fig:beyondplanck}
 .
 
 At the same time, a more complete sky model, across a wider frequency range was delivered, produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization%, as shown in the right side of Figure~\ref{fig:beyondplanck}
@@ -181,8 +177,8 @@ The development of \commanderfour\ means that datasets that were previously inac
 \item the re-analysis of \AKARI\ data, focusing on better zodiacal light modelling, and low level systematics, to characterize thermal dust emission at high angular resolution and CIB;
 \item the re-analysis of \COBE-FIRAS data, focusing on thermometer calibration and glitch correction, to refine the measurement of the CMB temperature, and the characterization of the CMB spectral distortions;
 \item the re-analysis of \Planck\ HFI data, focusing on better control of systematic effects, to exploit the full potential of the HFI polarization data;
-\item the analysis of CHIPASS data, which will unlock the best measurements of synchrotron to date;
-\item the analysis of Simons Observatory data, to get the best high-resolution maps of the sky at millimeter wavelengths, and to contribute to the first measurement of the tensor-to-scalar ratio $r$;
+\item the analysis of CHIPASS data, which will unlock new measurements of synchrotron;
+\item the analysis of Simons Observatory data, to get high-resolution maps of the sky in the microwave, and contribute to the first measurement of the tensor-to-scalar ratio $r$;
 \item the analysis of Fermi-LAT data, expanding our frequency range to the gamma-ray sky;% and finding its correlation with the microwave and infrared sky;
 \item and the analysis of COMAP data, as a first step towards a joint, iterative, end-to-end analysis of line intensity mapping data.
 \end{enumerate}
