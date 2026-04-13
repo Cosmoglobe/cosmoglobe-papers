@@ -85,7 +85,7 @@
 \title{Cosmoglobe: Mapping the Universe from the Milky Way to the Big Bang\\\aism{Alternative 1: Cosmoglobe: Past, Present and Future}\\\aism{Alternative 2: Cosmoglobe: A Brief History}}
 
 
-\author{ A.I. Silva Martins, on behalf of the Cosmoglobe Collaboration\\\aism{they specifically said to not list the whole collaboration, but I think it makes sense to list some other people}}
+\author{ A.I. Silva Martins, on behalf of the Cosmoglobe Collaboration}
 
 \address{Institute of Theoretical Astrophysics, University of Oslo, Sem Sælands vei 13,\\
 0371 Oslo, Norway}
@@ -96,7 +96,7 @@ The Cosmoglobe project is a global effort to jointly analyze complementary cosmo
 
 \section{Introduction}
 
-The idea behind the Cosmoglobe project is simple: all telescopes are looking at the same sky, so when analyzed together, they have this underlying signal in common. By jointly analyzing these datasets, we constrain both this underlying signal, and any instrumental or other systematic effects that could otherwise be mistaken for cosmological signal. 
+The idea behind the Cosmoglobe project is simple: all telescopes are looking at the same sky, so when analyzed together, they have this underlying signal in common. By jointly analyzing these datasets, we constrain both this underlying signal, and any (instrumental or otherwise) systematic effects that could otherwise be mistaken for cosmological signal. 
 %This allows us to take advantage of the complementarity of the different datasets.
 
 In order to do this, we use a Bayesian end-to-end analysis framework, called \Commander~\footnote{%Originally named this way as it was meant to be used in combination with the Master algorithm%~\cite{hivon:2002}
@@ -108,7 +108,7 @@ samples iteratively from the full joint posterior distribution of all the parame
 
 \begin{figure}[htb]
 \centerline{\includegraphics[width=0.6\linewidth]{figures/cosmoglobe.png}}
-\caption[]{The Cosmoglobe loop. We start with calibrating each of the different datasets; afterwards, we make maps of the sky at each frequency that each experiment is observing; then, we separate the sky into its different components, e.g. CMB, dust, free-free, AME, synchrotron, etc; additionally, we produce power spectra; and then we are able to estimate the values of cosmological parameters from these. Finally, we do it all over again, using what we have learned in the previous iteration to better calibrate the data, and so on, until we have converged to a stable solution and fully explored the viable parameter space.}\label{fig:cosmoglobe}
+\caption[]{The Cosmoglobe loop. We start with calibrating each of the different datasets; afterwards, we make maps of the sky at each frequency that each experiment is observing; then, we separate the sky into its different components, e.g.\,the cosmic microwave background (CMB), dust, free-free, anomalous microwave emission, synchrotron, etc; additionally, we produce power spectra; and then we are able to estimate the values of cosmological parameters from these. Finally, we do it all over again, using what we have learned in the previous iteration to better calibrate the data, and so on, until we have converged to a stable solution and fully explored the viable parameter space.}\label{fig:cosmoglobe}
 \end{figure}
 
 \aism{add bayes etc equations?}
@@ -123,7 +123,7 @@ samples iteratively from the full joint posterior distribution of all the parame
 % \Commander\ underwent a major rewrite in between its second and third generations, with \commanderthree\ now being able to perform end-to-end analysis, starting from the raw data, all the way to parameter estimation. All of the Cosmoglobe results available at the time of writing have been produced using \commanderthree. The \commanderthree\ code is written in Fortran and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}}. It is also still maintained and developed at the time of writing.
 
 \commanderfour\ is the latest generation of the \Commander\ framework, and a significant rewrite of the legacy code. %\commanderfour adds support to efficiently parallelize the processing steps and to run on modern high performance computing architectures, so that we can handle larger, next generation datasets. %The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. 
-Where \commanderthree\ has a linear architecture, only parallelizable within one node, \commanderfour\ is parallelizable across multiple nodes. This is necessary to run on modern high performance computing architectures, so that we can handle larger datasets. It is also more modular and flexible than its predecessors, allowing new contributors to analyze their own datasets or contribute new features. \commanderfour\ is being developed in Python and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
+Where \commanderthree\ has a linear architecture, only parallelizable within one node, \commanderfour\ is parallelizable across multiple nodes. This is necessary to run on modern high performance computing architectures, so that we can handle larger datasets. It is also more modular and flexible than its predecessors, allowing new contributors to easily analyze their own datasets or contribute new features. \commanderfour\ is being developed in Python and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
 %\begin{figure}[htb]
 %\centerline{\includegraphics[width=\linewidth]{figures/commander4.pdf}}
 %\caption[]{While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to paralelize tasks across multiple nodes. In this scheme, we show dedicated nodes for each step in the analysis, which also allows us to run a second Markov chain at the same time, taking advantage of all of the nodes at all times, and being able to take advantage of double the Gibbs iterations to infer our parameters and their uncertainties from.}\label{fig:commander4}
@@ -131,11 +131,10 @@ Where \commanderthree\ has a linear architecture, only parallelizable within one
 
 \section{\BeyondPlanck : Global Bayesian analysis of the Planck LFI data}
 %Once the project period for \Planck\ was nearing its end, the \Planck\ analysis team was running the data through an iterative process, where each part of the analysis was performed by a different physical node and different people. As such, the process was slower than was needed to get enough iterations to be able to infer robust error bars onto the estimated cosmological parameters. 
-The official \Planck\ analysis was performed across several different groups, physically separated in space, with slow handoff between the groups. These inefficiencies meant the analysis group could only perform a few iterations before the end of the project. With this in mind, the \BeyondPlanck\ project~\cite{bp01} was created, along with the \commanderthree\ software: an outlet for the \Planck\ low-frequency instrument (LFI) data to be iteratively analyzed in an end-to-end pipeline, jointly with other relevant datasets. In particular, the 353 and 857 GHz frequency maps produced by the Planck high-frequency instrument (HFI) to characterize the thermal dust, and the Haslam map to constrain synchrotron emission. Additionally, both temperature and polarization from the Ka through V bands produced in the WMAP mission were included. Since these cover similar frequencies to the Planck LFI instrument, they were able to be jointly analyzed, and offsetting systematics thanks to their independent scanning strategy and instrumental systematics.
+The  \Planck\ 2015 analysis was performed across several different institutions, each performing their own part of the pipeline, with slow handoff between them. These inefficiencies meant the analysis team could only perform a few iterations before the end of the project. With this in mind, the \BeyondPlanck\ project~\cite{bp01} was created, along with the \commanderthree\ software: an outlet for the \Planck\ low-frequency instrument (LFI) data to be iteratively analyzed in an end-to-end pipeline, jointly with other relevant datasets. In particular, the Planck high-frequency instrument (HFI) 353 and 857 GHz frequency maps were used in order to characterize thermal dust, and the Haslam map was used to constrain synchrotron emission. Additionally, both temperature and polarization from the Ka through V bands from the WMAP mission were included. Since these cover similar frequencies to the Planck LFI instrument, they were able to be jointly analyzed, offsetting systematics thanks to their independent scanning strategy and instrumental systematics.
 %In particular, the 353 and 857\,GHz frequency maps produced in the original analysis from the other instrument aboard \Planck, the High Frequency Instrument (HFI), in order to be able to characterize the thermal dust that is more clear at high frequencies, but still affects the low frequencies that LFI picks up, and the Haslam map was used as a way to constrain synchrotron emission. At the same time, maps in both temperature and polarization from the Ka through V bands produced in the \WMAP\ mission also helped the analysis, pushing on the idea that any instrument, independent of scanning strategy or any instrumental systematics, should be looking at the same sky.
 
-An important product from the \BeyondPlanck\ analysis was a new estimation of the optical depth to reionization $\tau$. Thanks to our iterative end-to-end pipeline, we took into account systematic effects previously undiscovered and fully propagated the uncertainties from the raw data to the final cosmological parameters. As such, we found bigger (but more physical) uncertainties in the value of $\tau$, and a slightly higher value. %than in previous analyses%, as shown in the left side of Figure~\ref{fig:beyondplanck}
-.
+An important product from the \BeyondPlanck\ analysis was a new estimation of the optical depth to reionization $\tau$. Thanks to our iterative end-to-end pipeline, we took into account systematic effects previously undiscovered and fully propagated the uncertainties from the raw data to the final cosmological parameters. As such, we found bigger (but more accurate) uncertainties in the value of $\tau$, which we also found to have a slightly higher value than was found in previous analyses. %than in previous analyses%, as shown in the left side of Figure~\ref{fig:beyondplanck}
 
 At the same time, a more complete sky model, across a wider frequency range was delivered, produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization%, as shown in the right side of Figure~\ref{fig:beyondplanck}
 
@@ -153,7 +152,7 @@ At the same time, a more complete sky model, across a wider frequency range was 
 
 \section{Data Release 1: Improved WMAP maps through Bayesian end-to-end analysis}
 
-The \BeyondPlanck\ analysis proved to be so successful, and thus the Cosmoglobe project was born, and its first goal was to reanalyze the \WMAP\ raw data, \textit{together} with the \textit{raw} data from \Planck\ LFI, resulting in the Cosmoglobe Data Release 1 (DR1)~\cite{watts2023_dr1}.
+As the \BeyondPlanck\ analysis proved to be so successful, the Cosmoglobe project was born, and its first goal was to reanalyze the \WMAP\ raw data, \textit{together} with the \textit{raw} data from \Planck\ LFI, resulting in the Cosmoglobe Data Release 1 (DR1)~\cite{watts2023_dr1}.
 
 A particularly noteworthy result of DR1 are the new \WMAP\ frequency maps, %shown in Figure~\ref{fig:dr1},
 %shown in the overview paper and accessible on the Cosmoglobe website, which now have 
@@ -161,9 +160,9 @@ with better control of systematic effects, allowing us to exploit the full poten
 
 \section{Data Release 2: Global Bayesian analysis of COBE-DIRBE}
 
-With two successful analyses at the microwave frequencies, the Cosmoglobe team shifted its attention to the infrared frequencies, to better characterize the astrophysical foregrounds at higher frequencies, which, in turn, helps us get cleaner (polarized) CMB maps and, thus, better estimation of the cosmological parameters that describe the Universe.
+With two successful analyses at the microwave frequencies, the Cosmoglobe team shifted its attention to the infrared frequencies, to better characterize the astrophysical foregrounds at higher frequencies, which, in turn, will help us get cleaner (polarized) CMB maps and, thus, better estimation of the cosmological parameters that describe the Universe.
 
-In particular, the Cosmoglobe Data Release 2~\cite{CG02_01} focused on the joint analysis of the \COBE-DIRBE data, starting from the raw time-ordered data, together with information from \Gaia, \Planck\ HFI, \COBE-FIRAS, HI4PI, WHAM and Dame. This resulted in improved zodiacal-light corrected maps, and a new characterization of the thermal dust emission, together with a more complete sky model spanning five orders of magnitude in frequency, as shown in Figure~\ref{fig:sed}.
+In particular, the Cosmoglobe Data Release 2~\cite{CG02_01} focused on the joint analysis of the \COBE-DIRBE data, starting from the raw time-ordered data, together with information from \Gaia, \Planck\ HFI, \COBE-FIRAS, HI4PI, WHAM and Dame. This resulted in improved zodiacal-light corrected maps, and a new characterization of the thermal dust emission, together with a more complete sky model, spanning five orders of magnitude in frequency, as shown in Figure~\ref{fig:sed}.
 
 \begin{figure}[htb]
 \centerline{\includegraphics[width=0.9\linewidth]{figures/all_fgs_bands_no-bestfit.pdf}}
@@ -172,11 +171,11 @@ In particular, the Cosmoglobe Data Release 2~\cite{CG02_01} focused on the joint
 
 \section{Current Status and Future Prospects}
 
-Since its beginning, the Cosmoglobe project aimed to bring communities together, through joint analysis of datasets, through the sharing of knowledge and, of course, data~\cite{bp05}. As such, all Cosmoglobe products can be accessed through our website~\footnote{https://www.cosmoglobe.uio.no/}.
+Since its beginning, the Cosmoglobe project aimed to bring the cosmology community together, through joint analysis of datasets, and through the sharing of knowledge and, of course, data~\cite{bp05}. As such, all Cosmoglobe products can be accessed through our website~\footnote{https://www.cosmoglobe.uio.no/}.
 
-The development of \commanderfour\ means that datasets that were previously inaccessible to us, can now be analyzed in a reasonable amount of time. As such, the Cosmoglobe team is active on the following projects, which we believe will benefit the community at large:
+The development of \commanderfour\ signifies that datasets that were previously inaccessible to us can now be analyzed in a reasonable amount of time. As such, the Cosmoglobe team is actively working on the following projects, which we believe will benefit the community at large:
 \begin{enumerate}
-\item the re-analysis of \AKARI\ data, focusing on better zodiacal light modelling, and low level systematics, to characterize thermal dust emission at high angular resolution and CIB;
+\item the re-analysis of \AKARI\ data, focusing on better zodiacal light modelling, and low level systematics, to characterize thermal dust emission and the cosmic infrared background at high angular resolution;
 \item the re-analysis of \COBE-FIRAS data, focusing on thermometer calibration and glitch correction, to refine the measurement of the CMB temperature, and the characterization of the CMB spectral distortions;
 \item the re-analysis of \Planck\ HFI data, focusing on better control of systematic effects, to exploit the full potential of the HFI polarization data;
 \item the analysis of CHIPASS data, which will unlock new measurements of synchrotron;
@@ -185,7 +184,7 @@ The development of \commanderfour\ means that datasets that were previously inac
 \item and the analysis of COMAP data, as a first step towards a joint, iterative, end-to-end analysis of line intensity mapping data.
 \end{enumerate}
 
-The Cosmoglobe team is preparing for future experiments, such as LiteBIRD and FOSSIL, and is involved in the development of their simulations and data analysis pipelines.
+The Cosmoglobe team is also preparing for future experiments, such as LiteBIRD and FOSSIL, and is involved in the development of their simulations and data analysis pipelines.
 
 \section*{Acknowledgments}
 The current work has received funding from the European Union’s Horizon
