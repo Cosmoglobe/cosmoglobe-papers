@@ -104,25 +104,24 @@ In order to do this, we use a Bayesian end-to-end analysis framework, called \Co
 ``Commander is an Optimal Monte-carlo Markov chAiN Driven EstimatoR''%.
 }~\cite{eriksen:2004,seljebotn:2019,bp03}. \Commander\ 
 %is a Gibbs sampling code, which 
-samples iteratively from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters. This allows us to consistently propagate uncertainties, and to marginalize over any nuisance parameters. %A schema of the Cosmoglobe loop is shown in Figure~\ref{fig:cosmoglobe}. 
+samples iteratively from the full joint posterior distribution of all the parameters in our model, including both the cosmological signal and the instrumental parameters. This allows us to consistently propagate uncertainties, and to marginalize over any nuisance parameters. A schema of the Cosmoglobe loop is shown in Figure~\ref{fig:cosmoglobe}. 
 
-%\begin{figure}[htb]
-%\centerline{\includegraphics[width=0.6\linewidth]{figures/cosmoglobe.png}}
-%\caption[]{The Cosmoglobe loop. We start with calibrating each of the different datasets; afterwards, we make maps of the sky at each frequency that each experiment is observing; then, we separate the sky into its different components, e.g. CMB, dust, free-free, AME, synchrotron, etc; additionally, we produce power spectra; and then we are able to estimate the values of cosmological parameters from these. Finally, we do it all over again, using what we have learned in the previous iteration to better calibrate the data, and so on, until we have converged to a stable solution and fully explored the viable parameter space.}\label{fig:cosmoglobe}
-%\end{figure}
+\begin{figure}[htb]
+\centerline{\includegraphics[width=0.6\linewidth]{figures/cosmoglobe.png}}
+\caption[]{The Cosmoglobe loop. We start with calibrating each of the different datasets; afterwards, we make maps of the sky at each frequency that each experiment is observing; then, we separate the sky into its different components, e.g. CMB, dust, free-free, AME, synchrotron, etc; additionally, we produce power spectra; and then we are able to estimate the values of cosmological parameters from these. Finally, we do it all over again, using what we have learned in the previous iteration to better calibrate the data, and so on, until we have converged to a stable solution and fully explored the viable parameter space.}\label{fig:cosmoglobe}
+\end{figure}
 
 \aism{add bayes etc equations?}
 
-\subsection{\commanderone}
+\section{The \Commander\ software}
 \commanderone, or, at the time, simply \Commander, was developed as a power spectrum estimator for the high resolution maps produced by the Wilkinson Microwave Anisotropy Probe (\WMAP) mission%~\cite{bennett:2013}
 . It was later one of the main component separation frameworks for the analysis of the \Planck\ data~\cite{planck2014-a12}. A particularly useful feature of \commanderone\ is its ability to sample spatially varying spectral indices~\cite{fuskeland2014}. The \commanderone\ code was developed in Fortran and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander1}}.
 
-\subsection{\commandertwo\ and \commanderthree}
 \commandertwo\ was the second generation of the \Commander\ framework, designed to add support for multi-resolution datasets. The \commandertwo\ code was also developed in Fortran. 
 \commandertwo\ was superceded by \commanderthree, which added support for end-to-end analysis, starting from the raw data, all the way to parameter estimation. This is the current state-of-the-art \Commander\ code, and all Cosmoglobe results to date have been produced using \commanderthree. The \commanderthree\ code is written in Fortran and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}} and it is still maintained and developed at the time of writing.
 % \subsection{\commanderthree}
 % \Commander\ underwent a major rewrite in between its second and third generations, with \commanderthree\ now being able to perform end-to-end analysis, starting from the raw data, all the way to parameter estimation. All of the Cosmoglobe results available at the time of writing have been produced using \commanderthree. The \commanderthree\ code is written in Fortran and is publicaly available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander}}. It is also still maintained and developed at the time of writing.
-\subsection{\commanderfour}
+
 \commanderfour\ is the latest generation of the \Commander\ framework, and a significant rewrite of the legacy code. %\commanderfour adds support to efficiently parallelize the processing steps and to run on modern high performance computing architectures, so that we can handle larger, next generation datasets. %The differences between the architectures of \commanderthree\ and \commanderfour\ are outlined in Figure~\ref{fig:commander4}. 
 Where \commanderthree\ has a linear architecture, only parallelizable within one node, \commanderfour\ is parallelizable across multiple nodes. This is necessary to run on modern high performance computing architectures, so that we can handle larger datasets. It is also more modular and flexible than its predecessors, allowing new contributors to analyze their own datasets or contribute new features. \commanderfour\ is being developed in Python and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
 %\begin{figure}[htb]
@@ -139,9 +138,7 @@ An important product from the \BeyondPlanck\ analysis was a new estimation of th
 .
 
 At the same time, a more complete sky model, across a wider frequency range was delivered, produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization%, as shown in the right side of Figure~\ref{fig:beyondplanck}
-.
 
-\aism{i removed some figures for space}
 
 %\begin{figure}
 %\begin{minipage}{0.50\linewidth}
@@ -166,7 +163,12 @@ with better control of systematic effects, allowing us to exploit the full poten
 
 With two successful analyses at the microwave frequencies, the Cosmoglobe team shifted its attention to the infrared frequencies, to better characterize the astrophysical foregrounds at higher frequencies, which, in turn, helps us get cleaner (polarized) CMB maps and, thus, better estimation of the cosmological parameters that describe the Universe.
 
-In particular, the Cosmoglobe Data Release 2~\cite{CG02_01} focused on the joint analysis of the \COBE-DIRBE data, starting from the raw time-ordered data, together with information from \Gaia, \Planck\ HFI, \COBE-FIRAS, HI4PI, WHAM and Dame. This resulted in improved zodiacal-light corrected maps, and a new characterization of the thermal dust emission.
+In particular, the Cosmoglobe Data Release 2~\cite{CG02_01} focused on the joint analysis of the \COBE-DIRBE data, starting from the raw time-ordered data, together with information from \Gaia, \Planck\ HFI, \COBE-FIRAS, HI4PI, WHAM and Dame. This resulted in improved zodiacal-light corrected maps, and a new characterization of the thermal dust emission, together with a more complete sky model spanning five orders of magnitude in frequency, as shown in Figure~\ref{fig:sed}.
+
+\begin{figure}[htb]
+\centerline{\includegraphics[width=0.9\linewidth]{figures/all_fgs_bands_no-bestfit.pdf}}
+\caption[]{The resulting posterior sky model from the Cosmoglobe DR2 analysis.}\label{fig:sed}
+\end{figure}
 
 \section{Current Status and Future Prospects}
 
