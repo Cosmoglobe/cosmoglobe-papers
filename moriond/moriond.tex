@@ -58,17 +58,19 @@
 \def\AKARI{\textrm{{AKARI}}}
 % \def\BeyondPlanck{\textsc{BeyondPlanck}}
 
-\DeclareRobustCommand{\BeyondPlanck}{%
-  \texorpdfstring{\textsc{BeyondPlanck}}{BeyondPlanck}%
-}
+\DeclareRobustCommand{\BeyondPlanck}{{\fontseries{m}\selectfont\textsc{BeyondPlanck}}}
 \DeclareRobustCommand{\Commander}{%
   \texorpdfstring{\texttt{Commander}}{Commander}%
 }
 \DeclareRobustCommand{\commanderone}{%
   \texorpdfstring{\texttt{Commander1}}{Commander1}%
 }
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
 \usepackage{lineno}
-\linenumbers
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,6 +83,7 @@
 \newcommand{\Photo}{}
 
 \begin{document}
+\linenumbers\
 \vspace*{4cm}
 \title{Cosmoglobe: Mapping the Universe from the Milky Way to the Big Bang\\\aism{Alternative 1: Cosmoglobe: Past, Present and Future}\\\aism{Alternative 2: Cosmoglobe: A Brief History}}
 
@@ -126,17 +129,18 @@ samples iteratively from the full joint posterior distribution of all the parame
 Where \commanderthree\ has a linear architecture, only parallelizable within one node, \commanderfour\ is parallelizable across multiple nodes. This is necessary to run on modern high performance computing architectures, so that we can handle larger datasets. It is also more modular and flexible than its predecessors, allowing new contributors to easily analyze their own datasets or contribute new features. \commanderfour\'s main interface is being developed in Python, with low-level implementations in C++, and is available on GitHub~\footnote{\url{https://github.com/Cosmoglobe/Commander4}}.
 %\begin{figure}[htb]
 %\centerline{\includegraphics[width=\linewidth]{figures/commander4.pdf}}
-%\caption[]{While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to paralelize tasks across multiple nodes. In this scheme, we show dedicated nodes for each step in the analysis, which also allows us to run a second Markov chain at the same time, taking advantage of all of the nodes at all times, and being able to take advantage of double the Gibbs iterations to infer our parameters and their uncertainties from.}\label{fig:commander4}
+%\caption[]{While \commanderthree\ has a linear architecture, only being able to parallelize tasks within one node, \commanderfour\ is able to parallelize tasks across multiple nodes. In this scheme, we show dedicated nodes for each step in the analysis, which also allows us to run a second Markov chain at the same time, taking advantage of all of the nodes at all times, and being able to take advantage of double the Gibbs iterations to infer our parameters and their uncertainties from.}\label{fig:commander4}
 %\end{figure}
 
-\section{\BeyondPlanck : Global Bayesian analysis of the Planck LFI data}
+\section{\BeyondPlanck: Global Bayesian analysis of the Planck LFI data}
 %Once the project period for \Planck\ was nearing its end, the \Planck\ analysis team was running the data through an iterative process, where each part of the analysis was performed by a different physical node and different people. As such, the process was slower than was needed to get enough iterations to be able to infer robust error bars onto the estimated cosmological parameters. 
 The  \Planck\ 2015 analysis was performed across several different institutions, each performing their own part of the pipeline, with slow handoff between them. These inefficiencies meant the analysis team could only perform a few iterations before the end of the project. With this in mind, the \BeyondPlanck\ project~\cite{bp01} was created, along with the \commanderthree\ software: an outlet for the \Planck\ low-frequency instrument (LFI) data to be iteratively analyzed in an end-to-end pipeline, jointly with other relevant datasets. In particular, the Planck high-frequency instrument (HFI) 353 and 857 GHz frequency maps were used in order to characterize thermal dust, and the Haslam map was used to constrain synchrotron emission. Additionally, both temperature and polarization from the Ka through V bands from the WMAP mission were included. Since these cover similar frequencies to the Planck LFI instrument, they were able to be jointly analyzed, offsetting systematic effects thanks to their independent scanning strategy and instrument designs.
 %In particular, the 353 and 857\,GHz frequency maps produced in the original analysis from the other instrument aboard \Planck, the High Frequency Instrument (HFI), in order to be able to characterize the thermal dust that is more clear at high frequencies, but still affects the low frequencies that LFI picks up, and the Haslam map was used as a way to constrain synchrotron emission. At the same time, maps in both temperature and polarization from the Ka through V bands produced in the \WMAP\ mission also helped the analysis, pushing on the idea that any instrument, independent of scanning strategy or any instrumental systematics, should be looking at the same sky.
 
 An important product from the \BeyondPlanck\ analysis was a new estimation of the optical depth to reionization $\tau$. Thanks to our iterative end-to-end pipeline, we took into account systematic effects previously undiscovered and fully propagated the uncertainties from the raw data to the final cosmological parameters. As such, we found larger (but more accurate) uncertainties on the value of $\tau$, which we also found to have a slightly higher value than was found in previous analyses. This was also the first time a joint estimation of the full posterior distribution of all parameters, from data streams to cosmological parameters, had been done, mapping all of the extremely non-trivial correlations between them, and not just their errors. %than in previous analyses%, as shown in the left side of Figure~\ref{fig:beyondplanck}
 
-At the same time, a more complete sky model, across a wider frequency range was delivered, produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization%, as shown in the right side of Figure~\ref{fig:beyondplanck}
+%At the same time, a more complete sky model, across a wider frequency range was delivered, produced thanks to the power of joint analysis of multiple, complimentary datasets, in both temperature and polarization%, as shown in the right side of Figure~\ref{fig:beyondplanck}
+The BeyondPlanck analysis also delivered a more complete sky model over a larger frequency range than the original Planck analysis. This major result was only made possible due to the power of joint analysis of multiple complimentary datasets in both temperature and polarization.
 
 
 %\begin{figure}
