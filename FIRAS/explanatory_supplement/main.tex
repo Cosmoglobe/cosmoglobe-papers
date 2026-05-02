@@ -2,6 +2,7 @@
 
 \usepackage{titling} % for keeping title and abstract on the same page
 \usepackage{xcolor} % lets you color text
+\usepackage{hyperref} % for hyperlinks in the PDF
 
 \newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
 
@@ -30,9 +31,8 @@
 FIRAS had four different observing modes, depending on the length of the sweep of the MTM (short or long) and the speed at which it moved (slow or fast). The four modes are summarized in Table~\ref{tab:observing_modes}.
 
 \begin{table}[ht]
-\label{tab:observing_modes}
 \centering
-\caption{FIRAS Observing Modes}
+\caption{FIRAS Observing Modes}\label{tab:observing_modes}
 \begin{tabular}{lc}
 Mode  & Length (cm)  \\ \hline
 Short & 1.76         \\
@@ -43,7 +43,7 @@ Fast  & 1.2          \\ \hline
 \end{tabular}
 \end{table}
 
-There was not high enough broadband aboard COBE in order to send down each individual interferogram that was taken at each sweep of the MTM. As such, the interferograms were coadded in groups of four (for the long scans) or 16 (for the short scans) before being sent to the ground. \todo{how long does each mode take to collect data? telemetered. turn-around time too}
+There was insufficient bandwidth aboard COBE to downlink each interferogram that was taken at each sweep of the MTM\@. As such, the interferograms were coadded in groups of four (for the long scans) or 16 (for the short scans) before being sent to the ground. \todo{how long does each mode take to collect data? telemetered.\@turn-around time too}
 
 \todo{long scans give better spectral resolution (how much?)}
 
@@ -52,11 +52,25 @@ There was not high enough broadband aboard COBE in order to send down each indiv
 \chapter{Data Model}
 
 
-\section{Self-heating}
+\chapter{Calibration}
+
+\section{Thermometry}
+
+\subsection{Aligning the timing of the thermometers and the interferograms}
+
+From Duncan: I essentially found the timing issues by using the script \texttt{test\_eng\_plots.py} and estimating based on the IFG timestreams and the GRT readings. There were often some readings with large gradients that I could use to align the shapes of the curves, e.g., making sure that the peaks were aligned.
+
+The default assumed behavior was that the housekeeping data were read out once per second, with low temperature currents read first, then high temperature currents 32 seconds later. In practice, I was able to see regions with high variability that the collimator and xcal\_cone GRT readings were flipped, with the low current data read first, high current data read second. This was essentially seen through correlations between other readings.
+
+It was not as easy to see the same things with the calibration resistors and with the bolometers. These readings were more relatively stable, and it wasn't easy to see that shifting by 16 seconds forwards or backwards made the results any better.
+
+My assumption was that these were wired in the correct order. My hope is that since it is so difficult to see whether this effect exists that it would be second-order or less. That said, I can't say with certainty.
+
+\subsection{Self-heating}
 
 A summary of the self-heating problem.
 
-The thermometer works by running a current through the metal;V=IR(T)where R(T) is some table that has been computed ahead of time.
+The thermometer works by running a current through the metal; $V=IR(T)$ where $R(T)$ is some table that has been computed ahead of time.
 
 The fun part is that there is Joule heating, $P=I^{2}R$, that increases the temperature itself. For the sake of sanity, we assume that it's a very quick response. Assuming the current is known, we measure the voltage, which gives us R(T). 
 
