@@ -245,7 +245,7 @@ where $\{i,j\}$ now denote respectively bright or diffuse sources in a given Gib
 \subsection{Bright stars}
 \label{sec:starmodel}
 
-To complete the above algorithm, we need to specify $\M$, $\t$, and $n_{\mathrm{s}}$, and we start by defining the catalog of bright stars. The first step in this procedure is to threshold the AllWise point source catalog \citep{wiseCat} at magnitude 7 in the W1 band. Many of these are located spatially very close to each other, and given the wide DIRBE beam this results in strong degeneracies in the fitted parameters of nearby objects. Furthermore, as described above, the computational engine of the current analysis framework is a Gibbs sampler, which is known to have a long correlation length for strongly correlated parameters \citep{geman:1984}. For this reason, we divide the set of bright objects into three separate sampling groups, within each of which no two objects are closer than a given distance. Specifically, each set is constructed by including the brightest remaining object, but only if it is further away from any already included source than 5'. All amplitudes within each group are sampled jointly with sparse matrix operators for the coupling matrix, $(\M_i^T \N^{-1} \M_i)^{-1}$, in Eq.~\ref{eq:amp_sampler}, resulting in a vanishing correlation length internally in each group.
+To complete the above algorithm, we need to specify $\M$, $\t$, and $\n_{\mathrm{s}}$, and we start by defining the catalog of bright stars. The first step in this procedure is to threshold the AllWise point source catalog \citep{wiseCat} at magnitude 7 in the W1 band. Many of these are located spatially very close to each other, and given the wide DIRBE beam this results in strong degeneracies in the fitted parameters of nearby objects. Furthermore, as described above, the computational engine of the current analysis framework is a Gibbs sampler, which is known to have a long correlation length for strongly correlated parameters \citep{geman:1984}. For this reason, we divide the set of bright objects into three separate sampling groups, within each of which no two objects are closer than a given distance. Specifically, each set is constructed by including the brightest remaining object, but only if it is further away from any already included source than 5'. All amplitudes within each group are sampled jointly with sparse matrix operators for the coupling matrix, $(\M_i^T \N^{-1} \M_i)^{-1}$, in Eq.~\ref{eq:amp_sampler}, resulting in a vanishing correlation length internally in each group.
 
 For each star in these sampling groups we extract estimates of the effective temperature, $T_{\mathrm{eff}}$, the gravitational acceleration, $\log g$, and the metallicity, [M/H], from the \GAIA\ DR2 database \citep{gaiaCat}, and use those to identify a best-fit spectral energy density (SED) from the PHOENIX starlight database \citep{Husser_2013}. The distributions of these parameters for the selected stars are shown in Fig.~\ref{fig:gaiacat}. Unfortunately, the PHOENIX catalog lacks information for $T_{\mathrm{eff}} > 12000$\,K, and so for these we use the closest match; this accounts for 1.1\,\% of all bright WISE objects. In principle, this may lead to the SEDs of the hottest stars being biased low, but this effect is at least partially mitigated by the fact that we fit the overall amplitude of each star freely in the following analysis. 
 
@@ -350,10 +350,11 @@ Finally, we convert from magnitudes to the linear $\epsilon(\nu)$ scaling factor
 
 The resulting spatial extinction template, evaluated for the 1.25\,$\mu$m band, can be seen in Fig.~\ref{fig:ext_template}. The majority of the extinction is occurring in the Galactic plane, but additional contributions can be seen tracing dust structures at high Galactic latitudes. The template scales according to the relations shown in Fig.~7 of \cite{ext_model}, and is applied to the stars component as described in Eq.~\ref{eq:datamodel}.
 
+
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figs/diffuseTemplate/diffuse_template.pdf}\\
-  \caption{The unsmoothed template of diffuse star emission evaluated in the DIRBE 1.25\,$\mu$m band. This template is the same for all channels, but with a different overall amplitude.}
+  \caption{The unsmoothed template of diffuse star emission evaluated in the DIRBE 1.25$\mu$m band. This template is the same for all channels, but with a different overall amplitude.}
   \label{fig:diffuse}
 \end{figure}
 
@@ -398,7 +399,7 @@ The resulting spatial extinction template, evaluated for the 1.25\,$\mu$m band, 
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{figs/correlation/covmatrix.pdf}
-  \caption{Correlation among a selection of parameters relevant for star modelling. From top to bottom, the included parameters are 1-3) the monopoles for DIRBE channels between 1.25 and 3.5\,$\mu$m; 4-7) zodiacal light cloud density, $N_{0}$, and albedoes, $\A_i$, for the 1.25-3.5\,$\mu$m bands; 8-9) full-sky dust amplitudes for the nearby and hot dust components; 10-12) the amplitudes of three randomly selected stars; and 13-16) the diffuse template amplitude for the 1.25-4.9\,$\mu$m bands.}
+  \caption{Correlation among a selection of parameters relevant for star modelling. From top to bottom, the included parameters are 1-3) the monopoles for DIRBE channels between 1.25 and 4.9\,$\mu$m; 4-7) zodiacal light cloud density, $N_{0}$, and albedoes, $\A_i$, for the 1.25-3.5\,$\mu$m bands; 8-9) full-sky dust amplitudes for the nearby and hot dust components; 10-12) the amplitudes of three randomly selected stars; and 13-16) the diffuse template amplitude for the 1.25-4.9\,$\mu$m bands.}
   \label{fig:corr}
 \end{figure}
 
@@ -428,7 +429,7 @@ We can identify three types of point source residuals in this third column of Fi
 
 In Fig.~\ref{fig:amptrace}, we show the total amplitude of the stars in three pixels in different regions in the sky (low Galactic latitudes, the Large Magellanic Cloud, and high Galactic latitudes) as a function of iteration, for all five of our  independent sampling chains. The first 25 samples in each chain are discarded as burn in, and the remaining samples form the samples included in our analysis. We observe excellent Monte Carlo mixing in the top row, while the sky diffuse template amplitude mixes more slowly than the individual bright stars.
 
-Figure~\ref{fig:corr} shows the correlation matrix computed over all 1090 accepted samples for a selected set of parameters, including monopoles for the 1.25-3.5\,$\mu$m bands (the 4.9\,$\mu$m monopole was not sampled, for details see \citet{CG02_03}); four zodiacal light parameters (the cloud density, $N_0$, and the albedos for the 1.25-3.5\,$\mu$m bands); two dust component amplitudes ($\A_{\mathrm{NearbyDust}}$ and $\A_{\mathrm{HotDust}}$); the amplitudes of three randomly selected stars ($\A_{\mathrm{s}i}$); and the diffuse starlight amplitude for the 1.25-4.9\,$\mu$m bands. The strongest positive correlations are seen internally among the monopoles and among the zodiacal light parameters; these are further discussed by \citep{CG02_01, CG02_02}. However, only a low level of correlations are observed between between these and the star model parameters. We do not see much cross correlation between the star parameters and other parameters in the global chain, with the exception of some of the individual star parameters and the dust amplitudes. This suggests overall that the star parameters are only mildly degenerate with other full sky parameters.
+Figure~\ref{fig:corr} shows the correlation matrix computed over all 1090 accepted samples for a selected set of parameters, including monopoles for the 1.25-3.5\,$\mu$m bands (the 4.9\,$\mu$m monopole was not sampled, for details see \citet{CG02_03}); four zodiacal light parameters (the cloud density, $N_0$, and the albedos for the 1.25-3.5\,$\mu$m bands); two dust component amplitudes ($\A_{\mathrm{NearbyDust}}$ and $\A_{\mathrm{HotDust}}$); the amplitudes of three randomly selected stars ($\A_{\mathrm{s}i}$); and the diffuse starlight amplitude for the 1.25-4.9\,$\mu$m bands. The strongest positive correlations are seen internally among the monopoles and among the zodiacal light parameters; these are further discussed by \citep{CG02_01, CG02_02}. However, only a low level of correlations are observed between between these and the star model parameters. We do not see much cross correlation between the star parameters and other parameters in the global chain, with the exception of some of the individual star parameters and the dust amplitudes, which seem to vary. This suggests overall that the star parameters are only mildly degenerate with other full sky parameters.
 
 \subsection{Spectral Energy Densities}
 
@@ -468,7 +469,7 @@ We also investigate our model of extinction, to determine how it compares to oth
           &  & & & \cite{DIRBE2mass} & Current & \cite{DIRBE2mass} & Current  & \cite{DIRBE2mass} & Current\\
     \hline
     \hline
-    \multicolumn{10}{c}{1.25\,$\mu$m}\\
+    \multicolumn{10}{c}{1.25$\mu$m}\\
     \hline
      1 \rule{0pt}{2ex} & 127.3 & 63.8 & 1.5 & 31.56 & 13.0 & 3.08 & 38.3 & 34.64 & 51.4\\
      2 & 107.7 & 57.7 & 2.0 & 42.72 & 18.8 & 3.62 & 44.5 & 45.34 & 63.3\\
@@ -476,7 +477,7 @@ We also investigate our model of extinction, to determine how it compares to oth
      4 & 257.8 & -59.4 & 1.9 & 51.88 & 28.6 & 3.92 & 45.3 & 55.8 & 73.9\\
      \hline
      \hline
-     \multicolumn{10}{c}{2.2\,$\mu$m}\\
+     \multicolumn{10}{c}{2.2$\mu$m}\\
      \hline
      1 \rule{0pt}{2ex} & 127.3 & 63.8  & 1.5 & 20.79 & 9.0 & 1.58 & 25.7 & 22.37 & 34.7\\
      2 & 107.7 & 57.7 & 2.0 & 28.99 & 13.6 & 1.87 & 29.9 & 30.86 & 43.4\\
@@ -523,7 +524,7 @@ Differences in star classification between our analysis and \cite{DIRBE2mass} ma
 \section{Conclusions}
 \label{sec:conclusions}
 
-Stars are a critical component of the infrared sky, which must be appropriately modelled in order to avoid contaminating other components. This paper has presented a model of the star emission for the DIRBE data that is able to account for the vast majority of the star signal in these measurements. Using data from \Gaia\ and \WISE\, we constructed models of 424\,829 individual point sources as well as a diffuse background of the remaining 710\,825\,587 \WISE\ sources, and together these account for 91\% of the observed DIRBE flux density at 2.2\,$\mu$m, dropping to 1\% at 25$\mu$m.
+Stars are a critical component of the infrared sky, which must be appropriately modelled in order to avoid contaminating other components. This paper has presented a model of the star emission for the DIRBE data that is able to account for the vast majority of the star signal in these measurements. Using data from \Gaia\ and \WISE\, we constructed models of 424\,829 individual point sources as well as a diffuse background of the remaining 710\,825\,587 \WISE\ sources, and together these account for 91\% of the observed DIRBE flux density at 2.2$\mu$m, dropping to 1\% at 25$\mu$m.
 
 Figure~\ref{fig:sed} shows the full sky average star SED (yellow band) derived from this work, plotted together with the other main sky components as a function of frequency and wavelength, from radio to infrared frequencies. The \Cosmoglobe\ DR2 sky model represents the first unified model of the microwave and infrared sky, and the star model presented here is an integral part of this work.
 
@@ -540,33 +541,32 @@ Finally, including additional high frequency data directly in the full run would
 \begin{acknowledgements}
   MG would like to thank Prof.\ Alberto Dominguez for useful
   conversations that led to improvements in the star modelling and
-  better limits on the CIB monopoles at 1.25 $\mu$m.  We thank Richard
-  Arendt, Tony Banday, Johannes Eskilt, Dale Fixsen, Ken Ganga, Paul
-  Goldsmith, Shuji Matsuura, Sven Wedemeyer, Janet Weiland and Edward
-  Wright for useful suggestions and guidance.  The current work has
-  received funding from the European Union’s Horizon 2020 research and
-  innovation programme under grant agreement numbers 819478 (ERC;
-  \textsc{Cosmoglobe}), 772253 (ERC; \textsc{bits2cosmology}),
-  101165647 (ERC, \textsc{Origins}), 101141621 (ERC,
-  \textsc{Commander}), and 101007633 (MSCA; \textsc{CMBInflate}).
-  This article reflects the views of the authors only. The funding
-  body is not responsible for any use that may be made of the
-  information contained therein. This research is also funded by the
-  Research Council of Norway under grant agreements number 344934
-  (YRT; \textsc{CosmoglobeHD}) and 351037 (FRIPRO;
-  \textsc{LiteBIRD-Norway}). Some of the results in this paper have
-  been derived using healpy \citep{Zonca2019} and the HEALPix
-  \citep{healpix} packages.  We acknowledge the use of the Legacy
-  Archive for Microwave Background Data Analysis (LAMBDA), part of the
-  High Energy Astrophysics Science Archive Center
-  (HEASARC). HEASARC/LAMBDA is a service of the Astrophysics Science
-  Division at the NASA Goddard Space Flight Center. This publication
-  makes use of data products from the Wide-field Infrared Survey
-  Explorer, which is a joint project of the University of California,
-  Los Angeles, and the Jet Propulsion Laboratory/California Institute
-  of Technology, funded by the National Aeronautics and Space
-  Administration. This work has made use of data from the European
-  Space Agency (ESA) mission {\it Gaia}
+  better limits on the CIB monopoles at 1.25 $\mu$m.  We thank
+  Richard Arendt, Tony Banday, Johannes Eskilt, Dale Fixsen,
+  Ken Ganga, Paul Goldsmith, Shuji Matsuura, Sven Wedemeyer, Janet
+  Weiland and Edward Wright for useful suggestions and
+  guidance.  The current work has received funding from the European
+  Union’s Horizon 2020 research and innovation programme under grant
+  agreement numbers 819478 (ERC; \textsc{Cosmoglobe}), 772253 (ERC;
+  \textsc{bits2cosmology}), 101165647 (ERC, \textsc{Origins}),
+    101141621 (ERC, \textsc{Commander}), and 101007633 (MSCA;
+    \textsc{CMBInflate}).  This article reflects the views of the
+    authors only. The funding body is not responsible for any use that
+    may be made of the information contained therein. This research is
+    also funded by the Research Council of Norway under grant
+    agreements number 344934 (YRT; \textsc{CosmoglobeHD and 351037 FRIPRO; LiteBIRD-Norway}). Some of the
+  results in this paper have been derived using healpy
+  \citep{Zonca2019} and the HEALPix \citep{healpix} packages.  We
+  acknowledge the use of the Legacy Archive for Microwave Background
+  Data Analysis (LAMBDA), part of the High Energy Astrophysics Science
+  Archive Center (HEASARC). HEASARC/LAMBDA is a service of the
+  Astrophysics Science Division at the NASA Goddard Space Flight
+  Center. This publication makes use of data products from the
+  Wide-field Infrared Survey Explorer, which is a joint project of the
+  University of California, Los Angeles, and the Jet Propulsion
+  Laboratory/California Institute of Technology, funded by the
+  National Aeronautics and Space Administration. This work has made
+  use of data from the European Space Agency (ESA) mission {\it Gaia}
   (\url{https://www.cosmos.esa.int/gaia}), processed by the {\it Gaia}
   Data Processing and Analysis Consortium (DPAC,
   \url{https://www.cosmos.esa.int/web/gaia/dpac/consortium}). Funding

@@ -152,22 +152,20 @@
 \def\Te{\ifmmode{T_{\mathrm{e}}}\else $T_{\mathrm{e}}$\fi} 
 \def\kB{\ifmmode{k_\mathrm{B}}\else $k_{\mathrm{B}}$\fi} 
 
-\newcommand{\aism}[1]{\textcolor{red}{{AISM:} #1}}
-
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR3. A concordance model of the thermal dust SED from microwave to infrared using AKARI, DIRBE, FIRAS and Planck HFI}}
+   \title{\bfseries{\Cosmoglobe\ DR3. Characterization of detector onboard AKARI FIS}}
 
    \input{../common/authors.tex}
 
-   \titlerunning{\Cosmoglobe: AKARI reanalysis}
-   \authorrunning{A.I.~Silva Martins et al.}
+   \titlerunning{\Cosmoglobe: AKARI Crosstalk}
+   \authorrunning{D.~J.~Watts et al.}
 
    \date{\today} 
    
-   \abstract{We present the SED used for the AKARI reanalysis.}
+   \abstract{We present a characterization and forward model for AKARI FIS detectors. This allows for more effective mapmaking, as described in a companion paper.}
 
-   \keywords{ISM\@: general, dust -- Cosmology: observations, diffuse radiation -- Infrared: general}
+   \keywords{Methods: data analysis, statistical -- ISM\@: cosmic rays -- Cosmology: observations}
 
    \maketitle
 
@@ -175,28 +173,42 @@
 \tableofcontents
    
 \section{Introduction}
-~\cite{CG02_05} first introduced the high spatial correlation between \CII\ and hot thermal dust emission, along with pointing out that the high frequency DIRBE data can be almost entirely explained by fitting five templates, which have a physically motivated correlation to thermal dust: the aforementioned \CII, as seen by FIRAS \citep{fixsen:1998}; the HI4PI \HI\ line emission map~\citep{HI4PI:2016}; the \Gaia\ dust extinction map \citep{edenhofer:2024}; the WHAM H$\alpha$ line emission map \citep{wham:2003,2016WHAM}; and, lastly, the Dame CO line emission map \citep{dame2001}. Building upon this work,~\cite{CG02_06} defined a three component dust model based on four high resolution templates. Two of those templates are the same as initially used by~\cite{CG02_05}: the \gaia\ and the WHAM H$\alpha$ templates, where the first is identified as a nearby dust component. The other two are defined as cold and hot dust, and a template for each one is built off of the high resolution \hfi\ data, assuming that at the \hfi\ frequency range, each of these dust populations behave as a modified black body, and subtracting the WHAM H$\alpha$ template as a correction to the hot dust component.~\cite{CG02_07} then takes these four high resolution templates and applies them to the high frequency DIRBE data. 
 
-In this paper, we follow from that work and apply this three component dust model, intially, to the \Planck\ High-Frequnecy Instrument (HFI), and the \COBE- DIRBE and FIRAS data, making sure to exclude any channels that would be contaminated with \CII\ line emission, in order to build an absolutely calibrated prior spectral energy density (SED) for the AKARI reanalysis. We then use the high-$\ell$ power from the AKARI FIS data in order to further refine the relative amplitudes of the three components. The full SED is then built as: a modified black body, from the best-fit analysis to the \Planck\ \hfi\ data, until 857\,GHz; a spline based on \aism{n} points, fit to the absolutely calibrated FIRAS and DIRBE data, between 857\,GHz and \aism{search when astrodust starts}; and an amplitude fit of the astrodust \aism{cite} SED model to the DIRBE data.
 
-\section{Methodology}
+Many of the effects described in this work have been discussed in \citet{verdugo_akari_2007}. Many of the results there were determined using Slow-Scan data, but have not been characterized in the all-sky survey data. These effects are clearly present to some extent in all AKARI FIS data, but not characterized well enough to be removed.
 
-\section{Data}
+Many of these effects are quite subtle, and are difficult to see in full-sky maps. One of the main advantages of the Commander framework is the conditioning on a given model. In this framework, unmodeled effects become much easier to spot and characterize.
 
-\aism{avoid all frequency bands that could have CII}
+\section{Characterization}
 
-\subsection{FIRAS}
 
-\aism{describe FIRAS calibration}
 
-Only around 5\% of the calibration data was taken with the external calibrator set to 15\,K or above. Furthermore, the thermometers on FIRAS at such high temperatures are highly unreliable, as they do not follow the expected behaviour of having the high current temperature data be affected by self-heating more than the low current data. 
+\section{Cross-detector effects}
 
-\subsection{DIRBE}
-DIRBE has an internal load that it calibrates off of, good to \aism{write here}
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/crosstalk_ghosts.png}
+	\caption{Cross-talk and ghost effects as seen in a FIS01 observation of a bright point source. Reproduced from IDUM Figure 3.1.3}
+\end{figure}
 
-\section{Results}
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/sw_timestream.png}
+	\caption{
+Time profile of signals from two SW detector pixels during one round trip scan of a Slow-Scan observation of a very bright source. The target passes from N60 to WIDE-S, then back again after the calibration sequence in the middle of the operation. A ghost signal is observed when the other detector was looking at the target. Reproduced from IDUM Figure 3.1.4.
+	}
+\end{figure}
 
-\section{Conclusions}\label{sec:conclusions}
+
+\begin{figure}
+	\includegraphics[width=\columnwidth]{figures/sw_timestream.png}
+	\caption{
+Same as Figure 3.1.4 but for the LW detectors. Only the ghost in the N160 is shown. Ghosts in the WIDE-L band appear in different detector pairs and are not shown in this plot. Reproduced from IDUM Figure 3.1.5.
+	}
+\end{figure}
+
+
+\section{Modeling}
+
+\section{Conclusions}
 
 
 \input{../common/acknowledgements}
