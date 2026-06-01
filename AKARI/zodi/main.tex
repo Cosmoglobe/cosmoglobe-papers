@@ -124,6 +124,7 @@
 \newcommand{\e}{\mathrm e}
 \newcommand{\cvar}{\ensuremath{c(\vartheta, \varphi, \psi)}}
 
+\newcommand{\angela}[0]{\textcolor{red}}
 
 \def\Tcmb{\ifmmode T_\mathrm{CMB}\else $T_{\mathrm{CMB}}$\fi}
 \def\Tcold{\ifmmode T_\mathrm{c}\else $T_{\mathrm{c}}$\fi}
@@ -186,52 +187,268 @@
 %\tableofcontents
    
 \section{Introduction}
-Intro about AKARI and DR3 analysis.
 
-Intro about zodi, why we need to study it, and what's new about the DR3 approach.
+\angela{Intro about AKARI and DR3 analysis.
+Intro about zodi, why we need to study it, and what's new about the DR3 approach.}
 
 \section{Zodiacal light modeling}
-Original analysis done with Wright model+Gorjian parameters but we don't care. We are 
+
+\angela{Original analysis done with Wright model+Gorjian parameters but we don't care. We are 
 working toward a global Cosmoglobe zodi model so we start from our K98-based model.
-
 Our and K98 models share the same components, explain those and give some equations (but not too many details).
-
 In DR2 and K98 to go from number density to total emission we fitted emissivities and albedoes and 
 used function to describe scattering and emission. This does not preserve consistency between different 
 wavelengths, so in DR3 we changed the approach such that we can perform multi-experiment analysis. 
 The new approach consists of assuming a certain function to describe the emission, fit its parameters, 
 and evaluate it at the desired wavelengths. At this stage the emission function is BB+MBB, this 
 assumption is backed-up by several studies (e.g., cite Fixsen \& Dwek (2002) used in Planck2013 analysis). 
-
 Talk a bit about this MBB+BB function: parameters defining the function, how we expect them to change from 
 one component to the other based on the size of the grains etc.
+Something about scattering as well or not?}
 
-Something about scattering as well or not?
+Since ZL is affected by seasonal changing, modeling it requires a sample-by-sample in 
+time-domain analysis performed by integrating each observation along the line-of-sight. 
+To achieve this, a three-dimensional model describing the IPD distribution 
+is needed, as well as functions describing the radiative properties of the grains. 
+The current analysis is based on the work presented by \citet{CG02_02} in the context 
+of the \cosmoglobe\ Data Release 2, as it is a first attempt to build a multi-experiment 
+ZL model based on both \COBE-DIRBE and \AKARI. In the following the parametric model 
+adopted in the course of the \cosmoglobe\ Data Release 3 analysis is presented, we refer 
+the interested reader to \citet{kelsall1998}, \citet{Hong}, and \citet{CG02_02} for full details.
+
+\angela{Put here final equation with the integral to compute total intensity so that what follows 
+is used to explain it?}
+
+\subsection{Interplanetary dust distribution}
+
+As a first approximation IPD can be described by a smooth and stable 
+Sun-centered cloud \citep{Leinert1989}, formed by grains originated from comets 
+\citep{Liou1995, ipatov, rigley}, asteroids \citep{Dermott1984} and meteoroids 
+\citep{dikarev}, with potential additions from planets \citep{Jorgensen2021}, the 
+Kuiper belt \citep{Mann2009}, and interstellar dust passing through the Solar 
+System \citep{Robinson2013}. The relative contribution from these sources to 
+the total IPD distribution is yet to be understood, but many models identify low-eccentricity 
+Jupiter family comets that disintegrate while moving towards the inner Solar System as 
+the main contribution. 
+
+Although this smooth cloud accounts for most of the measured emission \citep{kelsall1998}, 
+since the analysis of \IRAS\ data small-scale structures have been observed as well. 
+In particular, \citet{Low1984} found three band-shaped dust clouds, visible as bumps 
+in the ZL profile at both sides of the Ecliptic plane within $\sim15^\circ$ from it. 
+These were further studied (e.g., \citet{Dermott1984, Sykes1986, Reach1997}) 
+and finally associated to collisions and fragmentation happening in asteroid families --- 
+more precisely to a blend of the Themis and Kronis families, the Eos family, and IO/Maria families --- 
+and to gravitational resonance and disturbance in the orbit of the planets 
+\citep{Low1984, Dermott1984, Dermott1994, Reach1997}.
+
+Additional finer structures are present in the zodiacal cloud due to 
+IPD grains which, under the influence of Poynting-Robertson effect \citep{Poynting1903,Robertson1937}, 
+pass through the orbits of inner planets and get trapped. This component is modeled 
+as a circumsolar ring, first noticed by \citet{Dermott1994} within the \IRAS\ data, 
+which also presents an increase in IPD density in the Earth-trailing region as a consequence 
+of the Earth's gravity.
+
+The components summarized here (a smooth cloud, three dust bands, a circumsolar ring, and 
+an Earth-trailing feature) are those featured in the K98 model, which is one of the most 
+widely used by cosmologists, and adopted in the present work. However, since 
+the original analysis, several alternative models were proposed to resolve its shortcomings. 
+Some examples of this are \citet{sano, Korngut, skysurf, newhorizons, parker}.
+
+\angela{Check all references. E.g. \citet{kennedy, jones_venus, Stenborg} are other 
+extensions to K98.}
+
+\subsubsection{Parametric model}
+\label{sect:parametric_mod}
+
+We model each zodiacal component by means of a number density $n_c(x,y,z)$, where $c$
+indicates components and $x$, $y$ and $z$ indicate heliocentric Ecliptic coordinates. 
+A heliocentric offset $(x_{0,c}, y_{0,c}, z_{0,c})$ is allowed for all components, 
+so that the component-centric coordinates become
+\begin{equation}    
+    \begin{aligned}
+        x_c&= x - x_{0,c}\\
+        y_c&= y - y_{0,c}\\
+        z_c&= z - z_{0,c}.
+    \end{aligned}
+\end{equation}
+Moreover, a plane of symmetry different from the Ecliptic can be modeled by means 
+of an inclination $i_c$ and an ascending node $\Omega_c$. We then define the
+radial distance $r_c$ from the origin and the height above the symmetry plane $Z_c$:
+\begin{align}
+    r_c &= \sqrt{x_c^2 + y_c^2 + z_c^2},\\
+    Z_c &= x_c\sin{\Omega_c}\sin{i_c} - y_c \cos{\Omega_c}\sin{i_c} + z_c \cos{i_c},\\
+    \zeta_c &= \frac{|Z_c|}{r_c},
+\end{align}
+with $\zeta_c$ being the radial height above the symmetry plane. These can be used 
+to describe azimuthally symmetric components in full.
+
+The number density of the smooth Sun-centered cloud is modeled as
+\begin{equation}
+    n_\mathrm{C}(x,y,z)=n_{0,
+      \mathrm{C}}r_\mathrm{C}^{-\alpha}f(\zeta_\mathrm{C}),
+    \label{eq:cloud}
+\end{equation}
+where $n_{0, \mathrm{C}}$ is the number density at 1\,AU, $\alpha$ is a 
+power-law exponent, $f(\zeta_\mathrm{C})$ is the fan-like vertical 
+distribution given as 
+\begin{equation}
+    f(\zeta_\mathrm{C}) = \exp {\left[-\beta g(\zeta_\mathrm{C})^\gamma \right]},
+\end{equation}
+with
+\begin{equation}
+    g(\zeta_\mathrm{C}) = \begin{cases}
+        \zeta_\mathrm{C}^2/2\mu & \mathrm{for}\; \zeta_\mathrm{C} < \mu,\\
+        \zeta_\mathrm{C} - \mu/2 & \mathrm{for}\; \zeta_\mathrm{C} \geq \mu,
+    \end{cases}
+\end{equation}
+where $\beta$, $\gamma$ and $\mu$ are shape parameters.
+
+The three dust bands included in the K98 model appear at Ecliptic latitudes of 
+approximately $\pm1.4^\circ$, $\pm10^\circ$, and $\pm15^\circ$. If we 
+indicate them with $B_i$, we can write their number density 
+\begin{align}
+    n_{\mathrm{B}_i}(x,y,z) &= \frac{3 n_{0, \mathrm{B}_i}}{r_{\mathrm{B}_i}} \exp \left[-\left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{6}\right]\left[1 + \left(\frac{\zeta_{\mathrm{B}_i}}{\delta_{\zeta_{\mathrm{B}_i}}}\right)^{p_i}v_i^{-1}\right] \nonumber\\
+    &\times\left\{1-\exp \left[-\left(\frac{r_{\mathrm{B}_i}}{\delta_{r_{\mathrm{B}_i}}}\right)^{20}\right]\right\},
+\label{eq:band}
+\end{align}
+where $n_{0, \mathrm{B}_i}$ is the number density of band $\mathrm{B}_i$ 
+at 3\,AU, $\delta_{r_{\mathrm{B}_i}}$ is the inner radial cut-off, and 
+$p_i$, $v_i$ and $\delta_{\zeta_{\mathrm{B}_i}}$ are shape parameters.
+
+Finally, we model the circumsolar ring (``SR'') and the Earth-trailing feature (``TF'') 
+together, thanks to a composite ring component (``R'') such that 
+\begin{align}
+    n_\mathrm{R}(x, y, z, \theta)&=n_{0, \mathrm{SR}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0, \mathrm{SR}}\right)^2}{\sigma_{R,\mathrm{SR}} ^2}-\frac{\left| Z_\mathrm{R} \right|}{\sigma_{Z, \mathrm{SR}}}\right]\nonumber\\
+   &+ n_{0, \mathrm{TF}} \exp \left[-\frac{\left(r_\mathrm{R}-r_{0,
+          \mathrm{TF}}\right)^{2}}{\sigma_{R,
+          \mathrm{TF}}^{2}}-\frac{\left|Z_\mathrm{F}\right|}{\sigma_{Z,
+          \mathrm{TF}}}-\frac{\left(\theta-\theta_{0,
+          \mathrm{TF}}\right)^{2}}{\sigma_{\theta,\mathrm{TF}}^{2}}\right],
+    \label{eq:ring}
+\end{align}
+where $\theta$ is the heliocentric longitude of the Earth, and the 
+radial locations $r_{0, \mathrm{SR}}$, $r_{0, \mathrm{TF}}$ specify
+the distances to the peak densities $n_{0, \mathrm{SR}}$, 
+$n_{0, \mathrm{TF}}$. The $\sigma$ parameters are length scales for the 
+$r$, $Z$ and $\theta$ parameters, respectively. We note that the 
+Earth-trailing feature depends on the position of the Earth and does not 
+have a plane symmetry like the other zodiacal components. 
+
+\subsection{Radiative properties}
+
+IPD grains are located inside the Solar System, therefore they are constantly heated 
+by sunlight. As a result, they both emit thermally and scatter the received light. 
+When related to the number density functions describing the distribution 
+of the grains (sect.~\ref{sect:parametric_mod}), these phenomena explain the 
+observed ZL signal $I_{\nu}$, typically measured in units of MJy$\,\mathrm{sr}^{-1}$ or
+nW$\,\mathrm{m}^{-2}\,\mathrm{Hz}^{-1}\,\mathrm{sr}^{-1}$. \angela{I of nu or lambda?}
+
+Typically, the thermal emission of IPD is modeled through a blackbody modified by 
+an emissivity factor $E_{c,\lambda}$, depending on both the component and the 
+wavelength channel under consideration \citep{kelsall1998}. However, when performing 
+a multi-experiment analysis, it is important to ensure the consistency of the model 
+across the whole region of the electromagnetic spectrum observed by either one or 
+many of the instruments included in the study. This is why here we opt for a 
+blackbody-like function spanning all the relevant wavelengths, instead of fitting the 
+emissivity factor for every channel of a single instrument individually. In 
+particular, we model IPD thermal emission as 
+\angela{(choose a name for the function, check component dependence, check name of parameters, 
+check how to ensure continuous function)}
+\begin{align}
+    TE_c(T, \lambda)= \begin{cases}
+        B_\lambda(T) & \mathrm{for}\; \lambda < \lambda_{\mathrm{cutoff}, c},\\
+        a_c B_\lambda(T) \lambda^{\beta_c} & \mathrm{for}\; \lambda \geq \lambda_{\mathrm{cutoff}, c},
+    \end{cases}
+    \label{eq:emission}
+\end{align}
+where $B_\lambda$ is the Planck function at a wavelength $\lambda$, $T$ is the 
+IPD temperature, and $\lambda_{\mathrm{cutoff}, c}$, $a_c$, and $\beta_c$ are 
+parameters associated to the modified blackbody part of the function for the 
+zodiacal component $c$. 
+
+Following \citet{kelsall1998}, we assume $T$ to fall off with radial distance $r$ (in AU)
+from the Sun as
+\begin{equation}
+    T(r) = T_0 r^{-\delta},
+\end{equation}
+where $T_0$ is the temperature of IPD at 1\,AU and $\delta$ is a power-law 
+exponent which is expected to be $\sim 0.5$ for gray dust. The other free parameters, 
+in particular, are: a cutoff wavelength $\lambda_{\mathrm{cutoff}, c}$ which defines 
+the point where the classic blackbody function becomes a modified blackbody, 
+an amplitude factor $a_c$ used to ensure continuity in $\lambda_{\mathrm{cutoff}, c}$, 
+and a negative power-law exponent $\beta_c$ describing the fall of the blackbody 
+with the wavelength.
+
+This choice for $TE$ is justified by the analysis of the ZL emission spectrum 
+presented by \citet{Fixsen2002}. \angela{Cite Planck paper? They only cite Fixen and say 
+we agree but in the end they fitted individual emissivities. Also, say here that 
+the cutoff is related to the dimension of the grains (in this case maybe refer to 
+Rowan-Robinson May 2013)? Other papers need to be cited here? Some figures to 
+show that also DR2 model agrees with this kind of function?}
+
+At near-infrared wavelengths, IPD grains scatter sunlight in addition to 
+emitting thermally. The contribution of this process to the total ZL signal 
+is, similarly thermal emission, usually modeled considering each wavelength 
+channel individually. In particular, the intensity of the scattered signal 
+depends on the solar flux measured at a certain radial distance from the Sun 
+$F_\lambda^\odot(r)$, multiplied by an albedo (reflectivity factor) $A_{c, \lambda}$ 
+fitted for each component at each channel, and a phase function $\Phi(\Theta)$ 
+which describes the angular distribution of the scattered light for scattering angles
+$\Theta$ \citep{kelsall1998}. To be able to perform a multi-experiment analysis, we 
+define a function $ST$ analogous to $TE$ so that the scattering at a given 
+wavelength is given by
+\begin{equation}
+    ST_c(T^\odot, \lambda) = \mathrm{something}\cdot\Phi(\Theta).
+\end{equation}
+To define the phase function, we opt for a Henyey-Greenstein function as defined by 
+\citet{Hong}:
+\begin{equation}
+  \Phi(\Theta)=\sum_\mathrm{k=1}^3 w_\mathrm{k} \frac{1}{4\pi}\frac{1-g_\mathrm{k}^2}{(1+g_\mathrm{k}^2-2g_\mathrm{k}\cos(\Theta))^{3/2}},
+\label{eq:phase_function}
+\end{equation}
+where $g_1$, $g_2$, $g_3$, $w_2$, and $w_3$ are free parameters, while \mbox{$w_1=1-(w_2+w_3)$.}
+\angela{Maybe we should not talk about this since is not akari-related, 
+ST is scattering term but we should find another name, also is it a 
+blackbody-like thing or what?}
+
+By combining all of these aspects about IPD, we can compute the total ZL signal by 
+summing up the intensity coming from all dust grains along the line-of-sight 
+relative to one observation. In practice, this requires to evaluate
+\begin{equation}\label{eq:los}
+    I_{p,t, \lambda} = \sum_c \int n_c \left[  ST_c(T^\odot, \lambda) \Phi + TE_c(T, \lambda) \right]\,ds,
+\end{equation}
+where $p$ represents an observed pixel or direction in the sky, $t$ is
+the time of observation, $n_c$ is the number density of component $c$
+in the line-of-sight, and $ds$ is a small distance along the
+line-of-sight $s$ from the observer and toward $p$.
 
 \section{Methodology}
-General Cosmoglobe workflow and how our ZL modeling fits into that.
 
+\angela{General Cosmoglobe workflow and how our ZL modeling fits into that.
 Practicalities of ZL fit: Powell search+MH acceptance as in DR2 but with the speed-up (necessary 
-because of high resolution data) of using solar-centric coordinates (expand on this...).
+because of high resolution data) of using solar-centric coordinates (expand on this...).}
 
 \section{Data}
-Datasets used and how they were handled (e.g., masking), maybe less than a section but here for now.
+
+\angela{Datasets used and how they were handled (e.g., masking), maybe less than a section but here for now.}
 
 \section{Results}
-Follow DR2 structure to present DR3 results, meaning:
+
+\angela{Follow DR2 structure to present DR3 results, meaning:
 Markov chains and convergence,
 Covariance matrix,
 Overall presentation of the new model (e.g., new values for the parameters) with focus on emission function,
 AKARI maps before and after,
-Comparison with other models to show consistency and improvements (e.g., DR2 vs DR3, AKARI old vs DR3 but be careful).
+Comparison with other models to show consistency and improvements (e.g., DR2 vs DR3, AKARI old vs DR3 but be careful).}
 
 \section{Conclusions}
-Here things conclude. Remember focus here are solar-centric speed-up and emissivity consistency.
+
+\angela{Here things conclude. Remember focus here are solar-centric speed-up and emissivity consistency.}
 
 \input{../common/acknowledgements}
 
 \bibliographystyle{aa}
-\bibliography{../../common/CG_bibliography,../../common/Planck_bib}%,references}
+\bibliography{../../common/CG_bibliography,../../common/Planck_bib,references}
 
 \clearpage
 \appendix
