@@ -151,6 +151,8 @@
 \def\Te{\ifmmode T_{\mathrm{e}}\else $T_{\mathrm{e}}$\fi} 
 \def\kB{\ifmmode k_\mathrm{B}\else $k_{\mathrm{B}}$\fi} 
 
+\renewcommand{\note}[1]{\textcolor{red}{{VV:} #1}}
+\newcommand{\pnote}[1]{\textcolor{red}{({VV:} #1})}
 
 \begin{document} 
 
@@ -159,7 +161,7 @@
    \input{../common/authors.tex}
 
    \titlerunning{\Cosmoglobe: AKARI reanalysis}
-   \authorrunning{V.~Vikenes et al.}
+   \authorrunning{V.~A.~Vikenes et al.}
 
    \date{\today} 
    
@@ -173,123 +175,69 @@
 \tableofcontents
    
 \section{Introduction}
-Here things are introduced \citep{planck2016-l01}.
+\label{sec:introduction}
+General intro on DR3/AKARI. Motivations and assumptions behind PSD noise modelling. Instrument sepcific challenges/assumptions/properties.  
 
-\section{First section}
-\begin{figure*}
-	\centering
-	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
-    \caption{This is just a test figure. }
-	\label{fig:TOBEREMOVED}
-\end{figure*}
+\section{Theoretical background}
+\label{sec:theoretical_background}
 
-\subsection{First subsection}
+\subsection{Cosmoglobe framework}
+\label{sec:cosmoglobe_framework}
+General introduction to Cosmoglobe framework? Data model for AKARI, emphasising PSD related parameters. Sampling scheme for the PSD parameters of interest.
 
-A big equation with alignments:
-\begin{alignat}{10}
-\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
-\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
-\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)&.\label{eq:gibbs_static}
-\end{alignat}
+\subsection{PSD models}
+\label{sec:PSD_models}
+Features and characteristics of noise, e.g. combination of white plus on or two $1/f$ terms. 
 
-\subsubsection{First subsubsection}
-A smaller equation:
-\begin{equation}
-  \r_{\mathrm{static}} = \dv - \left[\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} 
-    + \n_\mathrm{corr}\right],
-\end{equation}
 
-\subsubsection{Second subsubsection}
-\label{sec:somelabel}
+\section{Methods}
+\label{sec:methods}
+General introduction on sampling scheme and assumptions, leading to the theoretical noise PSD model in Fourier space. \pnote{May be placed in theory section.}
 
-\subsection{Second subsection}
-A table could look like this:
-\begin{table}[t]
-  \begingroup
-  \newdimen\tblskip \tblskip=5pt
-	\caption{List of celestial body flags. {Comets are flagged with the radius listed if they are within 2~AU of the Sun, otherwise they have a $1^\circ$ exclusion radius.}}
-  \label{tab:planet_flags}
-  \nointerlineskip
-  \vskip -3mm
-  \footnotesize
-  \setbox\tablebox=\vbox{
-    \newdimen\digitwidth
-    \setbox0=\hbox{\rm 0}
-    \digitwidth=\wd0
-    \catcode`*=\active
-    \def*{\kern\digitwidth}
-    %
-    \newdimen\signwidth
-    \setbox0=\hbox{-}
-    \signwidth=\wd0
-    \catcode`!=\active
-    \def!{\kern\signwidth}
-    %
- \halign{
-      \hbox to 4.0cm{#\leaderfil}\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      #\tabskip 0em\hfil\cr
-    \noalign{\doubleline}
-      \omit Object\hfil&
-      \omit\hfil Radius ($^\circ$) \hfil\cr
-      \noalign{\vskip 4pt\hrule\vskip 4pt}
-      Moon********************** & 10 \cr
-      Mercury******************* & *1 \cr
-      Venus********************* & *2 \cr
-      Mars********************** & *2 \cr
-      Jupiter******************* & *2 \cr
-      Saturn******************** & *1 \cr
-      Uranus******************** & *1 \cr
-      Neptune******************* & *1 \cr
-	{73P/Schwassmann–Wachmann 3} & *2 \cr
-      	{C/1989 Q1*****************} & *2 \cr
-      	{C/1989 T1*****************} & *2 \cr
-      	{C/1989 X1*****************} & 15 \cr
-      	{C/1990 K1*****************} & *1 \cr
-      	{1 Ceres*******************} & *1 \cr
-      	{2 Pallas******************} & *1 \cr
-      	{4 Vesta*******************} & *1 \cr
-      	{15 Eunomia****************} & *1 \cr
-      	{31 Euphrosyne*************} & *1 \cr
-      	{41 Daphne*****************} & *1 \cr
-      	{42 Isis*******************} & *1 \cr
-      	{85 Io*********************} & *1 \cr
-      	{185 Eunike****************} & *1 \cr
-      	{194 Prokne****************} & *1 \cr
-      	{372 Palma*****************} & *1 \cr
-      	{405 Thia******************} & *1 \cr
-      	{511 Davida****************} & *1 \cr
-      	{704 Interamnia************} & *1 \cr
-      	{747 Winchester************} & *1 \cr
-      	{1021 Flammario************} & *1 \cr
-      \noalign{\vskip 4pt\hrule\vskip 5pt} } }
-  \endPlancktablewide \endgroup
-\end{table}
+\subsection{Sampling correlated noise}
+\label{sec:}
+Description of how noise is sampled in Commander, and how different parts of the analysis affect noise estimation. 
 
-\section{Second section}
+\subsection{Sampling noise PSD parameters}
+% \label{sec:XXX}
+How we sample white and correlated noise in commander.
+How we sample correlated noise parameters to get the parametric model. 
 
-\subsection{Another subsection}
+\subsection{Choice of parametric model}
+% \label{sec:XXX}
+One vs. two $1/f$ terms. 
 
-\section{And so on}
+\section{Challenges and caveats}
+% \label{sec:XXX}
+
+\subsection{Spike corrections}
+% \label{sec:XXX}
+
+AKARI noise characteristics, and implementation of subsequent spike corrections. \pnote{Brief overview and reference if this becomes a paper on its own}
+
+\subsection{Degeneracies}
+% \label{sec:XXX}
+
+
+\section{Results}
+% \label{sec:XXX}
+
+
+\subsection{Posterior distributions}
+% \label{sec:XXX}
+\subsubsection{Correlated noise maps}
+% \label{sec:XXX}
+\subsubsection{Noise parameter chains}
+% \label{sec:XXX}
+\subsubsection{Posterior distributions}
+% \label{sec:XXX}
+\subsubsection{PSD curve}
+% \label{sec:XXX}
+
+\section{Systematic effects}
+% \label{sec:XXX}
+
+
 
 \section{Conclusions}
 \label{sec:conclusions}
