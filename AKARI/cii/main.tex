@@ -52,7 +52,7 @@
 \def\WISE{WISE}
 \def\AKARI{\textrm{{AKARI}}}
 \def\IRAS{\textit{{IRAS}}}
-\newcommand{\CII}{\ensuremath{\textsc{C\,ii}}}
+\newcommand{\CII}{\ensuremath{[\textsc{C\,ii}]}}
 \newcommand{\phm}{\phantom{-}}
 \newcommand{\dv}[0]{\vec{d}}
 \renewcommand{\t}[0]{\vec{t}}
@@ -111,7 +111,6 @@
 \newcommand{\e}{\mathrm e}
 \newcommand{\cvar}{\ensuremath{c(\vartheta, \varphi, \psi)}}
 
-
 \def\Tcmb{\ifmmode T_\mathrm{CMB}\else $T_{\mathrm{CMB}}$\fi}
 \def\Tcold{\ifmmode T_\mathrm{c}\else $T_{\mathrm{c}}$\fi}
 \def\Text{\ifmmode T_\mathrm{e}\else $T_{\mathrm{e}}$\fi}
@@ -154,7 +153,8 @@
 
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR3. XII AKARI Galactic [CII] line emission map}}
+  %  \title{\bfseries{\Cosmoglobe\ DR3. Q. High-resolution map of Galactic 158\micron{} \CII{} emission through joint analysis of AKARI, HFI and FIRAS}}
+   \title{\bfseries{\Cosmoglobe\ DR3. Q. High-resolution map of Galactic 158\micron{} \CII{} emission in AKARI data}}
 
    \input{authors.tex}
 
@@ -164,9 +164,12 @@
    \date{\today} 
    
    \abstract{
-    We present a new high-resolution estimate of the Galactic 158\micron [CII] line emission using AKARI WIDE-L and N60 data. 
-    This work is part of the third Cosmoglobe data release (DR3), re-analyzing the data of the AKARI infrared satellite covering wavelengths $40$--$200$\micron using the global Bayesian end-to-end Gibbs sampling framework \commander3. At $120$--$200\micron$ the main contributions to the signal measured by the AKARI WIDE-L and N160 bands are from thermal dust, which can be diveded into a cold, hot and nearby component, as well as the line emission from singly-ionized carbon at 158\micron. The 158\micron [CII] emission can be estimated by subtracting a bandpass-integrated estimate of the thermal dust emission from the AKARI data. In particular, as the hot dust component and the [CII] emission will trace similar high-energy environments, 
+    We present a new high-resolution full-sky map of the Galactic \CII{} emission using the AKARI WIDE-L and N60 data within the \cosmoglobe{} global Bayesian analysis framework. In addition to the \CII{} line at 158\micron{}, thermal dust strongly contributes to the bandpass-integrated signal measured by the AKARI WIDE-L and N160 bands at $120$--$200\micron$. As the bandpasses of detectors within each band can vary by several 10\% at any given frequency, while their integrals remain stable, we can extract the \CII emission from the bandpass integrated thermal dust by differencing detector maps (Type A). Alternatively, we incorporate the \CII{} line into the global \cosmoglobe sky model and extract the component as part of the joint fit using both AKARI FIS, Planck HFI and \COBE{} FIRAS data (Type B). Both Type A and B maps are consistent with each other, although the latter provides a superior signal to noise ratio. The resulting maps are the highest resolution \CII{} estimate across the full sky to date, with noise level estimates ranging from $XXX$–$YYYY$\MJysr and a resolution of $\sim37''$ FWHM. Cross-correlating our \CII{} map to that of FIRAS, as well as to the \cosmoglobe{} DR3 hot dust map, we respectively find correlation coefficients of $0.XX$ and $0.YY$, showing a high degree of spacial correlation to both. As \CII{} is one of the most important cooling mechanisms in the insterstellar medium (ISM) we can estimate the star-formation rate (SFR) in each pixel of the sky by using the projected surface brightness of \CII{} from our maps. The resulting SFR map is broadly consistant with [OTHER SURVEY(S)] in a selection of [SOME WELL-KNOWN STAR-FORMING REGIONS] and represents the currently highest resolution full-sky SFR map of our own Galaxy in the literature.
+    
+    % Main results: the CII map itself. Correlation coefficients to FIRAS CII and hot dust (now we have the hot dust and CII on small and large scales). The detector line ratios (perhaps a bit too technical for abstract). The noise level of the CII map in units of Jy/sr. Translate the measured intensity to Watts to estimate cooling rate and thus star formation and check if it is consistent with known star formation estimates.
+    
    }
+
 
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
@@ -176,46 +179,19 @@
 \tableofcontents
    
 \section{Introduction}
-Here things are introduced \citep{planck2016-l01}.
 
-\section{First section}
-\begin{figure*}
+
+\section{AKARI bandpass measurements}
+\begin{figure}
 	\centering
-	\includegraphics[width=\linewidth]{figs/DIRBE_optics.png}
-    \caption{This is just a test figure. }
+	\includegraphics[width=\linewidth]{figs/akari_bandpasses.pdf}
+    \caption{Detector-average bandpass measurement of the AKARI N60, WIDE-S, WIDE-L and N160 bands as a function of wavelength and frequency. For context, the 158\micron{} line is marked as a dashed line.}
 	\label{fig:TOBEREMOVED}
-\end{figure*}
+\end{figure}
 
-\subsection{First subsection}
 
-A big equation with alignments:
-\begin{alignat}{10}
-\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
-\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
-\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)&.\label{eq:gibbs_static}
-\end{alignat}
 
-\subsubsection{First subsubsection}
-A smaller equation:
-\begin{equation}
-  \r_{\mathrm{static}} = \dv - \left[\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} 
-    + \n_\mathrm{corr}\right],
-\end{equation}
 
-\subsubsection{Second subsubsection}
-\label{sec:somelabel}
-
-\subsection{Second subsection}
 A table could look like this:
 \begin{table}[t]
   \begingroup
@@ -288,15 +264,39 @@ A table could look like this:
   \endPlancktablewide \endgroup
 \end{table}
 
-\section{Second section}
+\section{Extracting the \CII{} line emission}
 
-\subsection{Another subsection}
+\subsection{Type A: Detector difference maps}
+\subsection{Type B: Joint global Bayesian sky model with FIRAS and \Planck{} HFI data}
+A big equation with alignments:
+\begin{alignat}{10}
+\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
+\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+&\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
+\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
+\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
+\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
+\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)&.\label{eq:gibbs_static}
+\end{alignat}
 
-\section{And so on}
+\section{High-resolution \CII{} maps}
+\subsection{Consistancy between the Type A and B maps}
+\subsection{Absolute calibration of \CII map}
+\subsection{Cross-correlation with FIRAS and \cosmoglobe hot dust maps}
+
+\section{Full-sky star formation rate map}
+\subsection{ISM cooling rate}
+\subsection{Star formation rate map}
+
 
 \section{Conclusions}
 \label{sec:conclusions}
-Here things conclude.
 
 \input{../common/acknowledgements}
 

@@ -154,7 +154,7 @@
 
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR3. Characterization of detector onboard AKARI FIS}}
+   \title{\bfseries{\Cosmoglobe\ DR3. Characterization of detectors onboard AKARI FIS}}
 
    \input{authors.tex}
 
@@ -163,8 +163,9 @@
 
    \date{\today} 
    
-   \abstract{We present a characterization and forward model for AKARI FIS detectors. This allows for more effective mapmaking, as described in a companion paper.}
-
+   \abstract{
+	   The AKARI FIS detector array comprised of contiguous germanium-gallium array detectors, allowing for excellent full-sky coverage of the far-infrared sky. The responsivity of Ge:Ga detectors must be characterized accurately in order to mitigate striping, loss of power at small scales, electrical crosstalk, straylight, among others. In this work, we characterize the FIS detector response using calibration data, sky models, and cross-correlations between detectors. With approach, we can fully characterize detector time constants, crosstalk, and sidelobe responses, and propagate through their uncertainty.
+   }
    \keywords{Methods: data analysis, statistical -- ISM\@: cosmic rays -- Cosmology: observations}
 
    \maketitle
@@ -174,13 +175,33 @@
    
 \section{Introduction}
 
+The AKARI FIS comprises of four pixel arrays, WIDE-S, WIDE-L, N160, and N60. The WIDE-S and WIDE-L channels are co-lacated, as are the N160 and N60 channels. While each pixel is sensitive to its own pointing on the sky, there is also cross-talk between pixels, detected through leakage of one pixel's signal into its neighbor's timestream.
+
+The physical mechanism for is currently undetermined, and is likely due to some combination of optical cross-talk (far sidelobe pickup) and electrical crosstalk. These effects manifest similarly, and are difficult to disentangle through sky data alone. 
 
 Many of the effects described in this work have been discussed in \citet{verdugo_akari_2007}. Many of the results there were determined using Slow-Scan data, but have not been characterized in the all-sky survey data. These effects are clearly present to some extent in all AKARI FIS data, but not characterized well enough to be removed.
 
 Many of these effects are quite subtle, and are difficult to see in full-sky maps. One of the main advantages of the Commander framework is the conditioning on a given model. In this framework, unmodeled effects become much easier to spot and characterize.
 
+In this work, we identify and characterize the AKARI FIS detectors' response to the sky signal, including both cross-talk and bolometer transfer function effects. Using the calibration campaign in conjunction with the derived sky model, we are able to determine the relative sources of the leakage of different detectors, thus obtaining a robust characterization of instrumental effects that can be modeled and mitigated in a fully Bayesian end-to-end framework.
+
 \section{Characterization}
 
+The AKARI satellite performed polar scans ($99^\circ$), using a calibration lamp once every (100?) minutes. These data are useful for showing the time response and relative gain of the detectors, but are degenerate with electrical crosstalk signals.
+
+For crosstalk studies, we use bright known sources on the sky to study the timestreams, similar to what was originally done in \citet{verdugo_akari_2007}.
+In particular, subsets of the data in which the targets in question were observed are selected and processed piecewise so that maps and timestreams of high-resolution events can be used for analysis.
+
+As part of the \textsc{Cosmoglobe} sky model, we project a sky map into a series of detectors via $\boldsymbol s_j=\mathsf P_j\boldsymbol m$, generating $n_\mathrm{det}$ synthetic timestreams $\boldsymbol s_j$, which can be compared with the data $\boldsymbol d_j$. In practice, we should obtain residual timestreams
+\begin{equation}
+	\boldsymbol r_j=\boldsymbol d_j - \mathsf P_j\boldsymbol m-\boldsymbol s_{\mathrm{zodi},j}-\boldsymbol n_{\mathrm{corr},j}.
+\end{equation}
+
+In the case of no sidelobe pickup, $\boldsymbol r_j$ should be consistent with Gaussian white noise. In practice, there is some form of crosstalk;
+\[
+	\boldsymbol r_j=\mathsf W^{jk}\boldsymbol d_k +\mathsf S^{jk}\boldsymbol s_j+ \boldsymbol n_j.
+\]
+We assume here that $\mathsf W$ is a total electrical crosstalk, which includes all thermal fluctuations and detector effects, and that $\mathsf S$ is the sidelobe pickup that depends only on the sky signal. The degree to which these can be separated depdends on the nature of the electrical crosstalk.
 
 
 \section{Cross-detector effects}
@@ -199,7 +220,7 @@ Time profile of signals from two SW detector pixels during one round trip scan o
 
 
 \begin{figure}
-	\includegraphics[width=\columnwidth]{figures/sw_timestream.png}
+	\includegraphics[width=\columnwidth]{figures/lw_timestream.png}
 	\caption{
 Same as Figure 3.1.4 but for the LW detectors. Only the ghost in the N160 is shown. Ghosts in the WIDE-L band appear in different detector pairs and are not shown in this plot. Reproduced from IDUM Figure 3.1.5.
 	}
