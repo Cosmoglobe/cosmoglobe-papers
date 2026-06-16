@@ -151,21 +151,33 @@
 \def\Te{\ifmmode T_{\mathrm{e}}\else $T_{\mathrm{e}}$\fi} 
 \def\kB{\ifmmode k_\mathrm{B}\else $k_{\mathrm{B}}$\fi} 
 
-\renewcommand{\note}[1]{\textcolor{red}{{VV:} #1}}
-\newcommand{\pnote}[1]{\textcolor{red}{({VV:} #1})}
+\renewcommand{\note}[1]{\textcolor{red}{#1}}
+\newcommand{\pnote}[1]{\textcolor{red}{(#1})}
+
+\newcommand{\ncorr}{\n_\mathrm{corr}}
+\newcommand{\fkneei}[1][1]{f_{\mathrm{knee},#1}}
+\newcommand{\slopei}[1][1]{\alpha_{#1}}
+
+\newcommand{\bigo}{\mathcal{O}}
+
+\newcommand{\pclosed}[1]{\left(#1\right)}
+\newcommand{\bclosed}[1]{\left[#1\right]}
+% \newcommand{\closed}{\pclosed}
+
+
 
 \begin{document} 
 
    \title{\bfseries{\Cosmoglobe\ DR3. <NUM> AKARI Noise Characterization }}
 
-   \input{../common/authors.tex}
+   \input{authors.tex}
 
    \titlerunning{\Cosmoglobe: AKARI reanalysis}
    \authorrunning{V.~A.~Vikenes et al.}
 
    \date{\today} 
    
-   \abstract{We present the AKARI reanalysis!}
+   \abstract{We present the Bayesian algorithm to estimate noise parameters in the Gibbs sampling framework for AKARI time-ordered-data. This is important because it allows us to make maps. For the noise power spectral density (PSD), we followed common practice and initially adopted a $1/f$ parametric model. However, we find evidence of correlated noise emerging at the high frequency end of the spectra, and are able to fit these well by adding a second $1/f$ term. Bad data is accounted for by \note{doing things}. Our model estimates correlated noise in time-domain, $\ncorr$, and estimates correlated noise parameters, $\xi^n = \{\sigma_0,\alpha_1,\fkneei[1],\alpha_2,\fkneei[2]\}$, which are assumed to be constant during a scan \pnote{define scan}. }
 
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
@@ -176,7 +188,19 @@
    
 \section{Introduction}
 \label{sec:introduction}
-General intro on DR3/AKARI. Motivations and assumptions behind PSD noise modelling. Instrument sepcific challenges/assumptions/properties.  
+General intro on DR3/AKARI. Motivations and assumptions behind PSD noise modelling. Instrument sepcific challenges/assumptions/properties.
+
+
+
+The AKARI satellite produced \note{$N$} time-ordered data samples (TOD) \pnote{per band?}. From these measurements, we want to produce maps of the infrared sky in order to \note{achieve stuff}, comprising \note{$\bigo(?)$} pixels. Doing so requires \note{assumptions}. \pnote{Write about how maps were made originally, and how noise was dealt with then.}
+
+\note{Paragraph about the global end-to-end Bayesian pipeline of Cosmoglobe with Commander3, tying this paper to the others.}
+
+The instrumental noise model we implement for AKARI
+
+To model instrumental noise for AKARI, we \note{adapt} the model developed by \cite{ihleBEYONDPLANCKVINoise2023} \pnote{for the BeyondPlanck collaboration} for Planck LFI. 
+
+
 
 \section{Theoretical background}
 \label{sec:theoretical_background}
@@ -185,10 +209,37 @@ General intro on DR3/AKARI. Motivations and assumptions behind PSD noise modelli
 \label{sec:cosmoglobe_framework}
 General introduction to Cosmoglobe framework? Data model for AKARI, emphasising PSD related parameters. Sampling scheme for the PSD parameters of interest.
 
+A detailed \note{description} of the Bayesian end-to-end pipeline is given in \note{main-paper-citation}. In this section we give a brief overview of the algorithm, focusing on the parts relevant for noise Characterization.
+
+We begin by adopting the data model defined in \note{citation}, \pnote{currently just copied from DR2. I.}
+\begin{align}
+	\label{eq:model}
+	\dv &=\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} +
+          \s_{\mathrm{static}} + \n_\mathrm{corr} + \n_\mathrm w\\
+        &\equiv \s_{\mathrm{tot}} + \n_{\mathrm{w}}.
+\end{align}
+\note{Continuing here when a ``main'' data model has been defined/introduced.}
+
 \subsection{PSD models}
 \label{sec:PSD_models}
-Features and characteristics of noise, e.g. combination of white plus on or two $1/f$ terms. 
+\note{Various parts here may/will be moved to the methods section. Should also include physical motivation/interpretations for noise properties, e.g. reasons behind values of $\alpha$ and $\fknee$.}
 
+We follow the \note{standard} convention, and assume that a $1/f$-model can be used to fit the noise PSD
+\begin{equation}
+    \label{eq:psd_oof_model}
+    P(f) = \sigma_0^2 \bclosed{1 + \pclosed{\frac{f}{\fknee}}^\alpha},
+\end{equation}
+where $f$ denotes temporal frequency, $\sigma_0$ denotes white-noise level, $\alpha$ is the slope of the correlated noise spectrum, and $\fknee$ roughly marks the frequency of the transition between white noise and correlated noise.  
+
+While this model works \pnote{has worked} well for many instruments \pnote{citations}, we find that the noise properties in AKARI deviate from this standard model with a prominent increase/rise in the noise levels towards higher frequencies. This feature is evident across all \pnote{?} detectors in every band. To account for this, we extend the model by introducing a second $1/f$-term, and adopt the following model \pnote{I'm tempted to use different letters/variables for the second $1/f$-term to avoid the subscripts.}
+\begin{equation}
+    \label{eq:psd_2oof_model}
+    P(f) = \sigma_0^2 \bclosed{1 + \pclosed{\frac{f}{\fkneei[1]}}^{\slopei[1]} + \pclosed{\frac{f}{\fkneei[2]}}^{\slopei[2]}}.
+\end{equation}
+Here, subscript $1$ refers to the standard parametrization of the $1/f$ model, whereas $2$ refers to the noise increase towards high frequencies. This particular model was chosen to properly fit the noise data at high frequencies in a minimal way \pnote{bad sentence}. 
+The main restrictions/trait of our model parameters is that $\slopei[1]<0$, whereas $\slopei[2]>0$. Additionally, we require $\fkneei[1]<\fkneei[2]<f_{\mathrm{samp}}/2$ \pnote{elaborate}.
+
+The five PSD parameters we will sample are thus $\xi^n = \{\sigma_0,\alpha_1,\fkneei[1],\alpha_2,\fkneei[2]\}$.
 
 \section{Methods}
 \label{sec:methods}
@@ -202,6 +253,9 @@ Description of how noise is sampled in Commander, and how different parts of the
 % \label{sec:XXX}
 How we sample white and correlated noise in commander.
 How we sample correlated noise parameters to get the parametric model. 
+
+\subsubsection{Priors on $\alpha$ and $\fknee$}
+
 
 \subsection{Choice of parametric model}
 % \label{sec:XXX}
@@ -229,10 +283,23 @@ AKARI noise characteristics, and implementation of subsequent spike corrections.
 % \label{sec:XXX}
 \subsubsection{Noise parameter chains}
 % \label{sec:XXX}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.95\linewidth]{figs/xi_n_band160_det10_iter3.png}
+	\caption{Sampled PSD noise parameter for detector 10 in the $160\,\mu\mathrm{m}$ band. \pnote{Placeholder figure}}
+	\label{fig:xi_n_band160_det10_iter3}
+\end{figure}
+
 \subsubsection{Posterior distributions}
 % \label{sec:XXX}
 \subsubsection{PSD curve}
 % \label{sec:XXX}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.95\linewidth]{figs/psd_band160.png}
+	\caption{PSD for different detectors in $160\,\mu\mathrm{m}$ band. Solid curves show measured noise, dashed curves show fitted model. \pnote{Placeholder figure}}
+	\label{fig:psd_band160}
+\end{figure}
 
 \section{Systematic effects}
 % \label{sec:XXX}
@@ -246,6 +313,6 @@ Here things conclude.
 \input{../common/acknowledgements}
 
 \bibliographystyle{aa}
-\bibliography{../../common/CG_bibliography,../../common/Planck_bib}%,references}
+\bibliography{../../common/CG_bibliography,../../common/Planck_bib,references}
 \end{document}
 %%%% End of aa.dem
