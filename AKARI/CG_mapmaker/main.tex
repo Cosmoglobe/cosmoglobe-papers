@@ -167,7 +167,7 @@
 
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR3. CG Mapmaking for Cross-talk corrections}}
+   \title{\bfseries{\Cosmoglobe\ DR3. Optimal cross-talk correction through conjugate-gradient mapmaking in AKARI reanalysis.}}
 
    \input{../common/authors.tex}
 
@@ -176,7 +176,11 @@
 
    \date{\today} 
    
-   \abstract{We present the GC mapmaking method DR3.}
+   \abstract{Cross-talk between detectors, both of optical and electrical nature, is one of the long-standing issues of Akari FIS data, at the core of \textsc{Cosmoglobe} DR3. 
+   We present a conjugate gradient mapmaking method and demonstrate its ability of accounting for the detectors cross talk through simulated point source maps.
+   We compare the method's performance, and its effects on the noise properties of the solution maps, with a traditional inverse-variance bin mapmaker.
+   
+   }
 
    \keywords{Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
@@ -192,7 +196,7 @@ Put reference to Akari instrument paper and maybe figure with original ghost pic
 \section{Methods}
 [Motivation for having a CG-driven mapmaker to solve the problem.]
 
-In a setup where the instrument presents significant cross-talk between detectors, the data can be modeled as
+In a setup where the instrument presents significant cross-talk between detectors, the data can be modeled in time domain as
 \begin{equation}
 	\textbf{d} = \mathrm{W}\textbf{s} + \textbf{n}
 \end{equation}
@@ -204,9 +208,44 @@ P has size of ($n_{pix}$,~$n_{tod}$) as it maps between pixel space and time ord
 \section{1D simulated data}
 Dataset used and how it was generated. This toy-dataset case is used to build intuition about the math of the problem.
 
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\linewidth]{figs/1d_d_tod.pdf}
+	\caption{Simulated observed TOD including cross talk effect and white noise.}
+	\label{fig:1d_tod_d}
+\end{figure}
+
 
 \section{2D simulated data}
 Dataset used and how it was generated. This dataset is used to test the method developed in a more realistic scenario.
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\linewidth]{figs/2d_sim_s.pdf}
+	\caption{Simulated point source smoothed true sky.}
+	\label{fig:2d_sim_s}
+\end{figure}
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\linewidth]{figs/2d_tod_d.pdf}
+	\caption{Observed TOD signal including cross talk effects and white noise.}
+	\label{fig:2d_sim_s}
+\end{figure}
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\linewidth]{figs/2d_cg_sol.pdf}
+	\caption{Conjugate gradient solution for the mapmaking equation taking into account cross talk.}
+	\label{fig:2d_cg_sol}
+\end{figure}
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\linewidth]{figs/Res_hist.pdf}
+	\caption{Histogram of the absolute residuals of the solution map obtained through the CG mapmkaing method versus a traditional inverse-variance bin mapmaker.}
+	\label{fig:Res_hist}
+\end{figure}
 
 \section{Computational expense}
 Explains the necessity of a CG mapmaker to solve the problem, total time needed, number of iterations, etc for 
