@@ -176,7 +176,7 @@
 
    \date{\today} 
    
-   \abstract{We present new high resolution thermal dust maps from the Cosmoglobe DR3 analysis of AKARI. In addition to the AKARI data we use the \Planck\ HFI, DIRBE, and FIRAS maps to better constrain the lower-frequency regime and set absolute calibration levels. This works build off of the Cosmoglobe DR2 and includes a new high resolution hot dust component, at \nside\ 8192 (with a beam full-width at half maximum of 3.5\arcmin), as well as the cold dust at \nside\ 4096(?), nearby dust and H$alpha$ dust correction components build off of template maps at \nside\ 2048. The new dust model is more physically motivated, with a modified blackbody spectrum at frequencies up to 900\,GHz, transitioning to a spline regime, until finally joining an astrodust motivated model for the highest frequencies. Thus, these new maps span the widest range of frequencies and allow for the inclusion of polycyclic aromatic hydrocarbons (PAH) as expected in the highest AKARI and DIRBE bands. These dust models can be used for better modeling of the dust distributions within the Milky Way galaxy, and will be imperative for future CMB studies, such as by LiteBIRD and Simons Observatory, to ensure the dust contamination is under control for future measures of CMB $B$-modes.}
+   \abstract{We present new high resolution thermal dust maps from the Cosmoglobe DR3 analysis of AKARI. In addition to the AKARI data we use the \Planck\ HFI, DIRBE, and FIRAS maps to better constrain the lower-frequency regime and set absolute calibration levels. This works build off of the Cosmoglobe DR2 and includes a new high resolution hot dust component, at \nside\ 8192 (with a beam full-width at half maximum of 35\arcsec (?)), as well as the cold dust at \nside\ 4096(?), nearby dust and H$\alpha$ dust correction components build off of template maps at \nside\ 2048. The new dust model is more physically motivated, with a modified blackbody spectrum at frequencies up to 900\,GHz, transitioning to a spline regime, until finally joining an astrodust motivated model for the highest frequencies. Thus, these new maps span the widest range of frequencies and allow for the inclusion of polycyclic aromatic hydrocarbon emission (PAH) as expected in the highest frequency AKARI and DIRBE bands. These dust models can be used for better modeling of the dust distributions within the Milky Way galaxy, and will be imperative for future CMB studies, such as by LiteBIRD and Simons Observatory, to ensure the dust contamination is under control for future measures of CMB $B$-modes. In particular, there is a string correlation between the hot dust component and the CII emission, as seen by FIRAS, and additionally with the CII emission measured by AKARI. }
 
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
    \maketitle
@@ -211,24 +211,27 @@ Figure with the summary bandpasses for each of the experiments? Or reference the
 \label{sec:dat_planck}
 
 \subsection{DIRBE?}
+\label{sec:dat_dirbe}
 
 \subsection{Firas?}
-
+\label{sec:dat_firas}
 
 \subsection{Ancillary data}
 GAIA, WISE, HI4PI, H-alpha, CII, CO? 
 
+
 \subsection{Masks}
 \label{sec:masks}
 Dust mask, chisq mask, AKARI mask, 
-
+Figure: mask figure
 
 \section{Methodology}
 \label{sec:method}
 
-\subsection{Data model}
+
+\subsection{Data and sky model}
 \label{sec:dat_model}
-Comapre to planck hfi, big full maps and smaller cutouts of nice featrues
+Compare to planck hfi, big full maps and smaller cutouts of nice featrues
 also power spectra, how to extend pysm to high resolution
 show how it compared to pysm at the highest ell
 contraints on spatial variations on the SED, frequency channerl diff maps
@@ -243,10 +246,20 @@ masks, confidence regions,
 
 The maps are the main thing, show off the high resolution. 
 
+\begin{align}
+    \vec{s}_\nu=&u_\nu 
+    \left[\vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}(\vec{a} _\mathrm{CMB} + \vec{a}_{\mathrm{quad}}(\nu))\gamma(\nu) \right. &\mathrm{(CMB)} \nonumber \\
+    &+\vec{t}_\mathrm{ff}\left(\frac{\nu_{0,\mathrm{ff}}}{\nu}\right)^2\frac{g_\mathrm{ff}(\nu;T_\mathrm{e})}{g_\mathrm{ff}(\nu_{0,\mathrm{ff}};T_\mathrm{e})} & \textrm{(Free-free)}\nonumber \\
+    &+\vec{a}_\mathrm{cold}\left(\frac{\nu}{\nu_\mathrm{cold}}\right)^{\beta_\mathrm{cold}+1}\left(\frac{e^{h\nu_\mathrm{cold}/k_\mathrm{B}T_\mathrm{cold}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{cold}}-1}\right) &\textrm{(Cold\ dust)}\nonumber \\
+    &+\vec{a}_\mathrm{hot}\left(\frac{\nu}{\nu_\mathrm{hot}}\right)^{\beta_\mathrm{hot}+1}\left(\frac{e^{h\nu_\mathrm{hot}/k_\mathrm{B}T_\mathrm{hot}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{hot}}-1}\right) &\textrm{(Hot\ dust)}\nonumber \\
+    &+a_\mathrm{near}\vec{t}_\mathrm{near}\left(\frac{\nu}{\nu_\mathrm{near}}\right)^{\beta_\mathrm{near}+1}\left(\frac{e^{h\nu_\mathrm{near}/k_\mathrm{B}T_\mathrm{near}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{near}}-1}\right)&\textrm{(Nearby\ dust)}\nonumber \\
+    &+a_\mathrm{H\alpha}\vec{t}_\mathrm{H\alpha}\left(\frac{\nu}{\nu_\mathrm{H\alpha}}\right)^{\beta_\mathrm{H\alpha}+1}\left(\frac{e^{h\nu_\mathrm{H\alpha}/k_\mathrm{B}T_\mathrm{H\alpha}}-1}{e^{h\nu/k_\mathrm{B}T_\mathrm{H\alpha}}-1}\right) &\textrm{(H$\alpha$\ dust)}\nonumber \\
+&+\vec{a}^{100}_\mathrm{co}h_\nu^{100}+\vec{a}^{217}_\mathrm{co}h_\nu^{217} +\vec{a}^{353}_\mathrm{co}h_\nu^{353}\left. \vphantom{\left(\frac{\nu}{\nu_\mathrm{d}}\right)^{\beta_\mathrm{d}+1}}\right] & \textrm{(CO)}\nonumber\\
+    &+m_\nu, &\textrm{(Monopole)}
+\label{equ:model}
+\end{align}
 
-
-\subsection{Sky model}
-\label{sec:sky_model}
+Adjust equation for dust for the low, vs medium vs high frequencies. 
 
 \subsection{Gibbs sampling}
 \label{sec:gibbs}
@@ -256,12 +269,32 @@ The maps are the main thing, show off the high resolution.
 \label{sec:dust}
 Hot dust, cold dust, nearby dust and hot dust correction (with H-alpha correlation?)
 Reference Ana SED paper, maybe SED plot with akari band updates?
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{sed_plot.png}
+    \caption{Dust SED. }
+    \label{fig:dust_sed}
+\end{figure}
 
 \subsection{Cold dust}
 \label{sec:cold_dust}
 
 \subsection{Hot dust}
 \label{sec:hot_dust}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\linewidth]{dust_cii_full.png}
+    \caption{High resolution hot dust map at 545\,GHz. The hot dust correlates strongly with CII emission. }
+    \label{fig:hotdust_full}
+\end{figure*}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{dust_cii_inset1.png}
+    \caption{High resolution hot dust map at 545\,GHz centered on Orions Nebula. }
+    \label{fig:hotdust_inset1}
+\end{figure}
 
 \subsection{Power-spectra}
 \label{sec:ps}

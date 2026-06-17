@@ -154,16 +154,19 @@
 
 \begin{document} 
 
-   \title{\bfseries{\Cosmoglobe\ DR3. I. Global Bayesian analysis of AKARI }}
+   \title{\bfseries{\Cosmoglobe\ DR3. I. Global Bayesian end-to-end analysis of AKARI-FIS.}}
 
-   \input{../common/authors.tex}
+   \input{authors.tex}
 
    \titlerunning{\Cosmoglobe: AKARI reanalysis}
    \authorrunning{E.~Gjerl{\o}w et al.}
 
    \date{\today} 
    
-   \abstract{We present the AKARI reanalysis!}
+   \abstract{We present a Bayesian end-to-end reanalysis of the AKARI Far-Infrared Surveyor (FIS) data within the Cosmoglobe analysis framework. Between 2006 and 2007, AKARI-FIS observed more than 96\% of the sky in four wavelength bands: N60, WIDE-S, WIDE-L, and N160, corresponding to central wavelengths of 65, 90, 140 and 160 microns, respectively. The analysis is conducted jointly between the AKARI time-ordered (TOD) data, \Planck 545 GHz and 857 GHz map-level data, TOD-level from the DIRBE bands between 240 and 12 microns, and FIRAS data. Our sky model includes a four-component dust model, a cosmic infrared background (CIB) component, a novel zodiacal light model, and a \CII model. This joint setup of sky model and multiple experiments allows for an estimation of AKARI gains and systematic effects that are consistent with the other observations involved, and allows for a final sky model that takes into account all relevant data.
+       We describe the AKARI instrumental noise as white noise plus a correlated noise term, which is modelled with a two-component $1/f$ power spectral density (PSD). Glitches are modelled using a super-glitch model, which handles the glitches so well, and we model crosstalk using the crosstalk modelling method. The handling of other systematic errors, such as ramp glitch corrections, ramp gain nonlinearities and detector pixel pointing offsets is also presented.
+       The result of this analysis is i) A high-resolution four-component dust model that is nevertheless characterized by far fewer parameters than other dust models ii) High-resolution maps of the CIB fluctuations, iii) A high-resolution zodiacal light model that is characterized as a combination of blackbodies, and iv) High-resolution \CII maps. We present comparisons to the original AKARI data analysis, and we find that the joint reanalysis, benefitting from algorithmic developments over the last two decades, as well as being informed by other experiment and a robust sky model, is able to improve constraints on all the abovementioned science targets.
+   }
 
    \keywords{ISM: general - Zodiacal dust, Interplanetary medium - Cosmology: observations, diffuse radiation - Galaxy: general}
 
@@ -173,119 +176,54 @@
 \tableofcontents
    
 \section{Introduction}
-Here things are introduced \citep{planck2016-l01}.
 
 \section{Global Bayesian modelling of the infrared sky}
 
-\subsection{Data model and posterior distribution}
+\subsection{Bayesian data analysis and the posterior distribution}
 
-A table could look like this:
-\begin{table}[t]
-  \begingroup
-  \newdimen\tblskip \tblskip=5pt
-	\caption{List of celestial body flags. {Comets are flagged with the radius listed if they are within 2~AU of the Sun, otherwise they have a $1^\circ$ exclusion radius.}}
-  \label{tab:planet_flags}
-  \nointerlineskip
-  \vskip -3mm
-  \footnotesize
-  \setbox\tablebox=\vbox{
-    \newdimen\digitwidth
-    \setbox0=\hbox{\rm 0}
-    \digitwidth=\wd0
-    \catcode`*=\active
-    \def*{\kern\digitwidth}
-    %
-    \newdimen\signwidth
-    \setbox0=\hbox{-}
-    \signwidth=\wd0
-    \catcode`!=\active
-    \def!{\kern\signwidth}
-    %
- \halign{
-      \hbox to 4.0cm{#\leaderfil}\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      \hfil#\hfil\tabskip 1em&
-      #\tabskip 0em\hfil\cr
-    \noalign{\doubleline}
-      \omit Object\hfil&
-      \omit\hfil Radius ($^\circ$) \hfil\cr
-      \noalign{\vskip 4pt\hrule\vskip 4pt}
-      Moon********************** & 10 \cr
-      Mercury******************* & *1 \cr
-      Venus********************* & *2 \cr
-      Mars********************** & *2 \cr
-      Jupiter******************* & *2 \cr
-      Saturn******************** & *1 \cr
-      Uranus******************** & *1 \cr
-      Neptune******************* & *1 \cr
-	{73P/Schwassmann–Wachmann 3} & *2 \cr
-      	{C/1989 Q1*****************} & *2 \cr
-      	{C/1989 T1*****************} & *2 \cr
-      	{C/1989 X1*****************} & 15 \cr
-      	{C/1990 K1*****************} & *1 \cr
-      	{1 Ceres*******************} & *1 \cr
-      	{2 Pallas******************} & *1 \cr
-      	{4 Vesta*******************} & *1 \cr
-      	{15 Eunomia****************} & *1 \cr
-      	{31 Euphrosyne*************} & *1 \cr
-      	{41 Daphne*****************} & *1 \cr
-      	{42 Isis*******************} & *1 \cr
-      	{85 Io*********************} & *1 \cr
-      	{185 Eunike****************} & *1 \cr
-      	{194 Prokne****************} & *1 \cr
-      	{372 Palma*****************} & *1 \cr
-      	{405 Thia******************} & *1 \cr
-      	{511 Davida****************} & *1 \cr
-      	{704 Interamnia************} & *1 \cr
-      	{747 Winchester************} & *1 \cr
-      	{1021 Flammario************} & *1 \cr
-      \noalign{\vskip 4pt\hrule\vskip 5pt} } }
-  \endPlancktablewide \endgroup
-\end{table}
-
+\subsection{Data model}
 
 \subsection{Gibbs sampling with \commanderthree}
 
-A big equation with alignments:
-\begin{alignat}{10}
-\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
-\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-&\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
-\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
-\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
-\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
-	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)&.\label{eq:gibbs_static}
-\end{alignat}
+\section{Data}
+\subsection{AKARI}
+\subsubsection{Noise characteristics}
+\subsubsection{Ramp modelling}
+\subsubsection{Crosstalk modelling}
+\subsubsection{Glitch detection}
+\subsubsection{Flagging}
 
+\subsection{DIRBE}
+%Refer to DR2 for this?
 
-\section{\AKARI}
-A smaller equation:
-\begin{equation}
-  \r_{\mathrm{static}} = \dv - \left[\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} 
-    + \n_\mathrm{corr}\right],
-\end{equation}
+\subsection{\Planck}
 
-\section{Frequency maps}
+\section{Results}
+\subsection{Instrumental parameters}
+\subsubsection{Gain}
+\subsubsection{Instrumental noise}
+\subsubsection{Glitches}
+\subsubsection{Ramp glitch corrections}
+\subsection{Sky model}
+\subsubsection{Dust}
+\subsubsection{Zodiacal light}
+\subsubsection{CIB}
+\subsubsection{\CII}
+\subsection{Frequency maps}
+\subsection{Goodness-of-fit}
+\begin{figure*}[t]
+    \centering
+\includegraphics[width=0.4\linewidth]{figs/tod_AKARI_065_map_c0001_k000010_I.png}
+\includegraphics[width=0.4\linewidth]{figs/tod_AKARI_090_map_c0001_k000010_I.png}
+\includegraphics[width=0.4\linewidth]{figs/tod_AKARI_140_map_c0001_k000010_I.png}
+\includegraphics[width=0.4\linewidth]{figs/tod_AKARI_160_map_c0001_k000010_I.png}
+\caption{AKARI frequency maps}
+    \label{fig:freqmaps}
+\end{figure*}
 
-\section{Goodness of fit}
 
 \section{Conclusions}
 \label{sec:conclusions}
-Here things conclude.
 
 \input{../common/acknowledgements}
 
@@ -293,3 +231,99 @@ Here things conclude.
 \bibliography{../../common/CG_bibliography,../../common/Planck_bib}%,references}
 \end{document}
 %%%% End of aa.dem
+
+%A table could look like this:
+%\begin{table}[t]
+%  \begingroup
+%  \newdimen\tblskip \tblskip=5pt
+%	\caption{List of celestial body flags. {Comets are flagged with the radius listed if they are within 2~AU of the Sun, otherwise they have a $1^\circ$ exclusion radius.}}
+%  \label{tab:planet_flags}
+%  \nointerlineskip
+%  \vskip -3mm
+%  \footnotesize
+%  \setbox\tablebox=\vbox{
+%    \newdimen\digitwidth
+%    \setbox0=\hbox{\rm 0}
+%    \digitwidth=\wd0
+%    \catcode`*=\active
+%    \def*{\kern\digitwidth}
+%    %
+%    \newdimen\signwidth
+%    \setbox0=\hbox{-}
+%    \signwidth=\wd0
+%    \catcode`!=\active
+%    \def!{\kern\signwidth}
+%    %
+% \halign{
+%      \hbox to 4.0cm{#\leaderfil}\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      \hfil#\hfil\tabskip 1em&
+%      #\tabskip 0em\hfil\cr
+%    \noalign{\doubleline}
+%      \omit Object\hfil&
+%      \omit\hfil Radius ($^\circ$) \hfil\cr
+%      \noalign{\vskip 4pt\hrule\vskip 4pt}
+%      Moon********************** & 10 \cr
+%      Mercury******************* & *1 \cr
+%      Venus********************* & *2 \cr
+%      Mars********************** & *2 \cr
+%      Jupiter******************* & *2 \cr
+%      Saturn******************** & *1 \cr
+%      Uranus******************** & *1 \cr
+%      Neptune******************* & *1 \cr
+%	{73P/Schwassmann–Wachmann 3} & *2 \cr
+%      	{C/1989 Q1*****************} & *2 \cr
+%      	{C/1989 T1*****************} & *2 \cr
+%      	{C/1989 X1*****************} & 15 \cr
+%      	{C/1990 K1*****************} & *1 \cr
+%      	{1 Ceres*******************} & *1 \cr
+%      	{2 Pallas******************} & *1 \cr
+%      	{4 Vesta*******************} & *1 \cr
+%      	{15 Eunomia****************} & *1 \cr
+%      	{31 Euphrosyne*************} & *1 \cr
+%      	{41 Daphne*****************} & *1 \cr
+%      	{42 Isis*******************} & *1 \cr
+%      	{85 Io*********************} & *1 \cr
+%      	{185 Eunike****************} & *1 \cr
+%      	{194 Prokne****************} & *1 \cr
+%      	{372 Palma*****************} & *1 \cr
+%      	{405 Thia******************} & *1 \cr
+%      	{511 Davida****************} & *1 \cr
+%      	{704 Interamnia************} & *1 \cr
+%      	{747 Winchester************} & *1 \cr
+%      	{1021 Flammario************} & *1 \cr
+%      \noalign{\vskip 4pt\hrule\vskip 5pt} } }
+%  \endPlancktablewide \endgroup
+%\end{table}
+
+%A big equation with alignments:
+%\begin{alignat}{10}
+%\xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\phantom{\xi_n} &
+%\,\beta_{\mathrm{sky}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%&\,\a_{\mathrm{static}}&)\label{eq:gibbs_n}\\
+%\beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%\,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
+%\a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+%&\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}}&)\\
+%\zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+%&\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}}&)\label{eq:gibbs_zodi}\\
+%\a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\xi_n, &
+%	\,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}}&)&.\label{eq:gibbs_static}
+%\end{alignat}
+
+
+%A smaller equation:
+%\begin{equation}
+%  \r_{\mathrm{static}} = \dv - \left[\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c+\s_{\mathrm{zodi}} 
+%    + \n_\mathrm{corr}\right],
+%\end{equation}
