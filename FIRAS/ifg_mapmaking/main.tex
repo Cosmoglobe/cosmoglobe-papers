@@ -250,8 +250,6 @@ Figure \ref{fig:ifg-pointing} shows an example of the pointing solution for one 
 
 We will describe how we generate the simulations for the modern method in Section \ref{sec:modern} in detail, followed by the simulation method for the legacy one in Section \ref{sec:firas-like}, which follows the same principles, with the addition of the on-board coadding step.
 
-\todo{picture explaining this}
-
 \subsection{Modern Experiment}
 \label{sec:modern}
 
@@ -261,11 +259,16 @@ For a modern experiment, we would have access to each of the on-board interferog
 
 We then end up with a 3-dimensional pointing matrix $\matP$, with dimensions $N_{\rm IFGs} \times N_{\rm pix} \times N_{\rm separations}$, where $N_{\rm IFGs}$ is the total number of sky interferograms taken over the four-year mission, totaling to around 12,614,546 interferograms, dependent on the exact observing efficiency; $N_{\rm pix}$ is the number of HEALPix pixels at NSIDE=128, which amounts to 196,608; and $N_{\rm separations}$ is the length of each interferogram, which we will assume to be a round number of 256 samples. Each row of this matrix, $\matP_{i,:,:}$, contains the pointing solution for one interferogram, with each column $\matP_{i,:,j}$ being a one-hot vector indicating which pixel the instrument was pointing to at separation $j$ of interferogram $i$. This matrix is saved and later used by the mapmaking algorithms. For real data, and for the FOSSIL experiment, these pointings will be given as part of the housekeeping data package.
 
-However, our simulation does not end there, as we want to have one single interferogram for each of the $N_{\rm IFGs}$, not 256 for each. As such, we take each of the generated interferograms for each pixel and build a new interferogram with the parts of each of the pixels that is hit, i.e., for each of the $N_{\rm IFGs}$ interferograms, we generate $N_{\rm separations}$ interferograms (where we might generate the same exact interferogram many times, e.g. if the beam passes through four different pixels through one scan and spends the same amount of time in each of the four pixels, we will generate only four different interferograms, each repeated 64 times) and keep only the samples where the beam would have been looking at that pixel.
+However, our simulation does not end there, as we want to have one single interferogram for each of the $N_{\rm IFGs}$, not 256 for each. As such, we take each of the generated interferograms for each pixel and build a new interferogram with the parts of each of the pixels that is hit, i.e., for each of the $N_{\rm IFGs}$ interferograms, we generate $N_{\rm separations}$ interferograms (where we might generate the same exact interferogram many times, e.g. if the beam passes through four different pixels through one scan and spends the same amount of time in each of the four pixels, we will generate only four different interferograms, each repeated 64 times) and keep only the samples where the beam would have been looking at that pixel. An example of this is shown in Figure \ref{fig:frankenstein}, where the red, vertical lines show where one pixel ends and another begins, and the final interferogram is built from the different parts of the interferograms of each pixel that is hit by the beam during one scan.
 
-Once this is done, we add white noise based on a rough estimate of a noise level of 1 Jy/sr for the whole mission, which results in a noise level of around 4 kJy/sr \todo{confirm} for each interferogram.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/frankenstein_ifg.png} 
+    \caption{Example of a final interferogram, built from the different parts of the interferograms of each pixel that is hit by the beam during one scan. The red vertical lines show where one pixel ends and another begins.}
+    \label{fig:frankenstein}
+\end{figure}
 
-\todo{add picture illustrating the frankenstein IFG}
+Once this is done, we add white noise based on a rough estimate of a noise level of 1 Jy/sr for the whole mission, which results in a noise level of around 4 kJy/sr for each interferogram.
 
 \subsection{Legacy Experiment}
 \label{sec:firas-like}
@@ -335,13 +338,6 @@ as defined e.g. by \cite{shewchuk:1994}. After experimenting with different opti
 \section{Results}
 \label{sec:results}
 
-
-\todo{No noise weighting leads to a noise floor when taking the absolute value of the FFT.}
-
-\subsection{Binned mapmaker}
-
-\todo{show how many pixels are hit using this mapmaking method vs how many are simulated}
-
 \subsection{Greater sky coverage}
 
 A first obvious advantage of using the full pointing matrix $\matP$ is that, by taking into account all of the parts of the sky hit by the beam during one interferogram, as opposed to using simply the middle pixel, is that we get a greater sky coverage. This is particularly obvious when looking at the FIRAS hit map, since it did not have complete sky coverage, when using the binned mapmaker methodology, as shown in Figure \ref{fig:hit-map-firas}, which misses many more pixels than the ones that were simulated, as shown in the bottom panel of Figure \ref{fig:scanning-strategy}.
@@ -354,8 +350,6 @@ A first obvious advantage of using the full pointing matrix $\matP$ is that, by 
 \end{figure}
 
 Similar follows for the FOSSIL-like simulation, where there are no missing pixels, but the number of hits per pixel is significantly increased when using the full pointing matrix $\matP$ and this allows us to properly weight the data when mapmaking.
-
-\todo{show hit map before and after}
 
 \subsection{Comparison}
 
