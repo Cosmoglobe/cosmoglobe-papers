@@ -209,7 +209,7 @@
 \section{Introduction and Motivation}
 \label{sec:intro}
 
-Mapmaking for traditional cosmological experiments has been studied in depth for decades, with a variety of methods available to optimally solve the mapmaking equation under different assumptions \citep{tegmark1997, natoli2001, keihanen2005, stompor2008, patanchon2008}. However, most of these methods are designed for experiments that take data in the form of time-ordered data (TOD), i.e., a stream of data taken as the instrument scans the sky over time, resulting in a two-dimensional spatial dataset. In this work, we focus on spectroscopy-based experiments, experiments that record frequency and position data over time, resulting in a three-dimensional dataset, with two spatial dimensions and one frequency one. In particular, we will simulate and test our mapmaking algorithms in data as seen from Fourier-transform spectrometers (FTS), but this method is easily generalized to any spectroscopy-based experiments with this kind of three-dimensional data, as the Fourier transform that is needed specific to the FTS is used only as a post-processing step. Examples of FTSs include FIRAS \citep{fixsen:1994,mather:1999}, PIXIE \citep{kogut:2011}, CONCERTO \citep{Hu_2024} and FOSSIL \todo{cite?}, while an example of a spectrometer that does not use an FTS but might benefit from this method is CCAT \citep{CCAT_Prime_Collaboration_2022}.
+Mapmaking for traditional cosmological experiments has been studied in depth for decades, with a variety of methods available to optimally solve the mapmaking equation under different assumptions \citep{tegmark1997, natoli2001, keihanen2005, stompor2008, patanchon2008}. However, most of these methods are designed for experiments that take data in the form of time-ordered data (TOD), i.e., a stream of data taken as the instrument scans the sky over time, resulting in a two-dimensional spatial dataset. In this work, we focus on spectroscopy-based experiments, experiments that record frequency and position data over time, resulting in a three-dimensional dataset, with two spatial dimensions and one frequency one. In particular, we will simulate and test our mapmaking algorithms in data as seen from Fourier-transform spectrometers (FTS), but this method is easily generalized to any spectroscopy-based experiments with this kind of three-dimensional data, as the Fourier transform that is needed specific to the FTS is used only as a post-processing step. Examples of FTSs include FIRAS \citep{fixsen:1994,mather:1999}, PIXIE \citep{kogut:2011}, CONCERTO \citep{Hu_2024} and FOSSIL \citep{coulon2024}, while an example of a spectrometer that does not use an FTS but might benefit from this method is CCAT \citep{CCAT_Prime_Collaboration_2022}.
 
 This work aims to specifically treat the "Fourier smearing" effect that happens when the beam of an instrument is moving at the same time as data is being taken, over time and frequency, by taking into account correlations inside each interferogram and reconstructing the position of the beam at each available data point. This effect is especially relevant in experiments with small beams, fast scanning strategies and/or long times for data collection (more specically to the FTS). This has also been studied in detail by \cite{naess2019} in the context of the PIXIE experiment, but here we present a more generalized method, under less assumptions, and apply it to both legacy and future experiments.
 
@@ -249,6 +249,8 @@ Figure \ref{fig:ifg-pointing} shows an example of the pointing solution for one 
 \end{figure*}
 
 We will describe how we generate the simulations for the modern method in Section \ref{sec:modern} in detail, followed by the simulation method for the legacy one in Section \ref{sec:firas-like}, which follows the same principles, with the addition of the on-board coadding step.
+
+An important step to notice is that, usually, for FTS experiments, the so-called zero path difference (ZPD), i.e. the point where the two arms of the interferometer are equal, therefore having the split signal maximally contructively interfering, is not at the beginning of the interferogram, even though that is what is simulated here. It is not relevant to simulate this effect for our purposes, as the ZPD is simply a phase shift in the interferogram, but it is important to note that this shift needs to be taken into account when analyzing real data, in particular because it can happen between two discrete data points; not taking this effect into account will massively affect the SED reconstruction.
 
 \subsection{Modern Experiment}
 \label{sec:modern}
@@ -333,7 +335,9 @@ Having defined these and in order to have our method converge in a reasonable am
     \label{eq:preconditioned}
     \M^{-1} \A \x = \M^{-1} \b,
 \end{equation}
-as defined e.g. by \cite{shewchuk:1994}. After experimenting with different options, we found that we can obtain a significant speed-up in convergence by choosing $\M$ to be the root-mean-square (RMS) map of the inverse of the white noise level. We can then solve \eqref{eq:preconditioned} iteratively in order to obtain our map $\m_x$.
+as defined e.g. by \cite{shewchuk:1994}. After experimenting with different options, we found that we can obtain a significant speed-up in convergence by choosing $\M$ to be the root-mean-square (RMS) map of the inverse of the white noise level. Additionally, we use the result of the white noise mapmaker as a first guess for the CG method, which also helps with convergence. We can then solve \eqref{eq:preconditioned} iteratively in order to obtain our map $\m_x$.
+
+
 
 \section{Results}
 \label{sec:results}
@@ -351,9 +355,25 @@ A first obvious advantage of using the full pointing matrix $\matP$ is that, by 
 
 Similar follows for the FOSSIL-like simulation, where there are no missing pixels, but the number of hits per pixel is significantly increased when using the full pointing matrix $\matP$ and this allows us to properly weight the data when mapmaking.
 
-\subsection{Comparison}
+\subsection{Comparing the different methods}
 
-\todo{tile of maps with differences and ratios between the simulation and each of the mapmaking methods (3x2?)}
+Figure \ref{fig:comparison-maps} shows the relative differences of the results of the three mapmaking methods for the FOSSIL-like (top) and FIRAS-like (bottom) simulations, when compared to the reference simulation. 
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.32\textwidth]{Figures/fossil_binned.pdf}
+    \raisebox{-0.065\height}{\includegraphics[width=0.32\textwidth]{Figures/fossil_white_noise.pdf}}
+    \includegraphics[width=0.32\textwidth]{Figures/fossil_cg.pdf}\\
+    \includegraphics[width=0.32\textwidth]{Figures/firas_binned.pdf}
+    \raisebox{-0.065\height}{\includegraphics[width=0.32\textwidth]{Figures/firas_white_noise.pdf}}
+    \includegraphics[width=0.32\textwidth]{Figures/firas_cg.pdf}
+    \caption{Relative differences of the results of the three mapmaking methods for the FOSSIL-like (top) and FIRAS-like (bottom) simulations, when compared to the reference simulation. The left panel shows the results of the binned mapmaker, the middle panel shows the results of the white noise mapmaker and the right panel shows the results of the CG mapmaker. The colorbar of the top row goes from -0.01 to 0.01, while the colorbar of the bottom row goes from -1 to 1.}
+    \label{fig:comparison-maps}
+\end{figure*}
+
+We can see that, for FOSSIL, the fact that the binned mapmaker does not take into account the full pointing matrix $\matP$ results in a transfer function effect around the galaxy, which leaves big parts of the sky under or over subtracted.
+
+The case of FIRAS is a lot more complicated, as there is further mixing of different pixels due to the on-board averaging of interferograms. The colorbar shows a much larger range (100x), on one side because there is much less FIRAS data, but also because of this mixing. We can see, however, that the legacy, binned method does resolve the area around the galaxy better than the high latitude regions, as opposed to what happens in FOSSIL. This can only be due to the on-board averaging, as that is the main relevant difference between the two simulations. We can also see that the white noise mapmaker is able to slightly extend the area around the galaxy that is well resolved.
 
 \section{Conclusions}
 \label{sec:conclusions}
