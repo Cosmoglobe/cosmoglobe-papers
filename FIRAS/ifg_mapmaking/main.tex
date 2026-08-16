@@ -177,6 +177,7 @@
 \def\kB{\ifmmode k_\mathrm{B}\else $k_{\mathrm{B}}$\fi} 
 
 \newcommand{\aism}[1]{\textcolor{green}{{AISM:} #1}}
+\usepackage{nicefrac}
 
 \begin{document} 
 
@@ -270,7 +271,7 @@ However, our simulation does not end there, as we want to have one single interf
     \label{fig:frankenstein}
 \end{figure}
 
-Once this is done, we add white noise based on a rough estimate of a noise level of 1 Jy/sr for the whole mission, which results in a noise level of around 4 kJy/sr for each interferogram.
+Once this is done, we add white noise based on a rough estimate of a noise level of 1 Jy/sr for the whole mission, which results in a noise level of around 4 kJy/sr for each interferogram. We also add correlated, $\nicefrac{1}{f}$, noise, with a knee frequency of \todo{fill in} and a spectral index of \todo{fill in}, which is a rough estimate based on the FIRAS data, in order to introduce correlations between the different separations of the interferogram. In real data, these correlations show up as $\nicefrac{1}{f}$ or other correlated noise types, but there will always be some kind of correlation introduced by the electronics.
 
 \subsection{Legacy Experiment}
 \label{sec:firas-like}
@@ -279,7 +280,7 @@ Since FIRAS averaged interferograms on-board before sending them to the ground, 
 
 We can do this by generating a four-dimensional pointing matrix $\matP$, with dimensions $N_{\rm IFGs} \times N_{\rm pix} \times N_{\rm separations} \times N_{\rm averaged}$, where $N_{\rm IFGs}$ is lower for the ten-months mission timeline of FIRAS, and we only take into account the data taken in the SS mode, amounting to 78,788 telemetered interferograms; $N_{\rm pix}$ is now 12,288, corresponding to an NSIDE of 32, $N_{\rm separations}$ now corresponds to the 512 samples of each of the FIRAS interferograms and $N_{\rm averaged}=16$ for the SS mode. We save this matrix to use during mapmaking. This matrix needs to be reconstructed when using real data as well, since we only have access to the pointing of the midpoint of each telemetered interferogram, but keep in mind that, going forward, we do not have access to the individual interferograms, only to the averaged one, as that is the closest to the real data.
 
-White noise is then added based on an estimate provided by \cite{fixsen:1994}, Figure 8, where the typical noise residual is shown to be around 0.1 $\mu$erg s$^{-1}$ cm$^{-2}$ sr$^{-1}$ cm for the spectrum given by the average of 93 interferograms. As such, we use a noise level of around 3 MJy/sr per complete "telemetered" interferogram. The factor of 1000 difference in noise level between the modern and legacy experiments is due to the highly sensitive KIDS detectors that FOSSIL will carry.
+White noise is then added based on an estimate provided by \cite{fixsen:1994}, Figure 8, where the typical noise residual is shown to be around 0.1 $\mu$erg s$^{-1}$ cm$^{-2}$ sr$^{-1}$ cm for the spectrum given by the average of 93 interferograms. As such, we use a noise level of around 3 MJy/sr per complete "telemetered" interferogram. The factor of 1000 difference in noise level between the modern and legacy experiments is due to the highly sensitive KIDS detectors that FOSSIL will carry. Similarly, we add correlated, $\nicefrac{1}{f}$, noise, with a knee frequency of \todo{fill in} and a spectral index of \todo{fill in}, but, in this case, we add a realisation to each of the 16 interferograms before averaging them.
 
 \todo{add figure of the adding of different interferograms, check colorbling matplotlib}
 
@@ -374,6 +375,18 @@ Figure \ref{fig:comparison-maps} shows the relative differences of the results o
 We can see that, for FOSSIL, the fact that the binned mapmaker does not take into account the full pointing matrix $\matP$ results in a transfer function effect around the galaxy, which leaves big parts of the sky under or over subtracted.
 
 The case of FIRAS is a lot more complicated, as there is further mixing of different pixels due to the on-board averaging of interferograms. The colorbar shows a much larger range (100x), on one side because there is much less FIRAS data, but also because of this mixing. We can see, however, that the legacy, binned method does resolve the area around the galaxy better than the high latitude regions, as opposed to what happens in FOSSIL. This can only be due to the on-board averaging, as that is the main relevant difference between the two simulations. We can also see that the noise-weighted binned mapmaker is able to slightly extend the area around the galaxy that is well resolved.
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.32\textwidth]{Figures/fossil_binned_chi2.pdf}
+    \raisebox{-0.065\height}{\includegraphics[width=0.32\textwidth]{Figures/fossil_noise_weighted_chi2.pdf}}
+    \includegraphics[width=0.32\textwidth]{Figures/fossil_cg_chi2.pdf}\\
+    \includegraphics[width=0.32\textwidth]{Figures/firas_binned_chi2.pdf}
+    \raisebox{-0.065\height}{\includegraphics[width=0.32\textwidth]{Figures/firas_noise_weighted_chi2.pdf}}
+    \includegraphics[width=0.32\textwidth]{Figures/firas_cg_chi2.pdf}
+    \caption{}
+    \label{fig:chi2}
+\end{figure*}
 
 \section{Conclusions}
 \label{sec:conclusions}
