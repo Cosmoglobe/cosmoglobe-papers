@@ -216,6 +216,8 @@ This work aims to specifically treat the "Fourier smearing" effect that happens 
 
 We will focus on simulating two different kinds of experiments: a modern experiment, where we assume the broadband is high enough to send down each individual interferogram (Section \ref{sec:modern}); a FIRAS-like experiment, where the broadband was not high enough and we have to work with data that was averaged on-board, mixing different sky positions together (Section \ref{sec:firas-like}). In order to simulate realistic data for these two types of experiments, we will take instrument parameters, respectively, from the legacy FIRAS data and available information and from the proposed FOSSIL satellite \citep{coulon2024}, a modern FTS experiment, currently being proposed as ESA's M8 mission, with the primary goal of measuring the cosmic microwave background (CMB) spectral distortions. As FOSSIL is still under development, we will use the current proposed parameters when possible, and otherwise take parameters similar to or adapted from FIRAS. Further work will be done in order to tune FOSSIL's parameters and optimize its design, also taking into account the results of this work.
 
+In theory, one could simply solve the maximum likelihood mapmaking equation (equation \eqref{eq:mapmaking}, explained in Section \ref{sec:wn-mapmaker}) and get the optimal map from a given data, but this is computationally unfeasible, as the ponting and noise covariance matrices are too large to be stored in memory and inverted/transposed.
+
 This paper is structured as follows: in Section \ref{sec:simulations}, we describe in detail all of the steps and considerations taken in order to generate realistic simulations, both for a FOSSIL-like (Section \ref{sec:modern}) and a FIRAS-like (Section \ref{sec:firas-like}) experiment, expanding on why there is a need for careful mapmaking; in Section \ref{sec:mapmaking}, we describe three different mapmaking methods: a naive binned mapmaker (Section \ref{sec:naive-mapmaker}), a mapmaker that follos the maximum-likelihood mapmaking equation but assumes only white noise and no frequency correlations (Section \ref{sec:wn-mapmaker}) and a conjugate gradient (CG) mapmaker, taking into account all of the outlined effects (Section \ref{sec:cg-mapmaker}); in Section \ref{sec:results}, we show the results obtained by each of the three mapmakers and compare them; finally, in Section \ref{sec:conclusions}, we present our conclusions and future outlooks.
 
 \section{Simulations}
@@ -253,6 +255,8 @@ We will describe how we generate the simulations for the modern method in Sectio
 
 An important step to notice is that, usually, for FTS experiments, the so-called zero path difference (ZPD), i.e. the point where the two arms of the interferometer are equal, therefore having the split signal maximally contructively interfering, is not at the beginning of the interferogram, even though that is what is simulated here. It is not relevant to simulate this effect for our purposes, as the ZPD is simply a phase shift in the interferogram, but it is important to note that this shift needs to be taken into account when analyzing real data, in particular because it can happen between two discrete data points; not taking this effect into account will massively affect the SED reconstruction.
 
+For both simulation types, we add correlated, $\nicefrac{1}{f}$, in order to introduce correlations between the different separations of the interferogram, i.e. in the native FTS space. In real data, these correlations may show up as $\nicefrac{1}{f}$ or other correlated noise types, but there will always be some kind of correlation introduced by the electronics. It is interesting to note that correlated noise in an instrument such as this one shows up in a completely different way as it would in a traditional CMB experiment, where the noise is not only correlated in time and space, but also correlated in frequency, as simultaneous movement of the instrument and the telescope introduce correlations between the different separations of the interferogram, which then get translated into sky frequency space after the Fourier transform. This is a crucial point to take into account when analyzing data from FTS experiments, as it is not enough to simply assume that the noise is uncorrelated in frequency space, as is usually done for traditional CMB experiments.
+
 \subsection{Modern Experiment}
 \label{sec:modern}
 
@@ -271,7 +275,7 @@ However, our simulation does not end there, as we want to have one single interf
     \label{fig:frankenstein}
 \end{figure}
 
-Once this is done, we add white noise based on a rough estimate of a noise level of 1 Jy/sr for the whole mission, which results in a noise level of around 4 kJy/sr for each interferogram. We also add correlated, $\nicefrac{1}{f}$, noise, with a knee frequency of \todo{fill in} and a spectral index of \todo{fill in}, which is a rough estimate based on the FIRAS data, in order to introduce correlations between the different separations of the interferogram. In real data, these correlations show up as $\nicefrac{1}{f}$ or other correlated noise types, but there will always be some kind of correlation introduced by the electronics.
+Once this is done, we add white noise based on a rough estimate of a noise level of 1 Jy/sr for the whole mission, which results in a noise level of around 4 kJy/sr for each interferogram. We add correlated, $\nicefrac{1}{f}$, noise, with a knee frequency of \todo{fill in} and a spectral index of \todo{fill in}, which is a rough estimate based on the FIRAS data.
 
 \subsection{Legacy Experiment}
 \label{sec:firas-like}
@@ -368,13 +372,19 @@ Figure \ref{fig:comparison-maps} shows the relative differences of the results o
     \includegraphics[width=0.32\textwidth]{Figures/firas_binned.pdf}
     \raisebox{-0.065\height}{\includegraphics[width=0.32\textwidth]{Figures/firas_noise_weighted.pdf}}
     \includegraphics[width=0.32\textwidth]{Figures/firas_cg.pdf}
-    \caption{Relative differences of the results of the three mapmaking methods for the FOSSIL-like (top) and FIRAS-like (bottom) simulations, when compared to the reference simulation. The left panel shows the results of the binned mapmaker, the middle panel shows the results of the noise-weighted binned mapmaker and the right panel shows the results of the CG mapmaker. The colorbar of the top row goes from -0.01 to 0.01, while the colorbar of the bottom row goes from -1 to 1.}
+    \caption{Relative differences of the results of the three mapmaking methods for the 540 GHz FOSSIL-like (top) and 544 GHz FIRAS-like (bottom) simulations, when compared to the reference simulation. The left panel shows the results of the binned mapmaker, the middle panel shows the results of the noise-weighted binned mapmaker and the right panel shows the results of the CG mapmaker. The colorbar of the top row goes from -0.01 to 0.01, while the colorbar of the bottom row goes from -1 to 1.}
     \label{fig:comparison-maps}
 \end{figure*}
 
 We can see that, for FOSSIL, the fact that the binned mapmaker does not take into account the full pointing matrix $\matP$ results in a transfer function effect around the galaxy, which leaves big parts of the sky under or over subtracted.
 
 The case of FIRAS is a lot more complicated, as there is further mixing of different pixels due to the on-board averaging of interferograms. The colorbar shows a much larger range (100x), on one side because there is much less FIRAS data, but also because of this mixing. We can see, however, that the legacy, binned method does resolve the area around the galaxy better than the high latitude regions, as opposed to what happens in FOSSIL. This can only be due to the on-board averaging, as that is the main relevant difference between the two simulations. We can also see that the noise-weighted binned mapmaker is able to slightly extend the area around the galaxy that is well resolved.
+
+Figure \ref{fig:chi2} is a different representation of the same results, where we can see certain features more clearly. We calculate a $\chi^2$ measure that takes into account the whole map cube, making sure that we can take into account frequency correlations in the different maps. We also want to be able to recognise where certain features are under-  and over-subtracted. As such, we calculate, for each pixel $p$:
+\begin{equation}
+    \mathrm{sgn}\left(\sum_\nu(d_{\nu p} - s_{\nu p})\right) \sum_\nu \frac{(d_{\nu p} - s_{\nu p})^2}{\sigma_{\nu p}^2},
+\end{equation}
+where $d_{\nu p}$ is the magnitude of the dust simulations at frequency $\nu$ and pixel $p$, $s_{\nu p}$ is the magnitude of the mapmaking result at frequency $\nu$ and pixel $p$ and $\sigma_{\nu p}$ is the noise level at frequency $\nu$ and pixel $p$. This way, we can see where the galaxy is under- or over-subtracted, as well as other features in the sky.
 
 \begin{figure*}[h]
     \centering
@@ -384,9 +394,13 @@ The case of FIRAS is a lot more complicated, as there is further mixing of diffe
     \includegraphics[width=0.32\textwidth]{Figures/firas_binned_chi2.pdf}
     \raisebox{-0.065\height}{\includegraphics[width=0.32\textwidth]{Figures/firas_noise_weighted_chi2.pdf}}
     \includegraphics[width=0.32\textwidth]{Figures/firas_cg_chi2.pdf}
-    \caption{}
+    \caption{Frequency-weighted $\chi^2$ of the results of the three mapmaking methods for the FOSSIL-like (top) and FIRAS-like (bottom) simulations, when compared to the reference simulation. The left panel shows the results of the binned mapmaker, the middle panel shows the results of the noise-weighted binned mapmaker and the right panel shows the results of the CG mapmaker. The maps show the logarithm of the $\chi^2$ measurement multiplied by the signal, in order to show under and over subtractions clearly. The yellow contour points out where the galaxy is in this ecliptic representation.}
     \label{fig:chi2}
 \end{figure*}
+
+The first feature that is very clear is that, for the binned mapmaker, we can clearly see that the galaxy has been dragged by the scanning path (constant ecliptic latitude for FIRAS), in particular for the FOSSIL case. In that panel, we can also see that not only has the galaxy been dragged, but also other sources on the sky appear as ripples, meaning they have been dragged. This is not as obvious in the lower-resolution FIRAS equivalent, but we can still see that, in both, the galaxy is split into two -- the under and oversubtracted parts --, particularly obvious in the center of the map where the scanning strategy projection onto the map is the most obvious.
+
+The $\chi^2$ calculated for the result of noise-weighted mapmaker for FIRAS, on the other hand, seems to be oversubtracting in the center of the galaxy and undersubtracting at the edges, signaling that there is a difference between using the middle pixel or all of the pixels, but this is still not good enough to resolve the full galaxy properly -- either because of lack of data or because of lack of spatial resolution.
 
 \section{Conclusions}
 \label{sec:conclusions}
