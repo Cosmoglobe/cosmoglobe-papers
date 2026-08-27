@@ -219,18 +219,32 @@ This work aims to specifically treat the ``Fourier smearing'' effect that happen
 
 We will focus on simulating two different kinds of experiments: a modern experiment, where we assume the broadband is high enough to send down each individual interferogram (Section \ref{sec:modern}); a FIRAS-like experiment, where the broadband was not high enough and we have to work with data that was averaged on-board, mixing different sky positions together (Section \ref{sec:firas-like}). In order to simulate realistic data for these two types of experiments, we will take instrument parameters, respectively, from the legacy FIRAS data and available information and from the proposed FOSSIL satellite \citep{coulon2024}, a modern FTS experiment, currently being proposed as ESA's M8 mission, with the primary goal of measuring the cosmic microwave background (CMB) spectral distortions. As FOSSIL is still under development, we will use the current proposed parameters when possible, and otherwise take parameters similar to or adapted from FIRAS. Further work will be done in order to tune FOSSIL's parameters and optimize its design, also taking into account the results of this work.
 
-In theory, one could simply solve the maximum likelihood mapmaking equation (Equation \eqref{eq:mapmaking}, explained in Section \ref{sec:wn-mapmaker}) and get the optimal map from a given data, but this is computationally unfeasible, as the ponting and noise covariance matrices are too large to be stored in memory and inverted/transposed.
+An ideal IFG observes the sky $S(\hat n,\nu)$ at any individual time according to the usual integral equation
+\begin{equation}
+	d(\hat n,x)=\int_0^\infty \cos(2\pi\nu x)\,S(\hat n,\nu)\,d\nu
+\end{equation}
+Assuming the data are taken at equal spacings, $x_j=j\Delta x$, we effectively sample the frequency at discrete spacings, $\nu_k=k\Delta\nu$. Similarly, we assume that for each sampling of the interferogram the telescope is perfectly stationary observing pixel $p$. This allows us to write 
+\begin{align}
+	d_{pj}&=\Delta\nu\sum_k\,\cos(2\pi k\Delta \nu\,j\Delta x)S_{pk}	
+	\\
+	&\equiv \mathsf F_{jk}S_{pk}
+\end{align}
+or put into time-ordered space with a pointing matrix $\mathsf P_{tp}$
+\begin{equation}
+	d_t=\mathsf F_{jk}\mathsf P_{tp}S_{pk}
+\end{equation}
+where $j$ is determined as a function of $t$.
 
-\djw{At some point we need to write down the actual data model, since the pointing matrix is quite vague. Writing the continuous integral and tieing it to the raw time-ordered data allows us to write a pointing matrix at all.}
+In theory, one could simply solve the maximum likelihood mapmaking equation (Equation \eqref{eq:mapmaking}, explained in Section \ref{sec:binned-mapmaker}) and get the optimal map from a given data, but this is computationally unfeasible, as the ponting and noise covariance matrices are too large to be stored in memory and inverted/transposed.
 
-This paper is structured as follows: in Section \ref{sec:simulations}, we describe in detail all of the steps and considerations taken in order to generate realistic simulations, both for a FOSSIL-like (Section \ref{sec:modern}) and a FIRAS-like (Section \ref{sec:firas-like}) experiment, expanding on why there is a need for careful mapmaking; in Section \ref{sec:mapmaking}, we describe three different mapmaking methods: a legacy mapmaker (Section \ref{sec:naive-mapmaker}), a binned mapmaker, that follows the maximum-likelihood mapmaking equation but assumes only white noise and no frequency correlations (Section \ref{sec:wn-mapmaker}) and a conjugate gradient (CG) mapmaker, taking into account all of the outlined effects (Section \ref{sec:cg-mapmaker}); in Section \ref{sec:results}, we show the results obtained by each of the three mapmakers and compare them; finally, in Section \ref{sec:conclusions}, we present our conclusions and future outlooks.
+This paper is structured as follows: in Section \ref{sec:simulations}, we describe in detail all of the steps and considerations taken in order to generate realistic simulations, both for a FOSSIL-like (Section \ref{sec:modern}) and a FIRAS-like (Section \ref{sec:firas-like}) experiment, expanding on why there is a need for careful mapmaking; in Section \ref{sec:mapmaking}, we describe three different mapmaking methods: a legacy mapmaker (Section \ref{sec:naive-mapmaker}), a binned mapmaker, that follows the maximum-likelihood mapmaking equation but assumes only white noise and no frequency correlations (Section \ref{sec:binned-mapmaker}) and a conjugate gradient (CG) mapmaker, taking into account all of the outlined effects (Section \ref{sec:cg-mapmaker}); in Section \ref{sec:results}, we show the results obtained by each of the three mapmakers and compare them; finally, in Section \ref{sec:conclusions}, we present our conclusions and future outlooks.
 
 \section{Simulations}
 \label{sec:simulations}
 
 In order to validate our proposed mapmaking algorithms, we first need to create a dataset to serve as our ground truth. We will assume the sky is made up solely of thermal dust, as it is the dominant foreground in most FIRAS and future FOSSIL frequencies, and the true sky content does not matter, only that we can fully recover it.
 
-We start by taking the dust component map as given in \cite{planck2014-a12}, smoothing it with the 1.6 degree FOSSIL beam and the seven degree FIRAS beam, respectively for our modern and legacy experiment simulations. Then, we apply the dust spectral energy density (SED), also as given in \cite{planck2014-a12}, to the downgraded map and generate a map cube, spanning the frequencies theoretically reachable by FOSSIL (from 60 to 1980 GHz, with a spectral resolution of 15 GHz) and by the FIRAS low spectral resolution scanning scheme (from 13 to around 3000 GHz, with a spectral resolution of 13.6 GHz). It is important to note that \djw{could remove the first chunk of this sentence} both FIRAS and FOSSIL have separate low and high frequency detectors, but we simulate only the FTS optics, which span the whole frequency range, and the splitting into the different frequency bands is a posterior step. We then generate one interferogram for each pixel in the map by taking the Fourier transform of the SED at that pixel. It is important to note that both FOSSIL, FIRAS and other similar (proposed or under-development) FTS instruments are differential, meaning they have an internal reference temperature which is subtracted from the sky signal, and that difference is what is measured. Here, our signal simply comes from the sky, since the differential nature of the instrument can be easily accomodated for, e.g. optimally by adding the internal reference to the differential data before mapmaking. However, in any case, this is what the data looks like for these differential FTS experiments when the internal load is well matched to the sky.
+We start by taking the dust component map as given in \cite{planck2014-a12}, smoothing it with the 1.6 degree FOSSIL beam and the seven degree FIRAS beam, respectively for our modern and legacy experiment simulations. Then, we apply the dust spectral energy density (SED), also as given in \cite{planck2014-a12}, to the downgraded map and generate a map cube, spanning the frequencies theoretically reachable by FOSSIL (from 60 to 1980 GHz, with a spectral resolution of 15 GHz) and by the FIRAS low spectral resolution scanning scheme (from 13 to around 3000 GHz, with a spectral resolution of 13.6 GHz). Both FIRAS and FOSSIL have separate low and high frequency detectors, but we simulate only the FTS optics, which span the whole frequency range, and the splitting into the different frequency bands is a posterior step. We then generate one interferogram for each pixel in the map by taking the Fourier transform of the SED at that pixel. It is important to note that both FOSSIL, FIRAS and other similar (proposed or under-development) FTS instruments are differential, meaning they have an internal reference temperature which is subtracted from the sky signal, and that difference is what is measured. Here, our signal simply comes from the sky, since the differential nature of the instrument can be easily accomodated for, e.g. optimally by adding the internal reference to the differential data before mapmaking. However, in any case, this is what the data looks like for these differential FTS experiments when the internal load is well matched to the sky.
 
 As temperature control is crucial for FOSSIL, its current proposed scanning strategy is a similar one to that of Planck \citep{planckScan}: the instrument will follow a Lissajous orbit around the Earth-Sun L2 point, capturing the whole sky in 6 months, while spinning at a rate of approximately one rotation per hour, with a boresight angle of 87 degrees and a spin axis tilted by 5 degrees, with a precession period of 20 hours. The survey will last 4 years, with a planned observing efficiency of 70\%. As such, we simulate this system and derive the line-of-sight observations across the sky, assuming one interferogram will last seven seconds, and, taking into account the number of channels, assuming each interferogram has a round number of 256 samples, which leads to a sampling rate of 36.57 Hz. The hit map of the simulated scanning strategy is shown in the top panel of Figure \ref{fig:scanning-strategy}.
 
@@ -260,20 +274,18 @@ Figure \ref{fig:ifg-pointing} shows an example of the pointing solution for one 
 
 We will describe how we generate the simulations for the modern method in Section \ref{sec:modern} in detail, followed by the simulation method for the legacy one in Section \ref{sec:firas-like}, which follows the same principles, with the addition of the on-board coadding step.
 
-An important step to notice is that, usually, \djw{Again, first chunk could be removed} for FTS experiments, the so-called zero path difference (ZPD), i.e. the point where the two arms of the interferometer are equal, therefore having the split signal maximally contructively interfering, is not at the beginning of the interferogram, even though that is what is simulated here. It is not relevant to simulate this effect for our purposes, as the ZPD is simply a phase shift in the interferogram, but it is important to note that this shift needs to be taken into account when analyzing real data, in particular because it can happen between two discrete data points; not taking this effect into account will massively affect the SED reconstruction.
+For FTS experiments, the so-called zero path difference (ZPD), i.e. the point where the two arms of the interferometer are equal, therefore having the split signal maximally contructively interfering, is not at the beginning of the interferogram, even though that is what is simulated here. It is not relevant to simulate this effect for our purposes, as the ZPD is simply a phase shift in the interferogram, but it is important to note that this shift needs to be taken into account when analyzing real data, in particular because it can happen between two discrete data points; not taking this effect into account will massively affect the SED reconstruction.
 
 For both simulation types, we add correlated, $\nicefrac{1}{f}$, in order to introduce correlations between the different separations of the interferogram, i.e. in the native FTS space. In real data, these correlations may show up as $\nicefrac{1}{f}$ or other correlated noise types, but there will always be some kind of correlation introduced by the electronics. It is interesting to note that correlated noise in an instrument such as this one shows up in a completely different way as it would in a traditional CMB experiment, where the noise is not only correlated in time and space, but also correlated in frequency, as simultaneous movement of the instrument and the telescope introduce correlations between the different separations of the interferogram, which then get translated into sky frequency space after the Fourier transform. This is a crucial point to take into account when analyzing data from FTS experiments, as it is not enough to simply assume that the noise is uncorrelated in frequency space, as is usually done for traditional CMB experiments.
 
 \subsection{Modern Experiment}
 \label{sec:modern}
 
-For a modern experiment, we would have access to each of the on-board interferograms and the current estimate for the FOSSIL FTS scanning time is seven seconds per each of these on-board interferograms.
+For the FOSSIL experiment, we will have a stream of data recording the forward and backward movement of the FTS mirror. In post-processing, we can cut these to have each one movement of the FTS, and that means that we will have access to each of the on-board interferograms and the current estimate for the FOSSIL FTS scanning time is seven seconds per each of these on-board interferograms.
 
 %The MTM scanning time for FOSSIL is not yet decided, so we will use the FIRAS reference value for one on-board interferogram of 3.04 seconds\footnote{The reference 55.36 seconds time for the full short and slow scanning mode includes the turn-around time of the MTM, whereas for the modern experiment we take only into account a forward sweep.}.
 
-\djw{It isn't totally clear to me that there will be separate IFGs. I think FOSSIL is proposing continuously going backwards and forwards, and what we count as an individual IFG might just be a post-processing choice we can make.}
-
-We then end up with a 3-dimensional pointing matrix $\matP$, with dimensions $N_{\rm IFGs} \times N_{\rm pix} \times N_{\rm separations}$, where $N_{\rm IFGs}$ is the total number of sky interferograms taken over the four-year mission, totaling to around 12,614,546 interferograms, dependent on the exact observing efficiency; $N_{\rm pix}$ is the number of HEALPix pixels at $N_\mathrm{side}=128$, which amounts to 196,608; and $N_{\rm separations}$ is the length of each interferogram, which we will assume to be a round number of 256 samples. Each row of this matrix, $\matP_{i,:,:}$, contains the pointing solution for one interferogram, with each column $\matP_{i,:,j}$ being a one-hot \djw{?} vector indicating which pixel the instrument was pointing to at separation $j$ of interferogram $i$. This matrix is saved and later used by the mapmaking algorithms. For real data, and for the FOSSIL experiment, these pointings will be given as part of the housekeeping data package.
+We then end up with a 3-dimensional pointing matrix $\matP$, with dimensions $N_{\rm IFGs} \times N_{\rm pix} \times N_{\rm separations}$, where $N_{\rm IFGs}$ is the total number of sky interferograms taken over the four-year mission, totaling to around 12,614,546 interferograms, dependent on the exact observing efficiency; $N_{\rm pix}$ is the number of HEALPix pixels at $N_\mathrm{side}=128$, which amounts to 196,608; and $N_{\rm separations}$ is the length of each interferogram, which we will assume to be a round number of 256 samples. Each row of this matrix, $\matP_{i,:,:}$, contains the pointing solution for one interferogram, with each column $\matP_{i,:,j}$ being a one-hot vector (i.e. a vector of all zeros, except one, which has the value of one) indicating which pixel the instrument was pointing to at separation $j$ of interferogram $i$. This matrix is saved and later used by the mapmaking algorithms. For real data, and for the FOSSIL experiment, these pointings will be given as part of the housekeeping data package.
 
 \djw{This is sort of hard for me to follow. It feels a bit abstract for some reason. I think a figure showing 2-dimensional slices would be useful. My first thought would be showing $P_{i,:,:}$ some sort of scatterplot showing the 256 points of the IFG colorcoded by the IFG value at the lon/lat corresponding to the pixels in that IFG. Perhaps that's what Figure 2 is meant to show?}
 
@@ -305,22 +317,20 @@ White noise is then added based on an estimate provided by \cite{fixsen:1994}, F
 \section{Mapmaking}
 \label{sec:mapmaking}
 
-A common approach that will be used in all three examples of mapmakers, which might not seem straight forward from when one is used to other more common CMB experiments data types, is that we do mapmaking in interferogram space (256 or 512 total maps, one for each separation of the FTS in FOSSIL and FIRAS, respectively), and only then Fourier transform the maps to sky frequency space (129 or 257 sky frequencies). \djw{I think this includes the $\nu=0$ term, so it could be safe to just say 128 and 256?}
+A common approach that will be used in all three examples of mapmakers, which might not seem straight forward from when one is used to other more common CMB experiments data types, is that we do mapmaking in interferogram space (256 or 512 total maps, one for each separation of the FTS in FOSSIL and FIRAS, respectively), and only then Fourier transform the maps to sky frequency space (128 or 256 sky frequencies).
 
 \subsection{Legacy mapmaker}
-\label{sec:naive-mapmaker}
+\label{sec:legacy-mapmaker}
 
 \todo{Show both FFT before and after averaging.} \aism{I don't remember what this meant...}
 
 \djw{I believe I was thinking about this being the case where we take the Frankenstein IFG to see the effective spectrum. This could then be compared to the SED in the different }
 
-We first implement a naive mapmaker, serving as a baseline comparison for our proposed mapmaking algorithm. This mapmaker is similar to the one used by the original FIRAS team, with the exception that, in the original analysis, there was some simple noise weighting when averaging the data, as further described by \cite{firasexsupp}. In this case, we take the pointing of the middle point of each interferogram, following what the FIRAS team did. A simple and quick way of already improving upon this method would be to, instead of taking the pointing of the middle point, taking the pointing of the ZPD of each interferogram. This was unfortunately not available in the original FIRAS data, but it is something that can be done for future experiments. \djw{In principle, this could be inferred from the scan rate, similar to what was done from the pre-averaged IFGs, right?}
+We first implement a naive mapmaker, serving as a baseline comparison for our proposed mapmaking algorithm. This mapmaker is similar to the one used by the original FIRAS team, with the exception that, in the original analysis, there was some simple noise weighting when averaging the data, as further described by \cite{firasexsupp}. In this case, we take the pointing of the middle point of each interferogram, following what the FIRAS team did. A simple and quick way of already improving upon this method would be to, instead of taking the pointing of the middle point, taking the pointing of the ZPD of each interferogram. This was unfortunately not available in the original FIRAS data, but it is something that can be done for future experiments, and, in principle, can of course be reconstructed assuming a continuous scan pattern.
 
-Our naive pointing matrix $\matP$ is then simply a two-dimensional matrix with shape $N_{\rm IFGs} \times N_{\rm pix}$, where each row $\matP_{i,:}$ is a one-hot vector \djw{I haven't heard this nomenclature before} indicating which pixel the instrument was pointing to at the middle sample of interferogram $i$. This matrix is then used to bin the data into a map, by simply averaging all interferograms that hit each pixel.
+Our naive pointing matrix $\matP$ is then simply a two-dimensional matrix with shape $N_{\rm IFGs} \times N_{\rm pix}$, where each row $\matP_{i,:}$ is a one-hot vector indicating which pixel the instrument was pointing to at the middle sample of interferogram $i$. This matrix is then used to bin the data into a map, by simply averaging all interferograms that hit each pixel.
 
-Once we have our 256 or 512 interferogram separation maps $m_x$, we can take the real Fourier transform of each pixel along the maps, obtaining, for each pixel, its spectrum $m_{\nu}$. We then end up with 129 or 257 full sky frequency maps, which we can then compare to the generated input sky at each SED frequency.
-
-\djw{Is it fair to say that this mapmaker is binning based solely on the central pointing?}
+Once we have our 256 or 512 interferogram separation maps $m_x$, we can take the real Fourier transform of each pixel along the maps, obtaining, for each pixel, its spectrum $m_{\nu}$. We then end up with 128 or 256 full sky frequency maps, which we can then compare to the generated input sky at each SED frequency.
 
 \subsection{Binned mapmaker}
 \label{sec:binned-mapmaker}
@@ -438,22 +448,6 @@ The $\chi^2$ calculated for the result of noise-weighted mapmaker for FIRAS, on 
 \section{DFT matrix}
 
 This work started with the idea of incorporating the Fourier transform part of the FTS directly into the mapmaking equation. As such, we did a lengthy study on the discrete Fourier transform (DFT) matrix and its properties. Here, we summarize this for the interested reader and show why we abandoned this approach.
-
-An ideal IFG observes the sky $S(\hat n,\nu)$ at any individual time according to the usual integral equation
-\begin{equation}
-	d(\hat n,x)=\int_0^\infty \cos(2\pi\nu x)\,S(\hat n,\nu)\,d\nu
-\end{equation}
-Assuming the data are taken at equal spacings, $x_j=j\Delta x$, we effectively sample the frequency at discrete spacings, $\nu_k=k\Delta\nu$. Similarly, we assume that for each sampling of the interferogram the telescope is perfectly stationary observing pixel $p$. This allows us to write 
-\begin{align}
-	d_{pj}&=\Delta\nu\sum_k\,\cos(2\pi k\Delta \nu\,j\Delta x)S_{pk}	
-	\\
-	&\equiv \mathsf F_{jk}S_{pk}
-\end{align}
-or put into time-ordered space with a pointing matrix $\mathsf P_{tp}$
-\begin{equation}
-	d_t=\mathsf F_{jk}\mathsf P_{tp}S_{pk}
-\end{equation}
-where $j$ is determined as a function of $t$.
 
 In principle, given the measured IFG values $d_t$, the pixels as a function of time $p(t)$, and the mirror position as a function of time $x_{j(t)}=j(t)\,\Delta x$, one can solve the standard mapmaking equation to obtain the sky cube;
 \begin{equation}
