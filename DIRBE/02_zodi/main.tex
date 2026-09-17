@@ -356,7 +356,7 @@ low-wavelength channel, as well as only one common emissivity for all
 three asteroidal bands. We define the parameters used in this 
 analysis in Tables~\ref{table:zodi-params-geo}, \ref{table:zodi-params-source}, and 
 \ref{table:zodi-params-phase}; 
-for full details of this model, we refer the interested reader to
+for full details of this model we refer the interested reader to
 \citet{kelsall1998} and \citet{Hong}.}
 
 %\footnote{We have also spent large 
@@ -702,13 +702,13 @@ all-important CIB monopoles.}
 
 \section{Data}\label{sect:data}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\columnwidth]{figs/tod.pdf}
-    \caption{Subsample of the pre-processed TOD used in this analysis for all ten DIRBE bands. The time-streams
-	show approximately one rotation of the \textit{COBE} satellite which includes two crossing of the Galactic and Ecliptic planes.}
-    \label{fig:tod_zodi}
-\end{figure}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=\columnwidth]{figs/tod.pdf}
+%    \caption{Subsample of the pre-processed TOD used in this analysis for all ten DIRBE bands. The time-streams
+%	show approximately one rotation of the \textit{COBE} satellite which includes two crossing of the Galactic and Ecliptic planes.}
+%    \label{fig:tod_zodi}
+%\end{figure}
 
 %\subsection{DIRBE Calibrated Individual Observations}
 The main dataset used in the \cosmoglobe\ DR2 analysis is the
@@ -747,15 +747,14 @@ elongation cut used by the DIRBE team to produce their final ZSMA
 maps, but provides much better precision in terms of removing specific
 systematic features.
 
-In the following, we will refer to the pre-processed CIO as TOD.  A
-subsample of the TOD for each DIRBE band as used in our analysis can
-be seen in Fig.~\ref{fig:tod_zodi}, where we show data for one
-rotation of the spacecraft about its boresight. Within this rotation,
-both the Galactic and Ecliptic planes are crossed twice. The two peaks
-at around 30\,sec and 1\,min 45\,sec correspond to the Galactic plane
-crossings, while the sine-like waves in bands 4.9, 12, and 25\,$\mu$m
-are due to the ZL emission which peaks in the Ecliptic plane.
-
+In the following, we will refer to the pre-processed CIO as TOD.  
+%A subsample of the TOD for each DIRBE band as used in our analysis can
+%be seen in Fig.~\ref{fig:tod_zodi}, where we show data for one
+%rotation of the spacecraft about its boresight. Within this rotation,
+%both the Galactic and Ecliptic planes are crossed twice. The two peaks
+%at around 30\,sec and 1\,min 45\,sec correspond to the Galactic plane
+%crossings, while the sine-like waves in bands 4.9, 12, and 25\,$\mu$m
+%are due to the ZL emission which peaks in the Ecliptic plane.
 In order to trace seasonal ZL modeling errors, we divide the TOD for
 each DIRBE channel into two, corresponding to the first and second
 half of the full survey. All ZL parameters are fitted jointly and
@@ -818,6 +817,44 @@ ancillary datasets. For full details, see
 %but they do not contribute with constraining power in the current
 %analysis \citep{CG02_01}.
 
+\begin{figure*}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_I_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
+    }\\
+    \resizebox{\textwidth}{!}{%
+    \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
+    \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
+    }\\
+    \caption{Illustration of the basic sky maps involved in the ZL 
+    fitting algorithms adopted by the \Cosmoglobe\ (\emph{left column}) 
+    and K98 (\emph{right column}) pipelines for one week of 
+    $25\,\mu\mathrm{m}$ observations, both adopting the K98 model. The basic data element in 
+    \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top left}), 
+    which is fitted with the full ZL model (K98 in this case), $Z_{\nu}$ 
+    (\emph{middle left}), both modeled in time-domain. The $\chi^2$ 
+    used in the \Cosmoglobe\ analysis minimizes the total signal-minus-model residual, 
+    $I_{\nu}-Z_{\nu}$ (\emph{bottom left}). In contrast, the 
+    K98 pipeline used exclusively differences between weekly and 
+    full-season maps, both for the observed signal, 
+    $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top right}), 
+    and the ZL model, $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle right}), 
+    where brackets indicate full-survey averages. Correspondingly, the 
+    final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ 
+    (\emph{bottom right}), and is by construction only sensitive to 
+    time-variable signals. The main advantage of the 
+    K98 approach is insensitivity to stationary sky signals, in 
+    particular thermal dust and CIB, while the main advantage of the 
+    \Cosmoglobe\ approach is a much higher effective signal-to-noise 
+    ratio, both to ZL parameters and zero-levels, as seen by comparing
+    the two bottom panels.}
+    \label{fig:week_vs_full}
+\end{figure*}
 
 \section{Methods}\label{sect:param-estimation}
 
@@ -882,7 +919,7 @@ evaluated along the line-of-sight defined by the pointing $\P$. This
 term depends on $\zeta_{\mathrm{z}}$, and our task in this paper is to
 establish an approximation to the marginal posterior distribution,
 $P(\zeta_{\mathrm{z}}|\dv)$. One straightforward way of computing this
-marginal distribution is, perhaps somewhat surprisingly, to first
+marginal distribution is to first
 consider the much bigger task of estimating the full joint posterior
 distribution, $P(\omega|\dv)$ --- which now includes billions of
 correlated parameters rather than just a hundred. The reason this is a 
@@ -892,18 +929,18 @@ is possible to sample from, while the marginal distribution does not;
 for early CMB applications of this two-stage approach, see
 \citet{jewell2004,wandelt2004,eriksen:2004}.
 
-In order for this to work, we have to define $\s_{\mathrm{tot}}$ as the sum 
-of all components but $\n_\mathrm{w}$, so that $\n_\mathrm{w}=\dv-\s_{\mathrm{tot}}$ 
-is a Gaussian distribution with 
-zero mean and covariance matrix $\N_{\mathrm{w}}$ that also has free parameters. 
-For most instruments this is an excellent approximation. With this assumption, we can
-write the likelihood, $\mathcal{L}(\omega) \equiv P(\dv|\omega)$, as 
-\begin{align}
--2\ln\mathcal{L}(\omega) &= (\dv-\s^{\mathrm{tot}}(\omega))^t
-  \N_{\mathrm{w}}^{-1}(\dv-\s^{\mathrm{tot}}(\omega)) +\ln|\N_{\mathrm w}| \nonumber \\
-  &\equiv \chi^2(\omega) +\ln|\N_{\mathrm w}|,
-\end{align}
-and the posterior distribution is then defined by Bayes' theorem.
+%In order for this to work, we have to define $\s_{\mathrm{tot}}$ as the sum 
+%of all components but $\n_\mathrm{w}$, so that $\n_\mathrm{w}=\dv-\s_{\mathrm{tot}}$ 
+%is a Gaussian distribution with 
+%zero mean and covariance matrix $\N_{\mathrm{w}}$ that also has free parameters. 
+%For most instruments this is an excellent approximation. With this assumption, we can
+%write the likelihood, $\mathcal{L}(\omega) \equiv P(\dv|\omega)$, as 
+%\begin{align}
+%-2\ln\mathcal{L}(\omega) &= (\dv-\s^{\mathrm{tot}}(\omega))^t
+%  \N_{\mathrm{w}}^{-1}(\dv-\s^{\mathrm{tot}}(\omega)) +\ln|\N_{\mathrm w}| \nonumber \\
+%  &\equiv \chi^2(\omega) +\ln|\N_{\mathrm w}|,
+%\end{align}
+%and the posterior distribution is then defined by Bayes' theorem.
 
 %,
 %\begin{equation}
@@ -918,44 +955,49 @@ In order to map out this full joint posterior, \textbf{we use Gibbs
 sampling \citep[e.g.,][]{geman:1984}, which allows
 us to draw samples iteratively by scanning through all conditional
 distributions, as opposed to drawing samples directly from the joint
-distribution.}
+distribution. In this framework, ZL parameter estimation is
+thus nothing but a traditional Gaussian $\chi^2$ optimization (or
+sampling) problem after all non-ZL contributions have been subtracted
+from $\dv$. Precisely how we implement this operation in the
+current pipeline is described in Sect.~\ref{sec:nonlin}.}
+
 %Sampling from $N$ conditional distributions, each
 %defined by a simple analytical distribution, is typically much simpler
 %than drawing from a single joint $N$-dimensional distribution that
 %does not have a closed form analytical expression. 
-In practice, for
-the \cosmoglobe\ DR2 analysis this translates into the following
-so-called Gibbs chain:
-\begin{alignat}{11}
-    \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-    &\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
-    \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\phantom{\xi_n} &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
-    &\,\a_{\mathrm{static}})\\
-    \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-    \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
-    &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
-    \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
-    &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
-    \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
-    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static},
-\end{alignat}
-where $\leftarrow$ indicates the process of drawing a sample from the
-distribution on the right-hand side. Each sampling step in this chain
-is described by \citet{CG02_01} and references therein --- except for
-Eq.~\eqref{eq:gibbs_zodi}, which is the main topic of this paper.
-
-Based on the data model in Eq.~\eqref{eq:model}, we can define the
-following residual
-\begin{equation}
-\r = \dv - (\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c +
-          \s_{\mathrm{static}} + \n_\mathrm{corr}),
-\end{equation}
-and this should ideally only contain ZL and white instrumental noise.
+%In practice, for
+%the \cosmoglobe\ DR2 analysis this translates into the following
+%so-called Gibbs chain:
+%\begin{alignat}{11}
+%    \tens{G} &\,\leftarrow P(\tens{G}&\,\mid &\,\dv,&\, &\,\phantom{\tens{G}} &\,\xi_n, &
+%    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%    &\,\a_{\mathrm{static}})\label{eq:gibbs_G}\\
+%    \xi_{\mathrm{n}} &\,\leftarrow P(\xi_{\mathrm{n}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\phantom{\xi_n} &
+%    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}},
+%    &\,\a_{\mathrm{static}})\\
+%    \beta_{\mathrm{sky}} &\,\leftarrow P(\beta_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+%    \,\phantom{\beta_{\mathrm{sky}}}& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+%    \a_{\mathrm{sky}} &\,\leftarrow P(\a_{\mathrm{sky}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+%    \,\beta_{\mathrm{sky}},& \,\phantom{\a_{\mathrm{sky}},}
+%    &\,\zeta_{\mathrm{z}}, &\,\a_{\mathrm{static}})\\
+%    \zeta_{\mathrm{z}} &\,\leftarrow P(\zeta_{\mathrm{z}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+%    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}},
+%    &\,\phantom{\zeta_{\mathrm{z}},} &\,\a_{\mathrm{static}})\label{eq:gibbs_zodi}\\
+%    \a_{\mathrm{static}} &\,\leftarrow P(\a_{\mathrm{static}}&\,\mid &\,\dv,&\, &\,\tens{G}, &\,\xi_n, &
+%    \,\beta_{\mathrm{sky}},& \,\a_{\mathrm{sky}}, &\,\zeta_{\mathrm{z}} &\,\phantom{\a_{\mathrm{static}}})\label{eq:gibbs_static},
+%\end{alignat}
+%where $\leftarrow$ indicates the process of drawing a sample from the
+%distribution on the right-hand side. Each sampling step in this chain
+%is described by \citet{CG02_01} and references therein --- except for
+%Eq.~\eqref{eq:gibbs_zodi}, which is the main topic of this paper.
+%
+%Based on the data model in Eq.~\eqref{eq:model}, we can define the
+%following residual
+%\begin{equation}
+%\r = \dv - (\G\P\B\sum_{c=1}^{n_{\mathrm{comp}}}\M_c\a_c +
+%          \s_{\mathrm{static}} + \n_\mathrm{corr}),
+%\end{equation}
+%and this should ideally only contain ZL and white instrumental noise.
 %
 %  \footnote{\textbf{My point is this noise 
 %is the residual we will get in the end, stuff that we can't resolve (right?) so I would add "unmodeled" to not 
@@ -965,66 +1007,26 @@ and this should ideally only contain ZL and white instrumental noise.
 %Since previously we said that this has free parameters and 
 %therefore cannot just be skipped, I think we should say something to justify what follows. \textit{Take out this note!!!}}
 % HKE: No, note that there is the word "ideally" there. When defining the posterior, we actually do assume that the model is correct. Unmodelled noise appears in the goodness-of-fit tests. The fact that the white noise also has free parameters is irrelevant for the ZL Gibbs sampling step; it only affects the noise sampling step itself. Gibbs sampling is great :-)
-As such, the assumption that this noise is also Gaussian defines the
-conditional distribution in Eq.~\eqref{eq:gibbs_zodi}, and we may
-write
-\begin{equation}
-  -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{\nu}
-  \left(\frac{\r_{\nu} -
-    \s_{\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \equiv
-  \chi^2 (\zeta_{\mathrm{z}}),
-  \label{eq:gibbs_chisq}
-\end{equation}
-where we have introduced multiple data frequency channels, denoted by
-$\nu$, and also for simplicity neglected the prior,
-$P(\zeta_{\mathrm{z}})$. We also define the reduced chi-squared
-$\chi^2_{\mathrm{red}}=\chi^2/n_{\mathrm{TOD}}$, where
-$n_{\mathrm{TOD}}$ is the number of TOD samples included in the
-likelihood evaluation. In this framework, ZL parameter estimation is
-thus nothing but a traditional Gaussian $\chi^2$ optimization (or
-sampling) problem after all non-ZL contributions have been subtracted
-from $\dv$. Precisely how we implement this operation in the
-current pipeline is described in Sect.~\ref{sec:nonlin}.
-
-
-\begin{figure*}
-    \centering
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_I_nu.pdf}%
-    \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
-    \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
-    }\\
-    \resizebox{\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
-    \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
-    }\\
-    \caption{Illustration of the basic sky maps involved in the ZL 
-    fitting algorithms adopted by the \Cosmoglobe\ (\emph{left column}) 
-    and K98 (\emph{right column}) pipelines for one week of 
-    $25\,\mu\mathrm{m}$ observations, both adopting the K98 model. The basic data element in 
-    \Cosmoglobe\ is the full sky signal, $I_{\nu}$ (\emph{top left}), 
-    which is fitted with the full ZL model (K98 in this case), $Z_{\nu}$ 
-    (\emph{middle left}), both modeled in time-domain. The $\chi^2$ 
-    used in the \Cosmoglobe\ analysis minimizes the total signal-minus-model residual, 
-    $I_{\nu}-Z_{\nu}$ (\emph{bottom left}). In contrast, the 
-    K98 pipeline used exclusively differences between weekly and 
-    full-season maps, both for the observed signal, 
-    $\Delta I_{\nu} \equiv I_{\nu}-\left<I_{\nu}\right>$ (\emph{top right}), 
-    and the ZL model, $\Delta Z_{\nu} = Z_{\nu}-\left<Z_{\nu}\right>$ (\emph{middle right}), 
-    where brackets indicate full-survey averages. Correspondingly, the 
-    final $\chi^2$ is defined through $\Delta I_{\nu} - \Delta Z_{\nu}$ 
-    (\emph{bottom right}), and is by construction only sensitive to 
-    time-variable signals. The main advantage of the 
-    K98 approach is insensitivity to stationary sky signals, in 
-    particular thermal dust and CIB, while the main advantage of the 
-    \Cosmoglobe\ approach is a much higher effective signal-to-noise 
-    ratio, both to ZL parameters and zero-levels, as seen by comparing
-    the two bottom panels.}
-    \label{fig:week_vs_full}
-\end{figure*}
+%As such, the assumption that this noise is also Gaussian defines the
+%conditional distribution in Eq.~\eqref{eq:gibbs_zodi}, and we may
+%write
+%\begin{equation}
+%  -2\ln P(\zeta_{\mathrm{z}}|\dv, \ldots) = \sum_{\nu}
+%  \left(\frac{\r_{\nu} -
+%    \s_{\nu,\mathrm{zodi}}(\zeta_\mathrm{s})}{\sigma_{\nu}}\right)^2 \equiv
+%  \chi^2 (\zeta_{\mathrm{z}}),
+%  \label{eq:gibbs_chisq}
+%\end{equation}
+%where we have introduced multiple data frequency channels, denoted by
+%$\nu$, and also for simplicity neglected the prior,
+%$P(\zeta_{\mathrm{z}})$. We also define the reduced chi-squared
+%$\chi^2_{\mathrm{red}}=\chi^2/n_{\mathrm{TOD}}$, where
+%$n_{\mathrm{TOD}}$ is the number of TOD samples included in the
+%likelihood evaluation. In this framework, ZL parameter estimation is
+%thus nothing but a traditional Gaussian $\chi^2$ optimization (or
+%sampling) problem after all non-ZL contributions have been subtracted
+%from $\dv$. Precisely how we implement this operation in the
+%current pipeline is described in Sect.~\ref{sec:nonlin}.
 
 \textbf{One important term in
 Eq.~\eqref{eq:model}, $\s_{\mathrm{static}}$, is
@@ -1070,7 +1072,8 @@ for the excess radiation has been established.
 \label{sec:algorithm_comparison}
 
 Before describing the practical numerical implementation used for
-sampling from Eq.~\eqref{eq:gibbs_zodi} in this paper, it is worth
+sampling from \textbf{the posterior distribution of zodiacal light 
+parameters} in this paper, it is worth
 considering the more important fundamental differences between
 our approach and that adopted by the DIRBE team as described by
 \citet{kelsall1998}. The first difference worth noting in this respect
@@ -1088,8 +1091,8 @@ method makes active use of an explicit parametric data model for all
 non-ZL components, the K98 algorithm eliminates any contributions from
 non-ZL components by only considering differences between weekly maps
 and the corresponding full-mission average map in their $\chi^2$
-statistic. That is, rather than optimizing the full $\chi^2$ as
-defined in Eq.~\eqref{eq:gibbs_chisq}, their algorithm optimizes
+statistic. That is, rather than optimizing the full \textbf{data-minus-ZL model} 
+$\chi^2$, their algorithm optimizes
 \begin{align}
   -2\ln P_{\mathrm{K98}}(\zeta_{\mathrm{z}}|\dv, \ldots) &= \sum_{i,\nu}
   \left(\frac{\Delta\dv_{i,\nu} -
@@ -1102,8 +1105,7 @@ where $i$ indicate week number, $\Delta \dv_{i,\nu} = \dv_{i,\nu} -
 \s_{i,\nu,\mathrm{zodi}} - \left<\s_{i,\nu,\mathrm{zodi}}\right>$, and brackets
 denote averaging over the full mission.
 
-Clearly, this statistic has a key philosophical advantage as compared
-to the full-signal statistic in Eq.~\eqref{eq:gibbs_chisq}: it does
+Clearly, this statistic has a key philosophical advantage: it does
 not require any assumptions regarding the astrophysical nature of a 
 complicated infrared sky. At least to first order, it is by
 construction safe against biases from foreground modeling
@@ -1165,12 +1167,25 @@ systematic biases from any non-Galactic source than absolute intensity
 measurements. One important example in this respect is optical
 non-idealities.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
+    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one 
+    single pre-production Gibbs chain, showing the burn-in phase. Each discrete jump indicates the 
+    start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. 
+    The following systematic decline within each main Gibbs iteration indicates the non-linear optimization 
+    performed by the Powell algorithm. The solid dark region corresponds to a large number of highly 
+    sub-optimal parameter trials. }
+    \label{fig:powell_chisq_iter}
+\end{figure}
+
 \subsection{Posterior sampling by non-linear optimization}
 \label{sec:nonlin}
 
 To complete the algorithm in Sect.~\ref{sec:gibbs}, we still need to
 specify the details of the algorithm used to draw samples from
-Eq.~\eqref{eq:gibbs_zodi}. A broad range of Bayesian sampling methods
+\textbf{the posterior distribution of zodiacal light 
+parameters}. A broad range of Bayesian sampling methods
 can be envisioned for this purpose, from simple
 Metropolis-Hastings (MH) accept-reject samplers to various
 incarnations of Hamiltonian samplers that exploit derivative
@@ -1200,6 +1215,17 @@ a simple Powell search, which uses a series of bi-directional line
 searches along a set of conjugate directions. The only reason for
 choosing this method over, say, Levenberg-Marquardt was one of
 implementational ease; it does not require derivative information.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figs/zodi_proc_masks.pdf}
+    \caption{Three of the processing masks used when estimating ZL parameters. The blue mask is the 
+    mask used in the stellar emission dominated 1.25 $\mathrm{\mu m}$ band, the orange mask is used 
+    in the ZL dominated 25 $\mathrm{\mu m}$ band, and the green mask is used in the thermal dust dominated 
+    240 $\mathrm{\mu m}$ band.}
+    \label{fig:zodi-procmask}
+\end{figure}
+
 
 The algorithm is defined as follows: we start by initializing all free
 ZL parameters at the values listed in \citet{kelsall1998} and \citet{Hong}, and run one Powell optimization to
@@ -1235,18 +1261,6 @@ run for a few full Gibbs iterations, as in one to ten full
 samples. Then, once the data and model configuration was considered
 sufficiently mature for production, a longer run with hundreds of
 samples distributed over multiple chains were produced.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figs/powell_red_chisq_vs_iter.pdf}
-    \caption{Reduced $\chi^2$ as a function of Powell likelihood evaluation count for one 
-    single pre-production Gibbs chain, showing the burn-in phase. Each discrete jump indicates the 
-    start of a new Gibbs sample, which is initialized on a new random point that is close to the previous iteration. 
-    The following systematic decline within each main Gibbs iteration indicates the non-linear optimization 
-    performed by the Powell algorithm. The solid dark region corresponds to a large number of highly 
-    sub-optimal parameter trials. }
-    \label{fig:powell_chisq_iter}
-\end{figure}
 
 %\begin{figure}[t]
 %    \centering
@@ -1303,16 +1317,6 @@ worse models than the previous best-fit are accepted.
 %figure illustrates well the highly complex and multi-peaked likelihood
 %surface that must be explored when sampling ZL parameters.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\columnwidth]{figs/zodi_proc_masks.pdf}
-    \caption{Three of the processing masks used when estimating ZL parameters. The blue mask is the 
-    mask used in the stellar emission dominated 1.25 $\mathrm{\mu m}$ band, the orange mask is used 
-    in the ZL dominated 25 $\mathrm{\mu m}$ band, and the green mask is used in the thermal dust dominated 
-    240 $\mathrm{\mu m}$ band.}
-    \label{fig:zodi-procmask}
-\end{figure}
-
 %\begin{figure*}[t]
 %    \centering
 %    \includegraphics[scale=0.8]{figs/traceplot_tot_shape_new.pdf}
@@ -1333,13 +1337,6 @@ worse models than the previous best-fit are accepted.
 %    parameter, and vertical axes were cropped to emphasize convergence.}
 %    \label{fig:trace-emissivity-albedo}
 %\end{figure*}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figs/correlation_matrix_new.pdf}
-    \caption{Correlations between the fitted ZL parameters $\zeta_{\mathrm{z}}$.}
-    \label{fig:correlations}
-\end{figure}
 
 As noted above, we define the accept/reject criterion in terms of a
 reduced $\chi^2_{\mathrm{red}}\equiv\chi^2/n_{\mathrm{TOD}}$, rather
@@ -1475,6 +1472,13 @@ have contributed with some information for these parameters as well,
 but the advantage is a computational speed-up of roughly one
 order-of-magnitude, and we consider this an excellent trade-off.
 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/correlation_matrix_new.pdf}
+    \caption{Correlations between the fitted ZL parameters $\zeta_{\mathrm{z}}$.}
+    \label{fig:correlations}
+\end{figure}
 
 \subsection{Masks}
 \label{sec:masks}
@@ -1678,7 +1682,7 @@ sampling efficiency in a Gibbs sampler.
     The red lines represent $\Phi(\Theta)$ as defined by the original K98 model 
     in the frequency channels 1.25 -- 3.5\,$\mu$m; the black dashed line is the phase function 
     defined in \citet{Hong}; while the solid black line is the DR2 function. This final one 
-    follows the definition of Eq.~\ref{eq:phase_function} and uses all the post-burn-in parameters 
+    follows the definition of \citet{Hong} and uses all the post-burn-in parameters 
     to obtain the mean value and the standard deviation of $\Phi$, 
     shown as a line and a grey area respectively in the figure.}
     \label{fig:phase_function}
@@ -1717,9 +1721,7 @@ sampling efficiency in a Gibbs sampler.
 
 To estimate the marginal posterior distribution for each ZL parameter
 individually, we compute the mean and standard deviation of all
-post-burn-in samples. For each parameter the number of burn-in samples
-was tuned individually, as shown in Figs.~\ref{fig:trace-ipd} and
-\ref{fig:trace-emissivity-albedo}. The resulting values for the shape
+post-burn-in samples. The resulting values for the shape
 parameters are tabulated in the fourth column of
 Table~\ref{table:zodi-params-geo}, the amplitude parameters are
 provided in Table~\ref{table:zodi-params-source}. For comparison, the
@@ -1803,70 +1805,71 @@ Table~\ref{table:zodi-params-phase}, and are in this case compared with \citet{H
     \centering
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_01.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_01.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_01.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_01.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_01.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_01.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_01.pdf}%
     %}
     \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_02.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_02.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_02.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_02.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_02.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_02.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_02.pdf}%
     %}
     \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_03.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_03.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_03.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_03.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_03.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_03.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_03.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_04.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_04.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_04.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_04.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_04.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_04.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_04.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_05.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_05.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_05.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_05.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_05.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_05.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_05.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_06.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_06.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_06.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_06.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_06.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_06.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_06.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_07.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_07.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_07.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_07.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_07.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_07.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_07.pdf}%
     %}
       \\
-    \caption{\textit{(Left column):} Mission-averaged frequency maps containing ZL after data 
-    selection. \textit{(Middle column):} Official DIRBE ZSMA maps. \textit{(Right column):} Our ZL subtracted mission-average 
-    maps. All the maps are at our native HEALPix resolution of $N_\mathrm{side} = 512$. Rows show, from top to 
+    \caption{\textbf{\textit{(Left column):} Official DIRBE zodiacal-light-subtracted mission-averaged frequency 
+    maps evaluated as data minus K98 zodiacal light model. \textit{(Middle column):} Our ZL subtracted mission-average 
+    maps. \textit{(Right column):} Difference between K98 and DR2 ZSMA maps.} All the maps are 
+    at our native HEALPix resolution of $N_\mathrm{side} = 512$. Rows show, from top to 
     bottom, DIRBE channels from 1.25 to 60$\,\mu$m.
     }
     \label{fig:dr2-zsma-compare1}
@@ -1875,29 +1878,29 @@ Table~\ref{table:zodi-params-phase}, and are in this case compared with \citet{H
 \begin{figure*}[t]
     \centering
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_08.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_08.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_08.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_08.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_08.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_08.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_08.pdf}%
     %}
     \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_09.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_09.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_09.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_09.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_09.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_09.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_09.pdf}%
     %}
       \\
 
     %\resizebox{\textwidth}{!}{%
-    \includegraphics[height=2.90cm]{figs/zsma_new/tot/Inu_zsma_10.pdf}%
-    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/tot/Inu_cbar_10.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/K98/k98_zsma_10.pdf}%
     \includegraphics[height=2.90cm]{figs/zsma_new/DR2/DR2_zsma_10.pdf}%
     \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/cbar/cbar_10.pdf}%
+    \includegraphics[height=2.90cm]{figs/zsma_new/diff/zsma_diff_10.pdf}%
+    \includegraphics[width=2.90cm,angle=90]{figs/zsma_new/diff/zsma_diff_cb_10.pdf}%
     %}
       \\
 
@@ -1924,7 +1927,8 @@ Figure~\ref{fig:mission-averaged-comp-maps} in
 Appendix~\ref{sec:zodi-comps} compares the mission-averaged ZL maps
 for both models per component. Here we see visually that in the DR2 maps both the 
 smooth cloud and the three dust bands are fainter than in the K98 maps. 
-The intensity of the third asteroidal band is particularly weak in our model, and we only conclude with an upper limit. 
+The intensity of the third asteroidal band is particularly weak in our model, 
+and we only conclude with an upper limit. 
 %as already noted, we cannot conclude that we have a detection of it with the DIRBE data alone.
 %something else to say??
 
@@ -2101,10 +2105,10 @@ cosmological and astrophysical analysis. These maps are simply derived
 by subtracting the ZL component from the TOD, and bin the rest
 into pixelized sky maps.
 
-Figures~\ref{fig:dr2-zsma-compare1} and \ref{fig:dr2-zsma-compare2}
-compare the K98 ZSMA maps (second column) with the new
-\cosmoglobe\ DR2 ZSMA maps (third column), as well as with the
-corresponding non-ZL-subtracted maps (first column). 
+\textbf{Figures~\ref{fig:dr2-zsma-compare1} and \ref{fig:dr2-zsma-compare2}
+compare the K98 ZSMA maps (first column) with the new
+\cosmoglobe\ DR2 ZSMA maps (second column), as well as with the
+difference between the two calculated as K98 ZSMA minus DR2 ZSMA maps (third column). }
 The 12--60\,$\mu$m DR2 ZSMA maps present negative 
 values along the Ecliptic plane, indicating that the actual zodiacal light signal is lower than 
 what is predicted by the model in use. Despite this, here we clearly
@@ -2468,121 +2472,143 @@ same quantities are presented in Fig.~\ref{fig:mission-averaged-comp-maps}.
 \clearpage
 \section{Interplanetary dust parameter atlas}
 \label{sec:param-atlas}
-In this Appendix, we present an atlas of mission-averaged ZL parameter maps.
-Each map shown in Figs.~\ref{fig:atlas1} and ~\ref{fig:atlas2} 
-represents the effect of changing one ZL model parameter by $\pm 5\%$ while holding the other fixed. %The maps are normalized.
+In this Appendix, we present an atlas of mission-averaged ZL parameter maps \textbf{for the $12\,\mu$m band}.
+Each map shown in Figs.~\ref{fig:atlas2} and ~\ref{fig:atlas1} 
+represents the effect of changing one ZL model parameter by $\pm 5\%$ while holding 
+\textbf{the other fixed. In the top-left corner of each map the negative and positive 
+limits of the colorbar are given expressed in units of MJy/sr, while in the top-right corner 
+the parameter names are displayed. Apart from the general parameters $T_0$ and $\delta$, 
+the maps are organized in columns according to the components they refer to: 
+circumsolar ring (SR) and Earth-trailing feature (TF) in Fig.~\ref{fig:atlas2}, 
+smooth cloud (C), dust band 1 (B1), dust band 2 (B2), and dust band 3 (B3) in Fig.~\ref{fig:atlas1}.}
 
-\begin{figure*}[hbt]
-    \centering
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_01.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_02.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_03.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_04.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_05.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_06.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_07.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_08.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_09.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/C_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B1_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B2_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/B3_10.pdf}%
-    }\\
-   
-    \caption{ZL parameter atlas showing the difference between increasing 
-    and lowering each ZL model parameter by $5\%$ in the form of %normalized 
-    mission-averaged ZL maps. Columns list, from left to right parameters of
-    1) the smooth cloud; 2) dust band 1; 3) dust band 2; and 4) dust band 3.}
-    \label{fig:atlas1}
-\end{figure*}
 \begin{figure*}
-    \centering
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_06.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_06.pdf}%
-    }\\   
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_07.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_02.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_07.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_08.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_03.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_08.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/SR_09.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_04.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_09.pdf}%
-    }\\
-    \resizebox{0.82\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/SR_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_05.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_10.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/TF_11.pdf}%
-    }\\
-    \resizebox{0.41\textwidth}{!}{%
-    \includegraphics[height=1cm]{figs/atlas/general_01.pdf}%
-    \includegraphics[height=1cm]{figs/atlas/general_02.pdf}%
-    }
+
+  \centering
+  \resizebox{0.44\textwidth}{!}{%
+  \includegraphics[height=4.5cm]{figs/atlas_new/atlas_61.pdf}%
+  \hspace{0.3cm}
+  \includegraphics[height=4.5cm]{figs/atlas_new/atlas_62.pdf}%
+  }
+
+  \resizebox{0.95\textwidth}{!}{%
+  \begin{tabular}{cccc}
+      {\Large SR} & {\Large SR} & {\Large TF} & {\Large TF} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_41.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_46.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_50.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_55.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_42.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_47.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_51.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_56.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_43.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_48.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_52.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_57.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_44.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_49.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_53.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_58.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_45.pdf} &
+      \rule{0pt}{4.5cm} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_54.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_59.pdf} \\
+
+      \rule{0pt}{4.5cm} &
+      \rule{0pt}{4.5cm} &
+      \rule{0pt}{4.5cm} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_60.pdf} \\
+
+  \end{tabular}%
+  }
+
     %\hspace*{0.47\textwidth}
     \caption{ZL parameter atlas showing the difference between increasing 
     and lowering each ZL model parameter by $5\%$ in the form of %normalized 
-    mission-averaged ZL maps. Columns list the circumsolar ring and Earth-trailing feature components.}
+    mission-averaged ZL maps. \textbf{The top row show the general parameters, 
+    then columns list the parameters defining the circumsolar ring (SR) and Earth-trailing feature (TF) components. 
+    In each map parameter names are indicated in the top-right corner, while the 
+    limits of the colorbar expressed in units of MJy/sr are shown in the top-left corner.}    
+    }
     \label{fig:atlas2}
 \end{figure*}
+
+\begin{figure*}[hbt]
+  \centering
+
+  \resizebox{0.95\textwidth}{!}{%
+  \begin{tabular}{cccc}
+      {\Large C} & {\Large B1} & {\Large B2} & {\Large B3} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_01.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_11.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_21.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_31.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_02.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_12.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_22.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_32.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_03.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_13.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_23.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_33.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_04.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_14.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_24.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_34.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_05.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_15.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_25.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_35.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_06.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_16.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_26.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_36.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_07.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_17.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_27.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_37.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_08.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_18.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_28.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_38.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_09.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_19.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_29.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_39.pdf} \\
+
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_10.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_20.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_30.pdf} &
+      \includegraphics[height=4.5cm]{figs/atlas_new/atlas_40.pdf}
+  \end{tabular}%
+  }
+
+  \caption{ZL parameter atlas showing the difference between increasing
+  and lowering each ZL model parameter by $5\%$ in the form of
+  normalized mission-averaged ZL maps. \textbf{Columns list parameters of the smooth cloud (C) 
+  and the three dust bands ((B1), (B2), and (B3) respectively). In each map parameter 
+  names are indicated in the top-right corner, while the 
+  limits of the colorbar expressed in units of MJy/sr are shown in the top-left corner.}}
+  \label{fig:atlas1}
+\end{figure*}
+
+
+
 
 \end{document}
 
