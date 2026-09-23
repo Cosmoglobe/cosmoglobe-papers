@@ -318,11 +318,11 @@ analysis would be to include the polarization data from the 1.25, 2.2,
 and 3.5 $\mu$m DIRBE bands.
 
 The rest of the paper is organized as follows. In
-Sect.~\ref{sect:zodi-model}, we introduce our ZL model and discuss
-implementation and optimization aspects. \textbf{Then, in Sect.~\ref{sect:data} 
-we describe the data used in the current analysis.In 
-Sect.~\ref{sect:param-estimation}, we describe the algorithms and methods
-used to fit the ZL parameters within the \cosmoglobe\  framework.
+Sect.~\ref{sect:zodi-model} we introduce our ZL model, \textbf{then in Sect.~\ref{sect:data} 
+we describe the data used in the current analysis. In 
+Sect.~\ref{sect:param-estimation} we describe the algorithms and methods
+used to fit the ZL parameters within the \cosmoglobe\  framework, as well as some 
+implementation and optimization aspects. 
 Next, in Sect.~\ref{sect:improved-model}, we present our updated 
 ZL model and compare this with the K98 model. Finally, we
 conclude in Sect.~\ref{sec:conclusions}.}
@@ -337,9 +337,11 @@ of the dust are introduced in the model to relate the grain's distribution to th
 signal actually measurable with an infrared detector.}
 
 \textbf{For the current \commanderthree\ implementation we adopt the K98 parametrization, 
-but we use a Henyey-Greenstein phase function as defined by \citet{Hong} to model 
-the scattering properties of the grains. 
-The total ZL signal may then be evaluated by summing up the intensity
+but we use a linear combination of Henyey-Greenstein functions to describe the phase function, 
+as defined by \citet{Hong} to model the scattering properties of the grains. The reason for 
+this choice is......}
+
+\textbf{The total ZL signal may then be evaluated by summing up the intensity
 from all dust grains, which in practice means evaluating a line-of-sight 
 integral for each observation,
 \begin{equation}\label{eq:los}
@@ -819,15 +821,15 @@ ancillary datasets. For full details, see
 
 \begin{figure*}
     \centering
-    \resizebox{\textwidth}{!}{%
+    \resizebox{0.9\textwidth}{!}{%
     \includegraphics[height=1cm]{figs/week/week_I_nu.pdf}%
     \includegraphics[height=1cm]{figs/week/week_delta_I_nu.pdf}%
     }\\
-    \resizebox{\textwidth}{!}{%
+    \resizebox{0.9\textwidth}{!}{%
     \includegraphics[height=1cm]{figs/week/week_Z_nu.pdf}%
     \includegraphics[height=1cm]{figs/week/week_delta_Z_nu.pdf}%
     }\\
-    \resizebox{\textwidth}{!}{%
+    \resizebox{0.9\textwidth}{!}{%
     \includegraphics[height=1cm]{figs/week/week_tod_nu.pdf}%
     \includegraphics[height=1cm]{figs/week/week_delta_tod_nu.pdf}%
     }\\
@@ -1036,22 +1038,21 @@ significant excess radiation that is not well described by the
 low-dimensional parametric K98 model.} Shortly after those
 observations, \citet{leinert:1998} showed that some of this radiation
 appeared to be stationary in solar-centric coordinates; see their
-Fig.~54. Such radiation can in principle be created through several
-different physical mechanisms. 
+Fig.~54. \textbf{Such radiation can in principle be created through several
+different physical mechanisms, and 
 %For instance, a yet unknown zodiacal
 %component could create a signal that appears stationary in
 %solar-centric coordinates, just like the circumsolar ring, or it could also be caused by stray-light
 %contamination in the DIRBE optics. 
-Even though this radiation
-was first noted more than two decades ago, it was never mapped out
-systematically until now, as part of the current \cosmoglobe\ DR2
+even though it was first noted more than two decades ago, it was never mapped out
+systematically until now as part of the current \cosmoglobe\ DR2
 analysis \citep{CG02_01}. For the time being, we choose to remain
 agnostic regarding the physical origin of this signal, and therefore,
 strictly speaking, the ZL model presented in the current paper only
 describes the parts of the total observed ZL that is attributable to
 the K98 parametrization. In the future, it is possible that the static
 component presented by \citet{CG02_01} should also be added to this
-model. 
+model. }
 %However, before that is done, it is imperative to rule out the
 %stray-light hypothesis, and that will require both detailed modeling
 %of the DIRBE instrument and joint analysis with other experiments,
@@ -1157,7 +1158,9 @@ to be an algorithmic strength, as indeed argued by
 DIRBE mission was to precisely measure the CIB monopole spectrum
 \citep{hauser1998}. Nevertheless, the final derived CIB constraints do
 of course still depend directly on reconstructed ZL monopole, whatever
-it may be. Intuitively speaking, the differential method aims to
+it may be. 
+
+Intuitively speaking, the differential method aims to
 measure the ZL monopole using derivatives alone. Whether that task is
 easier or harder than to establish a sufficiently accurate model of
 the Milky Way can only be determined by trying both methods, and
@@ -1681,7 +1684,7 @@ sampling efficiency in a Gibbs sampler.
     over the solar elongation angle interval observed by DIRBE ($\Theta \in [65^\circ,\,125^\circ]$). 
     The red lines represent $\Phi(\Theta)$ as defined by the original K98 model 
     in the wavelength channels 1.25 -- 3.5\,$\mu$m, \textbf{while other colors are used to 
-    show three different versions of the phase function as defined by \citet{Hong}. 
+    show three different versions of the phase function defined by \citet{Hong}. 
     In particular, the blue line reproduces the original work, the turquoise line 
     follows \cite{skysurf} at 1.25\,$\mu$m, and the solid black line is the DR2 function.} 
     This final one 
@@ -1691,21 +1694,21 @@ sampling efficiency in a Gibbs sampler.
     \label{fig:phase_function}
 \end{figure}
 
-\begin{figure}[t]
-    \centering
-    \vspace{1pt}
-    \includegraphics[width=\columnwidth]{figs/zodi_intensity_new.pdf}
-    \caption{(\textit{Top panel}:) ZL intensity as a function of wavelength on the 2024-01-01
-      as predicted by the DR2 (solid lines) and K98 (dashed lines)
-      models. Colors show three different positions on the sky with Galactic coordinates 
-      ($l=39.91^\circ,\,b=-58.70^\circ$), ($l=96.38^\circ,\,b=29.81^\circ$), and ($l=191.41^\circ,\,b=8.68^\circ$) 
-      corresponding to the solar elongation at $90^\circ$, the North Ecliptic Pole, 
-      and the antisolar point, respectively. The black curves instead show the full-sky average. 
-      (\textit{Bottom}:) Fractional difference between the DR2 and 98 models, 
-      evaluated from the results shown in the top panel.
-    }
-    \label{fig:zodi-intensity}
-\end{figure}
+%\begin{figure}[t]
+%    \centering
+%    \vspace{1pt}
+%    \includegraphics[width=\columnwidth]{figs/zodi_intensity_new.pdf}
+%    \caption{(\textit{Top panel}:) ZL intensity as a function of wavelength on the 2024-01-01
+%      as predicted by the DR2 (solid lines) and K98 (dashed lines)
+%      models. Colors show three different positions on the sky with Galactic coordinates 
+%      ($l=39.91^\circ,\,b=-58.70^\circ$), ($l=96.38^\circ,\,b=29.81^\circ$), and ($l=191.41^\circ,\,b=8.68^\circ$) 
+%      corresponding to the solar elongation at $90^\circ$, the North Ecliptic Pole, 
+%      and the antisolar point, respectively. The black curves instead show the full-sky average. 
+%      (\textit{Bottom}:) Fractional difference between the DR2 and 98 models, 
+%      evaluated from the results shown in the top panel.
+%    }
+%    \label{fig:zodi-intensity}
+%\end{figure}
 
 \begin{figure}[t]
     \centering
@@ -1952,25 +1955,27 @@ solar elongation angle that DIRBE was able to observe. However, when comparing t
 it is worth noting that most of the DIRBE constraining power lies between 80 and $110^{\circ}$, 
 and the visual impression in this figure does depend on the specific range used for normalization. 
 With this caveat in mind, we see that the minimum (which is independent of normalization) 
-in our function lies between the Hong et al.\ and K98 minima. The biggest discrepancy is 
+in our function lies between the Hong et al.\ and K98 minima, \textbf{very close to the one of 
+the ZodiSURF model \citep{skysurf}.} The biggest discrepancy is 
 seen at very low scattering angles, where our phase function lies about $4\,\sigma$ lower 
 than Hong et al. In that respect, it is worth noting that the Hong et al.\ analysis included 
 datasets at very low solar elongations. A future \Cosmoglobe\ re-analysis of the current 
 model may want to consider including those as well. 
 
-Figure~\ref{fig:zodi-intensity} compares the predicted ZL intensity
-as a function of wavelength for three different positions on the sky
-at one given day in different colors, as well as the average over the
-full sky in black. Solid and dashed lines show the DR2 and K98
-predictions, respectively. The bottom panel shows the relative
-difference. In general, the two models agree to better than 10\,\% for
-most wavelengths, except at the very longest, 
-for which the overall amplitudes are very uncertain. 
+%Figure~\ref{fig:zodi-intensity} compares the predicted ZL intensity
+%as a function of wavelength for three different positions on the sky
+%at one given day in different colors, as well as the average over the
+%full sky in black. Solid and dashed lines show the DR2 and K98
+%predictions, respectively. The bottom panel shows the relative
+%difference. In general, the two models agree to better than 10\,\% for
+%most wavelengths, except at the very longest, 
+%for which the overall amplitudes are very uncertain. 
+
 %, and near the $4.9\,\mu$m channel where we have fit a free albedo. 
 
-Figure~\ref{fig:reldiff} shows a similar relative difference, but now 
-as a function of position on the sky for the 12 and 25\,$\mu$m
-channels. In these channels, for which the ZL emission is the
+Figure~\ref{fig:reldiff} \textbf{shows the relative difference between the K98 model 
+and the present work as a function of position on the sky for the 12 and 25\,$\mu$m
+bands}. In these channels, for which the ZL emission is the
 brightest, the K98 and \cosmoglobe\ DR2 models agree to within
 $\lesssim$\,3\,\% over most of the sky. These differences are thus 
 similar in magnitude to the relative residuals measured by
@@ -2044,9 +2049,10 @@ half-mission map, denoted by HM1, which corresponds to the first five
 months of the mission, we see a faint band that follows the Ecliptic
 plane. Even brighter Ecliptic residuals are seen in the 12--60\,$\mu$m
 channels, and future work should clearly aim at establishing a more
-detailed model of ZL in the Ecliptic plane; again, joint analysis with
-high-resolution measurements from \IRAS\ and \AKARI\ should prove
-extremely useful for this.
+detailed model of ZL in the Ecliptic \textbf{plane.}
+%; again, joint analysis with
+%high-resolution measurements from \IRAS\ and \AKARI\ should prove
+%extremely useful for this.
 
 As noted in Sect.~\ref{sect:data}, we exclude one week of observations
 at both the beginning and end of the DIRBE survey due to instrumental
@@ -2092,7 +2098,7 @@ uncertainties of 0.80 and 0.93\,MJy/sr per sample at 12 and
 estimates. Despite assuming such large uncertainties, they obtained a
 reduced $\chi^2$ of 1.30 with their extended model. In contrast, if we
 had adopted the same white noise estimates, we would have obtained a
-reduced $\chi^2$ of $\sim$\,$0.1$, which immediately would suggest
+$\chi_\mathrm{red}^2$ of $\sim$\,$0.1$, which immediately would suggest
 significant noise RMS over-estimation. In other words, the current
 \cosmoglobe\ DR2 analysis has resulted both in significantly lower
 white noise uncertainties and lower absolute residuals for the main ZL
@@ -2106,12 +2112,11 @@ establish a set of zodiacal light subtracted mission averaged (ZSMA)
 frequency maps for each DIRBE channel that can be used for
 cosmological and astrophysical analysis. These maps are simply derived
 by subtracting the ZL component from the TOD, and bin the rest
-into pixelized sky maps.
-
-\textbf{Figures~\ref{fig:dr2-zsma-compare1} and \ref{fig:dr2-zsma-compare2}
+into pixelized sky maps. \textbf{Figures~\ref{fig:dr2-zsma-compare1} and \ref{fig:dr2-zsma-compare2}
 compare the K98 ZSMA maps (first column) with the new
 \cosmoglobe\ DR2 ZSMA maps (second column), as well as with the
-difference between the two calculated as K98 ZSMA minus DR2 ZSMA maps (third column). }
+difference between the two calculated as K98 ZSMA minus DR2 ZSMA maps (third column).}
+
 The 12--60\,$\mu$m DR2 ZSMA maps present negative 
 values along the Ecliptic plane, indicating that the actual zodiacal light signal is lower than 
 what is predicted by the model in use. Despite this, here we clearly
@@ -2240,7 +2245,7 @@ ideas from simulated annealing and/or Hamiltonian sampling.
 Furthermore, future analyses may also include SPHEREx data, 
 which will allow testing of the ZL model at wavelengths closer to the 
 visible and contribute to ongoing efforts toward developing an optical 
-zodiacal light model (e.g., \citet{skysurf11}).
+zodiacal light model (e.g., \citet{skysurf}).
 
 In addition, it is by no means obvious that a low-dimensional 3D model
 such as K98 with only $\mathcal{O}(10^2)$ free parameters can describe
