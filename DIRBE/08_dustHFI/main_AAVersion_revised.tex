@@ -60,6 +60,7 @@
 \makeatletter
 \AddToHook{cmd/appendix/before}{\def\cref@section@alias{appendix}}
 \makeatother
+\newcommand{\crefrangeconjunction}{--}
 
 \usepackage{caption} 
 \usepackage{subcaption} 
@@ -328,8 +329,6 @@ A.~I.~Silva Martins\inst{\oslo}
 M.~San\inst{\oslo}
 \and
 D.~Sponseller\inst{\gothenberg}
-\and
-N.-O.~Stutzer\inst{\oslo}
 \and
 H.~Thommesen\inst{\oslo}
 \and
@@ -640,6 +639,7 @@ Our Gibbs sampler, for this case, employs the algorithm
 \begin{alignat}{2}
   \label{eq:gibbs1}
   \vec{a}_c &\leftarrow P(\vec{a}_c &&|{\bf d}, \phantom{\vec{a}_c ,} \mathsf{G_{857}},m)\\
+  \label{eq:gibbs2}
 \mathsf{G_{857}} &\leftarrow P(\mathsf{G_{857}} &&|{\bf d}, \vec{a}_c,\phantom{\mathsf{G_{857}},}m)\\ 
 m &\leftarrow P(m &&|{\bf d}, \vec{a}_c,\mathsf{G_{857}}\phantom{,m}) ,
 \label{eq:gibbs3}
@@ -649,7 +649,7 @@ where the arrow operator $\leftarrow$ indicates updating the variable on the lef
 
 \subsection{Parameter grid search and optimization strategy}
 \label{sec:statistics}
-Having only access to HFI data, the four dust component amplitudes in the current model are highly correlated with their corresponding spectral parameters, $T$ and $\beta$. This results in a long Monte Carlo correlation length in a fully integrated Gibbs sampler, which then translates into a high computational cost for scanning large parameter volumes. To mitigate this, we instead perform an extensive grid search over the spectral parameter and the \Gaia\ and H$\alpha$ scaling amplitudes, in which we initialize a large number of independent Gibbs chains with different parameter combinations. For each fixed set of spectral parameters, we then run a short Gibbs sampler as given by Eqs.~\ref{eq:gibbs1}--\ref{eq:gibbs3} to fit the amplitudes per pixel of the hot and cold dust; the CMB and the CO amplitudes; the gains at 857\,GHz; as well as monopoles. We then compare the $\chi^2$ from the residuals, the correlations between the nearby-hot, nearby-cold, \Ha-hot and \Ha-cold maps, the correlation between the cold and HI4PI maps, and we inspect the hot and cold maps for large scale negative amplitudes. The nearby and H$\alpha$ dust components describe dust structures that are located physically close to the Earth, while the hot and cold components should account for everything not fit by those, i.e., more distant dust features. In general, a solution with a lower correlation between the nearby and H$\alpha$ components on the one hand, and hot and cold dust on the other hand, is therefore preferable over solutions with higher correlations. 
+Having only access to HFI data, the four dust component amplitudes in the current model are highly correlated with their corresponding spectral parameters, $T$ and $\beta$. This results in a long Monte Carlo correlation length in a fully integrated Gibbs sampler, which then translates into a high computational cost for scanning large parameter volumes. To mitigate this, we instead perform an extensive grid search over the spectral parameter and the \Gaia\ and H$\alpha$ scaling amplitudes, in which we initialize a large number of independent Gibbs chains with different parameter combinations. For each fixed set of spectral parameters, we then run a short Gibbs sampler as given by \cref{eq:gibbs1,eq:gibbs2,eq:gibbs3} to fit the amplitudes per pixel of the hot and cold dust; the CMB and the CO amplitudes; the gains at 857\,GHz; as well as monopoles. We then compare the $\chi^2$ from the residuals, the correlations between the nearby-hot, nearby-cold, \Ha-hot and \Ha-cold maps, the correlation between the cold and HI4PI maps, and we inspect the hot and cold maps for large scale negative amplitudes. The nearby and H$\alpha$ dust components describe dust structures that are located physically close to the Earth, while the hot and cold components should account for everything not fit by those, i.e., more distant dust features. In general, a solution with a lower correlation between the nearby and H$\alpha$ components on the one hand, and hot and cold dust on the other hand, is therefore preferable over solutions with higher correlations. 
 
 At the outset of this analysis, we do not know a priori the optimal grid range for each parameter for the currently available HFI dataset. As a first guess, we therefore start from the best-fit HFI+DIRBE parameters presented by \citet{CG02_05}, and start exploring a large but sparsely parameter volume around this position. We then identify the best-fit point of the resulting grid, based on the combination of $\chi^2$ and correlation statistics defined above, and restart the gridding around the new best-fit point. This process is repeated several times. Finally, we compute dense 1D or 2D grids around the final best-fit point for each global parameter. 
 
@@ -665,7 +665,7 @@ The error bars in this table are derived from the final low-dimensional grids, a
 
 Considering the specific numerical values listed in \cref{tab:SEDs}, we note that the hot dust component has a best-fit temperature of 30\,K, while the cold dust component has a temperature of 11\,K. These are both slightly more extreme than those reported for the corresponding components derived from DIRBE+HFI by \citet{CG02_05}, which were 26\,K for \ion{C}{ii}; 12\,K for CO; and 16\,K for \ion{H}{i}. We emphasize that the HFI frequency bands do not cover the peak of the SED for a $\gtrsim$12\,K MBB, and the derived HFI-only temperatures are therefore particularly susceptible to the 857\,GHz gain. As such, we do not attach a high statistical significance to the precise numerical values of the spectral parameters listed in \cref{tab:SEDs}, but rather note the main results in the current paper are not the MBB parameters as such (which are strongly degenerate with the 857\,GHz gain), but rather the morphology of the corresponding amplitude maps (which are not strongly degenerate with the 857\,GHz gain).
 
-Next, \cref{fig:SEDGridContours} shows $(T,\beta)$ grids for each of the four dust components, computed by fixing all other parameters at the global best-fit solution. The underlying colors indicate the respective reduced $\chi^2$ distribution, while the contours show the Pearson correlation coefficient for a relevant companion map. Starting with the cold dust component in the top left panel, we first observe the well-known ``banana-shaped'' degeneracy between $T$ and $\beta$; a higher temperature can be compensated by a lower $\beta$, which together maintains a nearly unchanged SED peak position \citep[e.g.,][]{juvela:2012}. Here we clearly see that the HFI data alone do not constrain the cold dust SED well, as any temperature between 8 and $\sim$14\,K results in an acceptable $\chi^2$. However, visual inspection the resulting amplitude maps (as shown in Figs.~\ref{fig:hot_cold_dust_set}--\ref{fig:hot_hot_dust_ratio}) shows that higher temperatures lead to strong degeneracies with the hot dust component, and thereby a negative large-scale amplitude. The right-most hatched region shows values that are excluded due to these unphysical solutions, while the leftmost regions are excluded due to extreme temperatures. The contours in this plot shows correlations between FIRAS \ion{C}{ii} and the hot dust component, and here we see that any cold dust MBB parameter configuration in the preferred region result in a correlation coefficient higher than 0.95.
+Next, \cref{fig:SEDGridContours} shows $(T,\beta)$ grids for each of the four dust components, computed by fixing all other parameters at the global best-fit solution. The underlying colors indicate the respective reduced $\chi^2$ distribution, while the contours show the Pearson correlation coefficient for a relevant companion map. Starting with the cold dust component in the top left panel, we first observe the well-known ``banana-shaped'' degeneracy between $T$ and $\beta$; a higher temperature can be compensated by a lower $\beta$, which together maintains a nearly unchanged SED peak position \citep[e.g.,][]{juvela:2012}. Here we clearly see that the HFI data alone do not constrain the cold dust SED well, as any temperature between 8 and $\sim$14\,K results in an acceptable $\chi^2$. However, visual inspection the resulting amplitude maps (as shown in \cref{fig:hot_cold_dust_set,fig:hot_hot_dust_ratio}) shows that higher temperatures lead to strong degeneracies with the hot dust component, and thereby a negative large-scale amplitude. The right-most hatched region shows values that are excluded due to these unphysical solutions, while the leftmost regions are excluded due to extreme temperatures. The contours in this plot shows correlations between FIRAS \ion{C}{ii} and the hot dust component, and here we see that any cold dust MBB parameter configuration in the preferred region result in a correlation coefficient higher than 0.95.
 
 Moving on to the hot dust MBB parameters, shown in the top right panel, we note that the $\chi^2$ distribution remains nearly constant over most of the plotted region. This is due to the fact that the hot dust component dominates at the 857\,GHz channel, and almost any change in the proposed SED can be compensated by an 857\,GHz gain adjustment combined with a small modification to the cold dust amplitude map. As a result, the morphology of the hot dust component is extremely stable with respect to both MBB and gain assumptions, up to an overall multiplicative re-scaling factor which is uncertain, and the resulting morphology correlates strongly with FIRAS \ion{C}{ii}, in full agreement with the observation made by \citet{CG02_05}.
 
@@ -761,8 +761,9 @@ This result is also critically important for $B$-mode polarization experiments, 
 
 \begin{acknowledgements}
     \edit{
+        To the best of our knowledge no AI tools were used in this analysis nor in the preparation of this manuscript.
   We thank Richard Arendt, Tony Banday, Gordian Edenhofer, Johannes Eskilt, Dale Fixsen, Ken Ganga, Paul
-  Goldsmith, Brandon Hensley, Shuji Matsuura, Gina Panopoulou, Marian Douspis Upsay, Sven Wedemeyer, Janet Weiland and Edward Wright for
+  Goldsmith, Brandon Hensley, Shuji Matsuura, Gina Panopoulou, Sven Wedemeyer, Janet Weiland and Edward Wright for
   useful suggestions and guidance.  The current work has received
   funding from the European Union’s Horizon 2020 research and
   innovation programme under grant agreement numbers 819478 (ERC;
